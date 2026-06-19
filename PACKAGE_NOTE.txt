@@ -1,10 +1,41 @@
-meta-only patch v32
+atcoder_explanations_site_v38_zone_euler_note_meta_only
 
-This package intentionally excludes:
+このZIPはメタ・スクリプト類のみを含む差分配布です。
+問題解説本文・知識記事本文・生成済みHTMLを誤って上書きしないため、次のディレクトリは含めていません。
+
 - explanations/
 - knowledge/
 - docs/
+- __pycache__/
 
-Apply scripts and config, then run:
-  python scripts/create_knowledge_stubs.py   # only if you need missing knowledge stubs
-  python scripts/build_site.py
+反映内容:
+1. `scripts/delete_zone_identifier.sh` を追加しました。
+   - リポジトリ直下から `./scripts/delete_zone_identifier.sh` で実行できます。
+   - 実行内容は `find . -name '*:Zone.Identifier' -type f -delete` のみです。
+2. Project Euler の表示名を `Project Euler` にしました。
+   - `（100番まで）` はタイトルから外しました。
+   - 一覧ページ本文に `（権利の都合上100番まで）` を表示します。
+   - 内部分類IDは既存データとの互換のため `Project Euler（100番まで）` のままです。
+3. v37までの変更も維持しています。
+   - 公開向け `README.md`
+   - 整理済み `README_for_GPT.md`
+   - `.gitignore`
+   - コンテスト一覧表の小さめ問題タイトル表示
+
+反映方法:
+1. ZIPをリポジトリ直下に展開します。
+2. 必要なら次を実行して生成済みHTMLを更新します。
+
+```bash
+python scripts/build_site.py
+```
+
+Windows由来の `*:Zone.Identifier` ファイルを消す場合は、リポジトリ直下で次を実行します。
+
+```bash
+./scripts/delete_zone_identifier.sh
+```
+
+注意:
+- README_for_GPT.md は作業用メモです。公開向けのトップREADMEではありません。
+- 公開サイトのトップ表示に使うREADMEは README.md です。
