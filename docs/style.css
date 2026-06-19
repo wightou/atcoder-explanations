@@ -383,6 +383,7 @@ a:hover {
 
 .contest-table {
   width: 100%;
+  min-width: 760px;
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -421,8 +422,8 @@ a:hover {
 }
 
 .contest-table td {
-  min-width: 120px;
-  height: 72px;
+  min-width: 108px;
+  height: 58px;
 }
 
 .contest-table td.empty {
@@ -432,7 +433,12 @@ a:hover {
 }
 
 .problem-cell {
-  display: block;
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 4px;
   color: var(--fg);
 }
 
@@ -440,9 +446,27 @@ a:hover {
   color: var(--accent);
 }
 
+.problem-code {
+  display: block;
+  min-width: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .problem-title {
   display: block;
-  overflow-wrap: anywhere;
+  min-width: 0;
+  font-size: 0.82rem;
+  line-height: 1.2;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .plain-list {
@@ -574,6 +598,7 @@ a:hover {
   }
 
   .contest-table {
-    table-layout: auto;
+    min-width: 720px;
+    table-layout: fixed;
   }
 }

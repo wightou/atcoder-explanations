@@ -104,7 +104,8 @@ DEFAULT_CONTEST_VIEWS = [
     },
     {
         "id": "Project Euler（100番まで）",
-        "title": "Project Euler（100番まで）",
+        "title": "Project Euler",
+        "description": "（権利の都合上100番まで）",
         "path": "project-euler-100.html",
         "layout": "list",
         "order": "oldest_first",
@@ -729,6 +730,7 @@ def normalize_contest_view(raw: dict) -> dict:
     if "id" not in spec:
         raise ValueError("contest_views には id が必要です")
     spec.setdefault("title", str(spec["id"]))
+    spec.setdefault("description", "")
     spec.setdefault("path", f"{str(spec['id']).lower()}.html")
     spec.setdefault("layout", "list")
     spec.setdefault("order", "latest_first")
@@ -1041,7 +1043,7 @@ def render_explanations_index(pages_by_class: dict[str, list[ExplanationPage]]) 
     return render_index_layout("問題解説", inner, current="問題解説", prefix="../", css_href="../style.css")
 
 
-def render_table_page(title: str, pages: list[ExplanationPage], columns: list[str], *, order: str) -> str:
+def render_table_page(title: str, pages: list[ExplanationPage], columns: list[str], *, order: str, description: str = "") -> str:
     rows_by_contest: dict[str, dict[str, ExplanationPage]] = defaultdict(dict)
     for p in pages:
         rows_by_contest[p.contest.upper()][p.problem.upper()] = p
@@ -1054,9 +1056,12 @@ def render_table_page(title: str, pages: list[ExplanationPage], columns: list[st
             if p is None:
                 cells.append('<td class="empty">-</td>')
             else:
+                problem_code = f"{p.contest.upper()}{p.problem.upper()}"
+                full_label = p.full_title
                 cells.append(
                     '<td>'
-                    f'<a class="problem-cell" href="../{escape(p.url)}">'
+                    f'<a class="problem-cell" href="../{escape(p.url)}" title="{escape(full_label)}">'
+                    f'<span class="problem-code">{escape(problem_code)}</span>'
                     f'<span class="problem-title">{escape(p.problem_title)}</span>'
                     '</a>'
                     '</td>'
@@ -1068,8 +1073,10 @@ def render_table_page(title: str, pages: list[ExplanationPage], columns: list[st
         )
 
     empty_row = f'<tr><td class="empty" colspan="{len(columns)+1}">まだ解説がありません。</td></tr>'
+    description_html = f'<p class="lead">{escape(description)}</p>' if description else ""
     inner = f"""
 <h1>{escape(title)}</h1>
+{description_html}
 <div class="table-scroll">
   <table class="contest-table">
     <thead>
@@ -1087,7 +1094,7 @@ def render_table_page(title: str, pages: list[ExplanationPage], columns: list[st
     return render_index_layout(title, inner, current="問題解説", prefix="../", css_href="../style.css")
 
 
-def render_list_page(title: str, pages: list[ExplanationPage], *, order: str) -> str:
+def render_list_page(title: str, pages: list[ExplanationPage], *, order: str, description: str = "") -> str:
     items = []
     for p in sort_pages_for_view(pages, order):
         items.append(
@@ -1095,8 +1102,10 @@ def render_list_page(title: str, pages: list[ExplanationPage], *, order: str) ->
             f'<span class="inline-tags">{render_tags(p.tags, from_subdir=True)}</span></li>'
         )
 
+    description_html = f'<p class="lead">{escape(description)}</p>' if description else ""
     inner = f"""
 <h1>{escape(title)}</h1>
+{description_html}
 <ul class="plain-list">
   {''.join(items) if items else '<li class="muted">まだ解説がありません。</li>'}
 </ul>
@@ -1884,6 +1893,7 @@ a:hover {
 
 .contest-table {
   width: 100%;
+  min-width: 760px;
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -1922,8 +1932,8 @@ a:hover {
 }
 
 .contest-table td {
-  min-width: 120px;
-  height: 72px;
+  min-width: 108px;
+  height: 58px;
 }
 
 .contest-table td.empty {
@@ -1933,7 +1943,12 @@ a:hover {
 }
 
 .problem-cell {
-  display: block;
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 4px;
   color: var(--fg);
 }
 
@@ -1941,9 +1956,27 @@ a:hover {
   color: var(--accent);
 }
 
+.problem-code {
+  display: block;
+  min-width: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .problem-title {
   display: block;
-  overflow-wrap: anywhere;
+  min-width: 0;
+  font-size: 0.82rem;
+  line-height: 1.2;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .plain-list {
@@ -2075,7 +2108,8 @@ a:hover {
   }
 
   .contest-table {
-    table-layout: auto;
+    min-width: 720px;
+    table-layout: fixed;
   }
 }
 """
@@ -2135,13 +2169,14 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
         class_id = str(spec["id"])
         title = str(spec["title"])
         path = str(spec["path"])
+        description = str(spec.get("description", ""))
         pages = pages_by_class.get(class_id, [])
         layout = str(spec["layout"])
         order = str(spec["order"])
         if layout == "table":
-            html = render_table_page(title, pages, list(spec["columns"]), order=order)
+            html = render_table_page(title, pages, list(spec["columns"]), order=order, description=description)
         else:
-            html = render_list_page(title, pages, order=order)
+            html = render_list_page(title, pages, order=order, description=description)
         (out_dir / "contests" / path).write_text(html, encoding="utf-8")
 
     for tag in all_tag_names:

@@ -70,7 +70,8 @@ order = "oldest_first"
 
 [[contest_views]]
 id = "Project Euler（100番まで）"
-title = "Project Euler（100番まで）"
+title = "Project Euler"
+description = "（権利の都合上100番まで）"
 path = "project-euler-100.html"
 layout = "list"
 order = "oldest_first"
