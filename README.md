@@ -1,4 +1,3 @@
-cat > README.md <<'EOF'
 # AtCoder自筆解説集
 
 AtCoderで解いた問題について、自分用に作成した解説をまとめています。
