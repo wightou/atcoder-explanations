@@ -1,0 +1,1556 @@
+[
+  {
+    "type": "explanation",
+    "contest": "ABC462",
+    "problem": "A",
+    "problem_title": "Secret Numbers",
+    "full_title": "ABC462A - Secret Numbers",
+    "url": "explanations/abc462-a.html",
+    "tags": [
+      "入出力",
+      "int型",
+      "char型",
+      "string型",
+      "if分岐",
+      "forループ"
+    ],
+    "body": "考え方 入力は文字列が $1$ つなので、string 型の変数を $1$ つ用意し、cin で入力を受け取る。 文字列の中身を $1$ 文字ずつ見ていきたいので、forループを用意する。 それぞれの文字について、if文で以下を行えばよい。 数字なら、それを答え用の文字列に追加する 数字でないなら何もしない 数字かどうかの判定は、文字が '0' 以上 '9' 以下かどうかで行える。 また、標準ライブラリ関数 isdigit を用いてもよい。 最後に、作った答え用の文字列を cout で出力すればよい。 入力例1での動作 入力を受け取る。 $0$ 文字目をチェックする。 'a' は数字でないので何もしない。 $1$ 文字目をチェックする。 'b' は数字でないので何もしない。 $2$ 文字目をチェックする。 'c' は数字でないので何もしない。 $3$ 文字目をチェックする。 '4' は数字なので答え用の文字列に加える。 $4$ 文字目をチェックする。 '6' は数字なので答え用の文字列に加える。 $5$ 文字目をチェックする。 '2' は数字なので答え用の文字列に加える。 最終的に、result を出力すればよい。 注意点 特になし。 別解 ループ内で「今何番目であるか」を使わないので、範囲for文を使ってもよい。 いちいち .at(i) を書く手間が省けるし、文字列の長さを自分で取得するのも不要になる。"
+  },
+  {
+    "type": "explanation",
+    "contest": "ABC462",
+    "problem": "B",
+    "problem_title": "Gift",
+    "full_title": "ABC462B - Gift",
+    "url": "explanations/abc462-b.html",
+    "tags": [
+      "多次元vector",
+      "多重ループ",
+      "隣接リスト"
+    ],
+    "body": "考え方 不定長の二次元vectorを扱えるか、という問題。 まず、入力を受け取るのが難しい。 方法は以下。 $N$ 個の空配列をもっている二次元vectorを作っておく。 以下をループする $K$ の値を受け取ったら、.resize() を使って a.at(i) の大きさを $K$ に変更する。 $K$ 個分、通常のvectorと同じように入力を受け取っていく。 それができたら、今度は答えを作っていく。 再び $N$ 個の空配列をもっている二次元vectorを作っておく。 そして、人 $i$ から人 $j$ にギフトを送るなら、人 $j$ は人 $i$ からギフトを受け取るということ。 これを、.emplace_back() で答え用の二次元vectorに入れていく。 $i$ が小さい順に処理することで、自然と結果が昇順に並ぶ。 実際には 0-indexed と 1-indexed の変換をしなくてはいけないことに注意。 すなわち、a.at(i) のデータに j とあるなら、result.at(j-1) に i+1 を入れることになる。 完成したら、今度は出力。 中身の各配列ごとに、まずサイズを出力して、その後中身をスペース区切りで出力する。 最後の出力後のスペースを取り除いてきっちり指定形式にしてもいいし、 AtCoderでは改行前に余計な半角スペースがあっても無視してくれるので、それを利用してもよい。 以下は、C問題以上のレベルの話。 実はこれは有向グラフの隣接リストにおいて、すべての辺の向きを逆転する方法そのものである。 今後もっと難しい問題で使用することになるので、覚えておきたい。 入力例1での動作 入力を受けとる。 人数分の要素を持つ、空の二次元vectorを用意する。 a[0] のデータを見て、$1$ 人目から受け取る人のデータを更新。 a[i] のデータに j とあるなら、result[j-1] に i+1 を入れる。 a[1] のデータを見て、$2$ 人目から受け取る人のデータを更新。 a[2] のデータを見て、$3$ 人目から受け取る人のデータを更新。 a[3] のデータを見て、$4$ 人目から受け取る人のデータを更新。 最終的に、result を指示に合わせた形式で出力すればよい。 注意点 特になし。 別解 特になし。"
+  },
+  {
+    "type": "explanation",
+    "contest": "ABC462",
+    "problem": "C",
+    "problem_title": "Not Covered Points",
+    "full_title": "ABC462C - Not Covered Points",
+    "url": "explanations/abc462-c.html",
+    "tags": [],
+    "body": "考え方 まず、愚直に解くと、各点 $i$ に対して他の $N-1$ 個の位置全てを確認しなくてはならない。 すると、計算量が $O(N^2)$ となり、$N = 3 \\times 10^5$ ではTLEする。 よって、これを高速化する。 実は、各点の番号が何番なのかは、考える必要がない。 よって、$X$ の値が小さい順に並べなおして考えることができる。 特に今回は $X$ が $1$ から $N$ までの順列なので、$X=i$ であるものを $i$ 番目にもってくればよい。 すると、問題の長方形条件は、自分より前に自分より $Y$ が小さい点が存在しないことと言い換えられる。 （$Y$ も順列なので同じ値が複数回来ることはなく、「以下」でも「未満」でもよい） この書き換えにより、他の点を全部調べなくても今までの最小値との比較で済み、$O(N)$ で解ける。 入力例1での動作 入力を受け取る。 x が小さい順に、y の値を並べなおす。 最小値記録用変数と、カウンターを用意する。 $0$ 番目を見る。最小値記録更新なので、カウントを $1$ 進める。 $1$ 番目を見る。最小値記録更新なので、カウントを $1$ 進める。 $2$ 番目を見る。最小値記録ではないので、何もしない。 カウンターの値が答え。 注意点 特になし。 別解 特になし。"
+  },
+  {
+    "type": "explanation",
+    "contest": "ABC462",
+    "problem": "D",
+    "problem_title": "Accomplice",
+    "full_title": "ABC462D - Accomplice",
+    "url": "explanations/abc462-d.html",
+    "tags": [
+      "順列組み合わせ",
+      "累積和",
+      "階差数列",
+      "シミュレーション"
+    ],
+    "body": "考え方 時刻と犯人 $2$ 人組のパターン数を求める問題。 「$2$ 人組を選んで、その $2$ 人での犯行数を求める」という方針では $O(N^2)$ かかるのでTLE。 ということで、時刻ごとに考えることになる。 時刻の最大値は $10^6$ なので、その長さの配列を用意するのは十分に可能。 ここに、各時刻に何人が犯行に加担可能かを記録していくことになる。 しかし、$1$ 人ずつforループで順番に $1$ を足していくと、$O(NT_{max})$ かかるのでこれもTLE。 よって、この加算を高速化する。 「vector の指定範囲に定数加算」を繰り返す場合、階差数列を作ってから累積和で復元する方法が有効。 $1$ 人ごとに vector を広く見る必要がなくなり、$O(N+T_{max})$ で完了する。 これが済んだら、時刻ごとに ${}_{加担可能人数}\\mathrm{C}_2$ を求めて、その総和を答えればよい。 入力例1での動作 入力を受け取る。 t の最大値が 20 なので、各時刻の人数データを長さ 22 で用意する。 今は階差数列になっている。 | |0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21| |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---| |p|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0| |本来の値|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0| (s,t) の (9,17) を見て、$9$ 番目から $17-2=15$ 番目に $1$ を足す。 | |0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21| |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---| |p|0|0|0|0|0|0|0|0|0|1|0|0|0|0|0|0|-1|0|0|0|0|0| |本来の値|0|0|0|0|0|0|0|0|0|1|1|1|1|1|1|1|0|0|0|0|0|0| (s,t) の (10,12) を見て、$10$ 番目から $12-2=10$ 番目に $1$ を足す。 | |0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21| |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---| |p|0|0|0|0|0|0|0|0|0|1|1|-1|0|0|0|0|-1|0|0|0|0|0| |本来の値|0|0|0|0|0|0|0|0|0|1|2|1|1|1|1|1|0|0|0|0|0|0| (s,t) の (13,20) を見て、$13$ 番目から $20-2=18$ 番目に $1$ を足す。 | |0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21| |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---| |p|0|0|0|0|0|0|0|0|0|1|1|-1|0|1|0|0|-1|0|0|-1|0|0| |本来の値|0|0|0|0|0|0|0|0|0|1|2|1|1|2|2|2|1|1|1|0|0|0| 累積和をとって、本来の値にする。 | |0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21| |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---| |p|0|0|0|0|0|0|0|0|0|1|2|1|1|2|2|2|1|1|1|0|0|0| ${}_{各値}\\mathrm{C}_2$ の総和を求める | |0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21| |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---| |p|0|0|0|0|0|0|0|0|0|1|2|1|1|2|2|2|1|1|1|0|0|0| |${}_p\\mathrm{C}_2$|0|0|0|0|0|0|0|0|0|0|1|0|0|1|1|1|0|0|0|0|0|0| 注意点 $N$ の値が大きいと、${}_N\\mathrm{C}_2$ が大きくなり、int 型からはみ出る。 結果用変数には long long 型を用いること。 別解 シミュレーションをして答えることもできる。 その場合、以下で解ける。 まず、館にいる時間が $D$ 未満である人は、最初からいなかったことにする。 それ以外の人について、加担可能な時刻の開始と終了をそれぞれソートして用意する。 時刻を $1$ ずつ進め、人の増減をしてから $_{人数}\\mathrm{C}_2$ を加算していく"
+  },
+  {
+    "type": "explanation",
+    "contest": "ABC462",
+    "problem": "E",
+    "problem_title": "Alternating Costs",
+    "full_title": "ABC462E - Alternating Costs",
+    "url": "explanations/abc462-e.html",
+    "tags": [
+      "考察問題",
+      "構築問題",
+      "貪欲法",
+      "距離",
+      "パリティ"
+    ],
+    "body": "考え方 考察問題。 出力が経路でないとはいえ、実質的に経路作成をする構築問題でもある。 以下、$X$ 座標を増やす行為を 右、減らす行為を 左 と表記する。 同様に、$Y$ 座標を増やす行為を 上、減らす行為を 下 と表記する。 まず、対称性を利用して問題のパターンを減らす。 目標地点が $X<0$ である場合、まるごと左右反転することで $X>0$ の問題に帰着できる。 同様に、$Y<0$ である場合、まるごと上下反転することで $Y>0$ の問題に帰着できる。 さらに、$X<Y$ である場合、swap(X,Y) と swap(A,B) を同時に行う。 以上で、$Y=0$ や $X=Y$ の場合も含めて $0 \\leq Y \\leq X$ である場合だけ解けばいいことになる。 次に、経路構築の前に問題の分析をする。 格子点を縦横に $1$ つずつ移動するとなると、パリティで考察することができる。 すなわち、$(0,0)$ からのマンハッタン距離が偶数である点と奇数である点に分類する。 そうすると、可能な全ての移動が「偶数→奇数」または「奇数→偶数」になる。 つまり偶数と奇数を交互に移動することになるため、移動コストは、以下のように理解してよい。 「偶数→奇数」の移動では、左右移動コストが $A$、上下移動コストが $B$ 「奇数→偶数」の移動では、左右移動コストが $B$、上下移動コストが $A$ また、経路構築する上で、いくつか「コストも目的地も不変な変更」を考えておく。 $1$ つめに、操作列1 右 操作列2 左 操作列3 は 操作列1 左 操作列2 右 操作列3 に変更可能。 これは、各移動が上下移動なのか左右移動なのかが変化せず、総移動量も変化しないため。 上下についても同様。 $2$ つめに、操作列1 右 右 上 操作列2 は 操作列1 上 右 右 操作列2 に変更可能。 これも、各移動を偶数マスから行うか奇数マスから行うかの回数が変化せず、総移動量も変化しないため。 上 上 右 や 上 上 左 なども同様。 これらを活用することで、コスト最小の操作列の $1$ つを貪欲に決めることができるようになる。 まず、$X>0$ である場合、操作列の中に 右 が必ずある。 もし最小コスト操作列の最初の 右 より前に 左 があるなら、それらを入れ替える。 それにより、最初の 右 より前に 左 が存在しない操作列に変化させられる。 同様に、$Y>0$ である場合、最初の 上 より前に 下 が存在しない操作列に変化させられる。 最後に、上 上 右 を 右 上 上 にしたり 右 右 上 を 上 右 右 にしたりする。 それにより、最初の $2$ つの片方が 上 でもう片方が 右 であるようにできる。 以上により、最小コストとなる操作列の中に、$2$ ターン後に必ず $(1,1)$ にいるものが存在する。 つまり、$2 \\times \\min(A,B)$ のコストで $(1,1)$ に行くことを貪欲に決めてしまってよい。 そしてこれを再帰的に繰り返すと、最終的に $Y$ 座標が目的地と一致するまで行える。 こうなると残りは $Y=0$ である問題に帰着される。 最後に、$Y=0$ の問題の解法を考える。 これは、実は以下の $2$ つを満たす経路だけ考えればよい。 $0 \\leq Y \\leq 1$ 範囲から外に出ない $(0,0)$ から $(X,0)$ まで $X$ 軸上の点を全て経由する 前者の理由は単純で、そこから出る経路に対し、出入する $2$ 回の上下移動を入れ変えればよい。 それでもはみ出ている場合は再帰的に繰り返せば、だんだんはみ出している区間が短くなる。 そして、最終的にはみ出している区間の長さが $0$ になる。 後者の理由は以下。 $(0,0)$ から $(X,0)$ までに $X$ 軸上の点の中に通らない点があると仮定する。 その場合、そこを通る付近に 上 右をk回 下 $(k \\geq 2)$ という操作列があるはず。 これを 上 右をk-2回 下 右 右 に変更することを再帰的に繰り返す。 すると、上 と 下 との間の 右 の個数を $0$ か $1$ にでき、$X$ 軸上の点をすべて通る操作列になっている。 ということで、$Y=0$ の問題は、単純に $1$ マスずつ右を目指せばよい。 つまり、右 か 上 右 下 かの $2$ 択を $X$ 回繰り返せばよい。 偶数からの移動は $\\min(A,3B)$、奇数からの移動は $\\min(B,3A)$ のコスト。 これで $(0,0)$ から $(X,0)$ まで最小コストでたどり着くことができる。 以上から、「可能な限り斜め移動した後で横移動」という経路を貪欲に選んでコストを計算すればよい。 同じ操作はまとめて計算することで、テストケースあたり $O(1)$ で答えられる。 入力例1での動作 $5$ つめのテストケースのみ。 入力を受け取る。 x と y を絶対値に変更する。 その後、$x>y$ になっているので入れ替えは行わない。 縦横交互移動を $60$ 回分繰り返し、コストに $\\min(31,9) \\times 120 = 1080$ を加算する。 偶数→奇数は $7$ 回あり、$\\min(31,3 \\times 9) = 27$ ずつコストがかかる 奇数→偶数は $7$ 回あり、$\\min(9,3 \\times 31) = 9$ ずつコストがかかる よって、$27 \\times 7 + 9 \\times 7 = 252$ をコストに加算する。 注意点 コストの値が大きいと、総和はあっさり int 型からはみ出る。 long long 型を用いること。 別解 特になし。"
+  },
+  {
+    "type": "explanation",
+    "contest": "ABC462",
+    "problem": "F",
+    "problem_title": "More ABC",
+    "full_title": "ABC462F - More ABC",
+    "url": "explanations/abc462-f.html",
+    "tags": [
+      "動的計画法"
+    ],
+    "body": "考え方 $S$ の長さを $N$ として、まずは $O(N^2)$ でもいい場合の解法を考える。 動的計画法で求める。 dp[i][j] を「$i+2$ 文字目までに \"ABC\" を $j$ 個作る最小コスト」とする。 dp[i][j] の値は以下の $2$ つの値の小さい方である。（ただし後者はテーブルからはみ出ない場合に限る） $i+2$ 文字目を使わない場合のコスト、つまり dp[i-1][j] $i+2$ 文字目を使う場合のコスト、つまり dp[i-3][j-1]+そこに\"ABC\"を作るコスト それとは別に、元々の文字列に \"ABC\" が何個あったかも計上しておく。 最後の文字までで、$K$ 個追加した個数を作る最小コストが答え。 これで、 $O(N^2)$ でもいい場合の答えは出せる。 そして、$K$ が最大 $10$ と小さいことを利用してこれを高速化する。 元の文字列と、それに最適な置換を行って \"ABC\" を $K$ 個増やした文字列を比較することを考える。 各文字列の $m$ 文字目までを見たときに、そこまでの \"ABC\" の個数が減っていることは絶対にない。 なぜなら、$m$ 文字目までをそのままにする、より低コストな解が存在するため。 境界で \"ABC\" が $1$ つ破壊されることを考慮に入れても、後半で作る \"ABC\" の個数は同じか減る。 同じであれば後半は同じ置換を採用すればいいし、減るなら \"ABC\" を $1$ つ選んで作るのをやめればよい。 同じように、$m$ 文字目までで $K+1$ 個以上増えることはない。 これは $m+1$ 文字目以降の \"ABC\" の個数が減っていることが、上の議論と同様の理由でないため。 ということは、「\"ABC\" を $j$ 個作る」ではなく、「\"ABC\" を $j$ 個追加で作る」にすれば、高速化できる。 つまり、 $j$ の値が $0 \\leq j \\leq N$ ではなく $0 \\leq j \\leq K$ で済むため、$O(NK)$ となる。 しかし、これでは今度は、元から \"ABC\" だったところを通過する更新が難しくなる。 そこで、DPテーブルを $3$ 個ずつ $K+2$ ブロック作ることにする。 そして、$3$ 文字前のデータを見ることをやめ、代わりに直前何文字以上 \"ABC\" を作っていないかを持つ。 $2$ 文字以上新しく \"ABC\" を作っていない場合のみ、次の \"ABC\" を作ることができるとする。 $3$ 個ずつなのは、「直前何文字分以上」を $0$、 $1$、 $2$、と $3$ つもつため。 $K+2$ ブロックなのは、追加で作った個数が $0$ から $K$ 個までの $K+1$ 個と、余剰 $1$ 個。 こういうデータの持ち方をすると、元々 \"ABC\" だったところを通過した場合の処理が簡単になる。 つまり、新たに \"ABC\" を作るかどうかの処理をしたのち、全データを $1$ ブロック分前に移動すればよい。 ブロック数の余剰は、このとき $K$ 回のデータが一時的に $K+1$ 回相当のブロックにはみ出るためのケア。 最後の文字まで処理が終わったら、全文字使って $K$ 回追加で作るコストを答えればよい。 入力例1での動作 $1$ つめのテストケースのみ。 入力を受け取る。 s の後ろ $2$ 文字以外について、そこから始まる \"ABC\" を作るのに必要な置換数を求める。 $3$ 個セットを $(k+2)$ ブロック、DPテーブルとして用意する。 最初のブロックを 0 で初期化、残りは INF にする。 縦棒はブロック境を見やすくするために入れてある。 vec[0] = 1 を見て、データを更新する。 自身と $1$ つ前の小さい方を新しい値とするが、ブロック境を超えて移動する数には 1 を足す。 vec[1] = 3 を見て、データを更新する。 自身と $1$ つ前の小さい方を新しい値とするが、ブロック境を超えて移動する数には 3 を足す。 vec[2] = 3 を見て、データを更新する。 自身と $1$ つ前の小さい方を新しい値とするが、ブロック境を超えて移動する数には 3 を足す。 vec[3] = 0 を見て、データを更新する。 自身と $1$ つ前の小さい方を新しい値とするが、ブロック境を超えて移動する数には 0 を足す。 0 ということは元から \"ABC\" だったということなので、その後 $1$ ブロック分前に移動する。 （先頭はこれ以上左にいかないので 0 のまま、末尾ブロックは INF を入れる） （0-indexed で）$k$ 番目のブロックの先頭の値が答え。 注意点 特になし。 別解 特になし。"
+  },
+  {
+    "type": "knowledge",
+    "title": "エラー",
+    "category": "基本",
+    "level": "難易度問わず",
+    "url": "knowledge/error.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "コーナーケース",
+    "category": "基本",
+    "level": "難易度問わず",
+    "url": "knowledge/corner-case.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "シミュレーション",
+    "category": "基本",
+    "level": "難易度問わず",
+    "url": "knowledge/simulation.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "テスト",
+    "category": "基本",
+    "level": "難易度問わず",
+    "url": "knowledge/test.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "入出力",
+    "category": "基本",
+    "level": "難易度問わず",
+    "url": "knowledge/input-output.html",
+    "aliases": [
+      "cin",
+      "cout",
+      "標準入力",
+      "標準出力"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "数学的表現",
+    "category": "基本",
+    "level": "難易度問わず",
+    "url": "knowledge/mathematical-expression.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "構築問題",
+    "category": "基本",
+    "level": "難易度問わず",
+    "url": "knowledge/constructive-problem.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "考察問題",
+    "category": "基本",
+    "level": "難易度問わず",
+    "url": "knowledge/ad-hoc-thinking.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "分割統治法",
+    "category": "データ探索系",
+    "level": "難易度問わず",
+    "url": "knowledge/divide-and-conquer.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "ベクトル（幾何学）",
+    "category": "幾何学系",
+    "level": "難易度問わず",
+    "url": "knowledge/geometric-vector.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "三角比",
+    "category": "幾何学系",
+    "level": "難易度問わず",
+    "url": "knowledge/trigonometric-ratio.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "距離",
+    "category": "幾何学系",
+    "level": "難易度問わず",
+    "url": "knowledge/distance.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "整数論",
+    "category": "その他数学系",
+    "level": "難易度問わず",
+    "url": "knowledge/number-theory.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "確率",
+    "category": "その他数学系",
+    "level": "難易度問わず",
+    "url": "knowledge/probability.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "順列組み合わせ",
+    "category": "その他数学系",
+    "level": "難易度問わず",
+    "url": "knowledge/permutation-and-combination.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "forループ",
+    "category": "基本",
+    "level": "A問題相当",
+    "url": "knowledge/for-loop.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "if分岐",
+    "category": "基本",
+    "level": "A問題相当",
+    "url": "knowledge/if-statement.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "whileループ",
+    "category": "基本",
+    "level": "A問題相当",
+    "url": "knowledge/while-loop.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "ソート",
+    "category": "基本",
+    "level": "A問題相当",
+    "url": "knowledge/sort.html",
+    "aliases": [
+      "sort"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "bool型",
+    "category": "変数とデータ構造",
+    "level": "A問題相当",
+    "url": "knowledge/bool.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "char型",
+    "category": "変数とデータ構造",
+    "level": "A問題相当",
+    "url": "knowledge/char.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "double型",
+    "category": "変数とデータ構造",
+    "level": "A問題相当",
+    "url": "knowledge/double.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "int型",
+    "category": "変数とデータ構造",
+    "level": "A問題相当",
+    "url": "knowledge/int.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "string型",
+    "category": "変数とデータ構造",
+    "level": "A問題相当",
+    "url": "knowledge/string.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "vector",
+    "category": "変数とデータ構造",
+    "level": "A問題相当",
+    "url": "knowledge/vector.html",
+    "aliases": [
+      "vector（一次元）"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "倍数判定",
+    "category": "その他数学系",
+    "level": "A問題相当",
+    "url": "knowledge/multiple-check.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "偶奇判定",
+    "category": "その他数学系",
+    "level": "A問題相当",
+    "url": "knowledge/odd-even.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "四則演算",
+    "category": "その他数学系",
+    "level": "A問題相当",
+    "url": "knowledge/arithmetic-operations.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "数え上げ",
+    "category": "その他数学系",
+    "level": "A問題相当",
+    "url": "knowledge/counting.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "最大値・最小値",
+    "category": "その他数学系",
+    "level": "A問題相当",
+    "url": "knowledge/maximum-minimum.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "グリッド操作",
+    "category": "基本",
+    "level": "B問題相当",
+    "url": "knowledge/grid-operation.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "多重ループ",
+    "category": "基本",
+    "level": "B問題相当",
+    "url": "knowledge/nested-loop.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "番兵法",
+    "category": "基本",
+    "level": "B問題相当",
+    "url": "knowledge/sentinel.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "範囲for文",
+    "category": "基本",
+    "level": "B問題相当",
+    "url": "knowledge/range-for.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "deque",
+    "category": "変数とデータ構造",
+    "level": "B問題相当",
+    "url": "knowledge/deque.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "list",
+    "category": "変数とデータ構造",
+    "level": "B問題相当",
+    "url": "knowledge/list.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "long long型",
+    "category": "変数とデータ構造",
+    "level": "B問題相当",
+    "url": "knowledge/long-long.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "map",
+    "category": "変数とデータ構造",
+    "level": "B問題相当",
+    "url": "knowledge/map.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "pair型",
+    "category": "変数とデータ構造",
+    "level": "B問題相当",
+    "url": "knowledge/pair.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "priority_queue",
+    "category": "変数とデータ構造",
+    "level": "B問題相当",
+    "url": "knowledge/priority-queue.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "queue",
+    "category": "変数とデータ構造",
+    "level": "B問題相当",
+    "url": "knowledge/queue.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "set",
+    "category": "変数とデータ構造",
+    "level": "B問題相当",
+    "url": "knowledge/set.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "stack",
+    "category": "変数とデータ構造",
+    "level": "B問題相当",
+    "url": "knowledge/stack.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "tuple型",
+    "category": "変数とデータ構造",
+    "level": "B問題相当",
+    "url": "knowledge/tuple.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "多次元vector",
+    "category": "変数とデータ構造",
+    "level": "B問題相当",
+    "url": "knowledge/multidimensional-vector.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "イベントソート",
+    "category": "データ探索系",
+    "level": "B問題相当",
+    "url": "knowledge/event-sort.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "全探索",
+    "category": "データ探索系",
+    "level": "B問題相当",
+    "url": "knowledge/brute-force.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "N進法",
+    "category": "その他数学系",
+    "level": "B問題相当",
+    "url": "knowledge/base-n.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "ビット演算",
+    "category": "その他数学系",
+    "level": "B問題相当",
+    "url": "knowledge/bit-operation.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "絶対値",
+    "category": "その他数学系",
+    "level": "B問題相当",
+    "url": "knowledge/absolute-value.html",
+    "aliases": [
+      "abs"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "再帰",
+    "category": "基本",
+    "level": "C問題相当",
+    "url": "knowledge/recursion.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "reserve関数",
+    "category": "変数とデータ構造",
+    "level": "C問題相当",
+    "url": "knowledge/reserve.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "bit全探索",
+    "category": "データ探索系",
+    "level": "C問題相当",
+    "url": "knowledge/bit-bruteforce.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "二分探索",
+    "category": "データ探索系",
+    "level": "C問題相当",
+    "url": "knowledge/binary-search.html",
+    "aliases": [
+      "binary search",
+      "lower_bound",
+      "upper_bound",
+      "答えで二分探索"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "尺取法",
+    "category": "データ探索系",
+    "level": "C問題相当",
+    "url": "knowledge/two-pointers.html",
+    "aliases": [
+      "しゃくとり法",
+      "two pointers"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "貪欲法",
+    "category": "データ探索系",
+    "level": "C問題相当",
+    "url": "knowledge/greedy.html",
+    "aliases": [
+      "greedy"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "順列全探索",
+    "category": "データ探索系",
+    "level": "C問題相当",
+    "url": "knowledge/permutation-search.html",
+    "aliases": [
+      "next_permutation探索"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "メモ化",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/memoization.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "メモ化再帰",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/memoized-recursion.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "ランレングス圧縮",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/run-length-encoding.html",
+    "aliases": [
+      "RLE"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "前処理",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/preprocessing.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "差分更新",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/difference-update.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "累積和",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/cumulative-sum.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "計算量の見積もり",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/complexity-analysis.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "階差数列",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/difference-array.html",
+    "aliases": [
+      "imos法",
+      "いもす法"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "幅優先探索",
+    "category": "グラフ理論系",
+    "level": "C問題相当",
+    "url": "knowledge/bfs.html",
+    "aliases": [
+      "BFS"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "深さ優先探索",
+    "category": "グラフ理論系",
+    "level": "C問題相当",
+    "url": "knowledge/dfs.html",
+    "aliases": [
+      "DFS"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "隣接リスト",
+    "category": "グラフ理論系",
+    "level": "C問題相当",
+    "url": "knowledge/adjacency-list.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "隣接行列",
+    "category": "グラフ理論系",
+    "level": "C問題相当",
+    "url": "knowledge/adjacency-matrix.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "パリティ",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/parity.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "剰余類環",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/modular-arithmetic.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "包除原理",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/inclusion-exclusion.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "周期性",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/periodicity.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "最大公約数",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/gcd.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "最小公倍数",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/lcm.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "約数列挙",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/divisor-enumeration.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "素数判定",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/primality-test.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "繰り返し二乗法",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/binary-exponentiation.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "補集合",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/complement.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "UnionFind木",
+    "category": "変数とデータ構造",
+    "level": "D問題相当",
+    "url": "knowledge/union-find.html",
+    "aliases": [
+      "DSU",
+      "Disjoint Set Union"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "bitDP",
+    "category": "高速化系",
+    "level": "D問題相当",
+    "url": "knowledge/bit-dp.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "二次元imos法",
+    "category": "高速化系",
+    "level": "D問題相当",
+    "url": "knowledge/two-dimensional-imos.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "二次元累積和",
+    "category": "高速化系",
+    "level": "D問題相当",
+    "url": "knowledge/two-dimensional-cumulative-sum.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "動的計画法",
+    "category": "高速化系",
+    "level": "D問題相当",
+    "url": "knowledge/dynamic-programming.html",
+    "aliases": [
+      "DP"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "01最良優先探索",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/zero-one-bfs.html",
+    "aliases": [
+      "0-1 BFS"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "A*アルゴリズム",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/a-star.html",
+    "aliases": [
+      "A*",
+      "A-star"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "Dijkstra法",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/dijkstra.html",
+    "aliases": [
+      "ダイクストラ法"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "グラフ理論の基礎",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/graph-theory-basics.html",
+    "aliases": [
+      "グラフ理論の基礎（知識としてのみ）"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "二部グラフ",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/bipartite-graph.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "最小全域木",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/minimum-spanning-tree.html",
+    "aliases": [
+      "Kruskal法",
+      "Prim法"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "木",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/tree.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "木DP",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/tree-dp.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "根付き木",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/rooted-tree.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "頂点倍加",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/binary-lifting.html",
+    "aliases": [
+      "ダブリング on tree"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "エラトステネスの篩",
+    "category": "その他数学系",
+    "level": "D問題相当",
+    "url": "knowledge/sieve-of-eratosthenes.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "区間篩",
+    "category": "その他数学系",
+    "level": "D問題相当",
+    "url": "knowledge/segmented-sieve.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "拡張ユークリッドの互除法",
+    "category": "その他数学系",
+    "level": "D問題相当",
+    "url": "knowledge/extended-euclidean.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "素因数分解",
+    "category": "その他数学系",
+    "level": "D問題相当",
+    "url": "knowledge/prime-factorization.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "Fenwick木",
+    "category": "変数とデータ構造",
+    "level": "E問題相当",
+    "url": "knowledge/fenwick-tree.html",
+    "aliases": [
+      "BIT",
+      "Binary Indexed Tree"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "segment木",
+    "category": "変数とデータ構造",
+    "level": "E問題相当",
+    "url": "knowledge/segment-tree.html",
+    "aliases": [
+      "セグメント木"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "三分探索",
+    "category": "データ探索系",
+    "level": "E問題相当",
+    "url": "knowledge/ternary-search.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "ダブリング",
+    "category": "高速化系",
+    "level": "E問題相当",
+    "url": "knowledge/doubling.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "最長共通部分列",
+    "category": "高速化系",
+    "level": "E問題相当",
+    "url": "knowledge/lcs.html",
+    "aliases": [
+      "LCS"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "最長増加部分列",
+    "category": "高速化系",
+    "level": "E問題相当",
+    "url": "knowledge/lis.html",
+    "aliases": [
+      "LIS"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "Zアルゴリズム",
+    "category": "文字列系",
+    "level": "E問題相当",
+    "url": "knowledge/z-algorithm.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "ハッシュ",
+    "category": "文字列系",
+    "level": "E問題相当",
+    "url": "knowledge/hash.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "ローリングハッシュ",
+    "category": "文字列系",
+    "level": "E問題相当",
+    "url": "knowledge/rolling-hash.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "回文判定",
+    "category": "文字列系",
+    "level": "E問題相当",
+    "url": "knowledge/palindrome-check.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "Bellman-Ford法",
+    "category": "グラフ理論系",
+    "level": "E問題相当",
+    "url": "knowledge/bellman-ford.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "Warshall-Floyd法",
+    "category": "グラフ理論系",
+    "level": "E問題相当",
+    "url": "knowledge/warshall-floyd.html",
+    "aliases": [
+      "Floyd-Warshall"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "トポロジカルソート",
+    "category": "グラフ理論系",
+    "level": "E問題相当",
+    "url": "knowledge/topological-sort.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "全方位木DP",
+    "category": "グラフ理論系",
+    "level": "E問題相当",
+    "url": "knowledge/rerooting-dp.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "偏角ソート",
+    "category": "幾何学系",
+    "level": "E問題相当",
+    "url": "knowledge/argument-sort.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "トロピカル半環",
+    "category": "その他数学系",
+    "level": "E問題相当",
+    "url": "knowledge/tropical-semiring.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "行列計算",
+    "category": "その他数学系",
+    "level": "E問題相当",
+    "url": "knowledge/matrix-computation.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "lazy segment木",
+    "category": "変数とデータ構造",
+    "level": "F問題相当",
+    "url": "knowledge/lazy-segment-tree.html",
+    "aliases": [
+      "遅延セグメント木"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "Moアルゴリズム",
+    "category": "データ探索系",
+    "level": "F問題相当",
+    "url": "knowledge/mo-algorithm.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "半分全列挙",
+    "category": "データ探索系",
+    "level": "F問題相当",
+    "url": "knowledge/meet-in-the-middle.html",
+    "aliases": [
+      "meet-in-the-middle"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "平方分割",
+    "category": "データ探索系",
+    "level": "F問題相当",
+    "url": "knowledge/sqrt-decomposition.html",
+    "aliases": [
+      "sqrt decomposition"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "座標圧縮",
+    "category": "高速化系",
+    "level": "F問題相当",
+    "url": "knowledge/coordinate-compression.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "Aho-Corasick法",
+    "category": "文字列系",
+    "level": "F問題相当",
+    "url": "knowledge/aho-corasick.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "Trie木",
+    "category": "文字列系",
+    "level": "F問題相当",
+    "url": "knowledge/trie.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "最近共通祖先",
+    "category": "グラフ理論系",
+    "level": "F問題相当",
+    "url": "knowledge/lca.html",
+    "aliases": [
+      "LCA"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "Nim",
+    "category": "その他数学系",
+    "level": "F問題相当",
+    "url": "knowledge/nim.html",
+    "aliases": [
+      "Grundy数",
+      "ゲーム理論"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "転倒数",
+    "category": "その他数学系",
+    "level": "F問題相当",
+    "url": "knowledge/inversion-number.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "Wavelet Matrix",
+    "category": "変数とデータ構造",
+    "level": "G問題以上相当",
+    "url": "knowledge/wavelet-matrix.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "二分木",
+    "category": "変数とデータ構造",
+    "level": "G問題以上相当",
+    "url": "knowledge/binary-tree.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "Suffix Array",
+    "category": "文字列系",
+    "level": "G問題以上相当",
+    "url": "knowledge/suffix-array.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "二部マッチング",
+    "category": "グラフ理論系",
+    "level": "G問題以上相当",
+    "url": "knowledge/bipartite-matching.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "最大フロー",
+    "category": "グラフ理論系",
+    "level": "G問題以上相当",
+    "url": "knowledge/maximum-flow.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "最小カット",
+    "category": "グラフ理論系",
+    "level": "G問題以上相当",
+    "url": "knowledge/minimum-cut.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "最小費用流",
+    "category": "グラフ理論系",
+    "level": "G問題以上相当",
+    "url": "knowledge/minimum-cost-flow.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "形式的冪級数、畳み込み",
+    "category": "その他数学系",
+    "level": "G問題以上相当",
+    "url": "knowledge/fps-convolution.html",
+    "aliases": [
+      "FPS",
+      "convolution",
+      "NTT"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "ビームサーチ",
+    "category": "その他",
+    "level": "AHC用",
+    "url": "knowledge/beam-search.html",
+    "aliases": [
+      "beam search"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "乱択アルゴリズム",
+    "category": "その他",
+    "level": "AHC用",
+    "url": "knowledge/randomized-algorithm.html",
+    "aliases": [
+      "乱択",
+      "randomized algorithm"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "山登り法",
+    "category": "その他",
+    "level": "AHC用",
+    "url": "knowledge/hill-climbing.html",
+    "aliases": [
+      "hill climbing"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "焼きなまし法",
+    "category": "その他",
+    "level": "AHC用",
+    "url": "knowledge/simulated-annealing.html",
+    "aliases": [
+      "simulated annealing",
+      "SA"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  },
+  {
+    "type": "knowledge",
+    "title": "貪欲法（AHC）",
+    "category": "その他",
+    "level": "AHC用",
+    "url": "knowledge/ahc-greedy.html",
+    "aliases": [
+      "AHC貪欲",
+      "greedy for AHC"
+    ],
+    "summary": "今後記述予定。",
+    "body": "今後記述予定"
+  }
+]

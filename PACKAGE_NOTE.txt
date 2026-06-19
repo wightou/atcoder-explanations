@@ -1,0 +1,10 @@
+meta-only patch v32
+
+This package intentionally excludes:
+- explanations/
+- knowledge/
+- docs/
+
+Apply scripts and config, then run:
+  python scripts/create_knowledge_stubs.py   # only if you need missing knowledge stubs
+  python scripts/build_site.py

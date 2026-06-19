@@ -1,0 +1,76 @@
+# コンテスト別の表示設定。
+#
+# 指定できる4パターン:
+#   表形式で最新のほど上:     layout = "table", order = "latest_first"
+#   表形式で最新のほど下:     layout = "table", order = "oldest_first"
+#   一覧形式で最新のほど上:   layout = "list",  order = "latest_first"
+#   一覧形式で最新のほど下:   layout = "list",  order = "oldest_first"
+#
+# table の場合だけ columns を使います。
+
+[[contest_views]]
+id = "ABC"
+title = "ABC"
+path = "abc.html"
+layout = "table"
+order = "latest_first"
+columns = ["A", "B", "C", "D", "E", "F", "G"]
+
+[[contest_views]]
+id = "ARC"
+title = "ARC"
+path = "arc.html"
+layout = "table"
+order = "latest_first"
+columns = ["A", "B", "C", "D", "E", "F"]
+
+[[contest_views]]
+id = "AGC"
+title = "AGC"
+path = "agc.html"
+layout = "table"
+order = "latest_first"
+columns = ["A", "B", "C", "D", "E", "F"]
+
+[[contest_views]]
+id = "AHC"
+title = "AHC"
+path = "ahc.html"
+layout = "list"
+order = "latest_first"
+
+[[contest_views]]
+id = "典型90問"
+title = "典型90問"
+path = "typical90.html"
+layout = "list"
+order = "oldest_first"
+
+[[contest_views]]
+id = "DPコンテスト"
+title = "DPコンテスト"
+path = "dp.html"
+layout = "list"
+order = "oldest_first"
+
+
+[[contest_views]]
+id = "その他AtCoder"
+title = "その他AtCoder"
+path = "other-atcoder.html"
+layout = "list"
+order = "latest_first"
+
+[[contest_views]]
+id = "Aizu Online Judge"
+title = "Aizu Online Judge"
+path = "aoj.html"
+layout = "list"
+order = "oldest_first"
+
+[[contest_views]]
+id = "Project Euler（100番まで）"
+title = "Project Euler（100番まで）"
+path = "project-euler-100.html"
+layout = "list"
+order = "oldest_first"

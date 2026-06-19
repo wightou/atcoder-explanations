@@ -1,0 +1,340 @@
+# 知識集Markdown仕様
+
+## 配置
+
+知識記事は `knowledge/` に置く。
+
+```txt
+knowledge/binary-search.md
+knowledge/cumulative-sum.md
+knowledge/dijkstra.md
+```
+
+生成後のHTMLは `docs/knowledge/` に出力する。
+
+```txt
+docs/knowledge/binary-search.html
+docs/knowledge/cumulative-sum.html
+docs/knowledge/dijkstra.html
+```
+
+## ファイル名
+
+ファイル名は英小文字の kebab-case を基本とする。
+
+```txt
+binary-search.md
+binary-search-on-answer.md
+cumulative-sum.md
+lazy-segment-tree.md
+aho-corasick.md
+```
+
+URLはファイル名から生成する。front matter に `slug` は原則として書かない。
+
+## front matter
+
+```yaml
+---
+title: 二分探索
+level: C問題相当
+category: データ探索系
+summary: 条件を満たす境界を高速に探す手法。
+aliases:
+  - binary search
+  - lower_bound
+  - upper_bound
+  - 答えで二分探索
+absorbs:
+  - lower_bound関数
+  - upper_bound関数
+  - 解の二分探索
+related:
+  - 計算量の見積もり
+---
+```
+
+## front matter の項目
+
+### `title`
+
+知識記事の正式名称を書く。原則として、問題解説の `tags` に書く正式なタグ名と一致させる。
+
+### `level`
+
+難易度目安を書く。
+
+```yaml
+level: 難易度問わず
+level: A問題相当
+level: B問題相当
+level: C問題相当
+level: D問題相当
+level: E問題相当
+level: F問題相当
+level: G問題以上相当
+level: AHC用
+level: 未分類
+```
+
+`level` は一覧ページや記事上部に自動表示する。そのため、本文中に「レベル」という見出しは作らない。
+
+難度が未分類の記事は、原則として `category: 未分類` にする。
+
+`category: 未分類` または `level: 未分類` の記事は、ファイルとして存在してもよい。ただし、通常導線には表示しない。分野別一覧、難易度別一覧、右サイドバー、タグ検索、検索データからは除外する。
+
+### `category`
+
+知識の分類を書く。
+
+```yaml
+category: 基本
+category: 変数とデータ構造
+category: データ探索系
+category: 高速化系
+category: 文字列系
+category: グラフ理論系
+category: 幾何学系
+category: その他数学系
+category: その他
+category: 未分類
+```
+
+ゲーム理論系の記事は、いったん `その他数学系` に入れる。記事数が増えたら独立カテゴリ化を検討する。
+
+### `summary`
+
+一覧ページやカード表示に使う短い説明を書く。1文程度を基本とする。
+
+### `aliases`
+
+別名、英語名、検索用の表記を書く。正式名称ではないが、検索で拾いたい語を入れる。
+
+### `absorbs`
+
+この記事に吸収して扱う項目を書く。
+
+例：
+
+```yaml
+title: 二分探索
+absorbs:
+  - lower_bound関数
+  - upper_bound関数
+  - 解の二分探索
+```
+
+この場合、`lower_bound関数`、`upper_bound関数`、`解の二分探索` の独立記事は原則として作らなくてよい。
+
+### `related`
+
+関連する知識を書く。前提知識、派生知識、比較対象になる知識を入れる。
+
+対応する知識記事が存在すればリンクにする。存在しない場合は通常のテキストとして表示してよい。
+
+
+## 現在の主な統合方針
+
+知識記事では、細かい関数名や派生項目は親記事に吸収してよい。
+
+例：
+
+```txt
+入出力（cin、coutを含む）
+vector（reverse関数を含む）
+ソート（sort関数、自力ソートを含む）
+二分探索（lower_bound関数、upper_bound関数、解の二分探索を含む）
+木（木の探索、木の直径を含む）
+Nim（Grundy数やゲーム理論の基本を含む）
+```
+
+## 本文構成
+
+知識記事の本文は、原則として次の構成にする。
+
+```md
+## 概要
+
+## 使う場面
+
+## 計算量
+
+## 考え方
+
+## 実装例
+
+## 動作例
+
+## 典型問題例
+
+## 応用
+
+## 注意点
+
+## 関連する知識
+```
+
+全ての見出しを必ず埋める必要はない。短い記事では、不要な見出しを省略してよい。
+
+### 概要
+
+その知識が何であるかを簡潔に書く。長い説明は後続の「考え方」に回し、ここでは1〜3文程度にする。
+
+### 使う場面
+
+どのような問題で使うかを書く。
+
+### 計算量
+
+時間計算量と、必要なら空間計算量を書く。標準ライブラリや文法記事など、計算量が主題でない場合は省略してよい。
+
+### 考え方
+
+なぜその方法で解けるのかを書く。
+
+### 実装例
+
+C++での最小限の実装例を書く。
+
+### 動作例
+
+小さな入力や配列を使って、その知識がどのように動くかを示す。手順を追うと理解しやすい知識では書く。文法記事や説明が短い記事では省略してよい。
+
+### 典型問題例
+
+その知識を使う代表的な問題を書く。AtCoder、競プロ典型90問、鉄則本などから、学習用に参照しやすい問題を選ぶ。すぐに良い例が思いつかない場合は省略してよい。
+
+### 応用
+
+派生手法・応用例があれば書く。
+
+### 注意点
+
+実装ミス・計算量ミス・境界条件のミスを書く。
+
+### 関連する知識
+
+近い知識、前提となる知識、発展先の知識を書く。
+
+front matter の `related` と重複してもよい。本文側では、なぜ関連するのかを短く補足してよい。
+
+
+## 数式表記
+
+知識記事・問題解説では、Markdown本文中にLaTeX形式の数式を書ける。
+
+```md
+インライン数式は `$O(N \log N)$` のように書く。
+
+ブロック数式は次のように書く。
+
+$$
+dp[i+1] = dp[i] + a_i
+$$
+```
+
+対応する記法は次の通り。
+
+- インライン数式: `$...$` または `\(...\)`
+- ブロック数式: `$$...$$` または `\[...\]`
+
+表示にはMathJax 3を使う。コードブロック内やインラインコード内の `$` は数式として扱わない。
+
+
+## 表の書き方
+
+知識記事・問題解説では、Markdownの表を書ける。
+
+標準的なMarkdown表として認識させるため、ヘッダー行の次に区切り行を書く。
+
+```md
+|   | 0 | 1 | 2 | 3 |
+|---|---|---|---|---|
+| p | 0 | 0 | 0 | 0 |
+```
+
+区切り行がない表はMarkdown表として扱われない。
+
+```md
+|   | 0 | 1 | 2 | 3 |
+| p | 0 | 0 | 0 | 0 |
+```
+
+これは表ではなく、通常の本文として扱われやすい。
+
+`markdown` パッケージが使える環境では `tables` 拡張で表を生成する。
+`markdown` パッケージがない環境でも、フォールバック変換で基本的なMarkdown表を表示できる。
+
+## スタブ生成
+
+未作成の知識記事は、ページビルドとは別に次のスクリプトで生成する。
+
+```bash
+python scripts/create_knowledge_stubs.py
+```
+
+既に存在する `knowledge/*.md` は上書きしない。
+
+内容を確認するだけなら次を使う。
+
+```bash
+python scripts/create_knowledge_stubs.py --dry-run
+```
+
+## 一覧内の表示順
+
+知識記事の front matter には、必要に応じて次を指定できる。
+
+```yaml
+category_order: 9999
+level_order: 9999
+```
+
+- `category_order` は分野別一覧内の表示順に使う。
+- `level_order` は難易度別一覧内の表示順に使う。
+- 小さいほど上に表示する。
+- 未指定時は `9999` として扱う。
+- 同じ値の場合は `title` 順に並べる。
+
+スタブ生成スクリプトで作る本文 `今後記述予定` の記事は、原則として `category_order: 9999` と `level_order: 9999` を入れる。
+
+
+## 知識集一覧ページ
+
+知識集では、全体一覧と個別一覧の両方を生成する。
+
+```txt
+docs/knowledge/by-category.html
+docs/knowledge/by-level.html
+docs/knowledge/categories/<category-slug>.html
+docs/knowledge/levels/<level-slug>.html
+```
+
+`by-category.html` と `by-level.html` は全体一覧である。
+右サイドバーやトップページの小項目リンクは、全体一覧内のアンカーではなく、個別の分野・難易度だけを表示するページへリンクする。
+
+例：
+
+```txt
+データ探索系 → docs/knowledge/categories/data-search.html
+C問題相当 → docs/knowledge/levels/c.html
+```
+
+## タグページのファイル名
+
+`docs/tags/` 配下のファイル名は、表示タグ名とは別にASCIIのslugで生成する。
+
+- タグ表示名は日本語のままにする。
+- 知識記事の `title` と一致するタグは、知識記事ファイル名の stem を優先して使う。
+- 問題解説側で実際に使われているタグが、知識記事の `aliases` または `absorbs` と一致する場合、そのタグページには対応する知識記事を表示する。
+- ただし、検索用の `aliases` や吸収項目だけを理由に、空のタグページは作らない。
+- 対応表にない日本語タグは `tag-<hash>.html` 形式にして、ファイル名の文字化けを避ける。
+
+例：
+
+```txt
+ビームサーチ → docs/tags/beam-search.html
+二分探索 → docs/tags/binary-search.html
+未知の日本語タグ → docs/tags/tag-xxxxxxxx.html
+```
+

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC462E - Alternating Costs</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ABC462E - Alternating Costs</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc462/tasks/abc462_e">問題ページ</a><a href="https://atcoder.jp/contests/abc462/submissions/76727375">解答例</a></div>
+    <h2>考え方</h2>
+<p>考察問題。<br>
+出力が経路でないとはいえ、実質的に経路作成をする構築問題でもある。</p>
+<p>以下、$X$ 座標を増やす行為を <code>右</code>、減らす行為を <code>左</code> と表記する。<br>
+同様に、$Y$ 座標を増やす行為を <code>上</code>、減らす行為を <code>下</code> と表記する。</p>
+<p>まず、対称性を利用して問題のパターンを減らす。<br>
+目標地点が $X&lt;0$ である場合、まるごと左右反転することで $X&gt;0$ の問題に帰着できる。<br>
+同様に、$Y&lt;0$ である場合、まるごと上下反転することで $Y&gt;0$ の問題に帰着できる。<br>
+さらに、$X&lt;Y$ である場合、<code>swap(X,Y)</code> と <code>swap(A,B)</code> を同時に行う。<br>
+以上で、$Y=0$ や $X=Y$ の場合も含めて $0 \leq Y \leq X$ である場合だけ解けばいいことになる。</p>
+<p>次に、経路構築の前に問題の分析をする。<br>
+格子点を縦横に $1$ つずつ移動するとなると、パリティで考察することができる。<br>
+すなわち、$(0,0)$ からのマンハッタン距離が偶数である点と奇数である点に分類する。<br>
+そうすると、可能な全ての移動が「偶数→奇数」または「奇数→偶数」になる。<br>
+つまり偶数と奇数を交互に移動することになるため、移動コストは、以下のように理解してよい。</p>
+<ul>
+<li>「偶数→奇数」の移動では、左右移動コストが $A$、上下移動コストが $B$</li>
+<li>「奇数→偶数」の移動では、左右移動コストが $B$、上下移動コストが $A$</li>
+</ul>
+<p>また、経路構築する上で、いくつか「コストも目的地も不変な変更」を考えておく。</p>
+<p>$1$ つめに、<code>操作列1 右 操作列2 左 操作列3</code> は <code>操作列1 左 操作列2 右 操作列3</code> に変更可能。<br>
+これは、各移動が上下移動なのか左右移動なのかが変化せず、総移動量も変化しないため。<br>
+上下についても同様。</p>
+<p>$2$ つめに、<code>操作列1 右 右 上 操作列2</code> は <code>操作列1 上 右 右 操作列2</code> に変更可能。<br>
+これも、各移動を偶数マスから行うか奇数マスから行うかの回数が変化せず、総移動量も変化しないため。<br>
+<code>上 上 右</code> や <code>上 上 左</code> なども同様。</p>
+<p>これらを活用することで、コスト最小の操作列の $1$ つを貪欲に決めることができるようになる。</p>
+<p>まず、$X&gt;0$ である場合、操作列の中に <code>右</code> が必ずある。<br>
+もし最小コスト操作列の最初の <code>右</code> より前に <code>左</code> があるなら、それらを入れ替える。<br>
+それにより、最初の <code>右</code> より前に <code>左</code> が存在しない操作列に変化させられる。</p>
+<p>同様に、$Y&gt;0$ である場合、最初の <code>上</code> より前に <code>下</code> が存在しない操作列に変化させられる。</p>
+<p>最後に、<code>上 上 右</code> を <code>右 上 上</code> にしたり <code>右 右 上</code> を <code>上 右 右</code> にしたりする。<br>
+それにより、最初の $2$ つの片方が <code>上</code> でもう片方が <code>右</code> であるようにできる。</p>
+<p>以上により、最小コストとなる操作列の中に、$2$ ターン後に必ず $(1,1)$ にいるものが存在する。<br>
+つまり、$2 \times \min(A,B)$ のコストで $(1,1)$ に行くことを貪欲に決めてしまってよい。<br>
+そしてこれを再帰的に繰り返すと、最終的に $Y$ 座標が目的地と一致するまで行える。<br>
+こうなると残りは $Y=0$ である問題に帰着される。</p>
+<p>最後に、$Y=0$ の問題の解法を考える。<br>
+これは、実は以下の $2$ つを満たす経路だけ考えればよい。</p>
+<ul>
+<li>$0 \leq Y \leq 1$ 範囲から外に出ない</li>
+<li>$(0,0)$ から $(X,0)$ まで $X$ 軸上の点を全て経由する</li>
+</ul>
+<p>前者の理由は単純で、そこから出る経路に対し、出入する $2$ 回の上下移動を入れ変えればよい。<br>
+それでもはみ出ている場合は再帰的に繰り返せば、だんだんはみ出している区間が短くなる。<br>
+そして、最終的にはみ出している区間の長さが $0$ になる。</p>
+<p>後者の理由は以下。<br>
+$(0,0)$ から $(X,0)$ までに $X$ 軸上の点の中に通らない点があると仮定する。<br>
+その場合、そこを通る付近に <code>上 右をk回 下</code> $(k \geq 2)$ という操作列があるはず。<br>
+これを <code>上 右をk-2回 下 右 右</code> に変更することを再帰的に繰り返す。<br>
+すると、<code>上</code> と <code>下</code> との間の <code>右</code> の個数を $0$ か $1$ にでき、$X$ 軸上の点をすべて通る操作列になっている。</p>
+<p>ということで、$Y=0$ の問題は、単純に $1$ マスずつ右を目指せばよい。<br>
+つまり、<code>右</code> か <code>上 右 下</code> かの $2$ 択を $X$ 回繰り返せばよい。<br>
+偶数からの移動は $\min(A,3B)$、奇数からの移動は $\min(B,3A)$ のコスト。<br>
+これで $(0,0)$ から $(X,0)$ まで最小コストでたどり着くことができる。</p>
+<p>以上から、「可能な限り斜め移動した後で横移動」という経路を貪欲に選んでコストを計算すればよい。<br>
+同じ操作はまとめて計算することで、テストケースあたり $O(1)$ で答えられる。</p>
+<h2>入力例1での動作</h2>
+<p>$5$ つめのテストケースのみ。</p>
+<p>入力を受け取る。</p>
+<pre><code>a: 31
+b: 9
+x: -74
+y: -60</code></pre>
+<p><code>x</code> と <code>y</code> を絶対値に変更する。<br>
+その後、$x&gt;y$ になっているので入れ替えは行わない。</p>
+<pre><code>a: 31
+b: 9
+x: 74
+y: 60</code></pre>
+<p>縦横交互移動を $60$ 回分繰り返し、コストに $\min(31,9) \times 120 = 1080$ を加算する。</p>
+<pre><code>x: 14
+y: 0
+result: 1080</code></pre>
+<p>偶数→奇数は $7$ 回あり、$\min(31,3 \times 9) = 27$ ずつコストがかかる<br>
+奇数→偶数は $7$ 回あり、$\min(9,3 \times 31) = 9$ ずつコストがかかる<br>
+よって、$27 \times 7 + 9 \times 7 = 252$ をコストに加算する。</p>
+<pre><code>result: 1332</code></pre>
+<h2>注意点</h2>
+<p>コストの値が大きいと、総和はあっさり <code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+<a class="tag" href="../tags/greedy.html">貪欲法</a>
+<a class="tag" href="../tags/distance.html">距離</a>
+<a class="tag" href="../tags/parity.html">パリティ</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler（100番まで）</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
