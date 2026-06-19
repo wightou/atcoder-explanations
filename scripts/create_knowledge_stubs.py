@@ -142,6 +142,7 @@ STUBS: list[KnowledgeStub] = [
     k("extended-euclidean", "拡張ユークリッドの互除法", "D問題相当", "その他数学系"),
     k("binary-exponentiation", "繰り返し二乗法", "C問題相当", "その他数学系"),
     k("binary-search", "二分探索", "C問題相当", "データ探索系", aliases=["binary search", "lower_bound", "upper_bound", "答えで二分探索"], absorbs=["lower_bound関数", "upper_bound関数", "解の二分探索"], related=["計算量の見積もり"]),
+    k("inverse-mapping", "逆写像", "C問題相当", "データ探索系", aliases=["inverse mapping", "inverse map", "逆引き"], absorbs=["逆置換"], related=["前処理", "vector", "map"]),
     k("two-pointers", "尺取法", "C問題相当", "データ探索系", aliases=["しゃくとり法", "two pointers"]),
     k("bit-bruteforce", "bit全探索", "C問題相当", "データ探索系"),
     k("permutation-search", "順列全探索", "C問題相当", "データ探索系", aliases=["next_permutation探索"]),
@@ -262,7 +263,8 @@ def render_stub(stub: KnowledgeStub) -> str:
         + yaml_list("absorbs", stub.absorbs)
         + yaml_list("related", stub.related)
         + "---\n\n"
-        + "今後記述予定\n"
+        + "## 概要\n\n"
+        + "今後記述予定。\n"
     )
 
 

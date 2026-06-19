@@ -11,6 +11,7 @@ import hashlib
 import json
 import re
 import shutil
+import sys
 
 try:
     import tomllib
@@ -190,6 +191,25 @@ def is_visible_knowledge(page: "KnowledgePage") -> bool:
 def visible_knowledge_pages(pages: list["KnowledgePage"]) -> list["KnowledgePage"]:
     return [p for p in pages if is_visible_knowledge(p)]
 
+
+
+
+def warn_missing_knowledge_pages_for_tags(explanation_tag_names: set[str], knowledge_pages: list["KnowledgePage"]) -> list[str]:
+    """問題解説で使われているタグに対応する知識記事がない場合、実行結果に警告を出す。
+
+    title / aliases / absorbs のいずれかに一致する可視の知識記事があれば対応済みとみなす。
+    docs/tags/ のタグページ自体は通常どおり生成する。
+    """
+    known_keys: set[str] = set()
+    for page in visible_knowledge_pages(knowledge_pages):
+        known_keys.update(page.tag_keys)
+
+    missing = sorted(explanation_tag_names - known_keys, key=str)
+    if missing:
+        print("WARNING: 対応する知識記事が見つからないタグがあります。", file=sys.stderr)
+        for tag in missing:
+            print(f"  - {tag}", file=sys.stderr)
+    return missing
 
 
 @dataclass(frozen=True)
@@ -2140,6 +2160,7 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
 
     visible_knowledge = visible_knowledge_pages(knowledge_pages)
     explanation_tag_names = set(tag_map)
+    warn_missing_knowledge_pages_for_tags(explanation_tag_names, knowledge_pages)
     for k in visible_knowledge:
         # 知識記事自身の title は常にタグページを作る。
         knowledge_tag_map[k.title].append(k)

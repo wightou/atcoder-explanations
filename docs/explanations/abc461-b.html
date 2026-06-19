@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>if分岐</title>
+<title>ABC461B - The Honest Woodcutters</title>
 <link rel="stylesheet" href="../style.css">
 <script>
 window.MathJax = {
@@ -28,22 +28,55 @@ window.MathJax = {
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>if分岐</h1>
-    <p>今後記述予定</p>
+    <h1>ABC461B - The Honest Woodcutters</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc461/tasks/abc461_b">問題ページ</a><a href="https://atcoder.jp/contests/abc461/submissions/76604370">解答例</a></div>
+    <h2>解法</h2>
+<p><code>0-indexed</code> と <code>1-indexed</code> が入り混じると面倒なので、最初に全て <code>0-indexed</code> に統一するとよい。</p>
+<p>女神視点で、各斧について、本当の所有者が名乗りを上げているかをチェックしていく。</p>
+<p><code>i</code> 番の斧の所有者は、<code>b[i]</code> 番の人である。<br>
+<code>b[i]</code> 番の人は、<code>a[b[i]]</code> 番の斧を持っていると主張している。<br>
+つまり、<code>a[b[i]]</code> の値が <code>i</code> そのものであれば、嘘は生じていない。</p>
+<p>全員が正直かを確認するには、最初に <code>&quot;Yes&quot;</code> で初期化された文字列を用意するとよい。<br>
+嘘が $1$ 回でも見つかった時点で、それを <code>&quot;No&quot;</code> に書き換える。</p>
+<p>C問題以降の知識になるが、$2$ つのデータ <code>a</code> と <code>b</code> が、以下の関係になっていることを「逆写像」という。</p>
+<ul>
+<li><code>a[i]</code> が <code>j</code> ならば、<code>b[j]</code> は <code>i</code> である。</li>
+<li><code>b[i]</code> が <code>j</code> ならば、<code>a[j]</code> は <code>i</code> である。</li>
+</ul>
+<p>配列の中から値を探すことを何度も繰り返す場合、最初に逆写像を用意すると高速化できる。<br>
+今後のために覚えておきたい。 </p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取り、全て <code>0-indexed</code> にしておく。</p>
+<pre><code>n: 3
+a: {2, 0, 1}
+b: {1, 2, 0}</code></pre>
+<p>出力用変数を用意しておく。</p>
+<pre><code>result: &quot;Yes&quot;</code></pre>
+<p>$0$ 番の斧をチェックする。<br>
+<code>b[0]</code> を見ると <code>1</code> であり、<code>a[1]</code> を見ると <code>0</code> である。<br>
+この部分は逆写像として正しいので、出力用変数には何もしない。</p>
+<p>$1$ 番の斧をチェックする。<br>
+<code>b[1]</code> を見ると <code>2</code> であり、<code>a[2]</code> を見ると <code>1</code> である。<br>
+この部分は逆写像として正しいので、出力用変数には何もしない。</p>
+<p>$2$ 番の斧をチェックする。<br>
+<code>b[2]</code> を見ると <code>0</code> であり、<code>a[0]</code> を見ると <code>2</code> である。<br>
+この部分は逆写像として正しいので、出力用変数には何もしない。</p>
+<p>最終的な出力用変数の中身が答え。</p>
+<pre><code>result: &quot;Yes&quot;</code></pre>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>木こり視点でチェックしてもよい。<br>
+その場合、<code>b[a[i]]</code> が <code>i</code> であるか確認することになる。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 基本</p>
-      <p><strong>難易度:</strong> A問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-a.html">ABC461A - Armor</a></li><li><a href="../explanations/abc462-a.html">ABC462A - Secret Numbers</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/inverse-mapping.html">逆写像</a>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>if分岐</title>
+<title>ABC461A - Armor</title>
 <link rel="stylesheet" href="../style.css">
 <script>
 window.MathJax = {
@@ -28,22 +28,39 @@ window.MathJax = {
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>if分岐</h1>
-    <p>今後記述予定</p>
+    <h1>ABC461A - Armor</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc461/tasks/abc461_a">問題ページ</a><a href="https://atcoder.jp/contests/abc461/submissions/76604367">解答例</a></div>
+    <h2>解法</h2>
+<p>入力は整数が $2$ つなので、<code>int</code> 型の変数を $2$ つ用意し、<code>cin</code> で入力を受け取る。</p>
+<p>この防具は、威力 $D$ 以下の攻撃を防ぐ。<br>
+よって、威力 $A$ の攻撃を防げるかどうかは、 $A \leq D$ であるかを判定すればよい。</p>
+<pre><code>if (a&lt;=d) {
+  // a&lt;=dであるときの処理（`Yes` と答える）
+} else {
+  // そうでないときの処理（`No` と答える）
+}</code></pre>
+<p>if文の中で直接 <code>cout</code> してもいいし、事前に出力用文字列を用意してもよい。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>a: 4
+d: 5</code></pre>
+<p><code>4</code> は <code>5</code> 以下なので、答えは <code>&quot;Yes&quot;</code>。</p>
+<pre><code>result: &quot;Yes&quot;</code></pre>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 基本</p>
-      <p><strong>難易度:</strong> A問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-a.html">ABC461A - Armor</a></li><li><a href="../explanations/abc462-a.html">ABC462A - Secret Numbers</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/input-output.html">入出力</a>
+<a class="tag" href="../tags/int.html">int型</a>
+<a class="tag" href="../tags/if-statement.html">if分岐</a>
+      </div>
+      
     </section>
 
     <section class="side-card">
