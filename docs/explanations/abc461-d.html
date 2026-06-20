@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC461D - Count Subgrid Sum = K</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ABC461D - Count Subgrid Sum = K</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc461/tasks/abc461_d">問題ページ</a><a href="https://atcoder.jp/contests/abc461/submissions/76604386">解答例</a><a href="https://atcoder.jp/contests/abc461/submissions/76604388">別解</a></div>
+    <h2>解法</h2>
+<p>愚直にやるのは簡単なコードで実現できる。<br>
+つまり、範囲の上下左右の端を決め、その範囲内の総和を求めるループをすればよい。<br>
+しかし、それでは $O(H^3W^3)$ かかってTLE。<br>
+そこでとりあえず $O(H^2W^2)$ への高速化を目指す。</p>
+<p>二次元 <code>vector</code> の矩形範囲内の高速化といえば、二次元累積和。<br>
+$O(HW)$ の事前処理をしておけば、任意の範囲の矩形和が $4$ つの数の加算減算だけで求まる。<br>
+これで、上下左右の端を決めるループの $O(H^2W^2)$ で処理できるようになる。</p>
+<p>しかし、この四重ループで処理するには $157$ 億回のループが必要で、間に合わない。<br>
+そこでさらに高速化をする。</p>
+<p>範囲の上下だけは同じように決めるとして、$O(H^2)$ 回のループを回す。<br>
+このとき、左右を決めるループが、これまでの方法では $O(W^2)$ 回あった。<br>
+これを尺取法で $O(W)$ にする。<br>
+すなわち、二次元累積和の差を取ることで、その上下幅内の左端から各列までの総和を事前に出しておく。<br>
+これは単調増加列になっているはずなので、「値がちょうど $K$ である組がいくつあるか？」は簡単。<br>
+尺取り法で「差が $K$ 以下の範囲」「差が $K$ 未満の範囲」を両方持てば、その差が「差が $K$ の範囲」。</p>
+<p>ということで、左右を決めるループが $O(W)$ になったので、全体で $O(H^2W)$ となり、計算が間に合う。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>h: 3
+w: 4
+k: 3
+s {&quot;1001&quot;,
+   &quot;1101&quot;,
+   &quot;0110&quot;}</code></pre>
+<p>二次元累積和を作る。<br>
+各行各列、先頭には $0$ を追加しておく。 </p>
+<pre><code>vec: {&quot;0, 0, 0, 0, 0&quot;,
+      &quot;0, 1, 1, 1, 2&quot;,
+      &quot;0, 2, 3, 3, 5&quot;,
+      &quot;0, 2, 4, 5, 7&quot;}</code></pre>
+<p>累積和のうち $2$ 行を選び、列ごとに差をとる。<br>
+ここでは <code>vec[1]</code> と <code>vec[3]</code> を選んだ場合の例を示す。</p>
+<pre><code>vec[1]: &quot;0, 1, 1, 1, 2&quot;
+vec[3]: &quot;0, 2, 4, 5, 7&quot;
+diff  : &quot;0, 1, 3, 4, 5&quot;,</code></pre>
+<p>尺取法を行う。<br>
+ただし、左側は <code>diff[r]-k</code>「未満」で動く <code>l1</code> と、 <code>diff[r]-k</code>「以下」で動く <code>l2</code> を用意する。<br>
+<code>r</code> が $0$ とすると、<code>diff[r]</code> は $0$ で、$0-k = -3$。<br>
+<code>l1</code> は $0$ まで、<code>l2</code> は $0$ まで進み、その差は $0$。<br>
+よって結果に $0$ を加算。</p>
+<pre><code>diff  : &quot;0, 1, 3, 4, 5&quot;,
+r : 0
+l1: 0
+l2: 0</code></pre>
+<p><code>r</code> が $1$ とすると、<code>diff[r]</code> は $1$ で、$1-k = -2$。<br>
+<code>l1</code> は $0$ まで、<code>l2</code> は $0$ まで進み、その差は $0$。<br>
+よって結果に $0$ を加算。</p>
+<pre><code>diff  : &quot;0, 1, 3, 4, 5&quot;,
+r : 1
+l1: 0
+l2: 0</code></pre>
+<p><code>r</code> が $2$ とすると、<code>diff[r]</code> は $3$ で、$3-k = 0$。<br>
+<code>l1</code> は $0$ まで、<code>l2</code> は $1$ まで進み、その差は $1$。<br>
+よって結果に $1$ を加算。</p>
+<pre><code>diff  : &quot;0, 1, 3, 4, 5&quot;,
+r : 2
+l1: 0
+l2: 1</code></pre>
+<p><code>r</code> が $3$ とすると、<code>diff[r]</code> は $4$ で、$4-k = 1$。<br>
+<code>l1</code> は $1$ まで、<code>l2</code> は $2$ まで進み、その差は $1$。<br>
+よって結果に $1$ を加算。</p>
+<pre><code>diff  : &quot;0, 1, 3, 4, 5&quot;,
+r : 3
+l1: 1
+l2: 2</code></pre>
+<p><code>r</code> が $4$ とすると、<code>diff[r]</code> は $5$ で、$5-k = 2$。<br>
+<code>l1</code> は $2$ まで、<code>l2</code> は $2$ まで進み、その差は $0$。<br>
+よって結果に $0$ を加算。</p>
+<pre><code>diff  : &quot;0, 1, 3, 4, 5&quot;,
+r : 4
+l1: 2
+l2: 2</code></pre>
+<p><code>vec[1]</code> と <code>vec[3]</code> を選んだ場合、結果は $2$ だけ加算された。<br>
+全ての $2$ 行の組の選び方について同じことを行うと、答えは $8$ となる。</p>
+<h2>注意点</h2>
+<p>最大グリッドを全部 $0$ で埋めて $K=0$ とすると、答えは、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>四重ループで処理するには $157$ 億回のループが必要で、間に合わない。<br>
+……と解法に記載したが、実はC++なら間に合わないこともない。</p>
+<p>AtCoderのサーバーのCPUは並列処理が可能らしい。<br>
+それを活かせるコードを書けば、ギリギリ間に合う。</p>
+<p>具体的には、以下をやる。</p>
+<ul>
+<li>計算は <code>int</code> 型で行う（$32$ ビットで処理することで、並列数を上げる）</li>
+<li>連続するループで、<code>vector</code> の連続部分を処理していくようにする</li>
+<li>ループの中身を単純な計算のみで書く（<code>.at()</code> は不可）</li>
+</ul>
+<p>実際に通った例は上部の「別解」リンク参照。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/two-dimensional-cumulative-sum.html">二次元累積和</a>
+<a class="tag" href="../tags/two-pointers.html">尺取法</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
