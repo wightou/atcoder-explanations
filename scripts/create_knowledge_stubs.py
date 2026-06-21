@@ -12,6 +12,7 @@ CATEGORIES = [
     "基本",
     "変数とデータ構造",
     "データ探索系",
+    "典型問題集",
     "高速化系",
     "文字列系",
     "グラフ理論系",
@@ -139,6 +140,8 @@ STUBS: list[KnowledgeStub] = [
     k("divisor-enumeration", "約数列挙", "C問題相当", "その他数学系"),
     k("gcd", "最大公約数", "C問題相当", "その他数学系"),
     k("lcm", "最小公倍数", "C問題相当", "その他数学系"),
+    k("factorial", "階乗", "C問題相当", "その他数学系", aliases=["factorial"], related=["順列組み合わせ"]),
+    k("binomial-coefficient", "二項係数", "C問題相当", "その他数学系", aliases=["combination", "nCr", "nCk"], related=["階乗", "順列組み合わせ", "剰余類環", "繰り返し二乗法"]),
     k("extended-euclidean", "拡張ユークリッドの互除法", "D問題相当", "その他数学系"),
     k("binary-exponentiation", "繰り返し二乗法", "C問題相当", "その他数学系"),
     k("binary-search", "二分探索", "C問題相当", "データ探索系", aliases=["binary search", "lower_bound", "upper_bound", "答えで二分探索"], absorbs=["lower_bound関数", "upper_bound関数", "解の二分探索"], related=["計算量の見積もり"]),
@@ -155,11 +158,16 @@ STUBS: list[KnowledgeStub] = [
     k("adjacency-matrix", "隣接行列", "C問題相当", "グラフ理論系"),
     k("bfs", "幅優先探索", "C問題相当", "グラフ理論系", aliases=["BFS"]),
     k("dfs", "深さ優先探索", "C問題相当", "グラフ理論系", aliases=["DFS"], absorbs=["バックトラック"]),
+    k("super-vertex", "超頂点", "D問題相当", "グラフ理論系", aliases=["仮想頂点", "ダミー頂点", "super vertex", "virtual vertex", "auxiliary vertex"], absorbs=["超始点", "超終点", "super source", "super sink"], related=["グラフ理論の基礎", "隣接リスト", "幅優先探索", "Dijkstra法", "最短経路問題"]),
 
     # D問題相当
     k("dynamic-programming", "動的計画法", "D問題相当", "高速化系", aliases=["DP"]),
-    k("tree-dp", "木DP", "D問題相当", "グラフ理論系", related=["動的計画法"]),
-    k("bit-dp", "bitDP", "D問題相当", "高速化系", related=["動的計画法"]),
+    k("knapsack-problem", "ナップサック問題", "D問題相当", "典型問題集", aliases=["knapsack", "0/1ナップサック"], related=["動的計画法"]),
+    k("interval-scheduling-problem", "区間スケジューリング問題", "C問題相当", "典型問題集", aliases=["interval scheduling"], related=["貪欲法", "ソート"]),
+    k("shortest-path-problem", "最短経路問題", "D問題相当", "典型問題集", aliases=["迷路の最短経路", "shortest path"], related=["幅優先探索", "Dijkstra法", "Warshall-Floyd法"]),
+    k("connected-components-count", "連結成分数", "C問題相当", "典型問題集", aliases=["連結成分の個数"], related=["幅優先探索", "深さ優先探索", "隣接リスト"]),
+    k("tree-dp", "木DP", "D問題相当", "典型問題集", related=["動的計画法", "木"]),
+    k("bit-dp", "bitDP", "D問題相当", "典型問題集", related=["動的計画法", "bit全探索"]),
     k("graph-theory-basics", "グラフ理論の基礎", "D問題相当", "グラフ理論系", aliases=["グラフ理論の基礎（知識としてのみ）"]),
     k("union-find", "UnionFind木", "D問題相当", "変数とデータ構造", aliases=["DSU", "Disjoint Set Union"]),
     k("rooted-tree", "根付き木", "D問題相当", "グラフ理論系"),
@@ -188,23 +196,23 @@ STUBS: list[KnowledgeStub] = [
     k("tropical-semiring", "トロピカル半環", "E問題相当", "その他数学系"),
     k("palindrome-check", "回文判定", "E問題相当", "文字列系"),
     k("z-algorithm", "Zアルゴリズム", "E問題相当", "文字列系"),
-    k("lis", "最長増加部分列", "E問題相当", "高速化系", aliases=["LIS"]),
-    k("lcs", "最長共通部分列", "E問題相当", "高速化系", aliases=["LCS"]),
+    k("lis", "最長増加部分列", "E問題相当", "典型問題集", aliases=["LIS"], related=["動的計画法", "二分探索"]),
+    k("lcs", "最長共通部分列", "E問題相当", "典型問題集", aliases=["LCS"], related=["動的計画法"]),
     k("bellman-ford", "Bellman-Ford法", "E問題相当", "グラフ理論系"),
     k("warshall-floyd", "Warshall-Floyd法", "E問題相当", "グラフ理論系", aliases=["Floyd-Warshall"]),
     k("argument-sort", "偏角ソート", "E問題相当", "幾何学系"),
-    k("topological-sort", "トポロジカルソート", "E問題相当", "グラフ理論系"),
+    k("dag-dp", "DAG上のDP", "E問題相当", "典型問題集", aliases=["DAG DP", "DAG上DP"], absorbs=["トポロジカルソート"], related=["動的計画法", "グラフ理論の基礎"]),
 
     # F問題相当
     k("lazy-segment-tree", "lazy segment木", "F問題相当", "変数とデータ構造", aliases=["遅延セグメント木"]),
-    k("lca", "最近共通祖先", "F問題相当", "グラフ理論系", aliases=["LCA"]),
+    k("lca", "最近共通祖先", "F問題相当", "典型問題集", aliases=["LCA"], related=["木", "頂点倍加"]),
     k("coordinate-compression", "座標圧縮", "F問題相当", "高速化系"),
     k("trie", "Trie木", "F問題相当", "文字列系"),
     k("aho-corasick", "Aho-Corasick法", "F問題相当", "文字列系", related=["Trie木"]),
     k("nim", "Nim", "F問題相当", "その他数学系", aliases=["Grundy数", "ゲーム理論"], absorbs=["二人零和有限確定完全情報ゲーム", "二人零和有限確定完全情報ゲーム、Nim、Grundy数"]),
     k("mo-algorithm", "Moアルゴリズム", "F問題相当", "データ探索系"),
     k("meet-in-the-middle", "半分全列挙", "F問題相当", "データ探索系", aliases=["meet-in-the-middle"]),
-    k("inversion-number", "転倒数", "F問題相当", "その他数学系"),
+    k("inversion-number", "転倒数", "F問題相当", "典型問題集", related=["Fenwick木", "座標圧縮", "分割統治法"]),
     k("sqrt-decomposition", "平方分割", "F問題相当", "データ探索系", aliases=["sqrt decomposition"]),
 
     # G問題以上相当
@@ -243,6 +251,76 @@ STUBS: list[KnowledgeStub] = [
 ]
 
 
+KNOWN_RENAMES = {
+    "topological-sort": "dag-dp",
+}
+
+
+def stub_by_slug(slug: str) -> KnowledgeStub:
+    for stub in STUBS:
+        if stub.slug == slug:
+            return stub
+    raise KeyError(slug)
+
+
+def replace_or_insert_front_matter_field(front: str, name: str, value: str) -> str:
+    lines = front.splitlines()
+    prefix = f"{name}:"
+    for i, line in enumerate(lines):
+        if line.startswith(prefix):
+            lines[i] = f"{name}: {value}"
+            return "\n".join(lines) + "\n"
+    lines.append(f"{name}: {value}")
+    return "\n".join(lines) + "\n"
+
+
+def replace_or_insert_front_matter_list(front: str, name: str, values: list[str]) -> str:
+    lines = front.splitlines()
+    prefix = f"{name}:"
+    start = None
+    for i, line in enumerate(lines):
+        if line.startswith(prefix):
+            start = i
+            break
+    new_lines = [f"{name}:"] + [f"  - {value}" for value in values]
+    if start is None:
+        lines.extend(new_lines)
+        return "\n".join(lines) + "\n"
+    end = start + 1
+    while end < len(lines) and (lines[end].startswith("  - ") or lines[end].strip() == ""):
+        end += 1
+    lines[start:end] = new_lines
+    return "\n".join(lines) + "\n"
+
+
+def apply_known_renames(*, dry_run: bool = False) -> list[tuple[Path, Path]]:
+    renamed: list[tuple[Path, Path]] = []
+    for old_slug, new_slug in KNOWN_RENAMES.items():
+        old_path = KNOWLEDGE_DIR / f"{old_slug}.md"
+        new_path = KNOWLEDGE_DIR / f"{new_slug}.md"
+        if not old_path.exists() or new_path.exists():
+            continue
+        new_stub = stub_by_slug(new_slug)
+        if not dry_run:
+            text = old_path.read_text(encoding="utf-8")
+            if text.startswith("---\n"):
+                end = text.find("\n---\n", 4)
+                if end != -1:
+                    front = text[4:end + 1]
+                    body = text[end + len("\n---\n"):]
+                    front = replace_or_insert_front_matter_field(front, "title", new_stub.title)
+                    front = replace_or_insert_front_matter_field(front, "level", new_stub.level)
+                    front = replace_or_insert_front_matter_field(front, "category", new_stub.category)
+                    front = replace_or_insert_front_matter_list(front, "aliases", new_stub.aliases)
+                    front = replace_or_insert_front_matter_list(front, "absorbs", new_stub.absorbs)
+                    front = replace_or_insert_front_matter_list(front, "related", new_stub.related)
+                    text = "---\n" + front + "---\n" + body
+            new_path.write_text(text, encoding="utf-8")
+            old_path.unlink()
+        renamed.append((old_path, new_path))
+    return renamed
+
+
 def yaml_list(name: str, values: list[str]) -> str:
     if not values:
         return f"{name}: []\n"
@@ -268,8 +346,9 @@ def render_stub(stub: KnowledgeStub) -> str:
     )
 
 
-def create_stubs(*, dry_run: bool = False) -> tuple[list[Path], list[Path]]:
+def create_stubs(*, dry_run: bool = False) -> tuple[list[Path], list[Path], list[tuple[Path, Path]]]:
     KNOWLEDGE_DIR.mkdir(parents=True, exist_ok=True)
+    renamed = apply_known_renames(dry_run=dry_run)
     created: list[Path] = []
     skipped: list[Path] = []
     seen_slugs: set[str] = set()
@@ -284,7 +363,7 @@ def create_stubs(*, dry_run: bool = False) -> tuple[list[Path], list[Path]]:
         if not dry_run:
             path.write_text(render_stub(stub), encoding="utf-8")
         created.append(path)
-    return created, skipped
+    return created, skipped, renamed
 
 
 def main() -> int:
@@ -292,8 +371,12 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true", help="作成せずに対象だけ表示します。")
     args = parser.parse_args()
 
-    created, skipped = create_stubs(dry_run=args.dry_run)
+    created, skipped, renamed = create_stubs(dry_run=args.dry_run)
     mode = "would create" if args.dry_run else "created"
+    rename_mode = "would rename" if args.dry_run else "renamed"
+    print(f"{rename_mode}: {len(renamed)}")
+    for old_path, new_path in renamed:
+        print(f"  ~ {old_path.relative_to(ROOT)} -> {new_path.relative_to(ROOT)}")
     print(f"{mode}: {len(created)}")
     for path in created:
         print(f"  + {path.relative_to(ROOT)}")

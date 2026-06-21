@@ -141,6 +141,7 @@ DEFAULT_EXPLANATIONS = ROOT / "explanations"
 DEFAULT_KNOWLEDGE = ROOT / "knowledge"
 DEFAULT_OUT = ROOT / "docs"
 DEFAULT_CONFIG = ROOT / "site_config.toml"
+IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".avif"}
 SIDEBAR_KNOWLEDGE_PAGES: list["KnowledgePage"] = []
 TAG_SLUG_MAP: dict[str, str] = {}
 
@@ -148,6 +149,7 @@ CATEGORY_ORDER = [
     "基本",
     "変数とデータ構造",
     "データ探索系",
+    "典型問題集",
     "高速化系",
     "文字列系",
     "グラフ理論系",
@@ -213,6 +215,12 @@ def warn_missing_knowledge_pages_for_tags(explanation_tag_names: set[str], knowl
 
 
 @dataclass(frozen=True)
+class PageAsset:
+    source_path: Path
+    output_path: Path
+
+
+@dataclass(frozen=True)
 class ExplanationPage:
     source_path: Path
     meta: dict
@@ -220,6 +228,7 @@ class ExplanationPage:
     body_html: str
     body_text: str
     url: str
+    assets: list[PageAsset]
 
     @property
     def contest(self) -> str:
@@ -255,6 +264,7 @@ class KnowledgePage:
     body_html: str
     body_text: str
     url: str
+    assets: list[PageAsset]
 
     @property
     def title(self) -> str:
@@ -399,12 +409,74 @@ def remove_duplicate_top_h1(body_md: str) -> str:
     return "\n".join(lines)
 
 
+def is_local_image_url(url: str) -> bool:
+    url = url.strip()
+    if not url or url.startswith("#") or url.startswith("/"):
+        return False
+    if re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", url):
+        return False
+    path_part = re.split(r"[?#]", url, maxsplit=1)[0]
+    return Path(path_part).suffix.lower() in IMAGE_EXTENSIONS
+
+
+def split_markdown_link_destination(raw: str) -> tuple[str, str]:
+    """Markdown link destinationからURL本体と後続のtitle指定を分ける。簡易パーサ。"""
+    raw = raw.strip()
+    if raw.startswith("<"):
+        end = raw.find(">")
+        if end != -1:
+            return raw[1:end], raw[end + 1 :]
+    m = re.match(r"([^\s]+)(.*)\Z", raw, flags=re.S)
+    if not m:
+        return raw, ""
+    return m.group(1), m.group(2)
+
+
+def rewrite_markdown_image_links(
+    body_md: str,
+    *,
+    source_path: Path,
+    source_root: Path,
+    output_subdir: str,
+) -> tuple[str, list[PageAsset]]:
+    """同じ入力ディレクトリに置いた画像を、生成HTMLから参照できるパスへ変換する。
+
+    例: explanations/abc463/e.md から ![図](e1.png) と書いた場合、
+    docs/explanations/abc463/e1.png にコピーし、HTML上の参照は abc463/e1.png にする。
+    """
+    assets: list[PageAsset] = []
+    source_root_resolved = source_root.resolve()
+
+    def replace(match: re.Match[str]) -> str:
+        alt = match.group(1)
+        dest_raw = match.group(2)
+        url, suffix = split_markdown_link_destination(dest_raw)
+        if not is_local_image_url(url):
+            return match.group(0)
+
+        path_part, *rest = re.split(r"([?#].*)", url, maxsplit=1)
+        url_suffix = "".join(rest)
+        image_source = (source_path.parent / path_part).resolve()
+        try:
+            image_rel_to_root = image_source.relative_to(source_root_resolved)
+        except ValueError:
+            print(f"WARNING: 画像パスが入力ディレクトリ外を指しています: {source_path}: {url}", file=sys.stderr)
+            return match.group(0)
+
+        output_path = Path(output_subdir) / image_rel_to_root
+        assets.append(PageAsset(image_source, output_path))
+        rewritten_url = image_rel_to_root.as_posix() + url_suffix
+        return f"![{alt}]({rewritten_url}{suffix})"
+
+    return re.sub(r"!\[([^\]]*)\]\(([^)\n]+)\)", replace, body_md), assets
+
+
 def render_inline(s: str) -> str:
     s = escape(s)
     s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
+    s = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", r'<img src="\2" alt="\1">', s)
     s = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', s)
     return s
-
 
 def is_markdown_table_separator(line: str) -> bool:
     parts = [part.strip() for part in line.strip().strip("|").split("|")]
@@ -644,6 +716,7 @@ CATEGORY_PAGE_SLUGS = {
     "基本": "basic",
     "変数とデータ構造": "variables-and-data-structures",
     "データ探索系": "data-search",
+    "典型問題集": "typical-problems",
     "高速化系": "optimization",
     "文字列系": "strings",
     "グラフ理論系": "graph-theory",
@@ -1493,10 +1566,16 @@ def load_explanations(src_dir: Path) -> list[ExplanationPage]:
     for path in sorted(src_dir.glob("**/*.md")):
         meta, body_md = parse_front_matter(path.read_text(encoding="utf-8"), path)
         require_keys(meta, ["contest", "problem", "problem_title", "problem_url", "submission_url", "tags"], path)
-        body_html = markdown_to_html(body_md)
+        body_md_for_html, assets = rewrite_markdown_image_links(
+            body_md,
+            source_path=path,
+            source_root=src_dir,
+            output_subdir="explanations",
+        )
+        body_html = markdown_to_html(body_md_for_html)
         body_text = markdown_to_plain_text(body_md)
         url = f"explanations/{explanation_filename(str(meta['contest']), str(meta['problem']))}"
-        page = ExplanationPage(path, meta, body_md, body_html, body_text, url)
+        page = ExplanationPage(path, meta, body_md, body_html, body_text, url, assets)
         validate_project_euler_page(page)
         pages.append(page)
     return pages
@@ -1509,10 +1588,16 @@ def load_knowledge(src_dir: Path) -> list[KnowledgePage]:
     for path in sorted(src_dir.glob("**/*.md")):
         meta, body_md = parse_front_matter(path.read_text(encoding="utf-8"), path)
         require_keys(meta, ["title"], path)
-        body_html = markdown_to_html(body_md)
+        body_md_for_html, assets = rewrite_markdown_image_links(
+            body_md,
+            source_path=path,
+            source_root=src_dir,
+            output_subdir="knowledge",
+        )
+        body_html = markdown_to_html(body_md_for_html)
         body_text = markdown_to_plain_text(body_md)
         url = f"knowledge/{knowledge_filename(path)}"
-        pages.append(KnowledgePage(path, meta, body_md, body_html, body_text, url))
+        pages.append(KnowledgePage(path, meta, body_md, body_html, body_text, url, assets))
     return pages
 
 
@@ -1523,6 +1608,22 @@ def clean_output(out_dir: Path) -> None:
             shutil.rmtree(child)
         else:
             child.unlink()
+
+
+def copy_page_assets(pages: list[ExplanationPage] | list[KnowledgePage], out_dir: Path) -> None:
+    copied: set[tuple[Path, Path]] = set()
+    for page in pages:
+        for asset in page.assets:
+            if not asset.source_path.exists():
+                print(f"WARNING: 画像ファイルが見つかりません: {page.source_path}: {asset.source_path}", file=sys.stderr)
+                continue
+            dst = out_dir / asset.output_path
+            key = (asset.source_path, dst)
+            if key in copied:
+                continue
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(asset.source_path, dst)
+            copied.add(key)
 
 
 
@@ -1696,6 +1797,16 @@ a:hover {
 .markdown-body pre code {
   background: transparent;
   padding: 0;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 16px 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
 }
 
 .markdown-body table {
@@ -2145,6 +2256,8 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
 
     explanations = load_explanations(explanations_dir)
     knowledge_pages = load_knowledge(knowledge_dir)
+    copy_page_assets(explanations, out_dir)
+    copy_page_assets(knowledge_pages, out_dir)
 
     global SIDEBAR_KNOWLEDGE_PAGES, TAG_SLUG_MAP
     SIDEBAR_KNOWLEDGE_PAGES = knowledge_pages

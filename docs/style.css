@@ -168,6 +168,16 @@ a:hover {
   padding: 0;
 }
 
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 16px 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+}
+
 .markdown-body table {
   width: max-content;
   min-width: 100%;
