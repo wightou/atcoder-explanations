@@ -89,7 +89,7 @@ window.MathJax = {
 \left(\frac{1}{2}\right)^{\mathrm{ts}+\mathrm{to}+1}<br>
 $$</p>
 <p>ただし、<code>tt=0</code> のとき、<code>ptt</code> を使う選手はいないので、計算を省略して <code>ptt=0</code> とする。<br>
-以下の確率も同様。</p>
+以下の確率も同様に、該当者がなければスキップし、ゼロ除算の発生を防ぐものとする。</p>
 <h3><code>pts</code></h3>
 <p><code>pts</code> は、<code>ts</code> の <code>t</code> 側の選手の優勝確率である。</p>
 <p>まず、自分が最後の試合に勝つ場合を考える。<br>
@@ -188,7 +188,7 @@ $$</p>
 そして、<code>tt=0</code> であり、<code>ts</code> と <code>to</code> の試合ではすべて <code>t</code> 側が負ける必要がある。</p>
 <p><code>so</code> の試合のうち、<code>s</code> 側が勝つ試合数を $i$ 個とする。<br>
 ただし、自分はその $i$ 人に含まれる必要がある。<br>
-そのため、試合の組は、残りの <code>ts+to-1</code> 個の試合から $i-1$ 個を選ぶことになる。</p>
+そのため、試合の組は、残りの <code>so-1</code> 個の試合から $i-1$ 個を選ぶことになる。</p>
 <p>このとき、勝利数 $W$ の優勝候補者は $2\mathrm{ts}+\mathrm{ss}+\mathrm{to}+i$ 人である。<br>
 よって、<code>pso</code> は次のように計算できる。</p>
 <p>$$<br>
