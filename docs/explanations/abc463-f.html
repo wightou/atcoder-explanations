@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC463F - Senshuraku</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ABC463F - Senshuraku</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc463/tasks/abc463_f">問題ページ</a><a href="https://atcoder.jp/contests/abc463/submissions/76862484">解答例</a></div>
+    <h2>考え方</h2>
+<p>最後の $N$ 試合の前での最大勝利数を $W$ とする。</p>
+<p>最後の試合で各選手が増やせる勝利数は高々 $1$ なので、最終的な最多勝利数は $W$ または $W+1$ である。<br>
+そのため、現在の勝利数が $W-2$ 以下の選手は優勝できない。</p>
+<p>そこで、選手を次の $3$ 種類に分類する。</p>
+<ul>
+<li><code>t</code>: 現在の勝利数が $W$ の選手</li>
+<li><code>s</code>: 現在の勝利数が $W-1$ の選手</li>
+<li><code>o</code>: 現在の勝利数が $W-2$ 以下の選手</li>
+</ul>
+<p><code>o</code> の選手自身は既に優勝の可能性が存在しない。</p>
+<p>最後の試合を、出場する選手の種類の組によって分類する。</p>
+<ul>
+<li><code>tt</code>: <code>t</code> 同士の試合</li>
+<li><code>ts</code>: <code>t</code> と <code>s</code> の試合</li>
+<li><code>ss</code>: <code>s</code> 同士の試合</li>
+<li><code>to</code>: <code>t</code> と <code>o</code> の試合</li>
+<li><code>so</code>: <code>s</code> と <code>o</code> の試合</li>
+</ul>
+<p><code>o</code> 同士の試合は、誰が勝っても優勝争いに関係しないので処理の必要はない。</p>
+<p>それぞれの種類の試合に出ている選手は、同じ立場なら同じ優勝確率になる。<br>
+そのため、次の $6$ 種類の優勝確率をそれぞれ計算し、出力は後でまとめて生成すればよい。</p>
+<ul>
+<li><code>ptt</code>: <code>tt</code> の選手</li>
+<li><code>pts</code>: <code>ts</code> の <code>t</code> 側の選手</li>
+<li><code>pst</code>: <code>ts</code> の <code>s</code> 側の選手</li>
+<li><code>pss</code>: <code>ss</code> の選手</li>
+<li><code>pto</code>: <code>to</code> の <code>t</code> 側の選手</li>
+<li><code>pso</code>: <code>so</code> の <code>s</code> 側の選手</li>
+</ul>
+<p>まず、<code>tt</code>、<code>ts</code>、<code>ss</code>、<code>to</code>、<code>so</code> の個数を数える。<br>
+同時に、各選手が上の $6$ 種類のどれに属するかを、どこかに記録しておく。</p>
+<p>次に、それぞれの種類の選手について、優勝確率を計算する。<br>
+これは、最終的な最多勝利数が $W+1$ の場合と $W$ の場合に分けて考えることになる。</p>
+<p>最終的な最多勝利数が $W+1$ になるには、<code>t</code> の選手が最後の試合に勝つ必要がある。<br>
+<code>tt</code> の試合からは必ず $W+1$ の選手が $1$ 人生まれる。<br>
+また、<code>ts</code> と <code>to</code> の試合では、<code>t</code> 側が勝った試合だけ $W+1$ の選手が生まれる。</p>
+<p>逆に、最終的な最多勝利数が $W$ になるには、$W+1$ の選手が生まれてはいけない。<br>
+つまり、<code>tt</code> の試合が存在せず、かつ <code>ts</code> と <code>to</code> の試合ではすべて <code>t</code> 側が負ける必要がある。<br>
+このとき、<code>ts</code> の試合からは $2$ 人、<code>to</code> からは <code>t</code> 側の $1$ 人、<code>ss</code> からは勝った $1$ 人が優勝候補者になる。<br>
+さらに、<code>so</code> の試合では <code>s</code> 側が勝った試合だけ $W$ の優勝候補者が $1$ 人増える。</p>
+<h3><code>ptt</code></h3>
+<p><code>ptt</code> は、<code>tt</code> の選手の優勝確率である。</p>
+<p><code>tt</code> の選手が優勝するには、自分の最後の試合に勝って勝利数 $W+1$ になる必要がある。<br>
+自分が勝つ確率は $\frac{1}{2}$ である。</p>
+<p><code>ts+to</code> 個の試合のうち、<code>t</code> 側が勝つ試合数が $i$ 個であるとする。<br>
+このような結果は ${}_{\mathrm{ts}+\mathrm{to}}\mathrm{C}_{i}$ 通りある。</p>
+<p>このとき、$W+1$ の優勝候補者は、<code>tt</code> の各試合の勝者と、<code>ts</code>・<code>to</code> のうち <code>t</code> 側が勝った選手なので、合計で $\mathrm{tt}+i$ 人である。<br>
+よって、その中からこの選手が優勝者として選ばれる確率は $\frac{1}{\mathrm{tt}+i}$ である。</p>
+<p>したがって、<code>ptt</code> は次のように計算できる。</p>
+<p>$$<br>
+\sum_{i=0}^{\mathrm{ts}+\mathrm{to}}<br>
+\frac{1}{\mathrm{tt}+i}<br>
+\times<br>
+{}_{\mathrm{ts}+\mathrm{to}}\mathrm{C}_{i}<br>
+\times<br>
+\left(\frac{1}{2}\right)^{\mathrm{ts}+\mathrm{to}+1}<br>
+$$</p>
+<p>ただし、<code>tt=0</code> のとき、<code>ptt</code> を使う選手はいないので、計算を省略して <code>ptt=0</code> とする。<br>
+以下の確率も同様。</p>
+<h3><code>pts</code></h3>
+<p><code>pts</code> は、<code>ts</code> の <code>t</code> 側の選手の優勝確率である。</p>
+<p>まず、自分が最後の試合に勝つ場合を考える。<br>
+この場合、自分は勝利数 $W+1$ になり、優勝候補者になる。</p>
+<p><code>ts+to</code> 個の試合のうち、<code>t</code> 側が勝つ試合数が $i$ 個であるとする。<br>
+ただし、自分はその $i$ 人に含まれる必要がある。<br>
+そのため、試合の組は、残りの <code>ts+to-1</code> 個の試合から $i-1$ 個を選ぶことになる。</p>
+<p>このとき、$W+1$ の優勝候補者は $\mathrm{tt}+i$ 人である。<br>
+よって、自分が勝つ場合の寄与は次のようになる。</p>
+<p>$$<br>
+\sum_{i=1}^{\mathrm{ts}+\mathrm{to}}<br>
+\frac{1}{\mathrm{tt}+i}<br>
+\times<br>
+{}_{\mathrm{ts}+\mathrm{to}-1}\mathrm{C}_{i-1}<br>
+\times<br>
+\left(\frac{1}{2}\right)^{\mathrm{ts}+\mathrm{to}}<br>
+$$</p>
+<p>次に、自分が最後の試合に負ける場合を考える。<br>
+この場合、自分の勝利数は $W$ のままである。<br>
+したがって、<code>tt=0</code> であり、さらに <code>ts</code> と <code>to</code> の試合ではすべて <code>t</code> 側が負ける必要がある。</p>
+<p>この条件のもとで、<code>so</code> の試合のうち <code>s</code> 側が勝つ試合数を $i$ 個とする。<br>
+このような結果は ${}_{\mathrm{so}}\mathrm{C}_{i}$ 通りある。</p>
+<p>このとき、勝利数 $W$ の優勝候補者は、合計で $2\mathrm{ts}+\mathrm{ss}+\mathrm{to}+i$ 人である。<br>
+よって、自分が負ける場合の寄与は、<code>tt=0</code> のときだけ次のようになる。</p>
+<p>$$<br>
+\sum_{i=0}^{\mathrm{so}}<br>
+\frac{1}{2\mathrm{ts}+\mathrm{ss}+\mathrm{to}+i}<br>
+\times<br>
+{}_{\mathrm{so}}\mathrm{C}_{i}<br>
+\times<br>
+\left(\frac{1}{2}\right)^{\mathrm{ts}+\mathrm{to}+\mathrm{so}}<br>
+$$</p>
+<p><code>pts</code> は、この $2$ つの寄与を足した値である。</p>
+<h3><code>pst</code></h3>
+<p><code>pst</code> は、<code>ts</code> の <code>s</code> 側の選手の優勝確率である。</p>
+<p><code>pst</code> の選手は、最後の試合に勝った場合だけ勝利数 $W$ になれる。<br>
+そして、<code>tt=0</code> であり、<code>ts</code> と <code>to</code> の試合ではすべて <code>t</code> 側が負ける必要がある。</p>
+<p>この条件は、<code>pts</code> の選手が自分の試合に負けて勝利数 $W$ で優勝候補者になる場合と同じである。<br>
+そのため、<code>pst</code> は <code>pts</code> の後半部分と同じ式で計算できる。</p>
+<p>$$<br>
+\sum_{i=0}^{\mathrm{so}}<br>
+\frac{1}{2\mathrm{ts}+\mathrm{ss}+\mathrm{to}+i}<br>
+\times<br>
+{}_{\mathrm{so}}\mathrm{C}_{i}<br>
+\times<br>
+\left(\frac{1}{2}\right)^{\mathrm{ts}+\mathrm{to}+\mathrm{so}}<br>
+$$</p>
+<p>ただし、<code>tt&gt;0</code> の場合は、勝利数 $W+1$ の選手が必ず生まれるので <code>pst=0</code> である。</p>
+<h3><code>pss</code></h3>
+<p><code>pss</code> は、<code>ss</code> の選手の優勝確率である。</p>
+<p><code>ss</code> の選手は、最後の試合に勝った場合だけ勝利数 $W$ になれる。<br>
+そのため、自分が勝つ確率 $\frac{1}{2}$ が必要である。<br>
+そして、<code>tt=0</code> であり、<code>ts</code> と <code>to</code> の試合ではすべて <code>t</code> 側が負ける必要がある。</p>
+<p><code>so</code> の試合のうち、<code>s</code> 側が勝つ試合数を $i$ 個とする。<br>
+このとき、勝利数 $W$ の優勝候補者は $2\mathrm{ts}+\mathrm{ss}+\mathrm{to}+i$ 人である。</p>
+<p>よって、<code>pss</code> は次のように計算できる。</p>
+<p>$$<br>
+\sum_{i=0}^{\mathrm{so}}<br>
+\frac{1}{2\mathrm{ts}+\mathrm{ss}+\mathrm{to}+i}<br>
+\times<br>
+{}_{\mathrm{so}}\mathrm{C}_{i}<br>
+\times<br>
+\left(\frac{1}{2}\right)^{\mathrm{ts}+\mathrm{to}+\mathrm{so}+1}<br>
+$$</p>
+<p>指数の $+1$ は、自分が <code>ss</code> の試合に勝つ必要があるためである。<br>
+ただし、<code>tt&gt;0</code> の場合は、勝利数 $W+1$ の選手が必ず生まれるので <code>pss=0</code> である。</p>
+<h3><code>pto</code></h3>
+<p><code>pto</code> は、<code>to</code> の <code>t</code> 側の選手の優勝確率である。</p>
+<p>まず、自分が最後の試合に勝つ場合を考える。<br>
+この場合は、自分が <code>ts+to</code> 個の試合のうち <code>t</code> 側が勝った $i$ 人に含まれる必要がある。<br>
+よって、寄与は次のようになる。</p>
+<p>$$<br>
+\sum_{i=1}^{\mathrm{ts}+\mathrm{to}}<br>
+\frac{1}{\mathrm{tt}+i}<br>
+\times<br>
+{}_{\mathrm{ts}+\mathrm{to}-1}\mathrm{C}_{i-1}<br>
+\times<br>
+\left(\frac{1}{2}\right)^{\mathrm{ts}+\mathrm{to}}<br>
+$$</p>
+<p>次に、自分が最後の試合に負ける場合を考える。<br>
+この場合、<code>tt=0</code> であり、<code>ts</code> と <code>to</code> の試合ではすべて <code>t</code> 側が負ける必要がある。</p>
+<p><code>so</code> の試合のうち、<code>s</code> 側が勝つ試合数を $i$ 個とすると、寄与は次のようになる。</p>
+<p>$$<br>
+\sum_{i=0}^{\mathrm{so}}<br>
+\frac{1}{2\mathrm{ts}+\mathrm{ss}+\mathrm{to}+i}<br>
+\times<br>
+{}_{\mathrm{so}}\mathrm{C}_{i}<br>
+\times<br>
+\left(\frac{1}{2}\right)^{\mathrm{ts}+\mathrm{to}+\mathrm{so}}<br>
+$$</p>
+<p><code>pto</code> は、この $2$ つの寄与を足した値である。<br>
+つまり、式としては <code>pts</code> と同じ値になる。</p>
+<h3><code>pso</code></h3>
+<p><code>pso</code> は、<code>so</code> の <code>s</code> 側の選手の優勝確率である。</p>
+<p><code>pso</code> の選手は、最後の試合に勝った場合だけ勝利数 $W$ になれる。<br>
+そして、<code>tt=0</code> であり、<code>ts</code> と <code>to</code> の試合ではすべて <code>t</code> 側が負ける必要がある。</p>
+<p><code>so</code> の試合のうち、<code>s</code> 側が勝つ試合数を $i$ 個とする。<br>
+ただし、自分はその $i$ 人に含まれる必要がある。<br>
+そのため、試合の組は、残りの <code>ts+to-1</code> 個の試合から $i-1$ 個を選ぶことになる。</p>
+<p>このとき、勝利数 $W$ の優勝候補者は $2\mathrm{ts}+\mathrm{ss}+\mathrm{to}+i$ 人である。<br>
+よって、<code>pso</code> は次のように計算できる。</p>
+<p>$$<br>
+\sum_{i=1}^{\mathrm{so}}<br>
+\frac{1}{2\mathrm{ts}+\mathrm{ss}+\mathrm{to}+i}<br>
+\times<br>
+{}_{\mathrm{so}-1}\mathrm{C}_{i-1}<br>
+\times<br>
+\left(\frac{1}{2}\right)^{\mathrm{ts}+\mathrm{to}+\mathrm{so}}<br>
+$$</p>
+<p>ただし、<code>tt&gt;0</code> の場合は、勝利数 $W+1$ の選手が必ず生まれるので <code>pso=0</code> である。</p>
+<p>この計算では、二項係数と割り算を何度も使う。<br>
+そのため、階乗と階乗の逆元を前計算して、二項係数を高速に求められるようにしておく。</p>
+<p>最後に、事前に記録しておいた選手ごとの仮の値に応じて、$6$ 種の値を代入すればよい。</p>
+<p>階乗や累乗を適切な方法で行えば、計算量は $O(N \log \mathrm{MOD})$ 程度である。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 4
+a: {1, 2, 3, 4, 2, 3, 1, 4}</code></pre>
+<p>最後の $N$ 試合の前での最大勝利数 <code>mx</code> を求める。</p>
+<pre><code>mx: 4</code></pre>
+<p>選手を <code>t</code>、<code>s</code>、<code>o</code> に分類する。</p>
+<pre><code>選手 1: o
+選手 2: o
+選手 3: s
+選手 4: t
+選手 5: o
+選手 6: s
+選手 7: o
+選手 8: t</code></pre>
+<p>各試合を分類する。</p>
+<pre><code>第1試合: 選手1 vs 選手2 -&gt; o 同士
+第2試合: 選手3 vs 選手4 -&gt; s と t
+第3試合: 選手5 vs 選手6 -&gt; o と s
+第4試合: 選手7 vs 選手8 -&gt; o と t</code></pre>
+<p>したがって、各種類の試合数は次のようになる。</p>
+<pre><code>tt: 0
+ts: 1
+ss: 0
+to: 1
+so: 1</code></pre>
+<p>各選手がどの種類の優勝確率を使うかを、<code>result</code> に仮の値として記録する。</p>
+<pre><code>result: {0, 0, -3, -2, 0, -6, 0, -5}</code></pre>
+<p>ここで、仮の値は次を表す。</p>
+<pre><code>-1: ptt
+-2: pts
+-3: pst
+-4: pss
+-5: pto
+-6: pso</code></pre>
+<p>まず、<code>ptt</code> を計算する。<br>
+この入力例では <code>tt=0</code> なので、<code>ptt</code> を使う選手はいない。</p>
+<p><code>ptt</code> は <code>0</code>（実際の値は $0$）である。</p>
+<p>次に、<code>pts</code> を計算する。<br>
+これは、<code>ts</code> の <code>t</code> 側の選手、つまり選手 $4$ の優勝確率である。</p>
+<p>選手 $4$ が自分の試合に勝ち、勝利数 $W+1$ で優勝候補者になる場合の寄与は、次のようになる。</p>
+<p>$$<br>
+\frac{1}{1}\times{}_{1}\mathrm{C}_{0}\times\left(\frac{1}{2}\right)^2<br>
++<br>
+\frac{1}{2}\times{}_{1}\mathrm{C}_{1}\times\left(\frac{1}{2}\right)^2<br>
+=<br>
+\frac{3}{8}<br>
+$$</p>
+<p>また、選手 $4$ が自分の試合に負け、勝利数 $W$ で優勝候補者になる場合の寄与は、次のようになる。</p>
+<p>$$<br>
+\frac{1}{3}\times{}_{1}\mathrm{C}_{0}\times\left(\frac{1}{2}\right)^3<br>
++<br>
+\frac{1}{4}\times{}_{1}\mathrm{C}_{1}\times\left(\frac{1}{2}\right)^3<br>
+=<br>
+\frac{7}{96}<br>
+$$</p>
+<p>よって、<code>pts</code> は次の値になる。</p>
+<p><code>pts</code> は <code>883862188</code>（実際の値は $\frac{43}{96}$）である。</p>
+<p>次に、<code>pst</code> を計算する。<br>
+これは、<code>ts</code> の <code>s</code> 側の選手、つまり選手 $3$ の優勝確率である。</p>
+<p><code>pst</code> の選手は、自分の試合に勝った場合だけ勝利数 $W$ で優勝候補者になりうる。<br>
+この入力例では、寄与は次の値になる。</p>
+<p>$$<br>
+\frac{1}{3}\times{}_{1}\mathrm{C}_{0}\times\left(\frac{1}{2}\right)^3<br>
++<br>
+\frac{1}{4}\times{}_{1}\mathrm{C}_{1}\times\left(\frac{1}{2}\right)^3<br>
+=<br>
+\frac{7}{96}<br>
+$$</p>
+<p>したがって、<code>pst</code> は次の値になる。</p>
+<p><code>pst</code> は <code>259959467</code>（実際の値は $\frac{7}{96}$）である。</p>
+<p>次に、<code>pss</code> を計算する。<br>
+この入力例では <code>ss=0</code> なので、<code>pss</code> を使う選手はいない。</p>
+<p><code>pss</code> は <code>0</code>（実際の値は $0$）である。</p>
+<p>次に、<code>pto</code> を計算する。<br>
+これは、<code>to</code> の <code>t</code> 側の選手、つまり選手 $8$ の優勝確率である。</p>
+<p>この入力例では、<code>pto</code> は <code>pts</code> と同じ値になる。</p>
+<p><code>pto</code> は <code>883862188</code>（実際の値は $\frac{43}{96}$）である。</p>
+<p>次に、<code>pso</code> を計算する。<br>
+これは、<code>so</code> の <code>s</code> 側の選手、つまり選手 $6$ の優勝確率である。</p>
+<p>選手 $6$ が優勝候補者になるには、自分の試合に勝つ必要がある。<br>
+この入力例では、寄与は次の値になる。</p>
+<p>$$<br>
+\frac{1}{4}\times{}_{0}\mathrm{C}_{0}\times\left(\frac{1}{2}\right)^3<br>
+=<br>
+\frac{3}{96}<br>
+$$</p>
+<p>したがって、<code>pso</code> は次の値になる。</p>
+<p><code>pso</code> は <code>967049217</code>（実際の値は $\frac{3}{96}$）である。</p>
+<p>最後に、<code>result</code> の仮の値を実際の優勝確率に置き換える。</p>
+<pre><code>result: {0, 0, 259959467, 883862188, 0, 967049217, 0, 883862188}</code></pre>
+<p>実際の値は、順に $0,0,\frac{7}{96},\frac{43}{96},0,\frac{3}{96},0,\frac{43}{96}$ である。</p>
+<p>よって、<code>0 0 259959467 883862188 0 967049217 0 883862188</code> を出力する。</p>
+<h2>注意点</h2>
+<p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+何か足し算や掛け算をするたびに結果を <code>% 998244353</code> し、割り算は $998244353-2$ 乗したものを掛ける。<br>
+累乗計算を何度も行うため、繰り返し二乗法のアルゴリズムも用意しておくこと。</p>
+<p>二項係数を階乗で計算するため、階乗と階乗の逆元を前計算しておくこと。</p>
+<p>剰余の掛け算では $998244353^2$ 級の値が現れる。<br>
+<code>long long</code> 型または <code>modint</code> を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/permutation-and-combination.html">順列組み合わせ</a>
+<a class="tag" href="../tags/probability.html">確率</a>
+<a class="tag" href="../tags/binomial-coefficient.html">二項係数</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/binary-exponentiation.html">繰り返し二乗法</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

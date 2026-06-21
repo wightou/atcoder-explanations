@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC463D - Maximize the Gap</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ABC463D - Maximize the Gap</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc463/tasks/abc463_d">問題ページ</a><a href="https://atcoder.jp/contests/abc463/submissions/76862473">解答例</a></div>
+    <h2>考え方</h2>
+<p>「あるスコア $x$ 以上が達成できるか？」は $x$ について単調である。<br>
+よって、この疑問の結果を $x$ で二分探索していけば、$O(\log (R_{\max}-L_{\min}))$ 回の判定で答えられる。</p>
+<p>あとは、$1$ 回の判定をどうやるかだが、これはほぼ区間スケジューリング問題そのものである。<br>
+許される次のスタート位置を $x$ 離さなければならないことくらいしか違いがない。<br>
+よって、事前にソートをしておけば $1$ 回の判定は $O(N)$ で可能。</p>
+<p>これで、全体として $O(N \log N + N \log (R_{\max}-L_{\min}))$ で解ける。</p>
+<p>最後に、不可能な場合の答えを $-1$ に書き換えるのを忘れずに。<br>
+これは、二分探索の結果が $1$ 未満であるかどうかで判定できる。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 6
+k: 3
+l: {1, 2, 5, 9, 10, 15}
+r: {12, 7, 9, 13, 18, 20}</code></pre>
+<p>各布について、「右端、左端」の形にして、右端が小さい順に並べる。</p>
+<pre><code>vec: {(7,2), (9,5), (12,1), (13,9), (18,10), (20,15)}</code></pre>
+<p>スコア $x$ を達成できるかを二分探索する。<br>
+達成できる値の下限 <code>inside</code> を $0$、達成できない値の上限 <code>outside</code> を $20-2 = 18$ で初期化する。</p>
+<pre><code>inside: 0
+outside: 18</code></pre>
+<p>まず、$x=9$ を達成できるか確認する。<br>
+右端が最も小さい布 <code>(7,2)</code> を選ぶ。<br>
+次に選ぶ布は、左端が $7+9=16$ 以上である必要がある。</p>
+<pre><code>vec: {(7,2), (9,5), (12,1), (13,9), (18,10), (20,15)}
+x: 9
+border: 16
+counter: 1</code></pre>
+<p>左端が $16$ 以上である布は残っていないので、$1$ 枚しか選べない。<br>
+$k=3$ 枚以上選べないので、$x=9$ は達成できない。<br>
+<code>outside</code> を $9$ に更新する。</p>
+<pre><code>inside: 0
+outside: 9</code></pre>
+<p>次に、$x=4$ を達成できるか確認する。<br>
+右端が最も小さい布 <code>(7,2)</code> を選ぶ。<br>
+次に選ぶ布は、左端が $7+4=11$ 以上である必要がある。</p>
+<pre><code>vec: {(7,2), (9,5), (12,1), (13,9), (18,10), (20,15)}
+x: 4
+border: 11
+counter: 1</code></pre>
+<p>布 <code>(20,15)</code> を選べる。<br>
+これで $2$ 枚選べたが、$k=3$ 枚に足りていないので、$x=4$ は達成できない。<br>
+<code>outside</code> を $4$ に更新する。</p>
+<pre><code>inside: 0
+outside: 4</code></pre>
+<p>次に、$x=2$ を達成できるか確認する。<br>
+右端が最も小さい布 <code>(7,2)</code> を選ぶ。<br>
+次に選ぶ布は、左端が $7+2=9$ 以上である必要がある。</p>
+<pre><code>vec: {(7,2), (9,5), (12,1), (13,9), (18,10), (20,15)}
+x: 2
+border: 9
+counter: 1</code></pre>
+<p>布 <code>(13,9)</code> を選べる。<br>
+次に選ぶ布は、左端が $13+2=15$ 以上である必要がある。</p>
+<pre><code>border: 15
+counter: 2</code></pre>
+<p>布 <code>(20,15)</code> を選べる。<br>
+これで $3$ 枚選べたので、$x=2$ は達成できる。<br>
+<code>inside</code> を $2$ に更新する。</p>
+<pre><code>border: 22
+counter: 3
+inside: 2
+outside: 4</code></pre>
+<p>次に、$x=3$ を達成できるか確認する。<br>
+右端が最も小さい布 <code>(7,2)</code> を選ぶ。<br>
+次に選ぶ布は、左端が $7+3=10$ 以上である必要がある。</p>
+<pre><code>vec: {(7,2), (9,5), (12,1), (13,9), (18,10), (20,15)}
+x: 3
+border: 10
+counter: 1</code></pre>
+<p>布 <code>(18,10)</code> を選べる。<br>
+次に選ぶ布は、左端が $18+3=21$ 以上である必要がある。</p>
+<pre><code>border: 21
+counter: 2</code></pre>
+<p>左端が $21$ 以上である布は残っていないので、$2$ 枚しか選べない。<br>
+$k=3$ 枚以上選べないので、$x=3$ は達成できない。</p>
+<pre><code>inside: 2
+outside: 3</code></pre>
+<p><code>inside</code> と <code>outside</code> の差が $1$ になったので、二分探索を終了する。<br>
+達成できる最大のスコアは $2$ である。</p>
+<p>よって、<code>2</code> を出力する。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/binary-search.html">二分探索</a>
+<a class="tag" href="../tags/greedy.html">貪欲法</a>
+<a class="tag" href="../tags/interval-scheduling-problem.html">区間スケジューリング問題</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
