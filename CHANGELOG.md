@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v43
+
+- `尺取法` と `sliding window法` を別記事として扱うように変更。
+  - `尺取法` の slug は `shakutori-method`。
+  - `sliding window法` の slug は `sliding-window`。
+- 旧 slug `two-pointers` は `shakutori-method` へリネームするように変更。
+- 旧 v41 / v42 の `knowledge/sliding-window.md` が `title: 尺取法` の場合、本文を保持して `knowledge/shakutori-method.md` へ条件付きリネームする処理を追加。
+- `scripts/build_site.py` で `docs/search.json` を生成しないように変更。
+- `scripts/create_knowledge_stubs.py` の skip 出力は既存ファイルの中身を表示せず、既定では件数だけ表示するように変更。
+
 ## v42
 
 - `ツーポインタ法` の category を `高速化系` から `データ探索系` に変更。

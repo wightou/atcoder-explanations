@@ -146,8 +146,9 @@ STUBS: list[KnowledgeStub] = [
     k("binary-exponentiation", "繰り返し二乗法", "C問題相当", "その他数学系"),
     k("binary-search", "二分探索", "C問題相当", "データ探索系", aliases=["binary search", "lower_bound", "upper_bound", "答えで二分探索"], absorbs=["lower_bound関数", "upper_bound関数", "解の二分探索"], related=["計算量の見積もり"]),
     k("inverse-mapping", "逆写像", "C問題相当", "データ探索系", aliases=["inverse mapping", "inverse map", "逆引き"], absorbs=["逆置換"], related=["前処理", "vector", "map"]),
-    k("two-pointer-method", "ツーポインタ法", "C問題相当", "データ探索系", aliases=["ツーポインタ", "2ポインタ", "two pointers", "two-pointer method", "two pointer method"], related=["計算量の見積もり", "ソート", "尺取法"]),
-    k("sliding-window", "尺取法", "C問題相当", "データ探索系", aliases=["しゃくとり法", "sliding window"], related=["ツーポインタ法"]),
+    k("two-pointer-method", "ツーポインタ法", "C問題相当", "データ探索系", aliases=["ツーポインタ", "2ポインタ", "two pointers", "two-pointer method", "two pointer method"], related=["計算量の見積もり", "ソート", "尺取法", "sliding window法"]),
+    k("shakutori-method", "尺取法", "C問題相当", "データ探索系", aliases=["しゃくとり法", "尺取り法"], related=["ツーポインタ法", "sliding window法"]),
+    k("sliding-window", "sliding window法", "C問題相当", "データ探索系", aliases=["sliding window", "sliding-window法", "スライディングウィンドウ", "スライディングウィンドウ法"], related=["ツーポインタ法", "尺取法"]),
     k("bit-bruteforce", "bit全探索", "C問題相当", "データ探索系"),
     k("permutation-search", "順列全探索", "C問題相当", "データ探索系", aliases=["next_permutation探索"]),
     k("modular-arithmetic", "剰余類環", "C問題相当", "その他数学系", absorbs=["modint"], related=["繰り返し二乗法"]),
@@ -254,13 +255,25 @@ STUBS: list[KnowledgeStub] = [
 
 KNOWN_RENAMES = {
     "topological-sort": "dag-dp",
-    "two-pointers": "sliding-window",
+    "two-pointers": "shakutori-method",
+}
+
+# 旧 v41 / v42 では knowledge/sliding-window.md が「尺取法」だった。
+# その本文を保持したまま、新しい「尺取法」ページへ移すための条件付きリネーム。
+# すでに「sliding window法」として作成済みの場合はリネームしない。
+KNOWN_TITLE_RENAMES = {
+    ("sliding-window", "尺取法"): "shakutori-method",
 }
 
 # 既存記事本文を壊さず、分類や別名だけを現行仕様へ寄せたい記事。
 # create_knowledge_stubs.py 実行時に、front matter だけを更新する。
 KNOWN_FRONT_MATTER_SYNCS = {
+    "divide-and-conquer",
+    "mo-algorithm",
+    "shakutori-method",
     "sliding-window",
+    "sqrt-decomposition",
+    "two-pointer-method",
 }
 
 
@@ -301,11 +314,12 @@ def replace_or_insert_front_matter_list(front: str, name: str, values: list[str]
     return "\n".join(lines) + "\n"
 
 
-def sync_known_front_matter(*, dry_run: bool = False) -> list[Path]:
+def sync_known_front_matter(*, dry_run: bool = False, skip_paths: set[Path] | None = None) -> list[Path]:
     updated: list[Path] = []
+    skip_paths = skip_paths or set()
     for slug in sorted(KNOWN_FRONT_MATTER_SYNCS):
         path = KNOWLEDGE_DIR / f"{slug}.md"
-        if not path.exists():
+        if path in skip_paths or not path.exists():
             continue
         stub = stub_by_slug(slug)
         text = path.read_text(encoding="utf-8")
@@ -314,21 +328,41 @@ def sync_known_front_matter(*, dry_run: bool = False) -> list[Path]:
         end = text.find("\n---\n", 4)
         if end == -1:
             continue
-        front = text[4:end + 1]
-        body = text[end + len("\n---\n"):]
-        new_front = front
-        new_front = replace_or_insert_front_matter_field(new_front, "title", stub.title)
-        new_front = replace_or_insert_front_matter_field(new_front, "level", stub.level)
-        new_front = replace_or_insert_front_matter_field(new_front, "category", stub.category)
-        new_front = replace_or_insert_front_matter_list(new_front, "aliases", stub.aliases)
-        new_front = replace_or_insert_front_matter_list(new_front, "absorbs", stub.absorbs)
-        new_front = replace_or_insert_front_matter_list(new_front, "related", stub.related)
-        new_text = "---\n" + new_front + "---\n" + body
+        new_text = rewrite_front_matter_to_stub(text, stub)
         if new_text != text:
             if not dry_run:
                 path.write_text(new_text, encoding="utf-8")
             updated.append(path)
     return updated
+
+
+def front_matter_title(text: str) -> str | None:
+    if not text.startswith("---\n"):
+        return None
+    end = text.find("\n---\n", 4)
+    if end == -1:
+        return None
+    for line in text[4:end].splitlines():
+        if line.startswith("title:"):
+            return line.split(":", 1)[1].strip().strip('"\'')
+    return None
+
+
+def rewrite_front_matter_to_stub(text: str, stub: KnowledgeStub) -> str:
+    if not text.startswith("---\n"):
+        return text
+    end = text.find("\n---\n", 4)
+    if end == -1:
+        return text
+    front = text[4:end + 1]
+    body = text[end + len("\n---\n"):]
+    front = replace_or_insert_front_matter_field(front, "title", stub.title)
+    front = replace_or_insert_front_matter_field(front, "level", stub.level)
+    front = replace_or_insert_front_matter_field(front, "category", stub.category)
+    front = replace_or_insert_front_matter_list(front, "aliases", stub.aliases)
+    front = replace_or_insert_front_matter_list(front, "absorbs", stub.absorbs)
+    front = replace_or_insert_front_matter_list(front, "related", stub.related)
+    return "---\n" + front + "---\n" + body
 
 
 def apply_known_renames(*, dry_run: bool = False) -> list[tuple[Path, Path]]:
@@ -341,18 +375,22 @@ def apply_known_renames(*, dry_run: bool = False) -> list[tuple[Path, Path]]:
         new_stub = stub_by_slug(new_slug)
         if not dry_run:
             text = old_path.read_text(encoding="utf-8")
-            if text.startswith("---\n"):
-                end = text.find("\n---\n", 4)
-                if end != -1:
-                    front = text[4:end + 1]
-                    body = text[end + len("\n---\n"):]
-                    front = replace_or_insert_front_matter_field(front, "title", new_stub.title)
-                    front = replace_or_insert_front_matter_field(front, "level", new_stub.level)
-                    front = replace_or_insert_front_matter_field(front, "category", new_stub.category)
-                    front = replace_or_insert_front_matter_list(front, "aliases", new_stub.aliases)
-                    front = replace_or_insert_front_matter_list(front, "absorbs", new_stub.absorbs)
-                    front = replace_or_insert_front_matter_list(front, "related", new_stub.related)
-                    text = "---\n" + front + "---\n" + body
+            text = rewrite_front_matter_to_stub(text, new_stub)
+            new_path.write_text(text, encoding="utf-8")
+            old_path.unlink()
+        renamed.append((old_path, new_path))
+
+    for (old_slug, expected_title), new_slug in KNOWN_TITLE_RENAMES.items():
+        old_path = KNOWLEDGE_DIR / f"{old_slug}.md"
+        new_path = KNOWLEDGE_DIR / f"{new_slug}.md"
+        if not old_path.exists() or new_path.exists():
+            continue
+        text = old_path.read_text(encoding="utf-8")
+        if front_matter_title(text) != expected_title:
+            continue
+        new_stub = stub_by_slug(new_slug)
+        if not dry_run:
+            text = rewrite_front_matter_to_stub(text, new_stub)
             new_path.write_text(text, encoding="utf-8")
             old_path.unlink()
         renamed.append((old_path, new_path))
@@ -387,7 +425,7 @@ def render_stub(stub: KnowledgeStub) -> str:
 def create_stubs(*, dry_run: bool = False) -> tuple[list[Path], list[Path], list[tuple[Path, Path]], list[Path]]:
     KNOWLEDGE_DIR.mkdir(parents=True, exist_ok=True)
     renamed = apply_known_renames(dry_run=dry_run)
-    synced = sync_known_front_matter(dry_run=dry_run)
+    synced = sync_known_front_matter(dry_run=dry_run, skip_paths={old_path for old_path, _ in renamed})
     created: list[Path] = []
     skipped: list[Path] = []
     seen_slugs: set[str] = set()
@@ -408,6 +446,7 @@ def create_stubs(*, dry_run: bool = False) -> tuple[list[Path], list[Path], list
 def main() -> int:
     parser = argparse.ArgumentParser(description="未作成の知識記事Markdownスタブを生成します。")
     parser.add_argument("--dry-run", action="store_true", help="作成せずに対象だけ表示します。")
+    parser.add_argument("--show-skipped", action="store_true", help="skip した既存ファイルのパスだけを表示します。本文や front matter は表示しません。")
     args = parser.parse_args()
 
     created, skipped, renamed, synced = create_stubs(dry_run=args.dry_run)
@@ -424,8 +463,9 @@ def main() -> int:
     for path in created:
         print(f"  + {path.relative_to(ROOT)}")
     print(f"skipped existing: {len(skipped)}")
-    for path in skipped:
-        print(f"  = {path.relative_to(ROOT)}")
+    if args.show_skipped:
+        for path in skipped:
+            print(f"  = {path.relative_to(ROOT)}")
     return 0
 
 

@@ -7,8 +7,8 @@ category_order: 9999
 level_order: 9999
 aliases:
   - sqrt decomposition
-absorbs: []
-related: []
+absorbs:
+related:
 ---
 
 ## 概要

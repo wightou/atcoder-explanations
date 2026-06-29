@@ -27,6 +27,12 @@ python scripts/build_site.py
 python scripts/create_knowledge_stubs.py
 ```
 
+`skip` された既存ファイルは件数だけ表示します。パスだけ確認したい場合は次を使います。本文や front matter の中身は表示しません。
+
+```bash
+python scripts/create_knowledge_stubs.py --show-skipped
+```
+
 Windows由来の `*:Zone.Identifier` ファイルを消す場合は、リポジトリ直下で次を実行します。
 
 ```bash
@@ -96,11 +102,15 @@ related:
 ---
 ```
 
-- `category: 未分類` または `level: 未分類` の記事は、通常導線・タグ検索・検索データから外します。
+- `category: 未分類` または `level: 未分類` の記事は、通常導線・タグ検索から外します。
 - ページ自体が生成されることは許容します。
 - 新規スタブの `summary` と本文の `## 概要` は、どちらも `今後記述予定。` を初期値にします。
 - `category: 典型問題集` は、問題パターンとして参照したい知識記事に使います。
 - `DAG上のDP` は `トポロジカルソート` を吸収して扱います。
+- `ツーポインタ法`、`尺取法`、`sliding window法` は別記事として扱います。
+  - `尺取法`: `knowledge/shakutori-method.md`
+  - `sliding window法`: `knowledge/sliding-window.md`
+- `scripts/build_site.py` は `search.json` を生成しません。タグページと知識記事一覧を主な探索導線とします。
 
 ### Markdown表示
 

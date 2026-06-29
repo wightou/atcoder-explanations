@@ -30,7 +30,227 @@ window.MathJax = {
   <article class="markdown-body">
     <h1>累積和</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>配列上の「ここからここまでの合計はいくつ？」に高速に答えるためのアルゴリズム。<br>
+ただし、途中で配列の中身は変えることはできない。</p>
+<p>$N$ 個のデータに対し $Q$ 回和を計算する場合、通常の方法でやれば計算回数が $O(NQ)$ になる。<br>
+しかし、このアルゴリズムを用いれば、$O(N+Q)$ で済む。</p>
+<h2>アルゴリズム内容</h2>
+<p>配列 <code>A</code> に対し、「そこより左」または「そこまで」の和を作っておく。<br>
+例えば、<code>{3,1,4,1,5,9,2,6}</code> という配列に対し、以下のように別の配列を作る。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th><code>index</code></th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>A</code></td>
+<td>3</td>
+<td>1</td>
+<td>4</td>
+<td>1</td>
+<td>5</td>
+<td>9</td>
+<td>2</td>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td>「より左」の累積和</td>
+<td>0</td>
+<td>3</td>
+<td>4</td>
+<td>8</td>
+<td>9</td>
+<td>14</td>
+<td>23</td>
+<td>25</td>
+<td>31</td>
+</tr>
+</tbody>
+</table></div>
+<p>または</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th><code>index</code></th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>A</code></td>
+<td>3</td>
+<td>1</td>
+<td>4</td>
+<td>1</td>
+<td>5</td>
+<td>9</td>
+<td>2</td>
+<td>6</td>
+</tr>
+<tr>
+<td>「まで」の累積和</td>
+<td>3</td>
+<td>4</td>
+<td>8</td>
+<td>9</td>
+<td>14</td>
+<td>23</td>
+<td>25</td>
+<td>31</td>
+</tr>
+</tbody>
+</table></div>
+<p>例えば前者の場合、<code>A[3]</code> から <code>A[6]</code> までの総和を答えたい場合を考える。<br>
+この場合、「より左」の累積和の <code>sum[7]</code> から <code>sum[3]</code> を引いて $25-8=17$ と求められる。<br>
+「まで」の方を用いるなら、 <code>sum[6]</code> から <code>sum[2]</code> を引いてやはり $25-8=17$ となる。</p>
+<p>この配列がどんなに長くても、最初に累積和さえ作ってしまえば区間和は引き算 $1$ 回。<br>
+「$L$ 番目から $R$ 番目までの総和を答えて」というクエリが大量に飛んでくる場合などに有効。</p>
+<p>「より左」型と「まで」型の主な違いは以下。<br>
+比較的、前者の方がミスをしにくい、より正確にはミスをしたときに発見や修正しやすい。</p>
+<ul>
+<li>「より左」型の方は、作るときにいくつか注意が必要</li>
+<li>「まで」型の方は、 $0$ 番目からの和を取りたい場合に $-1$ 番目が存在しないケアが必要</li>
+</ul>
+<h2>コード例</h2>
+<p>累積和の作り方は、いくつかの方法がある。<br>
+一番使いやすい、「より左」型の累積和の作り方。</p>
+<pre><code>vector&lt;int&gt; sum(n+1,0);
+for (int i=0; i&lt;n; i++) sum.at(i+1) = sum.at(i) + a.at(i);</code></pre>
+<p>サイズが元の配列より $1$ つ大きくなることに注意。<br>
+また、<code>sum[0]</code> に明示的に <code>0</code> を入れる必要があることにも注意。</p>
+<p>同じ「より左」型でも、標準ライブラリを使う方法もある。</p>
+<pre><code>vector&lt;int&gt; sum(n+1,0);
+partial_sum(a.begin(),a.end(),sum.begin()+1);</code></pre>
+<p>やはりサイズが $1$ 大きくなることと、<code>sum[0]</code> の明示的初期化が必要。<br>
+さらに、第 $3$ 引数で <code>.begin()</code> ではなくそれに $1$ を足す必要がある。</p>
+<p>また、「まで型」の場合は</p>
+<pre><code>vector&lt;int&gt; sum(n);
+partial_sum(a.begin(),a.end(),sum.begin());</code></pre>
+<p>と書けるほか、元の数列をつぶしていい場合は</p>
+<pre><code>for (int i=0; i&lt;n-1; i++) a.at(i+1) += a.at(i);</code></pre>
+<p>だけでも累積和にできる。<br>
+この方法は、<code>a</code> を作るときに <code>0</code> を挿入して $1$ つ長くなった形で作ると、「より左」型にもできる。<br>
+これを知っていると、二次元累積和（あるいはそれ以上の次元）を作るときに楽になる。</p>
+<p>実際に区間和を求めるときは、以下のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th>「より左」型</th>
+<th>「まで」型</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$[l,r)$ の和</td>
+<td><code>sum.at(r)-sum.at(l)</code></td>
+<td><code>sum.at(r-1)-sum.at(l-1)</code></td>
+</tr>
+<tr>
+<td>$[l,r]$ の和</td>
+<td><code>sum.at(r+1)-sum.at(l)</code></td>
+<td><code>sum.at(r)-sum.at(l-1)</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>※ 「まで」型の場合、$l=0$ のときは分岐処理で <code>sum.at(l-1)</code> を引かないようにする。</p>
+<h2>使い方の応用</h2>
+<p>和だけでなく、逆の演算が存在すれば、なんでも同様の処理ができる。<br>
+逆の演算が存在しない場合も、部分的には同様の処理ができる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th>累積演算</th>
+<th>逆演算</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>累積和</td>
+<td><code>A[i]+x</code></td>
+<td><code>sum[r]-sum[l]</code></td>
+</tr>
+<tr>
+<td>累積積（オーバーフローしない範囲）</td>
+<td><code>A[i]*x</code></td>
+<td><code>prod[r]/prod[l]</code></td>
+</tr>
+<tr>
+<td>法 $P$（素数）の累積積（$0$ がない）</td>
+<td><code>A[i]*x%P</code></td>
+<td><code>prod[r]*(prod[l]のP-2乗)%P</code> （※E問題級）</td>
+</tr>
+<tr>
+<td>法 $M$（合成数）の累積積</td>
+<td><code>A[i]*x%M</code></td>
+<td>なし</td>
+</tr>
+<tr>
+<td>累積最大値</td>
+<td><code>max(A[i],x)</code></td>
+<td>なし</td>
+</tr>
+<tr>
+<td>累積最小値</td>
+<td><code>min(A[i],x)</code></td>
+<td>なし</td>
+</tr>
+</tbody>
+</table></div>
+<h2>注意点</h2>
+<p>たくさんの値の和を取るので、オーバーフローしやすい。<br>
+最大サイズですべて最大値だった場合に最後の値がいくつになるか、事前に確認することが必要。<br>
+何も考えずに整数は全部 <code>long long</code> 型にすれば事故が起こりにくくすることはできる。<br>
+しかし、それすらはみ出る場合もあるため根本対策にはなっていない。<br>
+事故が減るメリットよりも、確認の癖がつきにくいデメリットの方が大きいかもしれない。</p>
+<p>また、<code>partial_sum</code> はもとの配列と同じ型で和を取っていく。<br>
+<code>A</code> を <code>vector&lt;int&gt;</code> で作ると、<code>sum</code> だけ <code>vector&lt;long long&gt;</code> にしてもオーバーフロー対策にならない。<br>
+この場合は <code>A</code> 自体を <code>vector&lt;long long&gt;</code> にしなければならない。</p>
+<p>配列の中身は後から変えられない。<br>
+変わるたびに作り直して間に合うならいいが、ダメな場合はFenwick木やsegment木を用いる。</p>
+<p>また、数値の種類数のように $1$ 箇所ごとのデータを詳細に持って大きくなってしまう場合は使えない。<br>
+sliding window法や尺取法、その他問題に対応できるアルゴリズムを用いること。</p>
+<p>逆演算が存在しない場合は、開始地点の自由な指定はできないが、端からのデータは使用できる。<br>
+例えば、自身以外の最大値を求める場合は、左右それぞれからの累積最大値を用いることができる。<br>
+$i$ 番目以外の最大値を知りたければ、左から $i-1$ 番目までと右から $i+1$ 番目までの大きい方を求める。</p>
+<h2>関連アルゴリズム</h2>
+<h3>sliding window法</h3>
+<p>長さ固定の区間を順に調べる処理を扱える。<br>
+種類数のように現在の状態を扱うデータが大きくなりがちなものに対しても使える場合がある。<br>
+一方で、後から改めて任意区間の処理を求められても何も答えられないのが難点。</p>
+<h3>尺取法</h3>
+<p>累積和と同じく、条件を満たす区間を探したり個数を数えたりするアルゴリズム。<br>
+累積和と二分探索の $2$ つが協力して $O(N\log N)$ でやることを、尺取法は $1$ つで $O(N)$ で処理できる。<br>
+sliding window法の長さ可変バージョンであり、累積和と比較した長所短所もほぼ同じ。</p>
+<h3>Fenwick木</h3>
+<p>累積和の上位互換。<br>
+同じように任意の区間の和がすぐにわかるようになっているが、途中での値の更新もできる。</p>
+<h3>segment木</h3>
+<p>Fenwick木のさらに上位互換。<br>
+やはり、任意の区間の和がすぐにわかるようになっているが、途中での値の更新もできる。<br>
+逆演算を利用しないので、累積最大値なども任意区間で求められる。</p>
+<h3>lazy segment木</h3>
+<p>segment木のさらに上位互換。<br>
+区間にまとめて代入とか、そういうことまでできるようになっている。</p>
+<h3>階差数列</h3>
+<p>累積和の逆。<br>
+階差数列の方をうまく処理し、累積和の方に真にほしいデータが出現するようにする。</p>
+<h3>二次元累積和</h3>
+<p>累積和、二次元配列バージョン。</p>
+<h3>動的計画法</h3>
+<p>あまり意識することはないが、実は累積和は動的計画法の一種である。</p>
   </article>
 
   <aside class="sidebar">

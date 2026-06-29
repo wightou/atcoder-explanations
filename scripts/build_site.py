@@ -8,7 +8,6 @@ from pathlib import Path
 from urllib.parse import quote
 import argparse
 import hashlib
-import json
 import re
 import shutil
 import sys
@@ -1523,32 +1522,6 @@ def render_knowledge_index(knowledge_pages: list[KnowledgePage]) -> str:
     return render_index_layout("知識集", inner, prefix="../", css_href="../style.css")
 
 
-def render_search_json(explanations: list[ExplanationPage], knowledge_pages: list[KnowledgePage]) -> str:
-    records = []
-    for p in sorted(explanations, key=page_sort_key):
-        records.append({
-            "type": "explanation",
-            "contest": p.contest,
-            "problem": p.problem,
-            "problem_title": p.problem_title,
-            "full_title": p.full_title,
-            "url": p.url,
-            "tags": p.tags,
-            "body": p.body_text,
-        })
-    for k in sorted(visible_knowledge_pages(knowledge_pages), key=knowledge_sort_key):
-        records.append({
-            "type": "knowledge",
-            "title": k.title,
-            "category": k.category,
-            "level": k.level,
-            "url": k.url,
-            "aliases": k.aliases,
-            "summary": k.summary,
-            "body": k.body_text,
-        })
-    return json.dumps(records, ensure_ascii=False, indent=2)
-
 
 def validate_project_euler_page(page: ExplanationPage) -> None:
     if classify_page(page) != "Project Euler（100番まで）":
@@ -2341,7 +2314,6 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
             encoding="utf-8",
         )
 
-    (out_dir / "search.json").write_text(render_search_json(explanations, knowledge_pages), encoding="utf-8")
     (out_dir / ".nojekyll").write_text("", encoding="utf-8")
     write_css(out_dir)
 
