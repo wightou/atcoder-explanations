@@ -130,7 +130,7 @@ window.MathJax = {
 <p>累積和の作り方は、いくつかの方法がある。<br>
 一番使いやすい、「より左」型の累積和の作り方。</p>
 <pre><code>vector&lt;int&gt; sum(n+1,0);
-for (int i=0; i&lt;n; i++) sum.at(i+1) = sum.at(i) + a.at(i);</code></pre>
+for (int i=0; i&lt;n; i++) sum.at(i+1) = sum.at(i)+a.at(i);</code></pre>
 <p>サイズが元の配列より $1$ つ大きくなることに注意。<br>
 また、<code>sum[0]</code> に明示的に <code>0</code> を入れる必要があることにも注意。</p>
 <p>同じ「より左」型でも、標準ライブラリを使う方法もある。</p>
