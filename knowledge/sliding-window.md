@@ -8,7 +8,7 @@ level_order: 9999
 aliases:
   - しゃくとり法
   - sliding window
-absorbs: []
+absorbs:
 related:
   - ツーポインタ法
 ---

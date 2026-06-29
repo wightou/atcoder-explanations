@@ -44,22 +44,22 @@ s: {&quot;xoxox&quot;,
     &quot;oxxxx&quot;}</code></pre>
 <p>答えを表す変数 <code>result</code> を <code>&quot;No&quot;</code> で初期化する。</p>
 <pre><code>result: &quot;No&quot;</code></pre>
-<p>それぞれの列車について、<code>x - &#x27;A&#x27;</code>、つまり $0$ 番目の文字を確認していく。</p>
+<p>それぞれの列車について、<code>x-&#x27;A&#x27;</code>、つまり $0$ 番目の文字を確認していく。</p>
 <p>$1$ 本目の列車を見る。<br>
 $0$ 番目の文字は <code>&#x27;x&#x27;</code> なので、指定された列に空席はない。</p>
 <pre><code>str: &quot;xoxox&quot;
-str.at(x - &#x27;A&#x27;): &#x27;x&#x27;
+str[x-&#x27;A&#x27;]: &#x27;x&#x27;
 result: &quot;No&quot;</code></pre>
 <p>$2$ 本目の列車を見る。<br>
 $0$ 番目の文字は <code>&#x27;x&#x27;</code> なので、指定された列に空席はない。</p>
 <pre><code>str: &quot;xxooo&quot;
-str.at(x - &#x27;A&#x27;): &#x27;x&#x27;
+str[x-&#x27;A&#x27;]: &#x27;x&#x27;
 result: &quot;No&quot;</code></pre>
 <p>$3$ 本目の列車を見る。<br>
 $0$ 番目の文字は <code>&#x27;o&#x27;</code> なので、指定された列に空席がある。<br>
 そのため、出力文字列を <code>&quot;Yes&quot;</code> に変更する。</p>
 <pre><code>str: &quot;oxxxx&quot;
-str.at(x - &#x27;A&#x27;): &#x27;o&#x27;
+str[x-&#x27;A&#x27;]: &#x27;o&#x27;
 result: &quot;Yes&quot;</code></pre>
 <p>結果として <code>&quot;Yes&quot;</code> を出力する。</p>
 <h2>注意点</h2>
