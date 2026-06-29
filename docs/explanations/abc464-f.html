@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC464F - Random Vault Heist</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ABC464F - Random Vault Heist</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc464/tasks/abc464_f">問題ページ</a><a href="https://atcoder.jp/contests/abc464/submissions/77039510">解答例</a></div>
+    <h2>考え方</h2>
+<p>まず、$N \leq 20$ の場合の $O(2^N)$ 解法を考える。</p>
+<p>例として、金庫が $3$ 個で、中身が $2$ と $3$ と $4$、目標金額が $7$ である場合を考える。<br>
+金庫を開ける順序は $6$ 通りあり、以下の寄与を合計して、期待値は $25/3$ となる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>開ける順序</th>
+<th>期待値の寄与</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>${2,3,4}$</td>
+<td>$(2+3+4)/6 = 3/2$</td>
+</tr>
+<tr>
+<td>${2,4,3}$</td>
+<td>$(2+4+3)/6 = 3/2$</td>
+</tr>
+<tr>
+<td>${3,2,4}$</td>
+<td>$(3+2+4)/6 = 3/2$</td>
+</tr>
+<tr>
+<td>${3,4}$</td>
+<td>$(3+4)/6 = 7/6$</td>
+</tr>
+<tr>
+<td>${4,2,3}$</td>
+<td>$(4+2+3)/6 = 3/2$</td>
+</tr>
+<tr>
+<td>${4,3}$</td>
+<td>$(4+3)/6 = 7/6$</td>
+</tr>
+</tbody>
+</table></div>
+<p>これを、何個目に開ける金庫からの寄与かで和の取り方を作り直す。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>何個目の金庫か</th>
+<th>期待値の寄与</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$1$ 個目の金庫</td>
+<td>$(2+2+3+3+4+4)/6 = 3$</td>
+</tr>
+<tr>
+<td>$2$ 個目の金庫</td>
+<td>$(3+4+2+4+2+3)/6 = 3$</td>
+</tr>
+<tr>
+<td>$3$ 個目の金庫</td>
+<td>$(4+3+4+3)/6 = 7/3$</td>
+</tr>
+</tbody>
+</table></div>
+<p>さらに、それぞれの中で、直前までにどの金庫を開けたのかで分解する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>何個目の金庫か</th>
+<th>直前までに開けた金庫</th>
+<th>期待値の寄与</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$1$ 個目の金庫</td>
+<td>$( )$</td>
+<td>$(2+3+4)/3 = 3$</td>
+</tr>
+<tr>
+<td>$2$ 個目の金庫</td>
+<td>$(2)$</td>
+<td>$(3+4)/6 = 7/6$</td>
+</tr>
+<tr>
+<td>$2$ 個目の金庫</td>
+<td>$(3)$</td>
+<td>$(2+4)/6 = 1$</td>
+</tr>
+<tr>
+<td>$2$ 個目の金庫</td>
+<td>$(4)$</td>
+<td>$(2+3)/6 = 5/6$</td>
+</tr>
+<tr>
+<td>$3$ 個目の金庫</td>
+<td>$(2,3)$</td>
+<td>$4/3 = 4/3$</td>
+</tr>
+<tr>
+<td>$3$ 個目の金庫</td>
+<td>$(2,4)$</td>
+<td>$3/3 = 1$</td>
+</tr>
+</tbody>
+</table></div>
+<p>それぞれの分子の和は、残っている金庫の総額である。<br>
+つまり、全金庫の総額から、既に開けた金庫の総額を引いて求められる。<br>
+分母は、「事前に開けたものがそうなった上で、次の $1$ 個で残りのそれぞれの金庫を開ける確率」の分母。</p>
+<p>つまり、今回の期待値は、以下で求まる。<br>
+$\dfrac{9-0}{{}_3\mathrm{C}_0 \times 3}+\dfrac{9-2}{{}_3\mathrm{C}_1 \times 2}+\dfrac{9-3}{{}_3\mathrm{C}_1 \times 2}+\dfrac{9-4}{{}_3\mathrm{C}_1 \times 2}+\dfrac{9-5}{{}_3\mathrm{C}_2 \times 1}+\dfrac{9-6}{{}_3\mathrm{C}_2 \times 1} = \dfrac{25}{3}$</p>
+<p>これは、各項ごとに、選んだ金庫の組の個数と合計額のみから $O(1)$ で高速に計算できる。<br>
+（逆数に毎回繰り返し二乗法を用いなくて済むように、階乗や各種逆数を事前計算しておく）<br>
+つまり、以下のようなデータを高速に構築できれば、$7$ 未満のデータだけ拾うことで $O(2^N)$ で解ける。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>選んだ金庫の個数</th>
+<th>合計額</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$0$ 個</td>
+<td>$0$</td>
+</tr>
+<tr>
+<td>$1$ 個</td>
+<td>$2, 3, 4$</td>
+</tr>
+<tr>
+<td>$2$ 個</td>
+<td>$5, 6, 7$</td>
+</tr>
+<tr>
+<td>$3$ 個</td>
+<td>$9$</td>
+</tr>
+</tbody>
+</table></div>
+<p>このデータの構築は、以下の方法を用いる。</p>
+<p>最初に、このような形のデータを用意する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>選んだ金庫の個数</th>
+<th>合計額</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$0$ 個</td>
+<td>$0$</td>
+</tr>
+<tr>
+<td>$1$ 個</td>
+<td></td>
+</tr>
+<tr>
+<td>$2$ 個</td>
+<td></td>
+</tr>
+<tr>
+<td>$3$ 個</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>ここに、金額 $2$ の金庫の影響を処理する。<br>
+つまり、すべてのデータについて、合計額に $2$ を加えて、個数が $1$ 大きいところに付け加える。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>選んだ金庫の個数</th>
+<th>合計額</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$0$ 個</td>
+<td>$0$</td>
+</tr>
+<tr>
+<td>$1$ 個</td>
+<td>$2$</td>
+</tr>
+<tr>
+<td>$2$ 個</td>
+<td></td>
+</tr>
+<tr>
+<td>$3$ 個</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>次に、金額 $3$ の金庫の影響を処理する。<br>
+方法は同様だが、$1$ 個のところはマージソートの要領で昇順に保っておく。<br>
+（これは、$N \leq 20$ のときには特に意味がないが、$N \leq 40$ に対応するときに役に立つ）</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>選んだ金庫の個数</th>
+<th>合計額</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$0$ 個</td>
+<td>$0$</td>
+</tr>
+<tr>
+<td>$1$ 個</td>
+<td>$2, 3$</td>
+</tr>
+<tr>
+<td>$2$ 個</td>
+<td>$5$</td>
+</tr>
+<tr>
+<td>$3$ 個</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>最後に金額 $4$ の金庫の影響を処理すれば、前述のデータが $O(2^N)$ で構築できる。<br>
+あとは、$1$ つずつ分数計算をすればよい。<br>
+以上が、$N \leq 20$ の場合に $O(2^N)$ で解く方法である。</p>
+<p>さて、ここまでは前座で、この問題はここからが本番である。<br>
+$N \leq 40$ の場合には $O(2^N)$ では間に合わず、$O(N 2^{N/2})$ くらいでどうにかしなければならない。 </p>
+<p>まず、$2^40$ 通りの列挙は絶対に無理なので、半分全列挙で前後半それぞれの $2^20$ 通りずつ全列挙する。<br>
+そして、前半から $i$ 個、後半から $j$ 個とるパターンごとにまとめて処理していく。<br>
+これらの寄与を計算するときの分母は、${}_N\mathrm{C}_{i+j} \times (N-i-j)$ でよい。</p>
+<p>分子側は前半から $i$ 個とるデータの配列と、後半から $j$ 個とるデータの配列を見て求める。<br>
+前者の値と後者の値の和が $X$ 未満になるような全組について、「全総額-その値」の総和を出せばよい。<br>
+これは、後者のインデックスを進めながら前者のインデックスを戻すツーポインタ法で求められる。<br>
+前者側の累積和も事前に取っておけば、$O(両配列の長さの和)$ で求まる。<br>
+これを $i$ と $j$ 全ての組について実行して全ての和をとればよい。</p>
+<p>半分全列挙のために <code>A</code> を分けたときに、左側に $l$ 個、右側に $r$ 個あったとする。<br>
+すると、ツーポインタ法の二重ループ全体で $O(l2^r+r2^l)$ 回かかる。<br>
+これは $l$ と $r$ を均等に分けたら $O(N 2^{N/2})$。<br>
+他にこれより計算量が膨らむところはないので、全体の計算量も $O(N 2^{N/2})$。<br>
+これで $N \leq 40$ の場合にも解ける。</p>
+<h2>入力例3での動作</h2>
+<p>入力例 $1$ があまり動作説明に適さないので、入力例 $3$ で例を示す。</p>
+<p>入力を受け取る。</p>
+<pre><code>n: 11
+x: 60
+a: {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31}</code></pre>
+<p>配列 <code>a</code> を前半と後半に分ける。</p>
+<pre><code>b: {2, 3, 5, 7, 11}
+c: {13, 17, 19, 23, 29, 31}</code></pre>
+<p>前半から $k$ 個取ったときの合計を、$k$ ごとに列挙する。</p>
+<p>最初は、$0$ 個取った合計だけがある。</p>
+<pre><code>result[0]: {0}
+result[1]: {}
+result[2]: {}
+result[3]: {}
+result[4]: {}
+result[5]: {}</code></pre>
+<p>値 <code>2</code> を処理すると、<code>2</code> を取る場合が追加される。</p>
+<pre><code>result[0]: {0}
+result[1]: {2}</code></pre>
+<p>次に値 <code>3</code> を処理すると、<code>3</code> を取る場合と、<code>2</code> と <code>3</code> の両方を取る場合が追加される。</p>
+<pre><code>result[0]: {0}
+result[1]: {2, 3}
+result[2]: {5}</code></pre>
+<p>次に値 <code>5</code> を処理すると、例えば、$1$ 個取る合計に <code>5</code> が追加される。<br>
+また、$2$ 個取る合計には <code>2+5=7</code> と <code>3+5=8</code> が追加される。<br>
+各配列が昇順になるようにマージソートしながら追加する。</p>
+<pre><code>result[0]: {0}
+result[1]: {2, 3, 5}
+result[2]: {5, 7, 8}
+result[3]: {10}</code></pre>
+<p>以下同様に繰り返すと、前半側の列挙結果は次のようになる。</p>
+<pre><code>vv1[0]: {0}
+vv1[1]: {2, 3, 5, 7, 11}
+vv1[2]: {5, 7, 8, 9, 10, 12, 13, 14, 16, 18}
+vv1[3]: {10, 12, 14, 15, 16, 18, 19, 20, 21, 23}
+vv1[4]: {17, 21, 23, 25, 26}
+vv1[5]: {28}</code></pre>
+<p>後半側も同様に列挙する。<br>
+今回の二重ループの説明では、後半から $2$ 個取る場合だけを見る。</p>
+<pre><code>vv2[2]: {30, 32, 36, 36, 40, 42, 42, 44, 46, 48, 48, 50, 52, 54, 60}</code></pre>
+<p>また、<code>a</code> 全体の合計値を取得する。</p>
+<pre><code>sum_all: 160</code></pre>
+<p>ここから、前半から $2$ 個、後半から $2$ 個取る場合の寄与の計算だけ例示する。</p>
+<pre><code>vv1[2]: {5, 7, 8, 9, 10, 12, 13, 14, 16, 18}
+vv2[2]: {30, 32, 36, 36, 40, 42, 42, 44, 46, 48, 48, 50, 52, 54, 60}</code></pre>
+<p>まず、<code>vv1[2]</code> の累積和 <code>sum1[2]</code> を作る。<br>
+<code>sum1[2][t]</code> は、<code>vv1[2]</code> の先頭 $t$ 個の和である。</p>
+<pre><code>vv1[2]:  {5, 7, 8, 9, 10, 12, 13, 14, 16, 18}
+sum1[2]: {0, 5, 12, 20, 29, 39, 51, 64, 78, 94, 112}</code></pre>
+<p><code>vv2[2]</code> の値を $1$ つずつ見る。<br>
+最初に、後半から取った合計が <code>30</code> の場合を考える。</p>
+<p>このとき、前半から取った合計が $60-30=30$ 未満なら、すでに盗んだ集合 $S$ の合計が $X$ 未満である。<br>
+<code>vv1[2]</code> の値はすべて <code>30</code> 未満なので、<code>id</code> は <code>10</code> となる。</p>
+<pre><code>k: 30
+x-k: 30
+id: 10</code></pre>
+<p>条件を満たす前半側の合計は、次の $10$ 個である。</p>
+<pre><code>5, 7, 8, 9, 10, 12, 13, 14, 16, 18</code></pre>
+<p>そのため、条件を満たす前半側の合計の総和は、<code>sum1[2][10]</code> を使って $112$ と求められる。</p>
+<pre><code>sum1[2][id]: 112</code></pre>
+<p>この <code>k=30</code> について、次に盗む金額の期待値の分子部分をまとめると、次の値になる。</p>
+<pre><code>(sum_all-k)*id-sum1[2][id]
+= (160-30)*10-112
+= 1188</code></pre>
+<p>同様に、<code>vv2[2]</code> の各値について処理すると次のようになる。<br>
+例えば <code>k=42</code> の場合は、前半側の合計が $18$ 未満のものだけを使うので、<code>id</code> は <code>9</code> となる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>後半側の合計 <code>k</code></th>
+<th><code>x-k</code></th>
+<th><code>id</code></th>
+<th><code>sum1[2][id]</code></th>
+<th><code>(sum_all-k)*id-sum1[2][id]</code></th>
+</tr></thead>
+<tbody>
+<tr>
+<td>30</td>
+<td>30</td>
+<td>10</td>
+<td>112</td>
+<td>1188</td>
+</tr>
+<tr>
+<td>32</td>
+<td>28</td>
+<td>10</td>
+<td>112</td>
+<td>1168</td>
+</tr>
+<tr>
+<td>36</td>
+<td>24</td>
+<td>10</td>
+<td>112</td>
+<td>1128</td>
+</tr>
+<tr>
+<td>36</td>
+<td>24</td>
+<td>10</td>
+<td>112</td>
+<td>1128</td>
+</tr>
+<tr>
+<td>40</td>
+<td>20</td>
+<td>10</td>
+<td>112</td>
+<td>1088</td>
+</tr>
+<tr>
+<td>42</td>
+<td>18</td>
+<td>9</td>
+<td>94</td>
+<td>968</td>
+</tr>
+<tr>
+<td>42</td>
+<td>18</td>
+<td>9</td>
+<td>94</td>
+<td>968</td>
+</tr>
+<tr>
+<td>44</td>
+<td>16</td>
+<td>8</td>
+<td>78</td>
+<td>850</td>
+</tr>
+<tr>
+<td>46</td>
+<td>14</td>
+<td>7</td>
+<td>64</td>
+<td>734</td>
+</tr>
+<tr>
+<td>48</td>
+<td>12</td>
+<td>5</td>
+<td>39</td>
+<td>521</td>
+</tr>
+<tr>
+<td>48</td>
+<td>12</td>
+<td>5</td>
+<td>39</td>
+<td>521</td>
+</tr>
+<tr>
+<td>50</td>
+<td>10</td>
+<td>4</td>
+<td>29</td>
+<td>411</td>
+</tr>
+<tr>
+<td>52</td>
+<td>8</td>
+<td>2</td>
+<td>12</td>
+<td>204</td>
+</tr>
+<tr>
+<td>54</td>
+<td>6</td>
+<td>1</td>
+<td>5</td>
+<td>101</td>
+</tr>
+<tr>
+<td>60</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table></div>
+<p>これらの合計は $10978$ である。</p>
+<pre><code>1188+1168+1128+1128+1088+968+968+850+734+521+521+411+204+101+0 = 10978</code></pre>
+<p>今回は前半から $2$ 個、後半から $2$ 個取っているので、すでに盗んだ金庫の個数は $4$ 個である。<br>
+「その $4$ 個が先頭に来る確率」は、二項係数の逆数を用いて処理する。</p>
+<pre><code>comb_inv(11,4): 674571184　（実際の分数の値は 1/330）</code></pre>
+<p>また、次に盗む金庫は残り $11-4=7$ 個から一様ランダムに選ばれる。<br>
+よって、さらに $1/7=855638017$ をかける。</p>
+<p>したがって、この場合に結果に加算する値は、剰余類環上では $10978 * 674571184 * 855638017$ である。</p>
+<p>同様の処理を、前半から取る個数 <code>i</code> と後半から取る個数 <code>j</code> のすべての組み合わせについて行う。<br>
+最後に、結果が負になっていれば $998244353$ を足してから出力する。</p>
+<h2>注意点</h2>
+<p><code>A_i</code>、<code>X</code>、部分集合の合計値は、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<p><code>sum1</code> は部分集合和の総和を持つため、そのまま加算すると <code>long long</code> 型からもはみ出る。<br>
+各加算ごとに $998244353$ で割った余りを取ること。</p>
+<p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+何か足し算や掛け算をするたびに結果を <code>% 998244353</code> する。<br>
+割り算は通常 $998244353-2$ 乗したものを掛けるが、それでは計算量が増えてしまう。<br>
+階乗の事前計算で逆数も求めておき、繰り返し二乗法を毎回しなくて済むように高速化しておくこと。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/meet-in-the-middle.html">半分全列挙</a>
+<a class="tag" href="../tags/two-pointer-method.html">ツーポインタ法</a>
+<a class="tag" href="../tags/cumulative-sum.html">累積和</a>
+<a class="tag" href="../tags/permutation-and-combination.html">順列組み合わせ</a>
+<a class="tag" href="../tags/probability.html">確率</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/binary-exponentiation.html">繰り返し二乗法</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/binomial-coefficient.html">二項係数</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

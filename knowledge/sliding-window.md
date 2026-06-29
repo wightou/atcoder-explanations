@@ -7,9 +7,12 @@ category_order: 9999
 level_order: 9999
 aliases:
   - しゃくとり法
-  - two pointers
+  - sliding window
 absorbs: []
-related: []
+related:
+  - ツーポインタ法
 ---
 
-今後記述予定
+## 概要
+
+今後記述予定。

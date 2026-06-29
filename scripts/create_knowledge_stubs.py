@@ -12,13 +12,13 @@ CATEGORIES = [
     "基本",
     "変数とデータ構造",
     "データ探索系",
-    "典型問題集",
     "高速化系",
     "文字列系",
     "グラフ理論系",
     "幾何学系",
     "その他数学系",
     "その他",
+    "典型問題集",
     "未分類",
 ]
 
@@ -77,7 +77,7 @@ STUBS: list[KnowledgeStub] = [
     k("ad-hoc-thinking", "考察問題", "難易度問わず", "基本"),
     k("simulation", "シミュレーション", "難易度問わず", "基本"),
     k("corner-case", "コーナーケース", "難易度問わず", "基本"),
-    k("divide-and-conquer", "分割統治法", "難易度問わず", "データ探索系"),
+    k("divide-and-conquer", "分割統治法", "難易度問わず", "高速化系"),
     k("number-theory", "整数論", "難易度問わず", "その他数学系"),
     k("trigonometric-ratio", "三角比", "難易度問わず", "幾何学系"),
     k("geometric-vector", "ベクトル（幾何学）", "難易度問わず", "幾何学系"),
@@ -146,7 +146,8 @@ STUBS: list[KnowledgeStub] = [
     k("binary-exponentiation", "繰り返し二乗法", "C問題相当", "その他数学系"),
     k("binary-search", "二分探索", "C問題相当", "データ探索系", aliases=["binary search", "lower_bound", "upper_bound", "答えで二分探索"], absorbs=["lower_bound関数", "upper_bound関数", "解の二分探索"], related=["計算量の見積もり"]),
     k("inverse-mapping", "逆写像", "C問題相当", "データ探索系", aliases=["inverse mapping", "inverse map", "逆引き"], absorbs=["逆置換"], related=["前処理", "vector", "map"]),
-    k("two-pointers", "尺取法", "C問題相当", "データ探索系", aliases=["しゃくとり法", "two pointers"]),
+    k("two-pointer-method", "ツーポインタ法", "C問題相当", "データ探索系", aliases=["ツーポインタ", "2ポインタ", "two pointers", "two-pointer method", "two pointer method"], related=["計算量の見積もり", "ソート", "尺取法"]),
+    k("sliding-window", "尺取法", "C問題相当", "データ探索系", aliases=["しゃくとり法", "sliding window"], related=["ツーポインタ法"]),
     k("bit-bruteforce", "bit全探索", "C問題相当", "データ探索系"),
     k("permutation-search", "順列全探索", "C問題相当", "データ探索系", aliases=["next_permutation探索"]),
     k("modular-arithmetic", "剰余類環", "C問題相当", "その他数学系", absorbs=["modint"], related=["繰り返し二乗法"]),
@@ -210,10 +211,10 @@ STUBS: list[KnowledgeStub] = [
     k("trie", "Trie木", "F問題相当", "文字列系"),
     k("aho-corasick", "Aho-Corasick法", "F問題相当", "文字列系", related=["Trie木"]),
     k("nim", "Nim", "F問題相当", "その他数学系", aliases=["Grundy数", "ゲーム理論"], absorbs=["二人零和有限確定完全情報ゲーム", "二人零和有限確定完全情報ゲーム、Nim、Grundy数"]),
-    k("mo-algorithm", "Moアルゴリズム", "F問題相当", "データ探索系"),
+    k("mo-algorithm", "Moアルゴリズム", "F問題相当", "高速化系"),
     k("meet-in-the-middle", "半分全列挙", "F問題相当", "データ探索系", aliases=["meet-in-the-middle"]),
     k("inversion-number", "転倒数", "F問題相当", "典型問題集", related=["Fenwick木", "座標圧縮", "分割統治法"]),
-    k("sqrt-decomposition", "平方分割", "F問題相当", "データ探索系", aliases=["sqrt decomposition"]),
+    k("sqrt-decomposition", "平方分割", "F問題相当", "高速化系", aliases=["sqrt decomposition"]),
 
     # G問題以上相当
     k("maximum-flow", "最大フロー", "G問題以上相当", "グラフ理論系"),
@@ -253,6 +254,13 @@ STUBS: list[KnowledgeStub] = [
 
 KNOWN_RENAMES = {
     "topological-sort": "dag-dp",
+    "two-pointers": "sliding-window",
+}
+
+# 既存記事本文を壊さず、分類や別名だけを現行仕様へ寄せたい記事。
+# create_knowledge_stubs.py 実行時に、front matter だけを更新する。
+KNOWN_FRONT_MATTER_SYNCS = {
+    "sliding-window",
 }
 
 
@@ -291,6 +299,36 @@ def replace_or_insert_front_matter_list(front: str, name: str, values: list[str]
         end += 1
     lines[start:end] = new_lines
     return "\n".join(lines) + "\n"
+
+
+def sync_known_front_matter(*, dry_run: bool = False) -> list[Path]:
+    updated: list[Path] = []
+    for slug in sorted(KNOWN_FRONT_MATTER_SYNCS):
+        path = KNOWLEDGE_DIR / f"{slug}.md"
+        if not path.exists():
+            continue
+        stub = stub_by_slug(slug)
+        text = path.read_text(encoding="utf-8")
+        if not text.startswith("---\n"):
+            continue
+        end = text.find("\n---\n", 4)
+        if end == -1:
+            continue
+        front = text[4:end + 1]
+        body = text[end + len("\n---\n"):]
+        new_front = front
+        new_front = replace_or_insert_front_matter_field(new_front, "title", stub.title)
+        new_front = replace_or_insert_front_matter_field(new_front, "level", stub.level)
+        new_front = replace_or_insert_front_matter_field(new_front, "category", stub.category)
+        new_front = replace_or_insert_front_matter_list(new_front, "aliases", stub.aliases)
+        new_front = replace_or_insert_front_matter_list(new_front, "absorbs", stub.absorbs)
+        new_front = replace_or_insert_front_matter_list(new_front, "related", stub.related)
+        new_text = "---\n" + new_front + "---\n" + body
+        if new_text != text:
+            if not dry_run:
+                path.write_text(new_text, encoding="utf-8")
+            updated.append(path)
+    return updated
 
 
 def apply_known_renames(*, dry_run: bool = False) -> list[tuple[Path, Path]]:
@@ -346,9 +384,10 @@ def render_stub(stub: KnowledgeStub) -> str:
     )
 
 
-def create_stubs(*, dry_run: bool = False) -> tuple[list[Path], list[Path], list[tuple[Path, Path]]]:
+def create_stubs(*, dry_run: bool = False) -> tuple[list[Path], list[Path], list[tuple[Path, Path]], list[Path]]:
     KNOWLEDGE_DIR.mkdir(parents=True, exist_ok=True)
     renamed = apply_known_renames(dry_run=dry_run)
+    synced = sync_known_front_matter(dry_run=dry_run)
     created: list[Path] = []
     skipped: list[Path] = []
     seen_slugs: set[str] = set()
@@ -363,7 +402,7 @@ def create_stubs(*, dry_run: bool = False) -> tuple[list[Path], list[Path], list
         if not dry_run:
             path.write_text(render_stub(stub), encoding="utf-8")
         created.append(path)
-    return created, skipped, renamed
+    return created, skipped, renamed, synced
 
 
 def main() -> int:
@@ -371,12 +410,16 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true", help="作成せずに対象だけ表示します。")
     args = parser.parse_args()
 
-    created, skipped, renamed = create_stubs(dry_run=args.dry_run)
+    created, skipped, renamed, synced = create_stubs(dry_run=args.dry_run)
     mode = "would create" if args.dry_run else "created"
     rename_mode = "would rename" if args.dry_run else "renamed"
+    sync_mode = "would sync front matter" if args.dry_run else "synced front matter"
     print(f"{rename_mode}: {len(renamed)}")
     for old_path, new_path in renamed:
         print(f"  ~ {old_path.relative_to(ROOT)} -> {new_path.relative_to(ROOT)}")
+    print(f"{sync_mode}: {len(synced)}")
+    for path in synced:
+        print(f"  * {path.relative_to(ROOT)}")
     print(f"{mode}: {len(created)}")
     for path in created:
         print(f"  + {path.relative_to(ROOT)}")

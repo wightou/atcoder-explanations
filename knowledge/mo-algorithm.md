@@ -1,7 +1,7 @@
 ---
 title: Moアルゴリズム
 level: F問題相当
-category: データ探索系
+category: 高速化系
 summary: 今後記述予定。
 category_order: 9999
 level_order: 9999
@@ -10,4 +10,6 @@ absorbs: []
 related: []
 ---
 
-今後記述予定
+## 概要
+
+今後記述予定。

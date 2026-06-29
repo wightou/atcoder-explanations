@@ -232,6 +232,96 @@
     "body": "考え方 最後の $N$ 試合の前での最大勝利数を $W$ とする。 最後の試合で各選手が増やせる勝利数は高々 $1$ なので、最終的な最多勝利数は $W$ または $W+1$ である。 そのため、現在の勝利数が $W-2$ 以下の選手は優勝できない。 そこで、選手を次の $3$ 種類に分類する。 t: 現在の勝利数が $W$ の選手 s: 現在の勝利数が $W-1$ の選手 o: 現在の勝利数が $W-2$ 以下の選手 o の選手自身は既に優勝の可能性が存在しない。 最後の試合を、出場する選手の種類の組によって分類する。 tt: t 同士の試合 ts: t と s の試合 ss: s 同士の試合 to: t と o の試合 so: s と o の試合 o 同士の試合は、誰が勝っても優勝争いに関係しないので処理の必要はない。 それぞれの種類の試合に出ている選手は、同じ立場なら同じ優勝確率になる。 そのため、次の $6$ 種類の優勝確率をそれぞれ計算し、出力は後でまとめて生成すればよい。 ptt: tt の選手 pts: ts の t 側の選手 pst: ts の s 側の選手 pss: ss の選手 pto: to の t 側の選手 pso: so の s 側の選手 まず、tt、ts、ss、to、so の個数を数える。 同時に、各選手が上の $6$ 種類のどれに属するかを、どこかに記録しておく。 次に、それぞれの種類の選手について、優勝確率を計算する。 これは、最終的な最多勝利数が $W+1$ の場合と $W$ の場合に分けて考えることになる。 最終的な最多勝利数が $W+1$ になるには、t の選手が最後の試合に勝つ必要がある。 tt の試合からは必ず $W+1$ の選手が $1$ 人生まれる。 また、ts と to の試合では、t 側が勝った試合だけ $W+1$ の選手が生まれる。 逆に、最終的な最多勝利数が $W$ になるには、$W+1$ の選手が生まれてはいけない。 つまり、tt の試合が存在せず、かつ ts と to の試合ではすべて t 側が負ける必要がある。 このとき、ts の試合からは $2$ 人、to からは t 側の $1$ 人、ss からは勝った $1$ 人が優勝候補者になる。 さらに、so の試合では s 側が勝った試合だけ $W$ の優勝候補者が $1$ 人増える。 ptt ptt は、tt の選手の優勝確率である。 tt の選手が優勝するには、自分の最後の試合に勝って勝利数 $W+1$ になる必要がある。 自分が勝つ確率は $\\frac{1}{2}$ である。 ts+to 個の試合のうち、t 側が勝つ試合数が $i$ 個であるとする。 このような結果は ${}_{\\mathrm{ts}+\\mathrm{to}}\\mathrm{C}_{i}$ 通りある。 このとき、$W+1$ の優勝候補者は、tt の各試合の勝者と、ts・to のうち t 側が勝った選手なので、合計で $\\mathrm{tt}+i$ 人である。 よって、その中からこの選手が優勝者として選ばれる確率は $\\frac{1}{\\mathrm{tt}+i}$ である。 したがって、ptt は次のように計算できる。 $$ \\sum_{i=0}^{\\mathrm{ts}+\\mathrm{to}} \\frac{1}{\\mathrm{tt}+i} \\times {}_{\\mathrm{ts}+\\mathrm{to}}\\mathrm{C}_{i} \\times \\left(\\frac{1}{2}\\right)^{\\mathrm{ts}+\\mathrm{to}+1} $$ ただし、tt=0 のとき、ptt を使う選手はいないので、計算を省略して ptt=0 とする。 以下の確率も同様に、該当者がなければスキップし、ゼロ除算の発生を防ぐものとする。 pts pts は、ts の t 側の選手の優勝確率である。 まず、自分が最後の試合に勝つ場合を考える。 この場合、自分は勝利数 $W+1$ になり、優勝候補者になる。 ts+to 個の試合のうち、t 側が勝つ試合数が $i$ 個であるとする。 ただし、自分はその $i$ 人に含まれる必要がある。 そのため、試合の組は、残りの ts+to-1 個の試合から $i-1$ 個を選ぶことになる。 このとき、$W+1$ の優勝候補者は $\\mathrm{tt}+i$ 人である。 よって、自分が勝つ場合の寄与は次のようになる。 $$ \\sum_{i=1}^{\\mathrm{ts}+\\mathrm{to}} \\frac{1}{\\mathrm{tt}+i} \\times {}_{\\mathrm{ts}+\\mathrm{to}-1}\\mathrm{C}_{i-1} \\times \\left(\\frac{1}{2}\\right)^{\\mathrm{ts}+\\mathrm{to}} $$ 次に、自分が最後の試合に負ける場合を考える。 この場合、自分の勝利数は $W$ のままである。 したがって、tt=0 であり、さらに ts と to の試合ではすべて t 側が負ける必要がある。 この条件のもとで、so の試合のうち s 側が勝つ試合数を $i$ 個とする。 このような結果は ${}_{\\mathrm{so}}\\mathrm{C}_{i}$ 通りある。 このとき、勝利数 $W$ の優勝候補者は、合計で $2\\mathrm{ts}+\\mathrm{ss}+\\mathrm{to}+i$ 人である。 よって、自分が負ける場合の寄与は、tt=0 のときだけ次のようになる。 $$ \\sum_{i=0}^{\\mathrm{so}} \\frac{1}{2\\mathrm{ts}+\\mathrm{ss}+\\mathrm{to}+i} \\times {}_{\\mathrm{so}}\\mathrm{C}_{i} \\times \\left(\\frac{1}{2}\\right)^{\\mathrm{ts}+\\mathrm{to}+\\mathrm{so}} $$ pts は、この $2$ つの寄与を足した値である。 pst pst は、ts の s 側の選手の優勝確率である。 pst の選手は、最後の試合に勝った場合だけ勝利数 $W$ になれる。 そして、tt=0 であり、ts と to の試合ではすべて t 側が負ける必要がある。 この条件は、pts の選手が自分の試合に負けて勝利数 $W$ で優勝候補者になる場合と同じである。 そのため、pst は pts の後半部分と同じ式で計算できる。 $$ \\sum_{i=0}^{\\mathrm{so}} \\frac{1}{2\\mathrm{ts}+\\mathrm{ss}+\\mathrm{to}+i} \\times {}_{\\mathrm{so}}\\mathrm{C}_{i} \\times \\left(\\frac{1}{2}\\right)^{\\mathrm{ts}+\\mathrm{to}+\\mathrm{so}} $$ ただし、tt>0 の場合は、勝利数 $W+1$ の選手が必ず生まれるので pst=0 である。 pss pss は、ss の選手の優勝確率である。 ss の選手は、最後の試合に勝った場合だけ勝利数 $W$ になれる。 そのため、自分が勝つ確率 $\\frac{1}{2}$ が必要である。 そして、tt=0 であり、ts と to の試合ではすべて t 側が負ける必要がある。 so の試合のうち、s 側が勝つ試合数を $i$ 個とする。 このとき、勝利数 $W$ の優勝候補者は $2\\mathrm{ts}+\\mathrm{ss}+\\mathrm{to}+i$ 人である。 よって、pss は次のように計算できる。 $$ \\sum_{i=0}^{\\mathrm{so}} \\frac{1}{2\\mathrm{ts}+\\mathrm{ss}+\\mathrm{to}+i} \\times {}_{\\mathrm{so}}\\mathrm{C}_{i} \\times \\left(\\frac{1}{2}\\right)^{\\mathrm{ts}+\\mathrm{to}+\\mathrm{so}+1} $$ 指数の $+1$ は、自分が ss の試合に勝つ必要があるためである。 ただし、tt>0 の場合は、勝利数 $W+1$ の選手が必ず生まれるので pss=0 である。 pto pto は、to の t 側の選手の優勝確率である。 まず、自分が最後の試合に勝つ場合を考える。 この場合は、自分が ts+to 個の試合のうち t 側が勝った $i$ 人に含まれる必要がある。 よって、寄与は次のようになる。 $$ \\sum_{i=1}^{\\mathrm{ts}+\\mathrm{to}} \\frac{1}{\\mathrm{tt}+i} \\times {}_{\\mathrm{ts}+\\mathrm{to}-1}\\mathrm{C}_{i-1} \\times \\left(\\frac{1}{2}\\right)^{\\mathrm{ts}+\\mathrm{to}} $$ 次に、自分が最後の試合に負ける場合を考える。 この場合、tt=0 であり、ts と to の試合ではすべて t 側が負ける必要がある。 so の試合のうち、s 側が勝つ試合数を $i$ 個とすると、寄与は次のようになる。 $$ \\sum_{i=0}^{\\mathrm{so}} \\frac{1}{2\\mathrm{ts}+\\mathrm{ss}+\\mathrm{to}+i} \\times {}_{\\mathrm{so}}\\mathrm{C}_{i} \\times \\left(\\frac{1}{2}\\right)^{\\mathrm{ts}+\\mathrm{to}+\\mathrm{so}} $$ pto は、この $2$ つの寄与を足した値である。 つまり、式としては pts と同じ値になる。 pso pso は、so の s 側の選手の優勝確率である。 pso の選手は、最後の試合に勝った場合だけ勝利数 $W$ になれる。 そして、tt=0 であり、ts と to の試合ではすべて t 側が負ける必要がある。 so の試合のうち、s 側が勝つ試合数を $i$ 個とする。 ただし、自分はその $i$ 人に含まれる必要がある。 そのため、試合の組は、残りの so-1 個の試合から $i-1$ 個を選ぶことになる。 このとき、勝利数 $W$ の優勝候補者は $2\\mathrm{ts}+\\mathrm{ss}+\\mathrm{to}+i$ 人である。 よって、pso は次のように計算できる。 $$ \\sum_{i=1}^{\\mathrm{so}} \\frac{1}{2\\mathrm{ts}+\\mathrm{ss}+\\mathrm{to}+i} \\times {}_{\\mathrm{so}-1}\\mathrm{C}_{i-1} \\times \\left(\\frac{1}{2}\\right)^{\\mathrm{ts}+\\mathrm{to}+\\mathrm{so}} $$ ただし、tt>0 の場合は、勝利数 $W+1$ の選手が必ず生まれるので pso=0 である。 この計算では、二項係数と割り算を何度も使う。 そのため、階乗と階乗の逆元を前計算して、二項係数を高速に求められるようにしておく。 最後に、事前に記録しておいた選手ごとの仮の値に応じて、$6$ 種の値を代入すればよい。 階乗や累乗を適切な方法で行えば、計算量は $O(N \\log \\mathrm{MOD})$ 程度である。 入力例1での動作 入力を受け取る。 最後の $N$ 試合の前での最大勝利数 mx を求める。 選手を t、s、o に分類する。 各試合を分類する。 したがって、各種類の試合数は次のようになる。 各選手がどの種類の優勝確率を使うかを、result に仮の値として記録する。 ここで、仮の値は次を表す。 まず、ptt を計算する。 この入力例では tt=0 なので、ptt を使う選手はいない。 ptt は 0（実際の値は $0$）である。 次に、pts を計算する。 これは、ts の t 側の選手、つまり選手 $4$ の優勝確率である。 選手 $4$ が自分の試合に勝ち、勝利数 $W+1$ で優勝候補者になる場合の寄与は、次のようになる。 $$ \\frac{1}{1}\\times{}_{1}\\mathrm{C}_{0}\\times\\left(\\frac{1}{2}\\right)^2 + \\frac{1}{2}\\times{}_{1}\\mathrm{C}_{1}\\times\\left(\\frac{1}{2}\\right)^2 = \\frac{3}{8} $$ また、選手 $4$ が自分の試合に負け、勝利数 $W$ で優勝候補者になる場合の寄与は、次のようになる。 $$ \\frac{1}{3}\\times{}_{1}\\mathrm{C}_{0}\\times\\left(\\frac{1}{2}\\right)^3 + \\frac{1}{4}\\times{}_{1}\\mathrm{C}_{1}\\times\\left(\\frac{1}{2}\\right)^3 = \\frac{7}{96} $$ よって、pts は次の値になる。 pts は 883862188（実際の値は $\\frac{43}{96}$）である。 次に、pst を計算する。 これは、ts の s 側の選手、つまり選手 $3$ の優勝確率である。 pst の選手は、自分の試合に勝った場合だけ勝利数 $W$ で優勝候補者になりうる。 この入力例では、寄与は次の値になる。 $$ \\frac{1}{3}\\times{}_{1}\\mathrm{C}_{0}\\times\\left(\\frac{1}{2}\\right)^3 + \\frac{1}{4}\\times{}_{1}\\mathrm{C}_{1}\\times\\left(\\frac{1}{2}\\right)^3 = \\frac{7}{96} $$ したがって、pst は次の値になる。 pst は 259959467（実際の値は $\\frac{7}{96}$）である。 次に、pss を計算する。 この入力例では ss=0 なので、pss を使う選手はいない。 pss は 0（実際の値は $0$）である。 次に、pto を計算する。 これは、to の t 側の選手、つまり選手 $8$ の優勝確率である。 この入力例では、pto は pts と同じ値になる。 pto は 883862188（実際の値は $\\frac{43}{96}$）である。 次に、pso を計算する。 これは、so の s 側の選手、つまり選手 $6$ の優勝確率である。 選手 $6$ が優勝候補者になるには、自分の試合に勝つ必要がある。 この入力例では、寄与は次の値になる。 $$ \\frac{1}{4}\\times{}_{0}\\mathrm{C}_{0}\\times\\left(\\frac{1}{2}\\right)^3 = \\frac{3}{96} $$ したがって、pso は次の値になる。 pso は 967049217（実際の値は $\\frac{3}{96}$）である。 最後に、result の仮の値を実際の優勝確率に置き換える。 実際の値は、順に $0,0,\\frac{7}{96},\\frac{43}{96},0,\\frac{3}{96},0,\\frac{43}{96}$ である。 よって、0 0 259959467 883862188 0 967049217 0 883862188 を出力する。 注意点 答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。 何か足し算や掛け算をするたびに結果を % 998244353 し、割り算は $998244353-2$ 乗したものを掛ける。 累乗計算を何度も行うため、繰り返し二乗法のアルゴリズムも用意しておくこと。 二項係数を階乗で計算するため、階乗と階乗の逆元を前計算しておくこと。 剰余の掛け算では $998244353^2$ 級の値が現れる。 long long 型または modint を用いること。 別解 特になし。"
   },
   {
+    "type": "explanation",
+    "contest": "ABC464",
+    "problem": "A",
+    "problem_title": "Decisive Battle",
+    "full_title": "ABC464A - Decisive Battle",
+    "url": "explanations/abc464-a.html",
+    "tags": [
+      "入出力",
+      "int型",
+      "char型",
+      "string型",
+      "if分岐",
+      "forループ",
+      "数え上げ"
+    ],
+    "body": "考え方 入力は文字列が $1$ つなので、string 型の変数を $1$ つ用意し、cin で入力を受け取る。 文字列の中身を $1$ 文字ずつ見ていきたいので、forループを用意する。 問題の指示通り、文字列に含まれる E と W の個数を比べればよい。 そのために、下準備として、まずカウンターを用意して、$0$ で初期化する。 そして、$1$ 文字ごとに、それが E なら $-1$、W なら $+1$ をしていく。 最終的にカウンターが正の数なら西軍の方が多く、負の数なら東軍の方が多い。 ということで、カウンターの値が $0$ より大きいなら \"West\"、そうでないなら \"East\" と答えればよい。 if分岐の中でcoutしてもいいし、出力用の変数を用意しておいてif分岐の外でcoutしてもいい。 入力例1での動作 入力を受け取る。 文字列の長さを取得する。 答え用の変数 result を \"East\" で初期化する。 counter を $0$ で初期化する。 $0$ 文字目をチェックする。 'E' なので counter を $1$ 減らす。 $1$ 文字目をチェックする。 'E' なので counter を $1$ 減らす。 $2$ 文字目をチェックする。 'W' なので counter を $1$ 増やす。 $3$ 文字目をチェックする。 'E' なので counter を $1$ 減らす。 $4$ 文字目をチェックする。 'W' なので counter を $1$ 増やす。 最終的に、counter は $0$ より大きくないので、result は \"East\" のままでよい。 最後に、result を出力すればよい。 注意点 特になし。 別解 ループ内で「今何番目であるか」を使わないので、範囲for文を使ってもよい。 いちいち .at(i) を書く手間が省けるし、文字列の長さを自分で取得するのも不要になる。"
+  },
+  {
+    "type": "explanation",
+    "contest": "ABC464",
+    "problem": "B",
+    "problem_title": "Crop",
+    "full_title": "ABC464B - Crop",
+    "url": "explanations/abc464-b.html",
+    "tags": [
+      "全探索",
+      "多重ループ"
+    ],
+    "body": "考え方 上下左右の余白を切り落とす問題。 入力例を見れば容易にわかるように、黒マスがある範囲を切り出して出力すればよい。 そのため、まず黒マスの存在範囲を調べる。 具体的には、すべての黒いマスの位置 $(i,j)$ について、以下を調べればよい。 左端：$j$ の最小値 右端：$j$ の最大値 上端：$i$ の最小値 下端：$i$ の最大値 最後に、$u$ 行目から $d$ 行目までについて、$l$ 列目から $r$ 列目までを切り出して出力すればよい。 これは、forループとかで $1$ 文字ずつ取り出すか、.substr() で $r-l+1$ 文字まとめて取り出す。 入力例1での動作 入力を受け取る。 答え用の変数 result を空の状態で用意する。 すべてのマスをチェックする。 黒いマスは、0-indexed で次の位置にある。 黒いマスがある範囲を調べると、次のようになる。 そのため、$1$ 行目から $2$ 行目までについて、$1$ 列目から $3$ 列目までを切り出せばよい。 $1$ 行目を切り出す。 $2$ 行目を切り出す。 注意点 特になし。 別解 特になし。"
+  },
+  {
+    "type": "explanation",
+    "contest": "ABC464",
+    "problem": "C",
+    "problem_title": "Plumage Palette",
+    "full_title": "ABC464C - Plumage Palette",
+    "url": "explanations/abc464-c.html",
+    "tags": [
+      "差分更新",
+      "イベントソート",
+      "シミュレーション"
+    ],
+    "body": "考え方 まず、愚直解を考えてみる。 現在の各鳥の色を管理する配列を用意し、A の中身をコピーする。 $i$ 日目には、配列 D を見て鳥の色を書き換えてから、全体を見て各色の登場回数をカウンティング。 答えは、数えたカウンタの中の $1$ 以上になっている個数である。 しかしこの解法は、二重ループを回すため、計算量が $O(MN)$ となってしまい、TLE。 そこで、高速化を考える。 愚直解の中で無駄な部分を探すと、各色の登場回数をカウンティングの部分が見つかる。 どうせ毎回限られた数の鳥しか変色しないので、カウンティングの結果はほぼ前日と変わらない。 ならば、真面目に数えるのは $0$ 日目だけにし、以降は変化部分だけ修正していくことで高速化できる。 具体的には、以下のようになる。 まず、$2$ つの下準備をしておく。 $1$ つめ、配列 D を見て、変色が早い順にデータを取り出す準備をしておく。 これは、vector でソートするなり、priority_queue を用いるなり、どれでもよい。 $2$ つめ、$0$ 日目時点での各色の鳥の数をカウンティングし、何色いるかも取得する。 今の各鳥の色は、見ないので管理しない。 その後、$1$ 日ずつデータを処理する。 まず、下準備のデータを見て、その日に変色する鳥をすべて $1$ 羽ずつ処理する。 その鳥の色が $x$ から $y$ に変わるときには、以下の $2$ つの処理をする。 色 $x$ の鳥の数を $1$ 減らし、$0$ になった場合は種類数も $1$ 減らす。 色 $y$ の鳥の数を $1$ 増やす。増やす前に $0$ だった場合は種類数も $1$ 増やす。 その日の処理を終えた後の種類数が、その日の答えとなる。 更新は全日程合計で鳥の羽数しか行われないため、計算量は $O(N+M)$ または $O(N \\log N+M)$ となり、間に合う。 （$\\log N$ がつくかどうかは、イベントソートのやり方次第） 入力例1での動作 入力を受け取る。 答え用の変数 result を用意する。 priority_queue に、色が変わる日と鳥の番号を入れておく。 （番兵として (m+1,-1) か何かを入れておいてもよい） ここでは、データの入れ方の都合で、鳥番号は 0-indexed で扱っている。 初期状態では、各鳥の色は a に入っている色である。 そのため、各色の鳥の数 counters と、$1$ 羽以上いる色の種類数 kind は次のようになる。 counters.at(0) は、添字がずれないようにするダミーデータ。 $1$ 日目を処理する。 que の先頭は (1,4) なので、鳥 $4$ の色を $4$ から $6$ に変える。 色 $4$ の鳥がいなくなったので、kind を $-1$ する。 $2$ 日目を処理する。 que の先頭は (3,0) なので、$2$ 日目に色が変わる鳥はいない。 $3$ 日目を処理する。 que の先頭に日付が $3$ のものが $3$ つあるので、鳥 $0$、鳥 $3$、鳥 $5$ の色を変える。 その色の鳥がいなくなったり新しく現れたりしたら、kind も適切に処理する。 $4$ 日目を処理する。 que の先頭は (5,2) なので、$4$ 日目に色が変わる鳥はいない。 $5$ 日目を処理する。 que の先頭は (5,2) なので、鳥 $2$ の色を 5 から 1 に変える。 色 $1$ の鳥が新しく現れたので、kind を $+1$ する。 $6$ 日目を処理する。 que の先頭は (6,1) なので、鳥 $1$ の色を 2 から 5 に変える。 $7$ 日目を処理する。 que が空もしくは番兵なので、$7$ 日目に色が変わる鳥はいない。 注意点 特になし。 別解 特になし。"
+  },
+  {
+    "type": "explanation",
+    "contest": "ABC464",
+    "problem": "D",
+    "problem_title": "Celester",
+    "full_title": "ABC464D - Celester",
+    "url": "explanations/abc464-d.html",
+    "tags": [
+      "動的計画法"
+    ],
+    "body": "考え方 最終日の最大嬉しさをいきなり求めようとしても、とても大変。 天気を変えるか変えないかの $2$ 択を $N$ 回やるので、計算量が $O(2^N)$ になってしまう。 しかし、最終日の $1$ 日前についての必要な情報が得られたら、簡単に答えが出せる。 最終日前が晴だった場合の中での最大嬉しさと、同じく雨だった場合のデータがあればよい。 最終日が晴になる方として、晴→晴はそのまま、雨→晴の方には Y の値を足す。 そのうち大きい方を採用する。 最終日が雨になる方として、晴→雨はそのまま、雨→雨もそのまま。 そのうち大きい方を採用する。 その後、元の天気と異なる方からは X の値を引く。 そして、最終日が晴の場合と雨の場合のうち、嬉しさが大きい方を答えればよい。 これで最終日の $1$ 日前の情報から最終日の答えを $O(1)$ で求めることができる。 そしてこの方法は、最終日以外でも前日の答えを利用して毎日の答えを $O(1)$ で求めるのに使える。 よって、動的計画法で日付順に $1$ 日ずつ求めていけば $O(N)$ で最終日の答えが出せる。 入力例1での動作 $1$ つめのテストケースのみ。 入力を受け取る。 dp_s[i] を、$i$ 日目の天気を晴にしたときの、$i$ 日目までの嬉しさの最大値とする。 dp_r[i] を、$i$ 日目の天気を雨にしたときの、$i$ 日目までの嬉しさの最大値とする。 （ただし、日付は 0-indexed で扱っている） $0$ 日目を処理する。 元の天気は晴なので、雨に変える場合だけ嬉しさが $3$ 減る。 $1$ 日目を処理する。 晴れる場合、前日が雨の場合に嬉しさ $2$ を加えても、前日晴だった場合の嬉しさより劣る。 したがって、晴れる場合の最大嬉しさは $0$。 雨の場合、前日の嬉しさが大きい方を引き継いで、最大嬉しさは $0$。 そこから、元の天気は雨なので、晴に変える場合だけ嬉しさが $1$ 減る。 $2$ 日目を処理する。 晴れる場合、前日が雨の場合に嬉しさ $6$ を加えると、前日晴だった場合の嬉しさに勝る。 したがって、晴れる場合の最大嬉しさは $6$。 雨の場合、前日の嬉しさが大きい方を引き継いで、最大嬉しさは $0$。 元の天気は雨なので、晴に変える場合だけ嬉しさが $4$ 減る。 $3$ 日目から $5$ 日目までを同様に処理する。 最後の日の天気はどちらでもよいので、dp_s[n-1] と dp_r[n-1] の大きい方が答えである。 注意点 嬉しさの合計値は、int 型からはみ出る。 long long 型を用いること。 別解 特になし。"
+  },
+  {
+    "type": "explanation",
+    "contest": "ABC464",
+    "problem": "E",
+    "problem_title": "Fill-Rect Query",
+    "full_title": "ABC464E - Fill-Rect Query",
+    "url": "explanations/abc464-e.html",
+    "tags": [
+      "考察問題",
+      "二次元累積和"
+    ],
+    "body": "考え方 愚直に解くのは非常に簡単だが、計算量が $O(HWQ)$ かかってしまう。 大量に上書きした後で、さらに別のもので同じ範囲を上書きするのは、どう考えても無駄。 結局のところ、各マス最後に塗られた時刻がわかれば、出力の再現はあとで $O(HW)$ で簡単にできる。 つまり、文字種が $26$ 種類しかないことは忘れて、各マス最後に塗られた時刻を求めればよい。 さて、マス $(i,j)$ が最後に塗られた時刻は、$(i以上,j以上)$ というマスが最後に右下になった時刻である。 ということは、全ての書き換えでとりあえず右下だけ記録しておき、まとめて累積最大値を取ればよい。 右下から左上方向に二次元累積最大値を取ることで、$(i以上,j以上)$ という範囲の最大値が $(i,j)$ に残る。 これで、計算量が $O(HW+Q)$ で全てのマスの文字がわかる。 入力例1での動作 入力を受け取る。 r と c は 0-indexed に直しておく。 各マスに、最後に書き換えた操作番号を記録するための二次元配列を用意する。 はじめは、どの操作でも書き換えられていないことを表す -1 で初期化する。 最右列と最下段に無意味なデータを $1$ 列/行だけ置いておくと、あとで累積最大値を取る処理が楽。 （以下の例には記載していない） 操作 $i$ は、右下のマスが (r[i], c[i]) である長方形を塗り替える。 そのため、いったん vec[r[i]][c[i]] に $i$ を書き込んでおく。 右下から順に見て、二次元累積最大値を取る。 具体的には、「自身、下のマス、右のマス」の最大値を求めていく。 更新順序の工夫により、各マスには結局、そのマスを含めた右下側にある最大値が入ることになる。 答え用の変数 result を、すべて A で初期化する。 累積最大値を取った後の vec[i][j] は、マス $(i,j)$ を最後に塗り替える操作番号である。 1 でなければ、対応する x の値を result[i][j] に書き込む。 マス $(0,0)$ は、vec[0][0] が 2 なので、x[2] を使って D にする。 マス $(0,1)$ は、vec[0][1] が 1 なので、x[1] を使って C にする。 マス $(0,2)$ は、vec[0][2] が 1 なので、x[1] を使って C にする。 マス $(1,0)$ は、vec[1][0] が 2 なので、x[2] を使って D にする。 マス $(1,1)$ は、vec[1][1] が 0 なので、x[0] を使って B にする。 マス $(1,2)$ は、vec[1][2] が -1 なので、A のままでよい。 注意点 特になし。 別解 特になし。"
+  },
+  {
+    "type": "explanation",
+    "contest": "ABC464",
+    "problem": "F",
+    "problem_title": "Random Vault Heist",
+    "full_title": "ABC464F - Random Vault Heist",
+    "url": "explanations/abc464-f.html",
+    "tags": [
+      "半分全列挙",
+      "ツーポインタ法",
+      "累積和",
+      "順列組み合わせ",
+      "確率",
+      "剰余類環",
+      "繰り返し二乗法",
+      "階乗",
+      "二項係数"
+    ],
+    "body": "考え方 まず、$N \\leq 20$ の場合の $O(2^N)$ 解法を考える。 例として、金庫が $3$ 個で、中身が $2$ と $3$ と $4$、目標金額が $7$ である場合を考える。 金庫を開ける順序は $6$ 通りあり、以下の寄与を合計して、期待値は $25/3$ となる。 | 開ける順序 | 期待値の寄与 | |---|---:| | ${2,3,4}$ | $(2+3+4)/6 = 3/2$ | | ${2,4,3}$ | $(2+4+3)/6 = 3/2$ | | ${3,2,4}$ | $(3+2+4)/6 = 3/2$ | | ${3,4}$ | $(3+4)/6 = 7/6$ | | ${4,2,3}$ | $(4+2+3)/6 = 3/2$ | | ${4,3}$ | $(4+3)/6 = 7/6$ | これを、何個目に開ける金庫からの寄与かで和の取り方を作り直す。 | 何個目の金庫か | 期待値の寄与 | |---|---:| | $1$ 個目の金庫 | $(2+2+3+3+4+4)/6 = 3$ | | $2$ 個目の金庫 | $(3+4+2+4+2+3)/6 = 3$ | | $3$ 個目の金庫 | $(4+3+4+3)/6 = 7/3$ | さらに、それぞれの中で、直前までにどの金庫を開けたのかで分解する。 | 何個目の金庫か | 直前までに開けた金庫 | 期待値の寄与 | |---|---|---:| | $1$ 個目の金庫 | $( )$ | $(2+3+4)/3 = 3$ | | $2$ 個目の金庫 | $(2)$ | $(3+4)/6 = 7/6$ | | $2$ 個目の金庫 | $(3)$ | $(2+4)/6 = 1$ | | $2$ 個目の金庫 | $(4)$ | $(2+3)/6 = 5/6$ | | $3$ 個目の金庫 | $(2,3)$ | $4/3 = 4/3$ | | $3$ 個目の金庫 | $(2,4)$ | $3/3 = 1$ | それぞれの分子の和は、残っている金庫の総額である。 つまり、全金庫の総額から、既に開けた金庫の総額を引いて求められる。 分母は、「事前に開けたものがそうなった上で、次の $1$ 個で残りのそれぞれの金庫を開ける確率」の分母。 つまり、今回の期待値は、以下で求まる。 $\\dfrac{9-0}{{}_3\\mathrm{C}_0 \\times 3}+\\dfrac{9-2}{{}_3\\mathrm{C}_1 \\times 2}+\\dfrac{9-3}{{}_3\\mathrm{C}_1 \\times 2}+\\dfrac{9-4}{{}_3\\mathrm{C}_1 \\times 2}+\\dfrac{9-5}{{}_3\\mathrm{C}_2 \\times 1}+\\dfrac{9-6}{{}_3\\mathrm{C}_2 \\times 1} = \\dfrac{25}{3}$ これは、各項ごとに、選んだ金庫の組の個数と合計額のみから $O(1)$ で高速に計算できる。 （逆数に毎回繰り返し二乗法を用いなくて済むように、階乗や各種逆数を事前計算しておく） つまり、以下のようなデータを高速に構築できれば、$7$ 未満のデータだけ拾うことで $O(2^N)$ で解ける。 | 選んだ金庫の個数 | 合計額 | |---:|---| | $0$ 個 | $0$ | | $1$ 個 | $2, 3, 4$ | | $2$ 個 | $5, 6, 7$ | | $3$ 個 | $9$ | このデータの構築は、以下の方法を用いる。 最初に、このような形のデータを用意する。 | 選んだ金庫の個数 | 合計額 | |---:|---| | $0$ 個 | $0$ | | $1$ 個 | | | $2$ 個 | | | $3$ 個 | | ここに、金額 $2$ の金庫の影響を処理する。 つまり、すべてのデータについて、合計額に $2$ を加えて、個数が $1$ 大きいところに付け加える。 | 選んだ金庫の個数 | 合計額 | |---:|---| | $0$ 個 | $0$ | | $1$ 個 | $2$ | | $2$ 個 | | | $3$ 個 | | 次に、金額 $3$ の金庫の影響を処理する。 方法は同様だが、$1$ 個のところはマージソートの要領で昇順に保っておく。 （これは、$N \\leq 20$ のときには特に意味がないが、$N \\leq 40$ に対応するときに役に立つ） | 選んだ金庫の個数 | 合計額 | |---:|---| | $0$ 個 | $0$ | | $1$ 個 | $2, 3$ | | $2$ 個 | $5$ | | $3$ 個 | | 最後に金額 $4$ の金庫の影響を処理すれば、前述のデータが $O(2^N)$ で構築できる。 あとは、$1$ つずつ分数計算をすればよい。 以上が、$N \\leq 20$ の場合に $O(2^N)$ で解く方法である。 さて、ここまでは前座で、この問題はここからが本番である。 $N \\leq 40$ の場合には $O(2^N)$ では間に合わず、$O(N 2^{N/2})$ くらいでどうにかしなければならない。 まず、$2^40$ 通りの列挙は絶対に無理なので、半分全列挙で前後半それぞれの $2^20$ 通りずつ全列挙する。 そして、前半から $i$ 個、後半から $j$ 個とるパターンごとにまとめて処理していく。 これらの寄与を計算するときの分母は、${}_N\\mathrm{C}_{i+j} \\times (N-i-j)$ でよい。 分子側は前半から $i$ 個とるデータの配列と、後半から $j$ 個とるデータの配列を見て求める。 前者の値と後者の値の和が $X$ 未満になるような全組について、「全総額-その値」の総和を出せばよい。 これは、後者のインデックスを進めながら前者のインデックスを戻すツーポインタ法で求められる。 前者側の累積和も事前に取っておけば、$O(両配列の長さの和)$ で求まる。 これを $i$ と $j$ 全ての組について実行して全ての和をとればよい。 半分全列挙のために A を分けたときに、左側に $l$ 個、右側に $r$ 個あったとする。 すると、ツーポインタ法の二重ループ全体で $O(l2^r+r2^l)$ 回かかる。 これは $l$ と $r$ を均等に分けたら $O(N 2^{N/2})$。 他にこれより計算量が膨らむところはないので、全体の計算量も $O(N 2^{N/2})$。 これで $N \\leq 40$ の場合にも解ける。 入力例3での動作 入力例 $1$ があまり動作説明に適さないので、入力例 $3$ で例を示す。 入力を受け取る。 配列 a を前半と後半に分ける。 前半から $k$ 個取ったときの合計を、$k$ ごとに列挙する。 最初は、$0$ 個取った合計だけがある。 値 2 を処理すると、2 を取る場合が追加される。 次に値 3 を処理すると、3 を取る場合と、2 と 3 の両方を取る場合が追加される。 次に値 5 を処理すると、例えば、$1$ 個取る合計に 5 が追加される。 また、$2$ 個取る合計には 2+5=7 と 3+5=8 が追加される。 各配列が昇順になるようにマージソートしながら追加する。 以下同様に繰り返すと、前半側の列挙結果は次のようになる。 後半側も同様に列挙する。 今回の二重ループの説明では、後半から $2$ 個取る場合だけを見る。 また、a 全体の合計値を取得する。 ここから、前半から $2$ 個、後半から $2$ 個取る場合の寄与の計算だけ例示する。 まず、vv1[2] の累積和 sum1[2] を作る。 sum1[2][t] は、vv1[2] の先頭 $t$ 個の和である。 vv2[2] の値を $1$ つずつ見る。 最初に、後半から取った合計が 30 の場合を考える。 このとき、前半から取った合計が $60-30=30$ 未満なら、すでに盗んだ集合 $S$ の合計が $X$ 未満である。 vv1[2] の値はすべて 30 未満なので、id は 10 となる。 条件を満たす前半側の合計は、次の $10$ 個である。 そのため、条件を満たす前半側の合計の総和は、sum1[2][10] を使って $112$ と求められる。 この k=30 について、次に盗む金額の期待値の分子部分をまとめると、次の値になる。 同様に、vv2[2] の各値について処理すると次のようになる。 例えば k=42 の場合は、前半側の合計が $18$ 未満のものだけを使うので、id は 9 となる。 | 後半側の合計 k | x-k | id | sum1[2][id] | (sum_all-k)*id-sum1[2][id] | |---|---:|---:|---:|---:| | 30 | 30 | 10 | 112 | 1188 | | 32 | 28 | 10 | 112 | 1168 | | 36 | 24 | 10 | 112 | 1128 | | 36 | 24 | 10 | 112 | 1128 | | 40 | 20 | 10 | 112 | 1088 | | 42 | 18 | 9 | 94 | 968 | | 42 | 18 | 9 | 94 | 968 | | 44 | 16 | 8 | 78 | 850 | | 46 | 14 | 7 | 64 | 734 | | 48 | 12 | 5 | 39 | 521 | | 48 | 12 | 5 | 39 | 521 | | 50 | 10 | 4 | 29 | 411 | | 52 | 8 | 2 | 12 | 204 | | 54 | 6 | 1 | 5 | 101 | | 60 | 0 | 0 | 0 | 0 | これらの合計は $10978$ である。 今回は前半から $2$ 個、後半から $2$ 個取っているので、すでに盗んだ金庫の個数は $4$ 個である。 「その $4$ 個が先頭に来る確率」は、二項係数の逆数を用いて処理する。 また、次に盗む金庫は残り $11-4=7$ 個から一様ランダムに選ばれる。 よって、さらに $1/7=855638017$ をかける。 したがって、この場合に結果に加算する値は、剰余類環上では $10978 * 674571184 * 855638017$ である。 同様の処理を、前半から取る個数 i と後半から取る個数 j のすべての組み合わせについて行う。 最後に、結果が負になっていれば $998244353$ を足してから出力する。 注意点 A_i、X、部分集合の合計値は、int 型からはみ出る。 long long 型を用いること。 sum1 は部分集合和の総和を持つため、そのまま加算すると long long 型からもはみ出る。 各加算ごとに $998244353$ で割った余りを取ること。 答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。 何か足し算や掛け算をするたびに結果を % 998244353 する。 割り算は通常 $998244353-2$ 乗したものを掛けるが、それでは計算量が増えてしまう。 階乗の事前計算で逆数も求めておき、繰り返し二乗法を毎回しなくて済むように高速化しておくこと。 別解 特になし。"
+  },
+  {
     "type": "knowledge",
     "title": "エラー",
     "category": "基本",
@@ -239,7 +329,7 @@
     "url": "knowledge/error.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -249,7 +339,7 @@
     "url": "knowledge/corner-case.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -259,7 +349,7 @@
     "url": "knowledge/simulation.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -269,7 +359,7 @@
     "url": "knowledge/test.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -284,7 +374,7 @@
       "標準出力"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -294,7 +384,7 @@
     "url": "knowledge/mathematical-expression.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -304,7 +394,7 @@
     "url": "knowledge/constructive-problem.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -314,17 +404,17 @@
     "url": "knowledge/ad-hoc-thinking.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
     "title": "分割統治法",
-    "category": "データ探索系",
+    "category": "高速化系",
     "level": "難易度問わず",
     "url": "knowledge/divide-and-conquer.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -334,7 +424,7 @@
     "url": "knowledge/geometric-vector.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -344,7 +434,7 @@
     "url": "knowledge/trigonometric-ratio.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -354,7 +444,7 @@
     "url": "knowledge/distance.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -364,7 +454,7 @@
     "url": "knowledge/number-theory.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -374,7 +464,7 @@
     "url": "knowledge/probability.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -384,7 +474,7 @@
     "url": "knowledge/permutation-and-combination.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -394,7 +484,7 @@
     "url": "knowledge/for-loop.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -404,7 +494,7 @@
     "url": "knowledge/if-statement.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -414,7 +504,7 @@
     "url": "knowledge/while-loop.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -426,7 +516,7 @@
       "sort"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -436,7 +526,7 @@
     "url": "knowledge/bool.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -446,7 +536,7 @@
     "url": "knowledge/char.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -456,7 +546,7 @@
     "url": "knowledge/double.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -466,7 +556,7 @@
     "url": "knowledge/int.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -476,7 +566,7 @@
     "url": "knowledge/string.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -488,7 +578,7 @@
       "vector（一次元）"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -498,7 +588,7 @@
     "url": "knowledge/multiple-check.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -508,7 +598,7 @@
     "url": "knowledge/odd-even.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -518,7 +608,7 @@
     "url": "knowledge/arithmetic-operations.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -528,7 +618,7 @@
     "url": "knowledge/counting.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -538,7 +628,7 @@
     "url": "knowledge/maximum-minimum.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -548,7 +638,7 @@
     "url": "knowledge/grid-operation.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -558,7 +648,7 @@
     "url": "knowledge/nested-loop.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -568,7 +658,7 @@
     "url": "knowledge/sentinel.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -578,7 +668,7 @@
     "url": "knowledge/range-for.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -588,7 +678,7 @@
     "url": "knowledge/deque.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -598,7 +688,7 @@
     "url": "knowledge/list.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -608,7 +698,7 @@
     "url": "knowledge/long-long.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -618,7 +708,7 @@
     "url": "knowledge/map.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -628,7 +718,7 @@
     "url": "knowledge/pair.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -638,7 +728,7 @@
     "url": "knowledge/priority-queue.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -648,7 +738,7 @@
     "url": "knowledge/queue.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -658,7 +748,7 @@
     "url": "knowledge/set.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -668,7 +758,7 @@
     "url": "knowledge/stack.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -678,7 +768,7 @@
     "url": "knowledge/tuple.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -688,7 +778,7 @@
     "url": "knowledge/multidimensional-vector.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -698,7 +788,7 @@
     "url": "knowledge/event-sort.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -708,7 +798,7 @@
     "url": "knowledge/brute-force.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -718,7 +808,7 @@
     "url": "knowledge/base-n.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -728,7 +818,7 @@
     "url": "knowledge/bit-operation.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -740,7 +830,7 @@
       "abs"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -750,7 +840,7 @@
     "url": "knowledge/recursion.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -760,7 +850,7 @@
     "url": "knowledge/reserve.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -770,7 +860,23 @@
     "url": "knowledge/bit-bruteforce.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "ツーポインタ法",
+    "category": "データ探索系",
+    "level": "C問題相当",
+    "url": "knowledge/two-pointer-method.html",
+    "aliases": [
+      "ツーポインタ",
+      "2ポインタ",
+      "two pointers",
+      "two-pointer method",
+      "two pointer method"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -785,20 +891,20 @@
       "答えで二分探索"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
     "title": "尺取法",
     "category": "データ探索系",
     "level": "C問題相当",
-    "url": "knowledge/two-pointers.html",
+    "url": "knowledge/sliding-window.html",
     "aliases": [
       "しゃくとり法",
-      "two pointers"
+      "sliding window"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -810,7 +916,7 @@
       "greedy"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -824,7 +930,7 @@
       "逆引き"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -836,7 +942,262 @@
       "next_permutation探索"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "メモ化",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/memoization.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "メモ化再帰",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/memoized-recursion.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "ランレングス圧縮",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/run-length-encoding.html",
+    "aliases": [
+      "RLE"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "前処理",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/preprocessing.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "差分更新",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/difference-update.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "累積和",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/cumulative-sum.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "計算量の見積もり",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/complexity-analysis.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "階差数列",
+    "category": "高速化系",
+    "level": "C問題相当",
+    "url": "knowledge/difference-array.html",
+    "aliases": [
+      "imos法",
+      "いもす法"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "幅優先探索",
+    "category": "グラフ理論系",
+    "level": "C問題相当",
+    "url": "knowledge/bfs.html",
+    "aliases": [
+      "BFS"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "深さ優先探索",
+    "category": "グラフ理論系",
+    "level": "C問題相当",
+    "url": "knowledge/dfs.html",
+    "aliases": [
+      "DFS"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "隣接リスト",
+    "category": "グラフ理論系",
+    "level": "C問題相当",
+    "url": "knowledge/adjacency-list.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "隣接行列",
+    "category": "グラフ理論系",
+    "level": "C問題相当",
+    "url": "knowledge/adjacency-matrix.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "パリティ",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/parity.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "二項係数",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/binomial-coefficient.html",
+    "aliases": [
+      "combination",
+      "nCr",
+      "nCk"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "剰余類環",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/modular-arithmetic.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "包除原理",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/inclusion-exclusion.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "周期性",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/periodicity.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "最大公約数",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/gcd.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "最小公倍数",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/lcm.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "約数列挙",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/divisor-enumeration.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "素数判定",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/primality-test.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "繰り返し二乗法",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/binary-exponentiation.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "補集合",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/complement.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "階乗",
+    "category": "その他数学系",
+    "level": "C問題相当",
+    "url": "knowledge/factorial.html",
+    "aliases": [
+      "factorial"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -864,261 +1225,6 @@
   },
   {
     "type": "knowledge",
-    "title": "メモ化",
-    "category": "高速化系",
-    "level": "C問題相当",
-    "url": "knowledge/memoization.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "メモ化再帰",
-    "category": "高速化系",
-    "level": "C問題相当",
-    "url": "knowledge/memoized-recursion.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "ランレングス圧縮",
-    "category": "高速化系",
-    "level": "C問題相当",
-    "url": "knowledge/run-length-encoding.html",
-    "aliases": [
-      "RLE"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "前処理",
-    "category": "高速化系",
-    "level": "C問題相当",
-    "url": "knowledge/preprocessing.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "差分更新",
-    "category": "高速化系",
-    "level": "C問題相当",
-    "url": "knowledge/difference-update.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "累積和",
-    "category": "高速化系",
-    "level": "C問題相当",
-    "url": "knowledge/cumulative-sum.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "計算量の見積もり",
-    "category": "高速化系",
-    "level": "C問題相当",
-    "url": "knowledge/complexity-analysis.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "階差数列",
-    "category": "高速化系",
-    "level": "C問題相当",
-    "url": "knowledge/difference-array.html",
-    "aliases": [
-      "imos法",
-      "いもす法"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "幅優先探索",
-    "category": "グラフ理論系",
-    "level": "C問題相当",
-    "url": "knowledge/bfs.html",
-    "aliases": [
-      "BFS"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "深さ優先探索",
-    "category": "グラフ理論系",
-    "level": "C問題相当",
-    "url": "knowledge/dfs.html",
-    "aliases": [
-      "DFS"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "隣接リスト",
-    "category": "グラフ理論系",
-    "level": "C問題相当",
-    "url": "knowledge/adjacency-list.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "隣接行列",
-    "category": "グラフ理論系",
-    "level": "C問題相当",
-    "url": "knowledge/adjacency-matrix.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "パリティ",
-    "category": "その他数学系",
-    "level": "C問題相当",
-    "url": "knowledge/parity.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "二項係数",
-    "category": "その他数学系",
-    "level": "C問題相当",
-    "url": "knowledge/binomial-coefficient.html",
-    "aliases": [
-      "combination",
-      "nCr",
-      "nCk"
-    ],
-    "summary": "今後記述予定。",
-    "body": "概要 今後記述予定。"
-  },
-  {
-    "type": "knowledge",
-    "title": "剰余類環",
-    "category": "その他数学系",
-    "level": "C問題相当",
-    "url": "knowledge/modular-arithmetic.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "包除原理",
-    "category": "その他数学系",
-    "level": "C問題相当",
-    "url": "knowledge/inclusion-exclusion.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "周期性",
-    "category": "その他数学系",
-    "level": "C問題相当",
-    "url": "knowledge/periodicity.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "最大公約数",
-    "category": "その他数学系",
-    "level": "C問題相当",
-    "url": "knowledge/gcd.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "最小公倍数",
-    "category": "その他数学系",
-    "level": "C問題相当",
-    "url": "knowledge/lcm.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "約数列挙",
-    "category": "その他数学系",
-    "level": "C問題相当",
-    "url": "knowledge/divisor-enumeration.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "素数判定",
-    "category": "その他数学系",
-    "level": "C問題相当",
-    "url": "knowledge/primality-test.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "繰り返し二乗法",
-    "category": "その他数学系",
-    "level": "C問題相当",
-    "url": "knowledge/binary-exponentiation.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "補集合",
-    "category": "その他数学系",
-    "level": "C問題相当",
-    "url": "knowledge/complement.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "階乗",
-    "category": "その他数学系",
-    "level": "C問題相当",
-    "url": "knowledge/factorial.html",
-    "aliases": [
-      "factorial"
-    ],
-    "summary": "今後記述予定。",
-    "body": "概要 今後記述予定。"
-  },
-  {
-    "type": "knowledge",
     "title": "UnionFind木",
     "category": "変数とデータ構造",
     "level": "D問題相当",
@@ -1128,7 +1234,209 @@
       "Disjoint Set Union"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "二次元imos法",
+    "category": "高速化系",
+    "level": "D問題相当",
+    "url": "knowledge/two-dimensional-imos.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "二次元累積和",
+    "category": "高速化系",
+    "level": "D問題相当",
+    "url": "knowledge/two-dimensional-cumulative-sum.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "動的計画法",
+    "category": "高速化系",
+    "level": "D問題相当",
+    "url": "knowledge/dynamic-programming.html",
+    "aliases": [
+      "DP"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "01最良優先探索",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/zero-one-bfs.html",
+    "aliases": [
+      "0-1 BFS"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "A*アルゴリズム",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/a-star.html",
+    "aliases": [
+      "A*",
+      "A-star"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "Dijkstra法",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/dijkstra.html",
+    "aliases": [
+      "ダイクストラ法"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "グラフ理論の基礎",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/graph-theory-basics.html",
+    "aliases": [
+      "グラフ理論の基礎（知識としてのみ）"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "二部グラフ",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/bipartite-graph.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "最小全域木",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/minimum-spanning-tree.html",
+    "aliases": [
+      "Kruskal法",
+      "Prim法"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "木",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/tree.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "根付き木",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/rooted-tree.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "超頂点",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/super-vertex.html",
+    "aliases": [
+      "仮想頂点",
+      "ダミー頂点",
+      "super vertex",
+      "virtual vertex",
+      "auxiliary vertex"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "頂点倍加",
+    "category": "グラフ理論系",
+    "level": "D問題相当",
+    "url": "knowledge/binary-lifting.html",
+    "aliases": [
+      "ダブリング on tree"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "エラトステネスの篩",
+    "category": "その他数学系",
+    "level": "D問題相当",
+    "url": "knowledge/sieve-of-eratosthenes.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "区間篩",
+    "category": "その他数学系",
+    "level": "D問題相当",
+    "url": "knowledge/segmented-sieve.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "拡張ユークリッドの互除法",
+    "category": "その他数学系",
+    "level": "D問題相当",
+    "url": "knowledge/extended-euclidean.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "素因数分解",
+    "category": "その他数学系",
+    "level": "D問題相当",
+    "url": "knowledge/prime-factorization.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "bitDP",
+    "category": "典型問題集",
+    "level": "D問題相当",
+    "url": "knowledge/bit-dp.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1158,215 +1466,13 @@
   },
   {
     "type": "knowledge",
-    "title": "bitDP",
-    "category": "高速化系",
-    "level": "D問題相当",
-    "url": "knowledge/bit-dp.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "二次元imos法",
-    "category": "高速化系",
-    "level": "D問題相当",
-    "url": "knowledge/two-dimensional-imos.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "二次元累積和",
-    "category": "高速化系",
-    "level": "D問題相当",
-    "url": "knowledge/two-dimensional-cumulative-sum.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "動的計画法",
-    "category": "高速化系",
-    "level": "D問題相当",
-    "url": "knowledge/dynamic-programming.html",
-    "aliases": [
-      "DP"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "01最良優先探索",
-    "category": "グラフ理論系",
-    "level": "D問題相当",
-    "url": "knowledge/zero-one-bfs.html",
-    "aliases": [
-      "0-1 BFS"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "A*アルゴリズム",
-    "category": "グラフ理論系",
-    "level": "D問題相当",
-    "url": "knowledge/a-star.html",
-    "aliases": [
-      "A*",
-      "A-star"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "Dijkstra法",
-    "category": "グラフ理論系",
-    "level": "D問題相当",
-    "url": "knowledge/dijkstra.html",
-    "aliases": [
-      "ダイクストラ法"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "グラフ理論の基礎",
-    "category": "グラフ理論系",
-    "level": "D問題相当",
-    "url": "knowledge/graph-theory-basics.html",
-    "aliases": [
-      "グラフ理論の基礎（知識としてのみ）"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "二部グラフ",
-    "category": "グラフ理論系",
-    "level": "D問題相当",
-    "url": "knowledge/bipartite-graph.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "最小全域木",
-    "category": "グラフ理論系",
-    "level": "D問題相当",
-    "url": "knowledge/minimum-spanning-tree.html",
-    "aliases": [
-      "Kruskal法",
-      "Prim法"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "木",
-    "category": "グラフ理論系",
-    "level": "D問題相当",
-    "url": "knowledge/tree.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
     "title": "木DP",
-    "category": "グラフ理論系",
+    "category": "典型問題集",
     "level": "D問題相当",
     "url": "knowledge/tree-dp.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "根付き木",
-    "category": "グラフ理論系",
-    "level": "D問題相当",
-    "url": "knowledge/rooted-tree.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "超頂点",
-    "category": "グラフ理論系",
-    "level": "D問題相当",
-    "url": "knowledge/super-vertex.html",
-    "aliases": [
-      "仮想頂点",
-      "ダミー頂点",
-      "super vertex",
-      "virtual vertex",
-      "auxiliary vertex"
-    ],
-    "summary": "今後記述予定。",
     "body": "概要 今後記述予定。"
-  },
-  {
-    "type": "knowledge",
-    "title": "頂点倍加",
-    "category": "グラフ理論系",
-    "level": "D問題相当",
-    "url": "knowledge/binary-lifting.html",
-    "aliases": [
-      "ダブリング on tree"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "エラトステネスの篩",
-    "category": "その他数学系",
-    "level": "D問題相当",
-    "url": "knowledge/sieve-of-eratosthenes.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "区間篩",
-    "category": "その他数学系",
-    "level": "D問題相当",
-    "url": "knowledge/segmented-sieve.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "拡張ユークリッドの互除法",
-    "category": "その他数学系",
-    "level": "D問題相当",
-    "url": "knowledge/extended-euclidean.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "素因数分解",
-    "category": "その他数学系",
-    "level": "D問題相当",
-    "url": "knowledge/prime-factorization.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
   },
   {
     "type": "knowledge",
@@ -1379,7 +1485,7 @@
       "Binary Indexed Tree"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1391,7 +1497,7 @@
       "セグメント木"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1401,7 +1507,119 @@
     "url": "knowledge/ternary-search.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "ダブリング",
+    "category": "高速化系",
+    "level": "E問題相当",
+    "url": "knowledge/doubling.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "Zアルゴリズム",
+    "category": "文字列系",
+    "level": "E問題相当",
+    "url": "knowledge/z-algorithm.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "ハッシュ",
+    "category": "文字列系",
+    "level": "E問題相当",
+    "url": "knowledge/hash.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "ローリングハッシュ",
+    "category": "文字列系",
+    "level": "E問題相当",
+    "url": "knowledge/rolling-hash.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "回文判定",
+    "category": "文字列系",
+    "level": "E問題相当",
+    "url": "knowledge/palindrome-check.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "Bellman-Ford法",
+    "category": "グラフ理論系",
+    "level": "E問題相当",
+    "url": "knowledge/bellman-ford.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "Warshall-Floyd法",
+    "category": "グラフ理論系",
+    "level": "E問題相当",
+    "url": "knowledge/warshall-floyd.html",
+    "aliases": [
+      "Floyd-Warshall"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "全方位木DP",
+    "category": "グラフ理論系",
+    "level": "E問題相当",
+    "url": "knowledge/rerooting-dp.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "偏角ソート",
+    "category": "幾何学系",
+    "level": "E問題相当",
+    "url": "knowledge/argument-sort.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "トロピカル半環",
+    "category": "その他数学系",
+    "level": "E問題相当",
+    "url": "knowledge/tropical-semiring.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "行列計算",
+    "category": "その他数学系",
+    "level": "E問題相当",
+    "url": "knowledge/matrix-computation.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1414,143 +1632,31 @@
       "DAG上DP"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "ダブリング",
-    "category": "高速化系",
-    "level": "E問題相当",
-    "url": "knowledge/doubling.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
     "title": "最長共通部分列",
-    "category": "高速化系",
+    "category": "典型問題集",
     "level": "E問題相当",
     "url": "knowledge/lcs.html",
     "aliases": [
       "LCS"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
     "title": "最長増加部分列",
-    "category": "高速化系",
+    "category": "典型問題集",
     "level": "E問題相当",
     "url": "knowledge/lis.html",
     "aliases": [
       "LIS"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "Zアルゴリズム",
-    "category": "文字列系",
-    "level": "E問題相当",
-    "url": "knowledge/z-algorithm.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "ハッシュ",
-    "category": "文字列系",
-    "level": "E問題相当",
-    "url": "knowledge/hash.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "ローリングハッシュ",
-    "category": "文字列系",
-    "level": "E問題相当",
-    "url": "knowledge/rolling-hash.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "回文判定",
-    "category": "文字列系",
-    "level": "E問題相当",
-    "url": "knowledge/palindrome-check.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "Bellman-Ford法",
-    "category": "グラフ理論系",
-    "level": "E問題相当",
-    "url": "knowledge/bellman-ford.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "Warshall-Floyd法",
-    "category": "グラフ理論系",
-    "level": "E問題相当",
-    "url": "knowledge/warshall-floyd.html",
-    "aliases": [
-      "Floyd-Warshall"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "全方位木DP",
-    "category": "グラフ理論系",
-    "level": "E問題相当",
-    "url": "knowledge/rerooting-dp.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "偏角ソート",
-    "category": "幾何学系",
-    "level": "E問題相当",
-    "url": "knowledge/argument-sort.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "トロピカル半環",
-    "category": "その他数学系",
-    "level": "E問題相当",
-    "url": "knowledge/tropical-semiring.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "行列計算",
-    "category": "その他数学系",
-    "level": "E問題相当",
-    "url": "knowledge/matrix-computation.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1562,17 +1668,7 @@
       "遅延セグメント木"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "Moアルゴリズム",
-    "category": "データ探索系",
-    "level": "F問題相当",
-    "url": "knowledge/mo-algorithm.html",
-    "aliases": [],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1584,19 +1680,29 @@
       "meet-in-the-middle"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "Moアルゴリズム",
+    "category": "高速化系",
+    "level": "F問題相当",
+    "url": "knowledge/mo-algorithm.html",
+    "aliases": [],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
     "title": "平方分割",
-    "category": "データ探索系",
+    "category": "高速化系",
     "level": "F問題相当",
     "url": "knowledge/sqrt-decomposition.html",
     "aliases": [
       "sqrt decomposition"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1606,7 +1712,7 @@
     "url": "knowledge/coordinate-compression.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1616,7 +1722,7 @@
     "url": "knowledge/aho-corasick.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1626,19 +1732,7 @@
     "url": "knowledge/trie.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
-  },
-  {
-    "type": "knowledge",
-    "title": "最近共通祖先",
-    "category": "グラフ理論系",
-    "level": "F問題相当",
-    "url": "knowledge/lca.html",
-    "aliases": [
-      "LCA"
-    ],
-    "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1651,17 +1745,29 @@
       "ゲーム理論"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
+  },
+  {
+    "type": "knowledge",
+    "title": "最近共通祖先",
+    "category": "典型問題集",
+    "level": "F問題相当",
+    "url": "knowledge/lca.html",
+    "aliases": [
+      "LCA"
+    ],
+    "summary": "今後記述予定。",
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
     "title": "転倒数",
-    "category": "その他数学系",
+    "category": "典型問題集",
     "level": "F問題相当",
     "url": "knowledge/inversion-number.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1671,7 +1777,7 @@
     "url": "knowledge/wavelet-matrix.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1681,7 +1787,7 @@
     "url": "knowledge/binary-tree.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1691,7 +1797,7 @@
     "url": "knowledge/suffix-array.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1701,7 +1807,7 @@
     "url": "knowledge/bipartite-matching.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1711,7 +1817,7 @@
     "url": "knowledge/maximum-flow.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1721,7 +1827,7 @@
     "url": "knowledge/minimum-cut.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1731,7 +1837,7 @@
     "url": "knowledge/minimum-cost-flow.html",
     "aliases": [],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1745,7 +1851,7 @@
       "NTT"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1757,7 +1863,7 @@
       "beam search"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1770,7 +1876,7 @@
       "randomized algorithm"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1782,7 +1888,7 @@
       "hill climbing"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1795,7 +1901,7 @@
       "SA"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   },
   {
     "type": "knowledge",
@@ -1808,6 +1914,6 @@
       "greedy for AHC"
     ],
     "summary": "今後記述予定。",
-    "body": "今後記述予定"
+    "body": "概要 今後記述予定。"
   }
 ]
