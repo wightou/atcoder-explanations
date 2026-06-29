@@ -2,7 +2,7 @@
 title: 累積和
 level: C問題相当
 category: 高速化系
-summary: vector のようなデータ構造に対し、区間の合計を高速に答えるためのアルゴリズム。
+summary: 配列に対し、区間の合計を高速に答えるためのアルゴリズム。
 aliases:
   - prefix sum
   - cumulative sum
