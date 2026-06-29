@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>ABC464E - Fill-Rect Query</h1>
-    <div class="auto-links"><a href="https://atcoder.jp/contests/abc464/tasks/abc464_e">問題ページ</a><a href="https://atcoder.jp/contests/abc464/submissions/77039507">解答例</a></div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc464/tasks/abc464_e">問題ページ</a><a href="https://atcoder.jp/contests/abc464/submissions/77039507">解答例</a><a href="https://atcoder.jp/contests/abc464/submissions/77079134">別解</a></div>
     <h2>考え方</h2>
 <p>愚直に解くのは非常に簡単だが、計算量が $O(HWQ)$ かかってしまう。<br>
 大量に上書きした後で、さらに別のもので同じ範囲を上書きするのは、どう考えても無駄。</p>
@@ -79,7 +79,41 @@ x: {&#x27;B&#x27;, &#x27;C&#x27;, &#x27;D&#x27;}</code></pre>
 <h2>注意点</h2>
 <p>特になし。</p>
 <h2>別解</h2>
-<p>特になし。</p>
+<p>左上もクエリ入力される場合の解き方でもよい。</p>
+<p>まず、$2W$ 以上の長さの配列を用意する。<br>
+中身は <code>priority_queue&lt;pair&lt;int,int&gt;&gt;</code> で、降順に取り出せるようにする。<br>
+<code>pair</code> の中身は、「上書き時刻、それを消すタイミング」とする。</p>
+<p>これは、扱いとしては横幅 $W$ に対する遅延segment木のようなものと考える。<br>
+つまり、各列用ノードに加え、それらを再帰的に $2$ つずつまとめて扱ったノードも用意する。<br>
+ただし <code>prod</code> や <code>apply</code> 用の演算はなく、データの入れ方が類似しているだけである。</p>
+<p>これに対し、以下の処理ができるようにしておく。</p>
+<p>$1$ つめに、$1$ 回 $O(\log W)$ での、区間最大値候補追加。<br>
+これは、遅延セグメント木の <code>apply</code> と同じように、ブロックごとに <code>priority_queue</code> に追加する。<br>
+例えば $3$ 列目から $10$ 列目までを更新したい場合は、以下を更新する。</p>
+<ul>
+<li>$3$ 列目のデータ</li>
+<li>$4, 5, 6, 7$ 列目のデータ</li>
+<li>$8, 9$ 列目のデータ</li>
+<li>$10$ 列目のデータ</li>
+</ul>
+<p>その瞬間最大値ではなくても後に最大値になるかもしれないので、どんな値でも入れておく。</p>
+<p>$2$ つめに、延べ $O(HW+Q\log Q \log W)$ での、期限切れの区間最大値削除。<br>
+これは、全 <code>priority_queue</code> について、<code>top</code> の削除予定時刻が現在時刻以前である限り <code>pop</code> すればよい。<br>
+<code>top</code> に来ていないものは残ってしまうかもしれないが、後に <code>top</code> に来た時に遅延処理で消される。</p>
+<p>$3$ つめに、$1$ 回 $O(\log W)$ での、ある列の現在の状態での最大値取得。<br>
+これは、遅延セグメント木の一点更新と同じようにすればよい。<br>
+すなわち、上へ登りながら各 <code>priority_queue</code> の <code>top</code> の最大値を見ればよい。</p>
+<p>この準備ができたら、上の行から順に見ていく。<br>
+各行について、以下の $3$ つを順に行えばよい。</p>
+<ul>
+<li>その行から始まる上書き全てについて、最大値候補追加を行う。</li>
+<li>$W$ 列すべてについて、最大値取得を行い、結果に反映する。</li>
+<li>その行で終わる上書き全てについて、最大値削除を行う。</li>
+</ul>
+<p>その行から始まる上書きの探索については、事前に適当な方法を用いて開始行でソートしておけばよい。</p>
+<p>これで、 $O(HW\log W+Q\log Q\log W+上書きソート分)$ で解くことができる。<br>
+画面上部にあるリンク先の別解コードでは、左上の入力が来ないので、代わりに定数として処理している。<br>
+本当に左上もクエリで来る問題を解くには、その部分も書き換えること。</p>
   </article>
 
   <aside class="sidebar">
