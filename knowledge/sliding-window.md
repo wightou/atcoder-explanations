@@ -10,7 +10,7 @@ aliases:
   - sliding-window法
   - スライディングウィンドウ
   - スライディングウィンドウ法
-absorbs: []
+absorbs:
 related:
   - ツーポインタ法
   - 尺取法

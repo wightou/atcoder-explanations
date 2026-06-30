@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC461F - Total Product is N</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ABC461F - Total Product is N</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc461/tasks/abc461_f">問題ページ</a><a href="https://atcoder.jp/contests/abc461/submissions/77094900">解答例</a><a href="https://atcoder.jp/contests/abc461/submissions/76604397">別解</a></div>
+    <h2>考え方</h2>
+<p>実際に数列を全部列挙するのは計算量的に非常に大変。<br>
+（……と思いきや、実はC++でなら工夫次第でどうにか間に合う。別解参照）</p>
+<p>積が $N$ になるものを求める問題だが、実はそのものに限らず積が $N$ の約数になるものを求めるといい。</p>
+<p>約数を何個選んだかごとに、以下を求める。<br>
+積が $N$ の約数にならないものはスキップする。</p>
+<ul>
+<li>選んだ約数の積で $N$ を割った商一覧</li>
+<li>各商それぞれ、その商になるパターン数</li>
+<li>各商それぞれ、その商になる単調増加数列のスコア合計</li>
+</ul>
+<p>これは、使える約数を $1$ つずつ増やしながら、動的計画法でデータ構築していけばよい。<br>
+入力例1での動作参照。</p>
+<p>構築出来たら、商が $1$ になったものに限り、スコアの処理をする。<br>
+使った約数の個数の階乗をかけることで、単調増加でない順の分もまとめて合計すれば答えとなる。</p>
+<p>計算量の見積もりが難しいが、雑に見て $O(約数の個数^2*積で約数を作る平均長さ)$ くらい。<br>
+$10^{10}$ 以下だと、最も大変なもので $2304\times 2304\times 10くらい？$ なので間に合う。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 8</code></pre>
+<p>$N$ の約数を全列挙する。</p>
+<pre><code>d: {1, 2, 4, 8}</code></pre>
+<p><code>(残り, パターン数, 昇順限定でのスコア合計)</code> を約数の個数ごとに管理するデータを用意する。<br>
+最初に、空集合を選んだ場合として、$(N,1,0)$ を入れておく。</p>
+<pre><code>0 個選ぶ場合: {(8,1,0)}
+1 個選ぶ場合:
+2 個選ぶ場合:
+3 個選ぶ場合:
+4 個選ぶ場合:</code></pre>
+<p>$1$ を選んだ場合のデータを追加する。</p>
+<pre><code>0 個選ぶ場合: {(8,1,0)}
+1 個選ぶ場合: {(8,1,1)}
+2 個選ぶ場合:
+3 個選ぶ場合:
+4 個選ぶ場合:</code></pre>
+<p>$2$ を選んだ場合のデータを追加する。<br>
+各配列はマージソート的な処理で「残り」の値の昇順に保つ。</p>
+<pre><code>0 個選ぶ場合: {(8,1,0)}
+1 個選ぶ場合: {(4,1,2), (8,1,1)}
+2 個選ぶ場合: {(4,1,3)}
+3 個選ぶ場合:
+4 個選ぶ場合:</code></pre>
+<p>$4$ を選んだ場合のデータを追加する。</p>
+<pre><code>0 個選ぶ場合: {(8,1,0)}
+1 個選ぶ場合: {(2,1,4), (4,1,2), (8,1,1)}
+2 個選ぶ場合: {(1,1,6), (2,1,5), (4,1,3)}
+3 個選ぶ場合: {(1,1,7)}
+4 個選ぶ場合:</code></pre>
+<p>$8$ を選んだ場合のデータを追加する。<br>
+残りを $8$ で割り切れないものはスキップする。<br>
+${1,8}$ と ${2,4}$ は同じ個数で同じ残りになるので、パターン数とスコア合計を足す。<br>
+つまり、$(1,1,9)$ と $(1,1,6)$ をあわせて $(1,2,15)$ とする。</p>
+<pre><code>0 個選ぶ場合: {(8,1,0)}
+1 個選ぶ場合: {(1,1,8), (2,1,4), (4,1,2), (8,1,1)}
+2 個選ぶ場合: {(1,2,15), (2,1,5), (4,1,3)}
+3 個選ぶ場合: {(1,1,7)}
+4 個選ぶ場合:</code></pre>
+<p>最終的に、残りが $1$ になっているものだけを答えに加算する。<br>
+昇順限定で数えているため、選んだ個数の階乗倍をする。</p>
+<pre><code>1 個選ぶ場合: 8 * 1! = 8
+2 個選ぶ場合: 15 * 2! = 30
+3 個選ぶ場合: 7 * 3! = 42
+result: 80</code></pre>
+<h2>注意点</h2>
+<p>入力値 $N$ やその約数は、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+何か足し算や掛け算をするたびに結果を <code>% 998244353</code> する。</p>
+<h2>別解</h2>
+<p>積が $N$ になる $2$ 以上の要素からなる数列を、深さ優先探索で列挙してもよい。<br>
+計算量がかなり厳しいが、C++なら工夫すれば間に合う。</p>
+<p>まず、$1$ を含む数列を列挙から外す。<br>
+$1$ がないデータから簡単に再現できるし、再現するまでもなく和に反映できる。</p>
+<p>次に、単調減少数列のみ探す。<br>
+最初に選んだ数ではやめに残りに使える数を減らし、二分探索で次の約数のループ範囲を狭く絞る。<br>
+単調減少でないものは、数列の長さの階乗をかけることでまとめて反映できる。</p>
+<p>これら $2$ つの工夫をすると、数列列挙でどうにか間に合う。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/divisor-enumeration.html">約数列挙</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
