@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC223B - Valid Arrays by K-Divisible Swaps</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ARC223B - Valid Arrays by K-Divisible Swaps</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc223/tasks/arc223_b">問題ページ</a><a href="https://atcoder.jp/contests/arc223/submissions/77113847">解答例</a></div>
+    <h2>考え方</h2>
+<p>数列を、以下のようにグループにわける。</p>
+<ul>
+<li>$k$ で割った余りが $0$ であるものが連続する部分</li>
+<li>$k$ で割った余りが $1$ または $k-1$ であるものが連続する部分</li>
+<li>$k$ で割った余りが $2$ または $k-2$ であるものが連続する部分</li>
+<li>（略）</li>
+<li>$k$ で割った余りが $k/2$ であるものが連続する部分（kが偶数の場合のみ）</li>
+</ul>
+<p>入れ替えの条件について考える。<br>
+まず、異なるグループ間での交換は不可能、よってグループ分けが崩れることはない。<br>
+そして、同じグループ間で入れ替えた場合、これもグループ分けが崩れることはない。<br>
+したがって、各グループ内で独立に考えて差し支えない。<br>
+グループ内の並べ替え方を順に考え、全てかけ合わせれば答え。</p>
+<p>まず、$k$ で割った余りが $0$ であるグループ、または $k/2$ であるグループ。<br>
+この場合、グループ内の任意の $2$ つが入れ替え可能で、つまり最終的に任意の順に並べられる。<br>
+つまり、見分けがつかないものを含む順列の公式 $\dfrac{n!}{p!q!r!\dots}$ で求まる。</p>
+<p>まず、$k$ で割った余りが $i$ または $k-i$ であるグループ。<br>
+この場合、余りが $i$ であるものと $k-i$ であるものは、入れ替え可能。<br>
+しかし、$i$ であるもの同士や $k-i$ であるもの同士は、入れ替え不可能。<br>
+最終的には、$i$ であるものの順番は保持、 $k-i$ であるものの順番も保持した任意の順列にできる。<br>
+つまり、$i$ であるものの位置の選び方を選べばよく、二項係数として求まる。</p>
+<p>前述のとおり、グループごとの値を全てかけあわせて $998244353$ で割った余りが答え。</p>
+<h2>入力例1での動作</h2>
+<p>$2$ つ目のテストケースのみ考える。</p>
+<p>入力を受け取る。</p>
+<pre><code>n: 6
+k: 4
+a: {1, 5, 3, 6, 2, 4}</code></pre>
+<p><code>a</code> を仮に全て $4$ で割った余りすると、以下のようになる。</p>
+<pre><code>a%4: {1, 1, 3, 2, 2, 0}</code></pre>
+<p>これを参考に <code>a</code> をグループに分ける。<br>
+$k=4$ なので、以下に分ける。</p>
+<ul>
+<li>$0$ が連続する部分</li>
+<li>$1$ と $3$ が連続する部分</li>
+<li>$2$ が連続する部分</li>
+</ul>
+<pre><code>a&#x27;: { {1,5,3}, {6,2}, {4} }</code></pre>
+<p>各部分の並べ替えのパターン数を求めていく。</p>
+<p>まず、$\{1,5,3\}$ 部分。<br>
+$4$ で割った余りが異なるもの同士は入れ替えられるが、同じものは入れ替えられない。<br>
+よって余りが $1$ のもの $2$ つを何番目に置くかを考えればよく、${}_3\mathrm{C}_2 = 3$ 通り。 </p>
+<p>次に、$\{6,2\}$ 部分。<br>
+この範囲内を任意の順に並べられる。<br>
+よって見分けがつかないものを含む順列で考えて、$\dfrac{2!}{1!1!} = 2$ 通り。 </p>
+<p>最後に、$\{4\}$ 部分。<br>
+この範囲内を任意の順に並べられる。<br>
+よって見分けがつかないものを含む順列で考えて、$\dfrac{1!}{1!} = 1$ 通り。 </p>
+<p>これらをすべてかけて $3 \times 2 \times 1 = 6$ を $998244353$ で割った余りが答え。</p>
+<h2>注意点</h2>
+<p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+順列数や二項係数を何度も使うため、階乗と階乗の逆元を前計算しておく。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/permutation-and-combination.html">順列組み合わせ</a>
+<a class="tag" href="../tags/binomial-coefficient.html">二項係数</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

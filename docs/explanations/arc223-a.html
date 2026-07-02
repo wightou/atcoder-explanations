@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC223A - Unusual-Constraint Knapsack</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ARC223A - Unusual-Constraint Knapsack</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc223/tasks/arc223_a">問題ページ</a><a href="https://atcoder.jp/contests/arc223/submissions/77113790">解答例</a></div>
+    <h2>考え方</h2>
+<p>ナップサック問題。<br>
+一般的な制約での解き方はわかっておらず、おそらく高速な解き方は存在しない（NP完全問題）。</p>
+<p>$N \leq 20$ くらいならbit全探索、$N \leq 40$ くらいなら半分全列挙で間に合うが、今回は $N \leq 60$。<br>
+$W$ や $\Sigma v$ が小さければ動的計画法で解けるが、今回はそれも無理。<br>
+ということで、$w$ に関する特殊な制約を利用して、今回ならではの解法を考えなければならない。</p>
+<p>これは、貪欲法で枝刈りをしながら重い荷物から順に採用するか否かを深さ優先探索をすればよい。<br>
+すなわち、残り容量 $W$ の状況で重さ $x$ の荷物を採用するか否かは、以下で決定できる。</p>
+<ul>
+<li>$W\geq 2x-1$ である場合、残りを全部採用可能なので、貪欲法により採用の方だけ進む。</li>
+<li>$x\leq W&lt;2x-1$ である場合、採用する場合としない場合と両方あり得るので、両方に進む。</li>
+<li>$W&lt;x$ である場合、採用不可能なので、不採用の方だけ進む。</li>
+</ul>
+<p>真ん中のパターンから不採用の方に進んだ場合、残りは全て一番上のパターンになる。<br>
+従って、最大に分岐しても $O(N^2)$ で求まる。<br>
+累積和等を使えば $O(N)$ にすることもできるが、$N\leq 60$ なのでそこまでする意味は薄い。</p>
+<h2>入力例1での動作</h2>
+<p>$1$ つ目のテストケースのみ考える。</p>
+<p>入力を受け取る。</p>
+<pre><code>N = 3
+W = 10
+vec = [(1,2), (3,1), (9,3)]</code></pre>
+<p>以下では、残り容量 $W$ で $id$ 以下の荷物しか選べない場合を <code>calc(W,id)</code> と表現する。<br>
+<code>calc(10,2)</code> を求めれば答えである。</p>
+<p><code>calc(10,2)</code> を求める。<br>
+$id=2$ である荷物は、重さが $9$、価値が $3$ である。<br>
+$9\times 2-1=17$ であり、残り容量 $10$ は $9$ 以上で $17$ 未満である。<br>
+よって、<code>calc(10,1)</code> と <code>calc(1,1)+3</code> の大きい方が答え。</p>
+<p><code>calc(10,1)</code> を求める。<br>
+$id=1$ である荷物は、重さが $3$、価値が $1$ である。<br>
+$3\times 2-1=5$ であり、残り容量 $10$ は $5$ 以上である。<br>
+よって、<code>calc(7,0)+1</code> が答え。</p>
+<p><code>calc(7,0)</code> を求める。<br>
+$id=0$ である荷物は、重さが $1$、価値が $2$ である。<br>
+$1\times 2-1=1$ であり、残り容量 $7$ は $1$ 以上である。<br>
+よって、<code>calc(6,-1)+2</code> が答えなのだが、<code>calc(6,-1)</code> は明らかに $0$ なので、答えは $2$。</p>
+<p>さかのぼって、<code>calc(10,1)</code> の答えは $3$。</p>
+<p><code>calc(1,1)</code> を求める。<br>
+$id=1$ である荷物は、重さが $3$、価値が $1$ である。<br>
+$3\times 2-1=5$ であり、残り容量 $1$ は $5$ 未満である。<br>
+よって、<code>calc(1,0)</code> が答え。</p>
+<p><code>calc(1,0)</code> を求める。<br>
+$id=0$ である荷物は、重さが $1$、価値が $2$ である。<br>
+$1\times 2-1=1$ であり、残り容量 $1$ は $1$ 以上である。<br>
+よって、<code>calc(0,-1)+2</code> が答えなのだが、<code>calc(0,-1)</code> は明らかに $0$ なので、答えは $2$。</p>
+<p>さかのぼって、<code>calc(1,1)</code> の答えは $2$。</p>
+<p>さかのぼって、<code>calc(10,2)</code> の答えは $5$。</p>
+<p>以上より、最大値は $5$ である。</p>
+<h2>注意点</h2>
+<p>答えや重さは、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/knapsack-problem.html">ナップサック問題</a>
+<a class="tag" href="../tags/greedy.html">貪欲法</a>
+<a class="tag" href="../tags/dfs.html">深さ優先探索</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

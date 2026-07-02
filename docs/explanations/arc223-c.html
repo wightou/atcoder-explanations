@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC223C - Whole Product of Pairwise Distances</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ARC223C - Whole Product of Pairwise Distances</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc223/tasks/arc223_c">問題ページ</a><a href="https://atcoder.jp/contests/arc223/submissions/77113877">解答例</a></div>
+    <h2>考え方</h2>
+<p><code>A</code> の順番は、積の値に影響を与えない。<br>
+よって、<code>A</code> をソートすることで、絶対値記号を外して $A_j-A_i$ の積と考えてよい。</p>
+<p>まず、$N$ で割った余りが等しい $2$ つの数があれば、積の中に $0$ が含まれるので答えは $0$。<br>
+しかし、数列は長さ $N$ である。<br>
+したがって結局は、余りが $0$ から $N-1$ まで $1$ 回ずつ登場するパターンのみ考えればよい。</p>
+<p>しかも、$N$ が合成数の場合も明らかに $0$ となる。<br>
+異なる素因数を含む場合、$N=pq$ と互いに素な $2$ 以上の $2$ つの数の積に分ける。<br>
+求める積の中に $p$ の倍数も $q$ の倍数も含まれるので、これは $pq$ の倍数。<br>
+同じ素数の累乗 $N=p^r$ の場合、その素因数の倍数は積の中に $r$ 個以上含まれる。<br>
+よって、$N$ が素数の場合のみ考えればよい。</p>
+<p>さらに、$N=2$ の場合は、偶数と奇数が $1$ つずつなら $1$、そうでなければ $0$。<br>
+したがって、あとは $N$ が奇素数の場合のみ考えればよい。</p>
+<p>剰余を、通常の剰余ではなく、絶対値最小剰余で取る。<br>
+つまり、$N=2k+1$ で割った余り $R$ を、通常の $0\leq R \leq 2k$ ではなく、$-k\leq R \leq k$ で取る。</p>
+<p>こうすると、$N(N-1)/2=k(2k+1)$ 個の積の絶対値は、$(k!)^{2k+1}$ である。<br>
+なぜなら、<code>A</code> の中には余りが $0$ から $N-1$ まで $1$ 回ずつ登場するからである。<br>
+この時点で答えは二択で、あとは負の数を何回かけたかを考えればよい。<br>
+これは各回ごと、$A_j$ の余りと、過去に調べた値にどんな余りが何個出たかから求められる。<br>
+愚直にやれば $O(N^2)$ になるが、Fenwick木などを用いることで $O(N\log N)$ で処理できる。</p>
+<p>以上を実装すればよい。<br>
+うまく実装すれば、$N=2$ のときや合成数のときも奇素数の場合のコードに任せて問題なくなる。</p>
+<h2>入力例1での動作</h2>
+<p>$3$ つ目のテストケースのみ考える。</p>
+<p>入力を受け取る。  <br>
+<code>a</code> はソートしておく。</p>
+<pre><code>n: 5
+a: {11, 22, 33, 44, 55}</code></pre>
+<p>$n=5$ は素数なので、処理を続ける。  <br>
+剰余類環の法を $5$ に設定する。</p>
+<p>$n/2=2$ なので、$(n/2)! = 2! = 2$ である。  <br>
+これを $n$ 乗して、仮の結果としておく。  <br>
+すなわち、仮の結果は $2^5 \% 5 = 2$ となる。</p>
+<p>前から順に、$5$ で割った余りを確認していく。</p>
+<p>まず、$11$ を見る。  <br>
+$11 \% 5 = 1$ である。<br>
+余り $1$ はまだ出ていないので、処理を続ける。<br>
+余り $2$ または $3$ のものはこれまでに $0$ 個出ているので、結果に $(-1)^0$ をかける。<br>
+余り $1$ が出たことを記録する。</p>
+<p>次に、$22$ を見る。  <br>
+$22 \% 5 = 2$ である。  <br>
+余り $2$ はまだ出ていないので、処理を続ける。  <br>
+余り $3$ または $4$ のものはこれまでに $0$ 個出ているので、結果に $(-1)^0$ をかける。<br>
+余り $2$ が出たことを記録する。</p>
+<p>次に、$33$ を見る。  <br>
+$33 \% 5 = 3$ である。  <br>
+余り $3$ はまだ出ていないので、処理を続ける。  <br>
+余り $4$ または $0$ のものはこれまでに $0$ 個出ているので、結果に $(-1)^0$ をかける。<br>
+余り $3$ が出たことを記録する。</p>
+<p>次に、$44$ を見る。  <br>
+$44 \% 5 = 4$ である。  <br>
+余り $4$ はまだ出ていないので、処理を続ける。  <br>
+余り $0$ または $1$ のものはこれまでに $1$ 個出ているので、結果に $(-1)^1$ をかける。  <br>
+仮の結果は $-2$ になる。  <br>
+余り $4$ が出たことを記録する。</p>
+<p>最後に、$55$ を見る。  <br>
+$55 \% 5 = 0$ である。  <br>
+余り $0$ はまだ出ていないので、処理を続ける。  <br>
+余り $1$ または $2$ のものはこれまでに $2$ 個出ているので、結果に $(-1)^2$ をかける。  <br>
+余り $0$ が出たことを記録する。</p>
+<p>以上より、仮の結果は $-2$ である。  <br>
+$5$ で割った余りとして正の値に直すと、答えは $3$ である。</p>
+<h2>注意点</h2>
+<p>$N$ が素数の場合は、法 $N$ の剰余類環で計算する。<br>
+符号も含めて管理する必要がある。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/number-theory.html">整数論</a>
+<a class="tag" href="../tags/primality-test.html">素数判定</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/binary-exponentiation.html">繰り返し二乗法</a>
+<a class="tag" href="../tags/fenwick-tree.html">Fenwick木</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
