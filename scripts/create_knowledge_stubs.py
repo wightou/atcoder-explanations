@@ -70,6 +70,7 @@ def k(slug: str, title: str, level: str, category: str, *, aliases=None, absorbs
 STUBS: list[KnowledgeStub] = [
     # 難易度問わず
     k("input-output", "入出力", "難易度問わず", "基本", aliases=["cin", "cout", "標準入力", "標準出力"], absorbs=["cin", "cout"]),
+    k("cpp-code-style", "C++のコードの書き方", "難易度問わず", "基本", aliases=["C++コード", "C++の書き方", "コードの書き方", "C++ coding style"], related=["入出力", "エラー", "テスト"]),
     k("error", "エラー", "難易度問わず", "基本"),
     k("test", "テスト", "難易度問わず", "基本"),
     k("mathematical-expression", "数学的表現", "難易度問わず", "基本"),

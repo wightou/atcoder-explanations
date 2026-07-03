@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C++のコードの書き方</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>C++のコードの書き方</h1>
+    <h2>概要</h2>
+<p>競技プログラミングで C++ を使うときの、基本的なコードの書き方。</p>
+<p>コメントについてもここで解説する。</p>
+<h2>コード例</h2>
+<h3>基本の枠</h3>
+<p>以下は、C++ で「何もしない」を実行するコード。</p>
+<pre><code>#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+int main() {
+
+  // ここに、コンピューターにやってほしいことを書く
+
+  return 0;
+
+}</code></pre>
+<p>何が書いてあるかを $1$ 行ずつ解説する。</p>
+<pre><code>#include &lt;bits/stdc++.h&gt;</code></pre>
+<p>まず、1行目のこれは「機能集、全部使うからよろしく！」という感じの文。<br>
+冒頭に毎回書く必要があるが、覚えなくてもコピペでよい。</p>
+<p>C++ では、よく使う機能集みたいなものが存在する。<br>
+しかし、それらを使うには、「機能集の $3$ 巻と $7$ 巻使うからよろしく！」みたいに伝えなければならない。<br>
+もちろん、使いもしないものを無駄に読み込ませたら、仕事で書いたコードであれば怒られるだろう。</p>
+<p>が、競技プログラミングはコードが動けば勝ちである。<br>
+豪快に「機能集、全部使うからよろしく！」をやってしまって何も問題ないし、誰にも怒られない。</p>
+<pre><code>using namespace std;</code></pre>
+<p>次に、$2$ 行目のこれは、「機能の名前を略して書くからよろしく！」という感じの文。<br>
+冒頭に毎回書く必要があるが、覚えなくてもコピペでよい。</p>
+<p>C++ のいろんな機能名は、<code>std::vector</code> とか <code>std::sort()</code> のように、名前が長めである。<br>
+これは言ってみれば <code>苗字::名前</code> みたいな形で書いているようなもの。<br>
+だが、C++ 界の苗字は <code>std::</code> が大多数。<br>
+そこで、「苗字書いてなかったら <code>std::</code> かもしれないと思ってね」をやっているのがこの文。</p>
+<p>稀にこれが意図しない問題を引き起こす可能性があるので、仕事で書いたコードであれば怒られるだろう。<br>
+が、競技プログラミングはコードが動けば勝ちである。<br>
+豪快に「<code>std::</code> は略して書くからよろしく！」をやってしまって何も問題ないし、誰にも怒られない。</p>
+<pre><code>int main() {
+
+}</code></pre>
+<p>$4$ 行目と $10$ 行目のこれは、<code>main</code> 関数の枠。<br>
+<code>int main() {</code> と <code>}</code> は毎回書く必要があるが、覚えなくてもコピペでよい。</p>
+<p><code>main</code> 関数は、言ってみれば <code>main</code> という名前のコンピューターへの指示書である。<br>
+C++ のコードは、まず <code>main</code> という名前の指示書を探して <code>{</code> <code>}</code> 間の内容を実行することになっている。<br>
+つまり、与えられた問題を解くためのプログラムは、基本的にこの間に書くと思っておいてよい。</p>
+<pre><code>  // ここに、コンピューターにやってほしいことを書く</code></pre>
+<p>$6$ 行目のこれは、コメント。<br>
+スラッシュを $2$ つ書き並べたら、その行の残りは人間用のメモ書きであり、コンピューターは無視する。<br>
+詳しくは後述。</p>
+<pre><code>  return 0;</code></pre>
+<p>最後に、$8$ 行目のこれは、終了報告。<br>
+<code>main</code> 関数を終える <code>}</code> の直前に書いておき、「無事に終わりました！」とコンピューターに知らせる。<br>
+覚えなくてもコピペでよく、なんなら書き忘れてもちゃんと動作する。</p>
+<h3>命令の記述ルール</h3>
+<p>言ってみれば、原稿用紙の使い方のルール。<br>
+ここでは $3$ つ紹介する。</p>
+<p>まず、$1$ つ $1$ つの命令の終わりには、必ずセミコロン <code>;</code> をつけること。<br>
+これは日本語で言う句点 <code>。</code> のようなもの。<br>
+日本語ならうっかり句点を忘れても人間は読んでくれるが、プログラムではそうはいかない。<br>
+むしろ、プログラムに勝手に推測で変な動きをされても困るので、ちゃんと「<code>;</code> ないよ」とエラーする。<br>
+詳しくは「エラー」のページ参照。</p>
+<p>次に、インデントを整えること。<br>
+波括弧の開き括弧 <code>{</code> と閉じ括弧 <code>}</code> は、非常に離れた位置に書くことが多い。<br>
+すると、今、どの <code>{</code> と、どの <code>}</code> の間にいるのかよくわからなくなってくる。<br>
+そこで、以下のように記述する。<br>
+（命令の内容に対して意味はないので、波括弧の位置と、行の先頭位置だけに注目）</p>
+<pre><code>int main() {
+
+  int n, m;
+  cin &gt;&gt; n &gt;&gt; m;
+
+  int a = 0;
+  int b = 0;
+
+  for (int i=0; i&lt;n; i++) {
+    a += i;
+    for (int j=0; j&lt;m; j++) {
+      b += i*j;
+    }
+  }
+
+  cout &lt;&lt; a &lt;&lt; &quot; &quot; &lt;&lt; b &lt;&lt; endl;
+  return 0;
+
+}</code></pre>
+<p>このコードにあるように、<code>{</code> が出てきたら、その場で改行する。<br>
+そして、次の行からは半角スペース $2$ つ分先頭を下げて書き始める。<br>
+その中でまた <code>{</code> が出てきたら、さらに $2$ つ下げる。<br>
+（$4$ つ下げるという人、$8$ つ下げるという人もいる）<br>
+そして、<code>}</code> が出てきたら、その直前で改行し、その行から半角スペースの数を $2$ つ減らす。<br>
+こうすると、どの <code>{</code> を閉じているのがどの <code>}</code> なのかわかりやすくなる。</p>
+<p>$3$ つめに、記号の前後には適度に半角スペースを入れる。<br>
+例えば、以下に、同じ内容の文を $4$ 回書いてある。<br>
+どれが見やすいかは人によるだろうが、一番上が見やすいという人はあまりいないだろう。</p>
+<pre><code>if(a==0)b=c+d;
+
+if (a==0) b = c+d;
+
+if (a == 0) b = c + d;
+
+if ( a == 0 ) b = c + d ;</code></pre>
+<p>どの記号の前後に半角スペースを入れるかは、そのコードを書くのに参加する全員で決めて統一する。<br>
+競技プログラミングでは自分 $1$ 人で全部書くので、自分の好きに決めてよい。<br>
+未来の自分が困らないように、自分で決めたルールには自分でちゃんと従うこと。</p>
+<p>余談だが、このページを作っている人は、わりと独特なルールを採用している。<br>
+コード例が、普通の人には読みにくいかもしれない。</p>
+<h3>コメントの書き方</h3>
+<p><code>//</code> を書くと、その行のそこより右が全部コメントになる。<br>
+コメントは実行時には無視されるため、メモを書くことができる。</p>
+<pre><code>int x;  // x に入力を受け取る
+cin &gt;&gt; x;</code></pre>
+<p>また、<code>/*</code> と <code>*/</code> で囲むと、その間が全部コメントになる。</p>
+<pre><code>/*
+この間に
+書いた内容が
+全部コメントになる
+*/</code></pre>
+<h2>使い方の応用</h2>
+<h3>コメントをメモとして使う</h3>
+<p>プログラムを書くというよりは、そのための補助に使うもの。<br>
+難易度問わず利用する。</p>
+<p>短時間のコンテストでは、コメントを書きすぎると時間ロスが大きい。<br>
+しかし、後で提出前に見直したいところなどはメモに残しておきたい。<br>
+また、<code>WA</code> が出た場合に真っ先に疑いたいところなども短くメモしておくと助かることもある。</p>
+<p>長時間のヒューリスティック系コンテストでは、各変数の意味やロジックをコメントで残しておきたい。<br>
+「明日の自分は他人と思え」。</p>
+<p>また、解説コードなどでは、コード例にコメントが書き足してあることが多い。<br>
+他人の解説などを読むときに混乱しないよう、実力問わず正しい知識を身に着けておきたい。</p>
+<h3>コードをまとめて有効化・無効化する</h3>
+<p>切り替えたいところの前後に以下のように書く。<br>
+この状態では、間のコードは有効。</p>
+<pre><code>//*
+いろいろ（有効）
+//*/</code></pre>
+<p>最初のスラッシュを $1$ つ消すと、その間をまとめて無効化できる。</p>
+<pre><code>/*
+いろいろ（無効）
+//*/</code></pre>
+<p>もちろん、スラッシュを $1$ つ付け足せばまた有効化できる。</p>
+<h3>2種類のコードを切り替える</h3>
+<p>切り替えたいところの前後に以下のように書く。<br>
+この状態では <code>A</code> の方が有効。</p>
+<pre><code>//*
+いろいろA（有効）
+/*/
+いろいろB（無効）
+//*/</code></pre>
+<p>最初のスラッシュを $1$ つ消すと、<code>A</code> を無効化して <code>B</code> を有効化できる。</p>
+<pre><code>/*
+いろいろA（無効）
+/*/
+いろいろB（有効）
+//*/</code></pre>
+<p>もちろん、スラッシュを $1$ つ付け足せばまた <code>A</code> の方を有効化できる。</p>
+<h3>VSCodeでの操作</h3>
+<p>VSCode でコードを書いている場合、「範囲選択して <code>Ctrl+/</code>」が便利。<br>
+その範囲全てをコメント化したり、逆にそれを解除したりできる。</p>
+<h2>注意点</h2>
+<h3>無効化したのを忘れてそのまま提出しないようにする</h3>
+<p>有効化・無効化を活用する場合、有効無効の設定が意図通りになっているかを提出前に確認すること。</p>
+<h3>全角文字をコード部分に混ぜないようにする</h3>
+<p>日本語の文章はコメントの中なら書ける。<br>
+一方で、コード部分に全角スペースや全角記号が混ざると、コンパイルエラーの原因になることがある。<br>
+コメントを書いた後、半角に戻し忘れたままスペースを書くと大変なことになるので注意。</p>
+<h3>/*……*/ はネストできない</h3>
+<pre><code>/* コメント1の途中に  /*コメント2*/  を挟む */</code></pre>
+<p>うっかり上のように書くと、1つ目の <code>/*</code> から1つ目の <code>*/</code> までがコメント範囲と判定されてしまう。<br>
+そして、後ろの <code>を挟む */</code> 部分がコメント扱いされず、エラーになる。<br>
+こういう記述をしないように注意すること。</p>
+<h2>関連知識</h2>
+<h3>入出力</h3>
+<p><code>cin</code> や <code>cout</code> の詳しい使い方は、入出力で扱う。</p>
+<h3>エラー</h3>
+<p>コードの書き方を間違えると、コンパイルエラーや実行時エラーになることがある。<br>
+エラーが出た場合は、エラーメッセージを読んで原因を探す。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>知識情報</h2>
+      <p><strong>分野:</strong> 基本</p>
+      <p><strong>難易度:</strong> 難易度問わず</p>
+    </section>
+
+    <section class="side-card">
+      <h2>関連知識</h2>
+      <ul class="side-links">
+        <li><a href="../knowledge/input-output.html">入出力</a></li><li><a href="../knowledge/error.html">エラー</a></li>
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>この知識を使う解説</h2>
+      <ul class="side-links">
+        <li class="muted">なし</li>
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

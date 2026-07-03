@@ -213,6 +213,52 @@ def warn_missing_knowledge_pages_for_tags(explanation_tag_names: set[str], knowl
     return missing
 
 
+def make_knowledge_key_map(knowledge_pages: list["KnowledgePage"]) -> dict[str, "KnowledgePage"]:
+    """知識名・別名・吸収名から知識ページを引く辞書を作る。
+
+    related は title / aliases / absorbs のいずれでも解決できるようにする。
+    通常の導線に出さない未分類ページは、関連知識リンクの候補から外す。
+    """
+    result: dict[str, KnowledgePage] = {}
+    for page in visible_knowledge_pages(knowledge_pages):
+        for key in page.tag_keys:
+            result.setdefault(key, page)
+    return result
+
+
+def resolve_related_knowledge_pages(
+    page: "KnowledgePage",
+    key_map: dict[str, "KnowledgePage"],
+) -> tuple[list["KnowledgePage"], list[str]]:
+    resolved: list[KnowledgePage] = []
+    missing: list[str] = []
+    seen_paths: set[Path] = {page.source_path}
+
+    for raw in page.related:
+        key = str(raw).strip()
+        if not key:
+            continue
+        related_page = key_map.get(key)
+        if related_page is None:
+            missing.append(key)
+            continue
+        if related_page.source_path in seen_paths:
+            continue
+        seen_paths.add(related_page.source_path)
+        resolved.append(related_page)
+
+    return resolved, missing
+
+
+def warn_missing_related_knowledge_pages(missing_by_page: dict[Path, list[str]]) -> None:
+    if not missing_by_page:
+        return
+    print("WARNING: related に対応する知識記事が見つからない項目があります。", file=sys.stderr)
+    for path in sorted(missing_by_page, key=lambda p: str(p)):
+        names = ", ".join(missing_by_page[path])
+        print(f"  - {path.relative_to(ROOT)}: {names}", file=sys.stderr)
+
+
 @dataclass(frozen=True)
 class PageAsset:
     source_path: Path
@@ -313,6 +359,15 @@ class KnowledgePage:
         if not isinstance(absorbs, list):
             raise ValueError(f"{self.source_path}: absorbs は YAML 配列にしてください")
         return [str(x) for x in absorbs]
+
+    @property
+    def related(self) -> list[str]:
+        related = self.meta.get("related", [])
+        if related is None:
+            return []
+        if not isinstance(related, list):
+            raise ValueError(f"{self.source_path}: related は YAML 配列にしてください")
+        return [str(x) for x in related]
 
     @property
     def tag_keys(self) -> list[str]:
@@ -1331,10 +1386,19 @@ def render_tag_page(tag: str, pages: list[ExplanationPage], knowledge_pages: lis
     return render_index_layout(f"タグ: {tag}", inner, prefix="../", css_href="../style.css")
 
 
-def render_knowledge_page(page: KnowledgePage, related: list[ExplanationPage]) -> str:
-    related_items = "".join(
+def render_knowledge_page(
+    page: KnowledgePage,
+    related_explanations: list[ExplanationPage],
+    related_knowledge: list[KnowledgePage],
+) -> str:
+    related_explanation_items = "".join(
         f'<li><a href="../{escape(p.url)}">{escape(p.full_title)}</a></li>'
-        for p in sorted(related, key=page_sort_key)
+        for p in sorted(related_explanations, key=page_sort_key)
+    ) or '<li class="muted">なし</li>'
+
+    related_knowledge_items = "".join(
+        f'<li><a href="../{escape(k.url)}">{escape(k.title)}</a></li>'
+        for k in sorted(related_knowledge, key=knowledge_sort_key)
     ) or '<li class="muted">なし</li>'
 
     body = f"""
@@ -1353,9 +1417,16 @@ def render_knowledge_page(page: KnowledgePage, related: list[ExplanationPage]) -
     </section>
 
     <section class="side-card">
+      <h2>関連知識</h2>
+      <ul class="side-links">
+        {related_knowledge_items}
+      </ul>
+    </section>
+
+    <section class="side-card">
       <h2>この知識を使う解説</h2>
       <ul class="side-links">
-        {related_items}
+        {related_explanation_items}
       </ul>
     </section>
 
@@ -1376,7 +1447,6 @@ def render_knowledge_page(page: KnowledgePage, related: list[ExplanationPage]) -
 </main>
 """
     return html_document(page.title, body, css_href="../style.css")
-
 
 def render_knowledge_item(page: KnowledgePage, *, link_prefix: str = "") -> str:
     summary_html = f'<div class="knowledge-summary">{escape(page.summary)}</div>' if page.summary else ""
@@ -2262,12 +2332,23 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
     for p in explanations:
         (out_dir / p.url).write_text(render_explanation_page(p), encoding="utf-8")
 
+    knowledge_key_map = make_knowledge_key_map(knowledge_pages)
+    missing_related_by_page: dict[Path, list[str]] = {}
+
     for k in knowledge_pages:
         related_pages: dict[Path, ExplanationPage] = {}
         for key in k.tag_keys:
             for related in tag_map.get(key, []):
                 related_pages[related.source_path] = related
-        (out_dir / k.url).write_text(render_knowledge_page(k, list(related_pages.values())), encoding="utf-8")
+        related_knowledge_pages, missing_related = resolve_related_knowledge_pages(k, knowledge_key_map)
+        if missing_related:
+            missing_related_by_page[k.source_path] = missing_related
+        (out_dir / k.url).write_text(
+            render_knowledge_page(k, list(related_pages.values()), related_knowledge_pages),
+            encoding="utf-8",
+        )
+
+    warn_missing_related_knowledge_pages(missing_related_by_page)
 
     (out_dir / "index.html").write_text(render_portal(pages_by_class, knowledge_pages), encoding="utf-8")
     (out_dir / "contests" / "index.html").write_text(render_explanations_index(pages_by_class), encoding="utf-8")
