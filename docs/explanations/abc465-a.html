@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>考察問題</title>
+<title>ABC465A - Supermajority</title>
 <link rel="stylesheet" href="../style.css">
 <script>
 window.MathJax = {
@@ -28,30 +28,55 @@ window.MathJax = {
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>考察問題</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <h1>ABC465A - Supermajority</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc465/tasks/abc465_a">問題ページ</a><a href="https://atcoder.jp/contests/abc465/submissions/77219785">解答例</a></div>
+    <h2>考え方</h2>
+<p>入力は整数が $2$ つなので、<code>int</code> 型の変数を $2$ つ用意し、<code>cin</code> で入力を受け取る。</p>
+<p>さて、$A&gt;B \times \dfrac{2}{3}$ かどうかを if 文で書けばよいように思える。<br>
+しかし、割り算を用いる比較は、プログラムの仕様上の落とし穴が $2$ つある。</p>
+<p>まず $1$ つめに、単純に $3$ で割ると、整数同士の割り算で商だけ求める計算になってしまう。<br>
+例えば $B=7$ の場合、$7$ に $2$ をかけて $14$、それを $3$ で割って $4$、とされて余りの $2$ が捨てられてしまう。</p>
+<p>では、$3.0$ で割って小数で判定する場合はどうかというと、今度は $2$ つめの罠が待っている。<br>
+小数は適当なところで計算を打ち切るため、$3.0$ が内部で $3.0000000000000001$ になっていたりする。<br>
+そのせいで、小数の大小比較は、本来同じはずの値を「左が小さい」などと誤判定することがある。</p>
+<p>ということで、両方の罠を避けるため、そもそも割り算も小数も避けて、整数で比較できるようにする。<br>
+条件式の両辺に $3$ をかけても問題ないため、「$3A&gt;2B$ であるかどうか？」を if 文の判定に使えばよい。<br>
+ここさえ書けたら、あとは if 文の中で出力する文字を決めるだけである。</p>
+<p>if 文の中で直接 <code>cout</code> してもいいし、事前に出力用文字列を用意してもよい。</p>
+<p>実は今回は、ちゃんと $2$ をかけてから $3$ で割る順序なら、どちらの罠も自然に回避されて AC する。<br>
+とはいえ次もそうだとは限らない。<br>
+「割り算の結果で比較することは避ける」を意識することは大切である。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>a: 316
+b: 465</code></pre>
+<p>答え用の変数 <code>result</code> を <code>&quot;No&quot;</code> で初期化する。</p>
+<pre><code>result: &quot;No&quot;</code></pre>
+<p><code>3*a&gt;2*b</code> かどうかを判定する。</p>
+<pre><code>3*a: 948
+2*b: 930</code></pre>
+<p><code>3*a&gt;2*b</code> が成り立つので、<code>result</code> を <code>&quot;Yes&quot;</code> にする。</p>
+<pre><code>result: &quot;Yes&quot;</code></pre>
+<p>最後に、<code>result</code> を出力すればよい。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>今回、非整数になる場合のズレ方は必ず $\dfrac{1}{3} = 0.333\dots$ 単位である。<br>
+よって、小数で計算し、$A$ が $B \times \dfrac{2}{3}+0.1$ より大きいと誤差吸収する方針でも解ける。<br>
+（コード例なし）</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 基本</p>
-      <p><strong>難易度:</strong> 難易度問わず</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-e.html">ABC461E - E-liter</a></li><li><a href="../explanations/abc462-e.html">ABC462E - Alternating Costs</a></li><li><a href="../explanations/abc464-e.html">ABC464E - Fill-Rect Query</a></li><li><a href="../explanations/abc465-d.html">ABC465D - X to Y</a></li><li><a href="../explanations/arc223-a.html">ARC223A - Unusual-Constraint Knapsack</a></li><li><a href="../explanations/arc223-b.html">ARC223B - Valid Arrays by K-Divisible Swaps</a></li><li><a href="../explanations/arc223-c.html">ARC223C - Whole Product of Pairwise Distances</a></li><li><a href="../explanations/arc223-d.html">ARC223D - Xpectation of Cards in Hand with Laboratory</a></li><li><a href="../explanations/arc223-e.html">ARC223E - Yin-Yang Two Bits Insertion</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/input-output.html">入出力</a>
+<a class="tag" href="../tags/int.html">int型</a>
+<a class="tag" href="../tags/string.html">string型</a>
+<a class="tag" href="../tags/if-statement.html">if分岐</a>
+<a class="tag" href="../tags/arithmetic-operations.html">四則演算</a>
+      </div>
+      
     </section>
 
     <section class="side-card">

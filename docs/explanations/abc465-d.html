@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>考察問題</title>
+<title>ABC465D - X to Y</title>
 <link rel="stylesheet" href="../style.css">
 <script>
 window.MathJax = {
@@ -28,30 +28,57 @@ window.MathJax = {
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>考察問題</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <h1>ABC465D - X to Y</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc465/tasks/abc465_d">問題ページ</a><a href="https://atcoder.jp/contests/abc465/submissions/77219806">解答例</a></div>
+    <h2>考え方</h2>
+<p>数式をちゃんと言語化できれば非常に単純な問題。</p>
+<p>$\lfloor x/K \rfloor$ は、$K$ で割って切り捨て。<br>
+これが仮に $K=10$ だったら、普通に一の位を消す操作になる。<br>
+つまり、$K=10$ の場合に言っていることは、以下のようなことである。</p>
+<ul>
+<li>末尾の数字を $1$ つ消す操作ができる</li>
+<li>末尾に好きな数字を $1$ つつける操作ができる</li>
+<li>$X$ を $Y$ に変えるのに最少何回かかるか？</li>
+</ul>
+<p>こう考えると $K=10$ の場合答えは明らか。<br>
+$X$ と $Y$ で、先頭からの数字列が何桁共通しているかを調べればよい。<br>
+$X$ の不一致部分を全部削除して、$Y$ の不一致部分を全部追加する、その操作数の和が答え。</p>
+<p>では、$K$ が $10$ 以外の数だったらどうするのか？<br>
+答えは単純で、$K$ 進法で扱えばいいだけである。</p>
+<h2>入力例1での動作</h2>
+<p>$1$ つめのテストケースのみ。</p>
+<p>入力を受け取る。</p>
+<pre><code>x: 11
+y: 9
+k: 3</code></pre>
+<p>まず、<code>x</code> を $3$ 進法に変換する。<br>
+$11 = 1\times 3^2 + 0\times 3^1 + 2\times 3^0$ なので、正順に直した後の数字列は次のようになる。</p>
+<pre><code>x_vec: {1, 0, 2}</code></pre>
+<p>次に、<code>y</code> を $3$ 進法に変換する。<br>
+$9 = 1\times 3^2 + 0\times 3^1 + 0\times 3^0$ なので、正順に直した後の数字列は次のようになる。</p>
+<pre><code>y_vec: {1, 0, 0}</code></pre>
+<p><code>x_vec</code> と <code>y_vec</code> が上から何個一致しているかを求める。<br>
+先頭から $2$ 個が一致しているので、<code>d</code> は $2$ である。</p>
+<pre><code>d: 2</code></pre>
+<p>あとは、<code>x_vec</code> の不一致部分を削除し、<code>y_vec</code> の不一致部分を追加する回数を数える。<br>
+<code>x_vec</code> の長さは $3$、<code>y_vec</code> の長さも $3$ なので、答えは $3+3-2\times 2=2$ である。</p>
+<pre><code>result: 2</code></pre>
+<h2>注意点</h2>
+<p>$X$、$Y$、$K$ は、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<p>また、<code>0</code> を $K$ 進法変換したとき、数字列を空として扱う。<br>
+これにより、<code>0</code> から正の整数へ移る場合の回数を正しく数えられる。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 基本</p>
-      <p><strong>難易度:</strong> 難易度問わず</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-e.html">ABC461E - E-liter</a></li><li><a href="../explanations/abc462-e.html">ABC462E - Alternating Costs</a></li><li><a href="../explanations/abc464-e.html">ABC464E - Fill-Rect Query</a></li><li><a href="../explanations/abc465-d.html">ABC465D - X to Y</a></li><li><a href="../explanations/arc223-a.html">ARC223A - Unusual-Constraint Knapsack</a></li><li><a href="../explanations/arc223-b.html">ARC223B - Valid Arrays by K-Divisible Swaps</a></li><li><a href="../explanations/arc223-c.html">ARC223C - Whole Product of Pairwise Distances</a></li><li><a href="../explanations/arc223-d.html">ARC223D - Xpectation of Cards in Hand with Laboratory</a></li><li><a href="../explanations/arc223-e.html">ARC223E - Yin-Yang Two Bits Insertion</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

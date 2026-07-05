@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC465C - Reverse Permutation</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ABC465C - Reverse Permutation</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc465/tasks/abc465_c">問題ページ</a><a href="https://atcoder.jp/contests/abc465/submissions/77219802">解答例</a></div>
+    <h2>考え方</h2>
+<p>一見、<code>reverse()</code> を多用して解けそうに見える。<br>
+しかし、<code>reverse()</code> は $O(N)$ かかる関数であり、$S$ の中身が <code>&#x27;o&#x27;</code> だらけだと全体で $O(N^2)$ かかる。<br>
+$N$ が最大 $500000$ まで対応しなければならないので、これでは間に合わずTLE。<br>
+そこで高速化を考える。</p>
+<p>データをひっくり返すのに時間がかかるなら、代わりにデータを見ている自分がひっくり返ればよい。<br>
+つまり、反転が発生したら、実際の前を今後は後ろだと思い、実際の後ろを今後は前だと思えばよい。</p>
+<p>それだけだと一部だけ反転というのは不可能であるように思えるが、そこは工夫次第で回避できる。<br>
+例えば $1$ から $3$ までを反転する操作は、$4$ 以上が存在しないものとして、全体反転すればよい。</p>
+<p>すなわち、以下を実行すればよい。</p>
+<ul>
+<li>空のデータを用意する</li>
+<li>$1$ を「後ろ」に追加する</li>
+<li>$1$ から $1$ まで反転があるなら、自分がひっくり返る</li>
+<li>$2$ を「後ろ」に追加する</li>
+<li>$1$ から $2$ まで反転があるなら、自分がひっくり返る</li>
+<li>$3$ を「後ろ」に追加する</li>
+<li>$1$ から $3$ まで反転があるなら、自分がひっくり返る</li>
+<li>$\dots$</li>
+</ul>
+<p>これなら、毎回反転があっても $O(N)$ で処理が終わる。<br>
+値を（実際の）前からも後ろからも追加するので、データ構造は <code>deque</code> の出番。</p>
+<p>あとは、最後に自分がひっくり返ったまま終わった場合は、最後だけ本当に反転させれば答え。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+s: &quot;ooxoo&quot;</code></pre>
+<p>答え用の変数 <code>que</code> を空の状態で用意する。<br>
+また、反転状態を表す変数 <code>reversed</code> を <code>false</code> で初期化する。</p>
+<pre><code>que: {}
+reversed: false</code></pre>
+<p>$0$ 文字目を処理する。<br>
+<code>reversed</code> は <code>false</code> なので、<code>1</code> を後ろに追加する。<br>
+<code>s[0]</code> は <code>o</code> なので、<code>reversed</code> を反転する。</p>
+<pre><code>que: {1}
+reversed: true</code></pre>
+<p>$1$ 文字目を処理する。<br>
+<code>reversed</code> は <code>true</code> なので、<code>2</code> を前に追加する。<br>
+<code>s[1]</code> は <code>o</code> なので、<code>reversed</code> を反転する。</p>
+<pre><code>que: {2, 1}
+reversed: false</code></pre>
+<p>$2$ 文字目を処理する。<br>
+<code>reversed</code> は <code>false</code> なので、<code>3</code> を後ろに追加する。<br>
+<code>s[2]</code> は <code>x</code> なので、<code>reversed</code> はそのままである。</p>
+<pre><code>que: {2, 1, 3}
+reversed: false</code></pre>
+<p>$3$ 文字目を処理する。<br>
+<code>reversed</code> は <code>false</code> なので、<code>4</code> を後ろに追加する。<br>
+<code>s[3]</code> は <code>o</code> なので、<code>reversed</code> を反転する。</p>
+<pre><code>que: {2, 1, 3, 4}
+reversed: true</code></pre>
+<p>$4$ 文字目を処理する。<br>
+<code>reversed</code> は <code>true</code> なので、<code>5</code> を前に追加する。<br>
+<code>s[4]</code> は <code>o</code> なので、<code>reversed</code> を反転する。</p>
+<pre><code>que: {5, 2, 1, 3, 4}
+reversed: false</code></pre>
+<p>最後に、<code>reversed</code> は <code>false</code> なので、<code>que</code> を反転しない。</p>
+<p>よって、<code>5 2 1 3 4</code> を出力する。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

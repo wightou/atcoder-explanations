@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>考察問題</title>
+<title>ABC465B - Parking 2</title>
 <link rel="stylesheet" href="../style.css">
 <script>
 window.MathJax = {
@@ -28,30 +28,56 @@ window.MathJax = {
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>考察問題</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <h1>ABC465B - Parking 2</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc465/tasks/abc465_b">問題ページ</a><a href="https://atcoder.jp/contests/abc465/submissions/77219790">解答例</a></div>
+    <h2>考え方</h2>
+<p>少し計算方法がややこしいだけの問題。</p>
+<p>ポイントは、$L$ 時から $R$ 時の料金の扱い方。<br>
+これを、$X$ 円になると考えず、通常より $X-Y$ 円追加料金（または値引き）が発生すると考える。<br>
+すると、とりあえず全体を $Y$ 円であるとして料金計算した後、追加料金や値引きを追加すればよくなる。</p>
+<p>まず、基本料金を求める。<br>
+これは、$Y$ 円で $B-A$ 時間駐車したのだから、これらの積でよい。</p>
+<p>次に、追加料金または値引きを求める。<br>
+差分が発生し始めるのは、該当時間内の利用が始まったときなので、$L$ と $A$ の大きい方。 <br>
+差分が発生し終わるのは、該当時間内の利用が終わったときなので、$R$ と $B$ の小さい方。<br>
+後者から前者を引いた値が $0$ より大きければ、それが追加料金または値引きが発生した長さである。<br>
+その長さに $X-Y$ をかけた値が、正なら追加料金、負なら値引き分となる。</p>
+<p>両者を足し合わせたものが答えとなる。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>x: 700
+y: 300
+l: 9
+r: 17
+a: 7
+b: 21</code></pre>
+<p>すべての時間で $Y$ 円かかったと仮定する。<br>
+駐車時間は $21-7=14$ 時間である。<br>
+よって、基本料金として $300 \times 14 = 4200$ 円かかる。</p>
+<pre><code>result: 4200</code></pre>
+<p>次に、$X$ 円の時間帯に何時間駐車したかを求める。<br>
+$9$ 時から $17$ 時までの $8$ 時間が該当する。</p>
+<pre><code>min(b,r): 17
+max(a,l): 9
+d: 8</code></pre>
+<p>追加料金分を加算する。<br>
+$1$ 時間当たり $700-300 = 400$ 円追加で発生する。<br>
+$8$ 時間分なら $400 \times 8 = 3200$ 円で、これを基本料金に加算する。</p>
+<pre><code>(x-y)*d: 3200
+result: 7400</code></pre>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 基本</p>
-      <p><strong>難易度:</strong> 難易度問わず</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-e.html">ABC461E - E-liter</a></li><li><a href="../explanations/abc462-e.html">ABC462E - Alternating Costs</a></li><li><a href="../explanations/abc464-e.html">ABC464E - Fill-Rect Query</a></li><li><a href="../explanations/abc465-d.html">ABC465D - X to Y</a></li><li><a href="../explanations/arc223-a.html">ARC223A - Unusual-Constraint Knapsack</a></li><li><a href="../explanations/arc223-b.html">ARC223B - Valid Arrays by K-Divisible Swaps</a></li><li><a href="../explanations/arc223-c.html">ARC223C - Whole Product of Pairwise Distances</a></li><li><a href="../explanations/arc223-d.html">ARC223D - Xpectation of Cards in Hand with Laboratory</a></li><li><a href="../explanations/arc223-e.html">ARC223E - Yin-Yang Two Bits Insertion</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <span class="muted">なし</span>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">
