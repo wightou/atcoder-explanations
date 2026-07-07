@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC465F - Sjeltzer?</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ABC465F - Sjeltzer?</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc465/tasks/abc465_f">問題ページ</a><a href="https://atcoder.jp/contests/abc465/submissions/77273845">解答例</a></div>
+    <h2>考え方</h2>
+<p>ID の桁数が $6$ 桁あるが、こういうときは問題を小さくして考えるのがいい。<br>
+そこで、ID が $2$ 桁の場合を考えてみよう。</p>
+<p>例えば、ID が $12$、$14$、$23$、$32$、$44$ の $5$ つのドリンクがあり、全てサイズは $1$ とする。<br>
+ここにクエリとして <code>22 33</code> が来たとする。<br>
+もちろん愚直に $5$ 個のデータを調べれば答えは出るが、それでは計算量が $O(NQ)$ でTLE。<br>
+これをどうするか、と問われれば、これはD問題レベルである。<br>
+事前に二次元累積和を取ることで $O(N+D^2+Q)$ になる。<br>
+ただし、$D$ は使える数字の個数である $10$ である。</p>
+<p>こう考えると $6$ 桁の場合もやることは明らかで、六次元累積和をとればよい。<br>
+方針立てはこれで全部で、無事に $O(N+D^6+Q)$ で間に合う目途が立つ。</p>
+<p>問題はコード書き。<br>
+特に大きな問題が $3$ つある。</p>
+<p>$1$ つめは、六次元のデータをどう持つのかという問題。<br>
+しかも、累積和を取るので各方向の長さが $11$ ほしい。<br>
+これは大きく $4$ つ（他にもあるかも）思いつくが、いずれも問題点がある。<br>
+自分にとって最も気にならない方針を選ぶこと。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>方針</th>
+<th>問題点</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>11進法で6桁の数に圧縮する</td>
+<td>バグったときに確認しづらい</td>
+</tr>
+<tr>
+<td>10進法圧縮し、累積和の方を工夫して書く</td>
+<td>六次元累積和がさらに複雑化する</td>
+</tr>
+<tr>
+<td>長さ6のtupleをキーにするmapを作る</td>
+<td>わかりやすいが、計算量が不安</td>
+</tr>
+<tr>
+<td>六次元配列を作る</td>
+<td>欲しい要素を取り出すコードを書くのが大変</td>
+</tr>
+</tbody>
+</table></div>
+<p>$2$ つめは、六方向の累積和をとる方法。<br>
+愚直に書くと $6$ 重ループを $6$ 回書くことになる。<br>
+これもいくつか方針がある。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>方針</th>
+<th>問題点</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>愚直に $6$ 重ループを $6$ 回書く</td>
+<td>$1$ つでも書き間違えたら、修正は非常に困難</td>
+</tr>
+<tr>
+<td>上手な足し方で、$6$ 重ループ $1$ 回で済ませる</td>
+<td>どこをどう足せば正しく出るのかがややこしい</td>
+</tr>
+<tr>
+<td>順列全探索で、$7$ 重ループ $1$ 回にする</td>
+<td>アルゴリズムが少し込み入ったものになる</td>
+</tr>
+</tbody>
+</table></div>
+<p>$3$ つめは、六次元累積和には、包除原理で足す値が $2^6=64$ 個もあること。<br>
+これもいくつか方針がある。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>方針</th>
+<th>問題点</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>愚直に $64$ 個の加減算を書く</td>
+<td>$1$ つでも書き間違えたら、修正は非常に困難</td>
+</tr>
+<tr>
+<td>$2$ 要素の六重ループで書く</td>
+<td>ネストが深いコードになる</td>
+</tr>
+<tr>
+<td>bit全探索で調べる</td>
+<td>アルゴリズムが少し込み入ったものになる</td>
+</tr>
+</tbody>
+</table></div>
+<p>解答例のコードでは、いずれも最後に提示した方法を採用している。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+s[0]: &quot;000000&quot;, v[0]: 1
+s[1]: &quot;314159&quot;, v[1]: 2
+s[2]: &quot;161803&quot;, v[2]: 10
+s[3]: &quot;169231&quot;, v[3]: 5
+s[4]: &quot;384400&quot;, v[4]: 20
+q: 4</code></pre>
+<p>各ドリンクの情報を <code>vec</code> に入れる。<br>
+添字を $1$ ずつずらして記録するので、初期状態で $0$ でない場所は次の $5$ 箇所である。</p>
+<pre><code>vec[1][1][1][1][1][1]: 1    ← 000000
+vec[4][2][5][2][6][10]: 2   ← 314159
+vec[2][7][2][9][1][4]: 10   ← 161803
+vec[2][7][10][3][4][2]: 5   ← 169231
+vec[4][9][5][5][1][1]: 20   ← 384400</code></pre>
+<p>その後、全方向に累積和を取る。<br>
+内部の値は非常に多くなるので、ここでは全部は書かない。<br>
+累積和を取った後は、各方向について半開区間の端点を指定し、包除原理で範囲内の総和を求められるようになる。</p>
+<p>$1$ つめのクエリを見る。</p>
+<pre><code>x: &quot;150001&quot;
+y: &quot;269944&quot;</code></pre>
+<p>コードでは、各桁について範囲の下端と上端を次のように持つ。<br>
+添字は $1$ ずつずらして記録しているため、条件 $x_k \leq s_k \leq y_k$ は累積和上では半開区間 $[x_k, y_k+1)$ に対応する。<br>
+$x_k &gt; y_k$ であるものは存在しないので、総和を実行する。</p>
+<pre><code>c0: {1, 3}
+c1: {5, 7}
+c2: {0, 10}
+c3: {0, 10}
+c4: {0, 5}
+c5: {1, 5}</code></pre>
+<p>つまり、このクエリで調べる範囲は次の通りである。</p>
+<pre><code>1桁目: 1 以上 2 以下
+2桁目: 5 以上 6 以下
+3桁目: 0 以上 9 以下
+4桁目: 0 以上 9 以下
+5桁目: 0 以上 4 以下
+6桁目: 1 以上 4 以下</code></pre>
+<p>この範囲の総和を、$2^6$ 箇所の累積和の足し引きで求める。<br>
+実際の処理では、<code>b</code> を $0$ から $63$ まで動かし、<code>popcount(b)</code> の偶奇で符号を決める。</p>
+<p>入力例1のドリンクのうち、この条件を満たすものは次の $2$ つである。</p>
+<pre><code>161803: 10
+169231: 5</code></pre>
+<p>よって、答えは $10+5=15$ である。</p>
+<pre><code>result: 15</code></pre>
+<p>他のクエリも同様に、各方向の端点を作り、$2^6$ 箇所の累積和を足し引きして答えを求める。</p>
+<h2>注意点</h2>
+<p>答えは <code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/two-dimensional-cumulative-sum.html">二次元累積和</a>
+<a class="tag" href="../tags/inclusion-exclusion.html">包除原理</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC465E - Digit Circus</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ABC465E - Digit Circus</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc465/tasks/abc465_e">問題ページ</a><a href="https://atcoder.jp/contests/abc465/submissions/77225605">解答例</a></div>
+    <h2>考え方</h2>
+<p>超巨大な数以下の整数のうち条件を満たす数の個数を考える問題。<br>
+しかも、条件が各桁の数でどうのこうのというものとなれば、いわゆる桁DPの出番。</p>
+<p>一般にはよく全部を並列処理するようなコードが紹介されるが、ここでは理解しやすい方法で解く。</p>
+<p>まず、ある桁より下で $0$ から $9$ までなんでも使っていい場合に、どんなデータが何個あるか数えておく。<br>
+この問題であれば、「どの数字を使っているかの $10$ ビットの数」「$3$ で割った余り」で分けて数える。<br>
+最初は後ろから $1$ 桁目より下を求める。<br>
+これは、使っている数字なしで余り $0$ が $1$ つあるだけ。<br>
+次に、後ろから $2$ 桁目より下を求める。<br>
+これは、後ろから $1$ 桁目より下の各データから、前に $0$ から $9$ をつけてみて配る DP をする。<br>
+以下、同じように繰り返して $0$ 桁目より下の情報まで作っておく。<br>
+$N$ が最大 $500$ 桁なので、$500 \times 2^{10} \times 3 = 1536000$ 個のデータになる。<br>
+それぞれから $10$ 回配るので、$15360000$ 回の処理で終わり、計算量は問題ない。</p>
+<p>これを事前処理としてやっておけば、$N$ 未満だけを数える作業がスムーズに済む。</p>
+<p>先頭の桁から、以下の条件全てに該当するものの個数を結果に加える。<br>
+これで、細かい一部の点を除き、答えになる。</p>
+<ul>
+<li>そこより前は全ての桁が $N$ と同じ</li>
+<li>そこの桁は $N$ の同じ桁より小さい</li>
+<li>そこより下は事前処理の結果の任意のもの</li>
+<li>問題の $3$ 条件のうち $1$ つだけを満たす</li>
+</ul>
+<p>あとは、微調整。<br>
+まず、この問題では先頭の $0$ が許されていない。<br>
+そこを $0$ 埋めしても影響がない問題ならいいが、今回はそうではない。<br>
+したがって、以下の $2$ つの補正が必要となる。</p>
+<ul>
+<li>$0$ 桁目だけ、$0$ に決めることを許さない</li>
+<li>桁数が短いものは同様の方法で改めて別計上する</li>
+</ul>
+<p>また、以上の解法は、$N$ 未満のものしか計算できない。<br>
+問題は $N$ 以下を求めるように言っているので、これでは $N$ そのものが調査から漏れる。<br>
+よって、最初に $N$ に $1$ を加えておき、$N+1$ 未満で数えるとよい。<br>
+$999$ のような、$1$ 足すことで桁数が変わる入力に注意すること。<br>
+調査対象が $501$ 桁になるので上で述べた計算量に若干修正が必要だが、それでも十分間に合う。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。<br>
+文字列として受け取った $N$ の値は、ここでは $s$ としている。</p>
+<pre><code>s: &quot;45&quot;</code></pre>
+<p><code>s</code> に $1$ を足す。<br>
+桁数も取得しておく。</p>
+<pre><code>s: &quot;46&quot;
+n: 2</code></pre>
+<p><code>free[i][b][r]</code> を用意する。<br>
+<code>free[i]</code> には、<code>i</code> 桁目より後ろを自由に決めるときの情報が入る。<br>
+<code>b</code> は使った数字の種類をビットで表現し、<code>r</code> は桁和を $3$ で割った余りを表す。<br>
+<code>free[i][b][r]</code> は $s$ との大小に関係なく、そういう条件のものがいくつあるかが入る。</p>
+<p>まず、<code>free[1]</code> は、後ろの桁に自由に決められる余地がない。<br>
+よって、以下のもの以外は全て $0$。</p>
+<pre><code>free[1][0][0]: 1</code></pre>
+<p>次に <code>free[0]</code> を作る。<br>
+今回、$N+1$ は $2$ 桁なので、<code>free[0]</code> には $1$ 桁分を自由に決める場合の個数が入る。<br>
+以下の $10$ 箇所が $1$ で、残りは $0$。</p>
+<pre><code>free[0][1][0]: 1
+free[0][2][1]: 1
+free[0][4][2]: 1
+free[0][8][0]: 1
+free[0][16][1]: 1
+free[0][32][2]: 1
+free[0][64][0]: 1
+free[0][128][1]: 1
+free[0][256][2]: 1
+free[0][512][0]: 1</code></pre>
+<p>上の桁から順に見る。<br>
+まず、まだ何も見ていないので、桁和と数字の種類は次の通りである。</p>
+<pre><code>sum_d: 0
+bit_d: 0</code></pre>
+<p>$0$ 桁目を見る。<br>
+<code>s[0]</code> は $4$ なので、先頭桁を $1$、$2$、$3$ のどれかにする。<br>
+$0$ にするのは先頭桁になってしまうので、一旦スキップ。</p>
+<p>先頭桁が $1$ のものは、<code>free[0]</code> のうち以下の $4$ つが該当。<br>
+（実際の処理的にはもっと該当しているものがあるが、中身が $0$ のものは説明上省略している）</p>
+<pre><code>free[0][4][2]: 1    ← 12
+free[0][8][0]: 1    ← 13
+free[0][32][2]: 1   ← 15
+free[0][256][2]: 1  ← 18</code></pre>
+<p>先頭桁が $2$ のものは、<code>free[0]</code> （中身が $0$ でないもの）のうち以下の $4$ つが該当。<br>
+（実際の処理的にはもっと該当しているものがあるが、中身が $0$ のものは説明上省略している）</p>
+<pre><code>free[0][2][1]: 1    ← 21
+free[0][8][0]: 1    ← 23
+free[0][16][1]: 1   ← 24
+free[0][128][1]: 1  ← 27</code></pre>
+<p>先頭桁が $3$ のものは、<code>free[0]</code> （中身が $0$ でないもの）のうち以下の $6$ つが該当。<br>
+（実際の処理的にはもっと該当しているものがあるが、中身が $0$ のものは説明上省略している）</p>
+<pre><code>free[0][2][1]: 1    ← 31
+free[0][4][2]: 1    ← 32
+free[0][16][1]: 1   ← 34
+free[0][32][2]: 1   ← 35
+free[0][128][1]: 1  ← 37
+free[0][256][2]: 1  ← 38</code></pre>
+<p>よって、先頭桁が $1$、$2$、$3$ であるものを数えると、$14$ 個である。</p>
+<pre><code>result: 14</code></pre>
+<p>次の桁へ進むため、ここまでの桁和と数字の種類を更新する。</p>
+<pre><code>sum_d: 4
+bit_d: 16 (二進法で0000010000)</code></pre>
+<p>$1$ 桁目を見る。<br>
+<code>s[1]</code> は $6$ なので、$0$ 桁目を $4$ で固定したまま、$1$ 桁目を $0$ から $5$ のどれかにする。<br>
+このうち条件を満たすものは、$42$、$43$、$45$ の $3$ 個である。</p>
+<pre><code>result: 17</code></pre>
+<p>そして、桁数が $s$ より少ないもの、つまり $1$ 桁の数を数える。<br>
+$1$ 桁の数のうち、条件を満たすものは $6$、$9$ の $2$ 個である。</p>
+<pre><code>result: 19</code></pre>
+<h2>注意点</h2>
+<p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+何か足し算をするたびに結果を <code>% 998244353</code> する。</p>
+<p>$N$ は <code>int</code> 型や <code>long long</code> 型からはみ出る。<br>
+文字列として扱うこと。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/bit-dp.html">bitDP</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/dp.html">DPコンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
