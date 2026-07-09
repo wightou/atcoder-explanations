@@ -30,7 +30,332 @@ window.MathJax = {
   <article class="markdown-body">
     <h1>エラー</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>プログラムを書いたときに、うまく動かないことがある。<br>
+そのときに表示されるエラーメッセージや実際の挙動を手がかりに、原因を探して直す必要がある。</p>
+<p>競技プログラミングでよく見るエラーは、大きく分けると以下の $3$ つ。</p>
+<ul>
+<li>コンパイルエラー <code>CE</code></li>
+<li>実行時エラー <code>RE</code></li>
+<li>論理エラー <code>WA</code></li>
+</ul>
+<p>なお、このページでは C++23 の <code>gcc</code> で出るメッセージを想定する。</p>
+<h2>コンパイルエラー CE</h2>
+<p>コンパイルエラーは、C++ のコードを機械語に翻訳する段階で失敗した場合のエラー。<br>
+何かを書き忘れているか、余計なものを書いている場合に発生しやすい。</p>
+<p>AtCoder の場合、提出で <code>CE</code> を出してもペナルティにはならない。</p>
+<p>エラーメッセージの最初に、次のような表示が出ることがある。</p>
+<pre><code>./Main.cpp: In function ‘int main()’:
+./Main.cpp:18:3: error:</code></pre>
+<p>これは、<code>main()</code> 関数内の、全体で $18$ 行目、$3$ 文字目あたりにエラーがあるという意味。<br>
+ただし、本当に悪い場所はその行ではなく、$1$ つ前の行の末尾であることもある。</p>
+<p>たくさんエラーが出た場合は、まず最初のエラーから直す。<br>
+$2$ つ目以降のエラーは、最初のエラーの影響で連鎖的に発生しているだけのことが多い。</p>
+<p>最初のエラー場所が <code>./Main.cpp</code> でない場合は、<code>./Main.cpp</code> での場所が初めて出てくるところを探す。<br>
+このような場合は、標準ライブラリの中でエラーが起きているかのように見えているだけ。<br>
+実際には自分のコードでライブラリを呼び出した場所に原因があることが多い。</p>
+<pre><code>./Main.cpp:18:3: warning:</code></pre>
+<p><code>error</code> ではなく <code>warning</code> と書かれている場合、それは警告である。<br>
+これは、「実行しようと思えばできるが、怪しいところがある」というメッセージ。<br>
+内容を確認して、問題なさそうなら無視してもよい。<br>
+ただし、本当に何かミスをしていることの方が多い。</p>
+<p>以下に、よくあるコンパイルエラーを示す。</p>
+<h3>未宣言の変数を使っている場合</h3>
+<pre><code>./Main.cpp:18:3: error: ‘a’ was not declared in this scope
+   18 |   a = 0;
+      |   ^</code></pre>
+<p><code>not declared</code> と書かれている場合、宣言されていない変数や名前を使っている。<br>
+単純な宣言忘れ、変数名のタイポ、スコープのミスなどが原因になる。</p>
+<h3>未宣言の型を使っている場合</h3>
+<pre><code>./Main.cpp:4:1: error: ‘Foo’ does not name a type
+    4 | Foo x;
+      | ^~~</code></pre>
+<p><code>does not name a type</code> と書かれている場合、存在しない型を使おうとしている。<br>
+型名のタイポや、型を定義する前に使っていることが原因になりやすい。</p>
+<h3><code>std::</code> の後ろの名前を間違えた場合</h3>
+<pre><code>./Main.cpp:13:8: error: ‘a’ is not a member of ‘std’
+   13 |   std::a;
+      |        ^</code></pre>
+<p><code>not a member of std</code> と書かれている場合、<code>std::</code> の後ろに存在しない名前を書いている。<br>
+<code>using namespace std;</code> を使っている場合はあまり出ないが、標準ライブラリ名のタイポで起きる。</p>
+<h3>同じ名前のものを重複して宣言した場合</h3>
+<pre><code>./Main.cpp:22:7: error: redeclaration of &#x27;int a&#x27;
+   22 |   int a = 1;
+      |       ^</code></pre>
+<p><code>redeclaration</code> と書かれている場合、同じ名前の変数などを $2$ 回宣言している。<br>
+片方の名前を変えるなどして直す。</p>
+<h3>関数の引数の型がおかしい場合</h3>
+<pre><code>./Main.cpp:15:6: error: no matching function for call to ‘max(int&amp;, double&amp;)’
+   15 |   max(n,d);
+      |   ~~~^~~~~</code></pre>
+<p><code>no matching function</code> と書かれている場合、その引数を受け取れる関数が見つかっていない。<br>
+この例では、<code>max()</code> に <code>int</code> 型と <code>double</code> 型を渡している。<br>
+しかし、<code>max()</code> は基本的に同じ型の値 $2$ つを受け取る関数である。<br>
+型変換などで、引数の型を合わせる。</p>
+<h3>関数の引数の個数がおかしい場合</h3>
+<pre><code>./Main.cpp:19:4: error: too few arguments to function ‘void f(int, int)’
+./Main.cpp:19:4: error: too many arguments to function ‘void f(int, int)’</code></pre>
+<p><code>too few arguments</code> は引数が少なすぎる、<code>too many arguments</code> は引数が多すぎるという意味。<br>
+関数定義や標準関数の使い方を確認し、渡す引数の個数を合わせる。</p>
+<h3>型の暗黙変換に失敗した場合</h3>
+<pre><code>./Main.cpp:17:5: error: could not convert ‘n’ from ‘int’ to ‘std::string’</code></pre>
+<p><code>could not convert</code> と書かれている場合、型変換に失敗している。<br>
+例えば、<code>string</code> 型を受け取る関数に <code>int</code> 型の変数を渡すと、このようなエラーになる。</p>
+<h3>参照渡しに一時値を渡した場合</h3>
+<pre><code>./Main.cpp:17:6: error: cannot bind non-const lvalue reference of type ‘int&amp;’ to an rvalue of type ‘int’
+   17 |   f(n+1);
+      |     ~^~</code></pre>
+<p><code>cannot bind</code> と書かれている場合、参照渡しに失敗している。<br>
+参照渡しで受け取る関数に、変数そのものではない一時値を渡している場合など。<br>
+一度別の変数に入れてから渡すか、関数側を <code>const</code> 参照や値渡しにする。</p>
+<h3>セミコロンを忘れた場合</h3>
+<pre><code>./Main.cpp:19:3: error: expected ‘,’ or ‘;’ before ‘int’
+   19 |   int b = 0;
+      |   ^~~</code></pre>
+<p><code>expected</code> と書かれている場合、何か必要なものを書き忘れている。<br>
+この例では、実際には $18$ 行目の末尾の <code>;</code> を忘れたせいで、次の行の先頭でエラーしている。</p>
+<h3>括弧の対応がおかしい場合</h3>
+<pre><code>./Main.cpp:26:12: error: expected ‘}’ at end of input
+   26 |   return 0;
+      |</code></pre>
+<p><code>expected ‘}’</code> は、閉じ括弧 <code>}</code> が足りないという意味。<br>
+ただし、括弧を忘れた場所そのものに表示が出るとは限らない。<br>
+全体を見て、<code>{</code> と <code>}</code> の対応を確認する。</p>
+<p>閉じ括弧 <code>}</code> が多すぎる場合は、次のような表示になることもある。</p>
+<pre><code>./Main.cpp:30:1: error: expected declaration before ‘}’ token
+   30 | }
+      | ^</code></pre>
+<h3>引用符の対応がおかしい場合</h3>
+<pre><code>./Main.cpp:21:14: error: missing terminating &quot; character
+   21 |   string s = &quot;abc;
+      |              ^~~~~</code></pre>
+<p><code>missing terminating &quot; character</code> は、文字列の引用符 <code>&quot;</code> を閉じ忘れているという意味。<br>
+文字列リテラルの前後を確認する。</p>
+<h3>式の書き方が正しくない場合</h3>
+<pre><code>./Main.cpp:20:9: error: expected primary-expression before ‘/’ token
+   20 |   a = b+/c;
+      |         ^</code></pre>
+<p><code>expected primary-expression</code> は、式を書くべきところに式ではないものを書いた場合に出る。<br>
+演算子の前後に値を書き忘れていないか、関数の引数が空になっていないかなどを確認する。</p>
+<h3>型が合わない値を代入した場合</h3>
+<pre><code>./Main.cpp:22:7: error: invalid conversion from &#x27;const char*&#x27; to &#x27;int&#x27;
+   22 |   a = &quot;hoge&quot;;
+      |       ^~~~~~</code></pre>
+<p><code>invalid conversion</code> は、不正な型変換という意味。<br>
+この例では、<code>int</code> 型の変数に文字列を代入しようとしている。</p>
+<h3>添字アクセスできないものに添字アクセスした場合</h3>
+<pre><code>./Main.cpp:22:4: error: invalid types &#x27;int[int]&#x27; for array subscript
+   22 |   a[0];
+      |    ^</code></pre>
+<p><code>invalid types ... for array subscript</code> と書かれている場合、誤った <code>[]</code> の使い方をしている。<br>
+この例では、<code>int</code> 型に対して <code>[]</code> を使ってしまっている。<br>
+変数の型が意図通りか確認する。</p>
+<h3>存在しないメンバにアクセスした場合</h3>
+<pre><code>./Main.cpp:21:9: error: ‘class std::vector&lt;int&gt;’ has no member named ‘hoge’
+   21 |   a.hoge();
+      |     ^~~~</code></pre>
+<p><code>has no member</code> と書かれている場合、存在しないメンバ関数やメンバ変数を使っている。<br>
+メンバ名のタイポや、変数の型の間違いを疑う。</p>
+<h3>クラスではないものにメンバアクセスした場合</h3>
+<pre><code>./Main.cpp:20:9: error: request for member ‘size’ in ‘n’, which is of non-class type ‘int’
+   20 |   n.size();
+      |     ^~~~</code></pre>
+<p><code>request for member</code> と書かれている場合、メンバを持たない型に対して <code>.size()</code> などを使っている。<br>
+<code>non-class type</code> と書かれる場合もある。<br>
+この例では、<code>n</code> は <code>int</code> 型なので、<code>.size()</code> は存在しない。</p>
+<h3>使えない演算子を使った場合</h3>
+<pre><code>./Main.cpp:21:9: error: no match for ‘operator+’
+   21 |   b = a + n;
+      |       ~~^~~</code></pre>
+<p><code>no match for operator+</code> のように書かれている場合、その型の組み合わせではその演算子が使えない。<br>
+変数の型を確認し、正しい演算子や型に直す。</p>
+<h3><code>&lt;...&gt;</code> の中の項目数を間違えた場合</h3>
+<pre><code>./Main.cpp:19:11: error: wrong number of template arguments (1, should be 2)
+   19 |   pair&lt;int&gt; a;
+      |           ^</code></pre>
+<p><code>wrong number of template arguments</code> は、テンプレート引数の個数が違うという意味。<br>
+例えば <code>pair</code> 型では、<code>pair&lt;int,int&gt;</code> のように $2$ つの型を書く必要がある。</p>
+<h3>型を書く場所に値を書いた場合</h3>
+<pre><code>./Main.cpp:19:11: error: type/value mismatch at argument 1 in template parameter list
+   19 |   vector&lt;n&gt; a;
+      |           ^</code></pre>
+<p><code>type/value mismatch</code> は、型を書くべきところに値を書いている場合などに出る。<br>
+この例では、<code>vector&lt;...&gt;</code> の中に型ではなく変数 <code>n</code> を書いている。</p>
+<h3>定数を書く場所に変数を書いた場合</h3>
+<pre><code>./Main.cpp:19:11: error: the value of &#x27;n&#x27; is not usable in a constant expression
+   19 |   bitset&lt;n&gt; a;
+      |           ^</code></pre>
+<p><code>not usable in a constant expression</code> は、定数が必要な場所に、変数を書いているという意味。<br>
+例えば、<code>bitset&lt;...&gt;</code> の中にはコンパイル時に定まっている定数を書く必要がある。</p>
+<h3>関数の宣言だけして中身を作り忘れた場合</h3>
+<pre><code>undefined reference to `f(int)&#x27;
+collect2: error: ld returned 1 exit status</code></pre>
+<p><code>undefined reference</code> と書かれている場合、関数の宣言だけして、定義を書き忘れていることがある。<br>
+宣言だけでなく、中身も作る。</p>
+<h3><code>main</code> 関数を作り忘れた場合</h3>
+<pre><code>undefined reference to `cpp_main(int, char**)&#x27;
+collect2: error: ld returned 1 exit status</code></pre>
+<p>上の <code>undefined reference</code> の特殊なパターン。<br>
+<code>main()</code> 関数を作り忘れている。<br>
+ただし、エラーメッセージの文言は環境による。</p>
+<h3><code>#include</code> や <code>using namespace std;</code> を書き忘れた場合</h3>
+<pre><code>./Main.cpp:11:3: error: &#x27;cin&#x27; was not declared in this scope; did you mean &#x27;std::cin&#x27;?
+   11 |   cin &gt;&gt; n;
+      |   ^~~</code></pre>
+<p><code>not declared</code> と言われた場合、<code>#include</code> や <code>using namespace std;</code> を書き忘れている可能性がある。<br>
+<code>using namespace std;</code> を使わないなら、<code>std::cin</code> のように <code>std::</code> を付ける必要がある。</p>
+<h3>全角文字を使った場合</h3>
+<pre><code>./Main.cpp:18:3: error: extended character 　 is not valid in an identifier</code></pre>
+<p><code>extended character</code> と書かれている場合、全角スペースなどの全角文字が混ざっている可能性が高い。<br>
+全角文字を消し、半角スペースやタブに直す。</p>
+<h2>よくある警告</h2>
+<h3>宣言した変数が未使用な場合</h3>
+<pre><code>./Main.cpp:21:7: warning: unused variable &#x27;a&#x27;
+   21 |   int a = 0;
+      |       ^</code></pre>
+<p><code>unused variable</code> は、宣言したのに使っていない変数があるという意味。<br>
+単に消し忘れただけなら無視してよいが、その変数を使う処理を書き忘れている可能性もある。</p>
+<h3>符号が異なる整数型を比較した場合</h3>
+<pre><code>warning: comparison of integer expressions of different signedness</code></pre>
+<p><code>different signedness</code> と書かれている場合、符号あり整数と符号なし整数を比較している。<br>
+<code>int</code> 型の変数と、<code>vector</code> の <code>.size()</code> の返り値を比較したときに出やすい。<br>
+問題なく動くことも多いが、意図通りか確認しておく。</p>
+<h3>返り値がある関数で <code>return</code> を忘れた場合</h3>
+<pre><code>warning: no return statement in function returning non-void</code></pre>
+<p><code>no return statement</code> は、返り値が必要な関数で <code>return</code> を書き忘れているという意味。<br>
+<code>void</code> 型でない自作関数で出た場合は、基本的に直す。</p>
+<h2>実行時エラー RE</h2>
+<p>実行時エラーは、コンパイルは通ったが、実行中に処理を続けられない問題が起きた場合のエラー。<br>
+原因がメモリ制限超過の場合は、<code>RE</code> ではなく <code>MLE</code> 判定になることがある。</p>
+<h3><code>.at()</code> で範囲外にアクセスした場合</h3>
+<pre><code>terminate called after throwing an instance of &#x27;std::out_of_range&#x27;
+what(): vector::_M_range_check: __n (which is 18446744073709551615) &gt;= this-&gt;size() (which is 5)</code></pre>
+<p><code>out_of_range</code> と書かれている場合、<code>vector</code> や <code>deque</code> などの範囲外にアクセスしている。<br>
+<code>which is</code> の $1$ つ目がアクセスしようとした位置、$2$ つ目が実際の長さ。</p>
+<p>上の例では、長さ $5$ の <code>vector</code> に対して、範囲外の位置を見ようとしている。<br>
+<code>18446744073709551615</code> のような巨大な値は、実際には <code>-1</code> 番目にアクセスしたときに出ることがある。</p>
+<p>なお、<code>.at()</code> ではなく <code>[]</code> を使った場合、このエラーは出ない。<br>
+ただし、それはバグがないという意味ではない。<br>
+エラーを出さないまま誤動作をする可能性があるという意味であり、不具合が修正しにくいだけである。</p>
+<h3>ゼロ除算をした場合</h3>
+<p>コードテストでの終了コードは <code>136</code> になることがある。<br>
+エラーメッセージは出ない。</p>
+<p><code>0</code> で割る処理が発生しているので、コード中の割り算を全て確認する。</p>
+<h3>メモリを使いすぎた場合</h3>
+<pre><code>terminate called after throwing an instance of &#x27;std::bad_alloc&#x27;
+what(): std::bad_alloc</code></pre>
+<p><code>bad_alloc</code> と書かれている場合、新しいデータ用のメモリ確保に失敗している。<br>
+巨大な <code>vector</code> を作った場合などに発生する。<br>
+データの持ち方を変え、メモリ使用量を減らす必要がある。</p>
+<h2>論理エラー</h2>
+<p>論理エラーは、実行は終了したが、結果が意図通りになっていないエラー。<br>
+また、各行では異常な処理が起きていないものの、無限ループで処理が終わらない場合もある。</p>
+<p>コンピューターは、書かれている通りにしか動かない。<br>
+頭の中のコード通りに書けていないか、頭の中のコードがそもそも間違っている。<br>
+<code>WA</code> や、計算量的には間に合うはずなのに <code>TLE</code> になった場合は、論理エラーを疑う。</p>
+<h3>無限ループが発生している場合</h3>
+<p><code>for</code> ループや <code>while</code> ループの終了条件を間違えると、処理が終わらないことがある。<br>
+コードテスト上で実行時間が極端に長くなったり、提出時に <code>TLE</code> になったりする。</p>
+<p>計算量に問題がないはずなのに <code>TLE</code> する場合、無限ループの可能性がある。<br>
+ループの先頭で <code>cerr</code> などを使ってメッセージを出してみると、それが大量に出続ける挙動をする。</p>
+<h3>何かを書き忘れた場合</h3>
+<p>ソートし忘れた、カウンターを増やし忘れた、答え用の変数に反映し忘れた、など。<br>
+小さいテストケースで <code>cerr</code> などを使い、変数の中身が想定通りに変わっているか確認する。</p>
+<h3>初期化がおかしい場合</h3>
+<p>カウンターの <code>0</code> 初期化を忘れた、最小値を探すのに <code>-1</code> で初期化した、など。<br>
+適当な大きい値で初期化したが、本当の答えがそれより大きい場合もある。</p>
+<h3>使う変数を間違えた場合</h3>
+<p><code>vector</code> の長さとして <code>m</code> を使うべきところで <code>n</code> を使った、など。<br>
+入力変数に極端な値を入れてみると、変な挙動が出て原因を見つけやすい。</p>
+<h3>比較演算子や条件式を間違えた場合</h3>
+<p><code>==</code> を誤って <code>=</code> にした、不等号の向きを逆にした、<code>&lt;=</code> と <code>&lt;</code> を間違えた、<code>&amp;&amp;</code> と <code>||</code> を間違えた、など。<br>
+境界値テストや、複数条件のうち $1$ つだけ成り立つ入力を試すと見つけやすい。</p>
+<h3><code>0-indexed</code> と <code>1-indexed</code> が混ざった場合</h3>
+<p>プログラム上の配列は、多くの場合 $0$ 番目から始まる。<br>
+一方で、問題文では数列を $1$ 番目から数えることが多い。</p>
+<p>問題文の「$K$ 番目」を、そのままプログラムの <code>K</code> 番目として扱うと、見る場所が $1$ つずれる。<br>
+端のデータを使うテストをすると見つけやすい。</p>
+<h3>小数の扱いに問題がある場合</h3>
+<p>本来等しいはずの値が、丸め誤差で少しずれて <code>==</code> が <code>false</code> になることがある。<br>
+また、整数として正確に扱いたい値を <code>double</code> 型で持つと、一の位が狂うこともある。</p>
+<p>小数を使わずに整数で処理できないか、設計時点で考える。<br>
+どうしても小数を使う場合は、誤差を意識して比較や出力を行う。</p>
+<h3>割り算の扱いに問題がある場合</h3>
+<p>小数で答えるべきところで <code>int</code> 型同士の割り算をしてしまう、など。<br>
+また、負数の除算や余りは、数学で想定しているものとずれることがある。<br>
+割り算に負数や小数が絡む場合は、特に注意して確認する。</p>
+<h3>オーバーフローした場合</h3>
+<p><code>int</code> 型は、およそ $21$ 億程度までしか扱えない。<br>
+入力が $10$ 億程度の場合、$3$ つ足すだけで範囲を超える。<br>
+また、$10^5$ 程度の数同士を掛け算しても範囲を超える。</p>
+<p>サンプルは小さい数であることが多い。<br>
+サンプルは通るのに提出で <code>WA</code> になる場合、オーバーフローを疑う。<br>
+計算途中で値が最大になるケースを手計算で確認するのがよい。</p>
+<h3>コーナーケースを見落とした場合</h3>
+<p>特殊な入力だけ別処理が必要な場合がある。<br>
+ほとんど <code>AC</code> して $1$ ケースや $2$ ケースだけ <code>WA</code> になるときは、この可能性がある。<br>
+境界値のテストをしてみるとよい。</p>
+<h3>そもそもアルゴリズムが間違っている場合</h3>
+<p>「このアルゴリズムで解けるはず」という考え自体が間違っていることもある。<br>
+特に、誤った貪欲法や動的計画法を使ってしまう形で起きやすい。</p>
+<p>愚直解も作り、小さい入力のランダムテストで答えを比べると見つけられる場合がある。<br>
+ただし、愚直解を書くこと自体に時間がかかる。</p>
+<h2>エラーの直し方</h2>
+<h3>エラーを直すときの流れ</h3>
+<p>まず、エラーメッセージが出ているか確認する。<br>
+出ているなら、最初の <code>error</code> から読む。</p>
+<p><code>warning</code> だけの場合は実行できることもあるが、怪しいところのヒントにはなる。<br>
+内容を確認して、想定通りか判断する。</p>
+<p><code>RE</code> の場合、エラーメッセージから原因が分かることもある。<br>
+しかし、どの行で発生したかまでは分からない場合も多い。<br>
+配列の長さ、割り算、メモリ使用量など、起きやすい原因から確認する。</p>
+<p>エラーメッセージがなく、出力だけがおかしい場合は論理エラーを疑う。<br>
+小さい入力を作り、途中の変数を <code>cerr</code> で出しながら確認する。</p>
+<h3>テストで原因を探す</h3>
+<p>論理エラーは、エラーメッセージが出ないことが多い。<br>
+そのため、どこで想定と違う値になっているかをテストで確認する。</p>
+<p>まずは小さい入力を手で作り、各変数の値が思った通りに変化しているか見る。<br>
+次に、最小値、最大値、境界値、コーナーケースを試す。</p>
+<p>必要であれば、愚直解と本解の両方を作り、小さいランダム入力で答えを比較する。</p>
+<h3><code>cerr</code> で途中経過を見る</h3>
+<p>途中経過を確認したい場合は、<code>cerr</code> が使える。<br>
+<code>cerr</code> で出した内容は、通常の解答出力とは別に扱われる。</p>
+<p>ただし、大量に出力するとそれ自体が遅くなり、<code>TLE</code> の原因になることがある。<br>
+必要な情報だけを出す。</p>
+<h2>注意点</h2>
+<h3>最初のエラーから直す</h3>
+<p>エラーが大量に出ても、最初の $1$ つだけが本当の原因であることが多い。<br>
+後ろのエラーから見始めると、原因ではない場所を探し続けることになる。</p>
+<h3>表示された場所が本当の原因とは限らない</h3>
+<p>セミコロン忘れや括弧忘れでは、表示された行より前に原因があることが多い。<br>
+<code>^</code> の位置だけでなく、その直前の行や周辺の文も確認する。</p>
+<h3><code>[]</code> は範囲外アクセスを教えてくれない</h3>
+<p><code>vector</code> などを <code>.at()</code> で見ると、範囲外アクセス時に <code>out_of_range</code> が出ることがある。<br>
+一方で、<code>[]</code> で範囲外アクセスをしても、分かりやすいエラーが出るとは限らない。</p>
+<p><code>[]</code> でエラーが出ていないから正しい、とは思わないこと。</p>
+<h3>サンプルが通っても正しいとは限らない</h3>
+<p>オーバーフロー、コーナーケース、添字のずれ、小数誤差などは、サンプルでは表に出ないことがある。<br>
+自分で境界値や極端な入力を試すこと。</p>
+<h2>関連知識</h2>
+<h3>C++のコードの書き方</h3>
+<p>セミコロン、括弧、コメント、全角文字など、コードの基本的な書き方は、エラーの原因と直結する。</p>
+<h3>入出力</h3>
+<p>入力の個数や順番がずれると、後続の処理が想定通りに動かず、論理エラーの原因になる。</p>
+<h3>テスト</h3>
+<p>論理エラーは、テストを用いて原因を探す。<br>
+小さい入力、境界値、コーナーケース、ランダムテストを使い分ける。</p>
+<h3>コーナーケース</h3>
+<p>特殊な入力だけ別処理が必要な問題では、コーナーケースの見落としで <code>WA</code> になることがある。</p>
+<h3>int型</h3>
+<p><code>int</code> 型は、およそ $21$ 億程度までしか扱えない。<br>
+オーバーフローの原因になりやすい。</p>
+<h3>long long型</h3>
+<p><code>long long</code> 型を使うと、<code>int</code> 型より大きな整数を扱える。<br>
+ただし、<code>long long</code> 型でもはみ出る場合がある。</p>
+<h3>double型</h3>
+<p>小数は丸め誤差が発生する。<br>
+等値判定や整数への変換には注意が必要。</p>
+<h3>vector</h3>
+<p><code>vector</code> の範囲外アクセスは、実行時エラーや論理エラーの原因になる。</p>
   </article>
 
   <aside class="sidebar">
@@ -43,7 +368,7 @@ window.MathJax = {
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li class="muted">なし</li>
+        <li><a href="../knowledge/cpp-code-style.html">C++のコードの書き方</a></li><li><a href="../knowledge/input-output.html">入出力</a></li><li><a href="../knowledge/corner-case.html">コーナーケース</a></li><li><a href="../knowledge/test.html">テスト</a></li><li><a href="../knowledge/double.html">double型</a></li><li><a href="../knowledge/int.html">int型</a></li><li><a href="../knowledge/vector.html">vector</a></li><li><a href="../knowledge/long-long.html">long long型</a></li>
       </ul>
     </section>
 
