@@ -2,7 +2,7 @@
 contest: ABC461
 problem: F
 problem_title: "Total Product is N"
-problem_title_ja: "相乗はN"
+problem_title_ja: "総乗はN"
 problem_url: https://atcoder.jp/contests/abc461/tasks/abc461_f
 submission_url: https://atcoder.jp/contests/abc461/submissions/77094900
 alternative_submission_urls:

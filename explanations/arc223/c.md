@@ -2,7 +2,7 @@
 contest: ARC223
 problem: C
 problem_title: "Whole Product of Pairwise Distances"
-problem_title_ja: "ペア距離の相乗"
+problem_title_ja: "ペア距離の総乗"
 problem_url: https://atcoder.jp/contests/arc223/tasks/arc223_c
 submission_url: https://atcoder.jp/contests/arc223/submissions/77113877
 tags:
