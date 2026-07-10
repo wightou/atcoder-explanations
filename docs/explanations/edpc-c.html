@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDPCC - Vacation</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>EDPCC - Vacation</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/67455965" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>$N$（最大 $10$ 万）回の選択があり、初日は $3$ 択、残りの日は $2$ 択。<br>
+愚直に全ルート試すのは明らかに無理。</p>
+<p>ということで、まずは愚直解を十分書き出せる例で様子を見て、計算を省けそうなところを探す。<br>
+入力例1で各日時点での最大幸福度を求めてみよう。</p>
+<p>$1$ 日目の場合。</p>
+<ul>
+<li>Aをするなら幸福度は $10$</li>
+<li>Bをするなら幸福度は $40$</li>
+<li>Cをするなら幸福度は $70$</li>
+</ul>
+<p>よって最大値は $70$。</p>
+<p>$2$ 日目の場合。</p>
+<ul>
+<li>ABをするなら幸福度は $10+50=60$</li>
+<li>ACをするなら幸福度は $10+80=90$</li>
+<li>BAをするなら幸福度は $40+20=60$</li>
+<li>BCをするなら幸福度は $40+80=120$</li>
+<li>CAをするなら幸福度は $70+20=90$</li>
+<li>CBをするなら幸福度は $70+50=120$</li>
+</ul>
+<p>よって最大値は $120$。</p>
+<p>$3$ 日目の場合。</p>
+<ul>
+<li>ABAをするなら幸福度は $10+50+30=90$</li>
+<li>ABCをするなら幸福度は $10+50+90=150$</li>
+<li>ACAをするなら幸福度は $10+80+30=120$</li>
+<li>ACBをするなら幸福度は $10+80+60=150$</li>
+<li>BABをするなら幸福度は $40+20+60=120$</li>
+<li>BACをするなら幸福度は $40+20+90=150$</li>
+<li>BCAをするなら幸福度は $40+80+30=150$</li>
+<li>BCBをするなら幸福度は $40+80+60=180$</li>
+<li>CABをするなら幸福度は $70+20+60=150$</li>
+<li>CACをするなら幸福度は $70+20+90=180$</li>
+<li>CBAをするなら幸福度は $70+50+30=150$</li>
+<li>CBCをするなら幸福度は $70+50+90=210$</li>
+</ul>
+<p>よって最大値は $210$。</p>
+<p>さて、$3$ 日目の詳細を見て、$2$ 日目の計算を流用できる部分を探す。</p>
+<ul>
+<li>ABAをするなら幸福度は $10+50+30=90$</li>
+<li>ACAをするなら幸福度は $10+80+30=120$</li>
+<li>BCAをするなら幸福度は $40+80+30=150$</li>
+<li>CBAをするなら幸福度は $70+50+30=150$</li>
+</ul>
+<p>Aで終わるこれら $4$ つは、実は $2$ 日目のうち最後にBかCをやる</p>
+<ul>
+<li>ABをするなら幸福度は $10+50=60$</li>
+<li>ACをするなら幸福度は $10+80=90$</li>
+<li>BCをするなら幸福度は $40+80=120$</li>
+<li>CBをするなら幸福度は $70+50=120$</li>
+</ul>
+<p>のうしろに $+30$ をつけただけである。<br>
+Bで終わる $4$ つ、Cで終わる $4$ つも同様。</p>
+<p>ということは、これらは実は $2$ 日目時点で</p>
+<ul>
+<li>Aで終わる場合の最大値は $90$</li>
+<li>Bで終わる場合の最大値は $120$</li>
+<li>Cで終わる場合の最大値は $120$</li>
+</ul>
+<p>を出しておけば、$3$ 日目は</p>
+<ul>
+<li>Aで終わる場合の最大値は $\max(120,120)+30=150$</li>
+<li>Bで終わる場合の最大値は $\max(90,120)+60=180$</li>
+<li>Cで終わる場合の最大値は $\max(90,120)+90=210$</li>
+</ul>
+<p>と出せる。<br>
+これならDPを $1$ つ進めるときに比較 $3$ 回と加算 $3$ 回だけで済むので、計算量は $O(N)$。<br>
+$N$ が $10$ 万でも余裕で間に合う。<br>
+DPスタート部分は、$1$ 日目だけデータをそのまま入れる。<br>
+あるいは、$0$ 日目時点で幸福度 $0$ と初期化してもよい。</p>
+<p>考えることは多いが、実装はDPコンテストの中で一番簡単。</p>
+<p>もし実際の経路まで要求された場合は、DP表のバックトレースで普通に解ける。<br>
+つまり、以下の手順で求められる。</p>
+<ul>
+<li>$3$ 日目に最大値を記録したのはC</li>
+<li>$2$ 日目にC以外で最大値を記録したのはB</li>
+<li>$1$ 日目にB以外で最大値を記録したのはC</li>
+</ul>
+<p>ただし、これをやるために、全日分のDP表か、どこから遷移したかの情報を保存しておく必要はある。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 3
+a: {10, 20, 30}
+b: {40, 50, 60}
+c: {70, 80, 90}</code></pre>
+<p><code>dp</code> の中身は以下とする。</p>
+<ul>
+<li><code>dp[0]</code> は「その日に A をする場合の幸福度最大値」</li>
+<li><code>dp[1]</code> は「その日に B をする場合の幸福度最大値」</li>
+<li><code>dp[2]</code> は「その日に C をする場合の幸福度最大値」</li>
+</ul>
+<p>初日分で <code>dp</code> を初期化する。</p>
+<pre><code>dp: {10, 40, 70}</code></pre>
+<p>$2$ 日目の分を更新する。</p>
+<p>$2$ 日目に A をする場合、$1$ 日目は B または C。<br>
+よって、<code>max(dp[1], dp[2])+a[1]</code> $= \max(40,70)+20 = 90$。<br>
+$2$ 日目に B をする場合、$1$ 日目は A または C。<br>
+よって、<code>max(dp[0], dp[2])+b[1]</code> $= \max(10,70)+50 = 120$。<br>
+$2$ 日目に C をする場合、$1$ 日目は A または B。<br>
+よって、<code>max(dp[0], dp[1])+c[1]</code> $= \max(10,40)+80 = 120$。</p>
+<pre><code>dp: {90, 120, 120}</code></pre>
+<p>$3$ 日目の分を更新する。</p>
+<p>$3$ 日目に A をする場合、$2$ 日目は B または C。<br>
+よって、<code>max(dp[1], dp[2])+a[2]</code> $= \max(120,120)+30 = 150$。<br>
+$3$ 日目に B をする場合、$2$ 日目は A または C。<br>
+よって、<code>max(dp[0], dp[2])+b[2]</code> $= \max(90,120)+60 = 180$。<br>
+$3$ 日目に C をする場合、$2$ 日目は A または B。<br>
+よって、<code>max(dp[0], dp[1])+c[2]</code> $= \max(90,120)+90 = 210$。</p>
+<pre><code>dp: {150, 180, 210}</code></pre>
+<p>最終日には何をやってもいいので、<code>dp</code> の最大値 $210$ が答え。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
