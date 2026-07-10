@@ -71,11 +71,30 @@ tags:
 ---
 ```
 
+
+教育系コンテストは、Markdownファイルのディレクトリを別々にし、HTMLでは同じページ内にコンテスト別の一覧として表示します。
+
+```txt
+explanations/edpc/a.md
+explanations/tdpc/a.md
+explanations/ndpc/a.md
+explanations/fps24/a.md
+```
+
+front matter の `contest` は `EDPC`、`TDPC`、`NDPC`、`FPS24` のように書きます。生成後は `contests/educational.html` に集約され、ページ内で各コンテストごとに一覧を分けます。教育系コンテストページでは、問題記号とタイトルを1つのリンクにまとめ、タグは表示しません。AtCoder上のEDPCの実際のcontest IDが `dp` の場合でも、本文管理上は `contest: EDPC` を使ってよいです。
+
 - `problem_url`、`submission_url`、`alternative_submission_urls` はタイトル直下に自動表示します。
 - 本文中に同じリンクがなくても問題にしません。
 - `tags` が参照している知識記事が見つからない場合、サイト生成スクリプトの実行結果に警告を表示します。
   - 知識記事の `title`、`aliases`、`absorbs` のいずれかに一致すれば対応済みとみなします。
   - `docs/tags/` のタグページ自体は通常どおり生成します。
+
+
+### リンクの扱い
+
+- `http://` または `https://` で始まるサイト外リンクは、生成HTMLで `target="_blank" rel="noopener noreferrer"` を付け、別ウィンドウまたは別タブで開きます。
+  - 問題ページ、解答例、別解提出、外部リンク集、本文中の外部リンクが対象です。
+- サイト内リンクは相対パスで生成し、同じウィンドウで開きます。
 
 ### 知識記事
 
@@ -144,7 +163,7 @@ related:
 3. AGC
 4. AHC
 5. 典型90問
-6. DPコンテスト
+6. 教育系コンテスト
 7. その他AtCoder
 8. Aizu Online Judge
 9. Project Euler

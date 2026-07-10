@@ -1,12 +1,15 @@
 # コンテスト別の表示設定。
 #
-# 指定できる4パターン:
+# 指定できる5パターン:
 #   表形式で最新のほど上:     layout = "table", order = "latest_first"
 #   表形式で最新のほど下:     layout = "table", order = "oldest_first"
 #   一覧形式で最新のほど上:   layout = "list",  order = "latest_first"
 #   一覧形式で最新のほど下:   layout = "list",  order = "oldest_first"
+#   グループ別一覧形式:       layout = "grouped_list", order = "oldest_first"
 #
 # table の場合だけ columns を使います。
+# grouped_list の場合だけ groups を使います。
+# grouped_table は旧設定との互換用として残しています。
 
 [[contest_views]]
 id = "ABC"
@@ -47,11 +50,12 @@ layout = "list"
 order = "oldest_first"
 
 [[contest_views]]
-id = "DPコンテスト"
-title = "DPコンテスト"
-path = "dp.html"
-layout = "list"
+id = "教育系コンテスト"
+title = "教育系コンテスト"
+path = "educational.html"
+layout = "grouped_list"
 order = "oldest_first"
+groups = ["EDPC", "TDPC", "NDPC", "FPS24"]
 
 
 [[contest_views]]

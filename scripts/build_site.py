@@ -5,7 +5,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from html import escape
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 import argparse
 import hashlib
 import re
@@ -79,12 +79,13 @@ DEFAULT_CONTEST_VIEWS = [
         "columns": [],
     },
     {
-        "id": "DPコンテスト",
-        "title": "DPコンテスト",
-        "path": "dp.html",
-        "layout": "list",
+        "id": "教育系コンテスト",
+        "title": "教育系コンテスト",
+        "path": "educational.html",
+        "layout": "grouped_list",
         "order": "oldest_first",
         "columns": [],
+        "groups": ["EDPC", "TDPC", "NDPC", "FPS24"],
     },
     {
         "id": "その他AtCoder",
@@ -113,6 +114,18 @@ DEFAULT_CONTEST_VIEWS = [
     },
 ]
 
+
+EDUCATIONAL_CONTEST_GROUPS = ["EDPC", "TDPC", "NDPC", "FPS24"]
+EDUCATIONAL_CONTEST_ALIASES = {
+    "dp": "EDPC",
+    "educational_dp": "EDPC",
+    "educationaldpcontest": "EDPC",
+    "dpcontest": "EDPC",
+    "edpc": "EDPC",
+    "tdpc": "TDPC",
+    "ndpc": "NDPC",
+    "fps24": "FPS24",
+}
 
 EXTERNAL_LINK_GROUPS = [
     (
@@ -814,6 +827,30 @@ def knowledge_filename(path: Path) -> str:
     return f"{safe_filename(path.stem)}.html"
 
 
+def normalized_contest_key(contest: str) -> str:
+    return str(contest).lower().replace(" ", "").replace("-", "_")
+
+
+def educational_contest_group(contest: str) -> str | None:
+    return EDUCATIONAL_CONTEST_ALIASES.get(normalized_contest_key(contest))
+
+
+def educational_group_sort_key(name: str) -> tuple[int, str]:
+    try:
+        return (EDUCATIONAL_CONTEST_GROUPS.index(name), "")
+    except ValueError:
+        return (len(EDUCATIONAL_CONTEST_GROUPS), name)
+
+
+def contest_url_from_pages(pages: list["ExplanationPage"]) -> str:
+    for page in pages:
+        url = str(page.meta.get("problem_url", "")).strip()
+        m = re.match(r"(https://atcoder\.jp/contests/[^/]+)", url)
+        if m:
+            return m.group(1)
+    return ""
+
+
 def contest_sort_key(contest: str):
     m = re.fullmatch(r"([A-Za-z]+)(\d+)", contest)
     if m:
@@ -821,8 +858,12 @@ def contest_sort_key(contest: str):
     c = contest.lower()
     if c in {"typical90", "typical"}:
         return ("TYPICAL90", 90)
-    if c in {"dp", "educational_dp", "edpc"}:
-        return ("DP", 0)
+    educational_group = educational_contest_group(contest)
+    if educational_group:
+        try:
+            return ("EDU", EDUCATIONAL_CONTEST_GROUPS.index(educational_group))
+        except ValueError:
+            return ("EDU", len(EDUCATIONAL_CONTEST_GROUPS))
     return (contest.upper(), 10**18)
 
 
@@ -848,7 +889,7 @@ def tag_explanation_sort_key(page: ExplanationPage):
         "AGC": 2,
         "AHC": 3,
         "典型90問": 4,
-        "DPコンテスト": 5,
+        "教育系コンテスト": 5,
         "その他AtCoder": 6,
         "Aizu Online Judge": 7,
         "Project Euler（100番まで）": 8,
@@ -883,8 +924,8 @@ def normalize_contest_view(raw: dict) -> dict:
     spec.setdefault("order", "latest_first")
     spec.setdefault("columns", [])
 
-    if spec["layout"] not in {"table", "list"}:
-        raise ValueError(f"{spec['id']}: layout は table または list にしてください")
+    if spec["layout"] not in {"table", "list", "grouped_table", "grouped_list"}:
+        raise ValueError(f"{spec['id']}: layout は table / list / grouped_table / grouped_list のいずれかにしてください")
     if spec["order"] not in {"latest_first", "oldest_first"}:
         raise ValueError(f"{spec['id']}: order は latest_first または oldest_first にしてください")
 
@@ -892,6 +933,11 @@ def normalize_contest_view(raw: dict) -> dict:
     if isinstance(columns, str):
         columns = list(columns)
     spec["columns"] = [str(x).upper() for x in columns]
+
+    groups = spec.get("groups", [])
+    if isinstance(groups, str):
+        groups = [groups]
+    spec["groups"] = [str(x).upper() for x in groups]
     return spec
 
 
@@ -920,7 +966,7 @@ def sort_pages_for_view(pages: list[ExplanationPage], order: str) -> list[Explan
 
 
 def classify_page(page: ExplanationPage) -> str:
-    c = page.contest.lower().replace(" ", "").replace("-", "_")
+    c = normalized_contest_key(page.contest)
     if re.fullmatch(r"abc\d+", c):
         return "ABC"
     if re.fullmatch(r"arc\d+", c):
@@ -931,8 +977,8 @@ def classify_page(page: ExplanationPage) -> str:
         return "AHC"
     if c in {"typical90", "typical", "競プロ典型90問"}:
         return "典型90問"
-    if c in {"dp", "educational_dp", "edpc", "dpcontest", "educationaldpcontest"}:
-        return "DPコンテスト"
+    if educational_contest_group(page.contest):
+        return "教育系コンテスト"
     if c in {"aoj", "aizuonlinejudge", "aizu"} or c.startswith("aoj"):
         return "Aizu Online Judge"
     if c in {"projecteuler", "euler", "pe"} or c.startswith("projecteuler"):
@@ -942,7 +988,48 @@ def classify_page(page: ExplanationPage) -> str:
     return "その他"
 
 
+def is_external_href(href: str) -> bool:
+    """サイト外リンクかどうかを判定する。
+
+    生成サイト内リンクは相対パスで出すため、http(s) の絶対URLは外部リンクとして扱う。
+    ページ内アンカーや mailto / tel / javascript は対象外にする。
+    """
+    href = str(href).strip()
+    if not href or href.startswith("#"):
+        return False
+    lowered = href.lower()
+    if lowered.startswith(("mailto:", "tel:", "javascript:")):
+        return False
+    if href.startswith("//"):
+        return True
+    parsed = urlparse(href)
+    return parsed.scheme in {"http", "https"}
+
+
+def add_external_link_attrs(html: str) -> str:
+    """HTML内の外部リンクだけを別タブで開くようにする。"""
+
+    def replace(match: re.Match[str]) -> str:
+        before = match.group(1)
+        quote_char = match.group(2)
+        href = match.group(3)
+        after = match.group(4)
+        attrs = before + after
+        if not is_external_href(href):
+            return match.group(0)
+
+        additions = ""
+        if not re.search(r"\btarget\s*=", attrs, flags=re.I):
+            additions += ' target="_blank"'
+        if not re.search(r"\brel\s*=", attrs, flags=re.I):
+            additions += ' rel="noopener noreferrer"'
+        return f'<a{before}href={quote_char}{href}{quote_char}{after}{additions}>'
+
+    return re.sub(r'<a\b([^>]*?)href=(["\'])(.*?)\2([^>]*)>', replace, html)
+
+
 def html_document(title: str, body: str, *, css_href: str = "style.css") -> str:
+    body = add_external_link_attrs(body)
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -1259,6 +1346,63 @@ def render_list_page(title: str, pages: list[ExplanationPage], *, order: str, de
 """
     return render_index_layout(title, inner, current="問題解説", prefix="../", css_href="../style.css")
 
+
+
+def render_grouped_table_page(
+    title: str,
+    pages: list[ExplanationPage],
+    *,
+    order: str,
+    groups: list[str] | None = None,
+    description: str = "",
+) -> str:
+    """教育系コンテストなどを、グループごとの簡潔な一覧として表示する。
+
+    問題番号とタイトルは1つのリンクにまとめ、タグは出さない。
+    layout 名は後方互換のため grouped_table も受け付ける。
+    """
+    pages_by_group: dict[str, list[ExplanationPage]] = defaultdict(list)
+    for page in pages:
+        group = educational_contest_group(page.contest) or page.contest.upper()
+        pages_by_group[group].append(page)
+
+    group_order = groups or []
+
+    def group_key(name: str) -> tuple[int, str]:
+        if name in group_order:
+            return (group_order.index(name), "")
+        return educational_group_sort_key(name)
+
+    chunks: list[str] = []
+    for group in sorted(pages_by_group.keys(), key=group_key):
+        group_pages = sort_pages_for_view(pages_by_group[group], order)
+        contest_url = contest_url_from_pages(group_pages)
+        heading = (
+            f'<h2><a href="{escape(contest_url)}">{escape(group)}</a></h2>'
+            if contest_url else f'<h2>{escape(group)}</h2>'
+        )
+        items = []
+        for page in group_pages:
+            label = f"{group} {page.problem.upper()} - {page.problem_title}"
+            items.append(f'<li><a href="../{escape(page.url)}">{escape(label)}</a></li>')
+        chunks.append(f"""
+<section class="contest-subsection">
+  {heading}
+  <ul class="plain-list compact-explanation-list">
+    {''.join(items) if items else '<li class="muted">まだ解説がありません。</li>'}
+  </ul>
+</section>
+""")
+
+    description_html = f'<p class="lead">{escape(description)}</p>' if description else ""
+    inner = f"""
+<h1>{escape(title)}</h1>
+{description_html}
+<div class="group-list">
+  {''.join(chunks) if chunks else '<p class="muted">まだ解説がありません。</p>'}
+</div>
+"""
+    return render_index_layout(title, inner, current="問題解説", prefix="../", css_href="../style.css")
 
 
 def get_alternative_submission_links(meta: dict) -> list[tuple[str, str]]:
@@ -2363,6 +2507,14 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
         order = str(spec["order"])
         if layout == "table":
             html = render_table_page(title, pages, list(spec["columns"]), order=order, description=description)
+        elif layout in {"grouped_table", "grouped_list"}:
+            html = render_grouped_table_page(
+                title,
+                pages,
+                order=order,
+                groups=list(spec.get("groups", [])),
+                description=description,
+            )
         else:
             html = render_list_page(title, pages, order=order, description=description)
         (out_dir / "contests" / path).write_text(html, encoding="utf-8")

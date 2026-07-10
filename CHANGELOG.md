@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## v47
+
+- 教育系コンテストページを、表ではなくコンテスト別の簡潔な一覧表示に変更。
+  - 問題記号とタイトルを1つのリンクにまとめる。
+  - タグは表示しない。
+- `http://` / `https://` のサイト外リンクに `target="_blank" rel="noopener noreferrer"` を付け、別ウィンドウまたは別タブで開くように変更。
+  - サイト内リンクは従来どおり同じウィンドウで開く。
+
+## v46
+
+- `EDPC` / `TDPC` / `NDPC` / `FPS24` を `教育系コンテスト` として扱うように変更。
+- `contests/educational.html` を生成し、その中で各コンテストごとに表を分けて表示するように変更。
+- Markdown配置は `explanations/edpc/`、`explanations/tdpc/`、`explanations/ndpc/`、`explanations/fps24/` のように別ディレクトリを維持する方針に整理。
+
 ## v45
 
 - `C++のコードの書き方` を `難易度問わず` / `基本` の知識記事として追加。
