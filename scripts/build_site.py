@@ -301,8 +301,12 @@ class ExplanationPage:
         return str(self.meta["problem_title"])
 
     @property
+    def problem_code(self) -> str:
+        return f"{self.contest} {self.problem}"
+
+    @property
     def full_title(self) -> str:
-        return f"{self.contest}{self.problem} - {self.problem_title}"
+        return f"{self.problem_code} - {self.problem_title}"
 
     @property
     def tags(self) -> list[str]:
@@ -1290,7 +1294,7 @@ def render_table_page(title: str, pages: list[ExplanationPage], columns: list[st
             if p is None:
                 cells.append('<td class="empty">-</td>')
             else:
-                problem_code = f"{p.contest.upper()}{p.problem.upper()}"
+                problem_code = f"{p.contest.upper()} {p.problem.upper()}"
                 full_label = p.full_title
                 cells.append(
                     '<td>'

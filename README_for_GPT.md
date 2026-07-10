@@ -81,7 +81,7 @@ explanations/ndpc/a.md
 explanations/fps24/a.md
 ```
 
-front matter の `contest` は `EDPC`、`TDPC`、`NDPC`、`FPS24` のように書きます。生成後は `contests/educational.html` に集約され、ページ内で各コンテストごとに一覧を分けます。教育系コンテストページでは、問題記号とタイトルを1つのリンクにまとめ、タグは表示しません。AtCoder上のEDPCの実際のcontest IDが `dp` の場合でも、本文管理上は `contest: EDPC` を使ってよいです。
+front matter の `contest` は `EDPC`、`TDPC`、`NDPC`、`FPS24` のように書きます。生成後は `contests/educational.html` に集約され、ページ内で各コンテストごとに一覧を分けます。教育系コンテストページでは、`EDPC B - Frog 2` のように問題記号とタイトルを1つのリンクにまとめ、タグは表示しません。AtCoder上のEDPCの実際のcontest IDが `dp` の場合でも、本文管理上は `contest: EDPC` を使ってよいです。
 
 - `problem_url`、`submission_url`、`alternative_submission_urls` はタイトル直下に自動表示します。
 - 本文中に同じリンクがなくても問題にしません。
