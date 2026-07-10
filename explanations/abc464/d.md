@@ -2,6 +2,7 @@
 contest: ABC464
 problem: D
 problem_title: "Celester"
+problem_title_ja: "天空師"
 problem_url: https://atcoder.jp/contests/abc464/tasks/abc464_d
 submission_url: https://atcoder.jp/contests/abc464/submissions/77039505
 tags:

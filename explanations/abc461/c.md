@@ -2,6 +2,7 @@
 contest: ABC461
 problem: C
 problem_title: "Variety"
+problem_title_ja: "バラエティ"
 problem_url: https://atcoder.jp/contests/abc461/tasks/abc461_c
 submission_url: https://atcoder.jp/contests/abc461/submissions/76604378
 tags:

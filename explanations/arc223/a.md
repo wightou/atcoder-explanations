@@ -2,6 +2,7 @@
 contest: ARC223
 problem: A
 problem_title: "Unusual-Constraint Knapsack"
+problem_title_ja: "特殊ナップサック"
 problem_url: https://atcoder.jp/contests/arc223/tasks/arc223_a
 submission_url: https://atcoder.jp/contests/arc223/submissions/77113790
 tags:

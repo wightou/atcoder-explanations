@@ -2,6 +2,7 @@
 contest: ABC463
 problem: D
 problem_title: "Maximize the Gap"
+problem_title_ja: "すき間の最大化"
 problem_url: https://atcoder.jp/contests/abc463/tasks/abc463_d
 submission_url: https://atcoder.jp/contests/abc463/submissions/76862473
 tags:

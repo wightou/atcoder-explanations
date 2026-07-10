@@ -2,6 +2,7 @@
 contest: ABC462
 problem: B
 problem_title: "Gift"
+problem_title_ja: "贈り物"
 problem_url: https://atcoder.jp/contests/abc462/tasks/abc462_b
 submission_url: https://atcoder.jp/contests/abc462/submissions/76685466
 tags:

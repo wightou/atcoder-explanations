@@ -2,6 +2,7 @@
 contest: ABC464
 problem: C
 problem_title: "Plumage Palette"
+problem_title_ja: "羽色パレット"
 problem_url: https://atcoder.jp/contests/abc464/tasks/abc464_c
 submission_url: https://atcoder.jp/contests/abc464/submissions/77039504
 tags:

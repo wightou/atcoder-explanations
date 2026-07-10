@@ -301,12 +301,22 @@ class ExplanationPage:
         return str(self.meta["problem_title"])
 
     @property
+    def problem_title_ja(self) -> str:
+        return str(self.meta.get("problem_title_ja", "")).strip()
+
+    @property
     def problem_code(self) -> str:
         return f"{self.contest} {self.problem}"
 
     @property
     def full_title(self) -> str:
         return f"{self.problem_code} - {self.problem_title}"
+
+    @property
+    def full_title_with_ja(self) -> str:
+        if self.problem_title_ja:
+            return f"{self.full_title}（{self.problem_title_ja}）"
+        return self.full_title
 
     @property
     def tags(self) -> list[str]:
@@ -316,6 +326,10 @@ class ExplanationPage:
         if not isinstance(tags, list):
             raise ValueError(f"{self.source_path}: tags は YAML 配列にしてください")
         return [str(x) for x in tags]
+
+    @property
+    def needs_mathjax(self) -> bool:
+        return markdown_needs_mathjax(self.body_md)
 
 
 @dataclass(frozen=True)
@@ -343,6 +357,10 @@ class KnowledgePage:
     @property
     def summary(self) -> str:
         return str(self.meta.get("summary", "")).strip()
+
+    @property
+    def needs_mathjax(self) -> bool:
+        return markdown_needs_mathjax(self.body_md)
 
     def _int_meta(self, key: str, default: int = 9999) -> int:
         raw = self.meta.get(key, default)
@@ -680,6 +698,17 @@ def fallback_markdown_to_html(md: str) -> str:
     return "\n".join(out)
 
 
+def markdown_needs_mathjax(body_md: str) -> bool:
+    """Markdown本文にMathJaxが必要そうな数式区切りがあるか判定する。
+
+    コードブロック・インラインコード内の `$` は数式扱いしない。
+    判定は読み込み要否を決めるための軽量なものに留める。
+    """
+    text = re.sub(r"```.*?```", " ", body_md, flags=re.S)
+    text = re.sub(r"`[^`]*`", " ", text)
+    return bool(re.search(r"\$\$|(?<!\\)\$(?!\s)|\\\(|\\\[", text))
+
+
 def markdown_to_html(body_md: str) -> str:
     body_md = remove_duplicate_top_h1(body_md)
     if markdown_lib is not None:
@@ -853,6 +882,31 @@ def contest_url_from_pages(pages: list["ExplanationPage"]) -> str:
         if m:
             return m.group(1)
     return ""
+
+
+
+def render_problem_card_link(
+    page: "ExplanationPage",
+    *,
+    code_label: str,
+    href: str,
+    css_class: str = "problem-cell",
+) -> str:
+    """問題一覧用の3点配置カードを生成する。
+
+    左上に問題コード、中央に英語タイトル、右下に任意の日本語タイトルを表示する。
+    """
+    title_ja_html = (
+        f'<span class="problem-title-ja">{escape(page.problem_title_ja)}</span>'
+        if page.problem_title_ja else ""
+    )
+    return (
+        f'<a class="{css_class}" href="{escape(href)}" title="{escape(page.full_title_with_ja)}">'
+        f'<span class="problem-code">{escape(code_label)}</span>'
+        f'<span class="problem-title">{escape(page.problem_title)}</span>'
+        f'{title_ja_html}'
+        '</a>'
+    )
 
 
 def contest_sort_key(contest: str):
@@ -1032,8 +1086,60 @@ def add_external_link_attrs(html: str) -> str:
     return re.sub(r'<a\b([^>]*?)href=(["\'])(.*?)\2([^>]*)>', replace, html)
 
 
-def html_document(title: str, body: str, *, css_href: str = "style.css") -> str:
+def mathjax_head_html() -> str:
+    return """<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
+    displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>"""
+
+
+def problem_title_fit_head_html() -> str:
+    return """<script>
+function fitProblemTitleJa() {
+  const items = document.querySelectorAll('.problem-title-ja');
+  for (const el of items) {
+    el.style.fontSize = '';
+    const computed = window.getComputedStyle(el);
+    const base = Number.parseFloat(computed.fontSize);
+    if (!Number.isFinite(base) || base <= 0 || el.clientWidth <= 0) {
+      continue;
+    }
+    const minSize = Math.max(9, base * 0.86);
+    let size = base;
+    while (el.scrollWidth > el.clientWidth && size > minSize) {
+      size = Math.max(minSize, size - 0.5);
+      el.style.fontSize = size + 'px';
+    }
+  }
+}
+window.addEventListener('DOMContentLoaded', fitProblemTitleJa);
+window.addEventListener('load', fitProblemTitleJa);
+window.addEventListener('resize', fitProblemTitleJa);
+</script>"""
+
+
+def html_document(
+    title: str,
+    body: str,
+    *,
+    css_href: str = "style.css",
+    include_mathjax: bool = False,
+    include_problem_title_fit: bool = False,
+) -> str:
     body = add_external_link_attrs(body)
+    head_parts = []
+    if include_mathjax:
+        head_parts.append(mathjax_head_html())
+    if include_problem_title_fit:
+        head_parts.append(problem_title_fit_head_html())
+    head_extra = "\n".join(head_parts)
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -1041,48 +1147,12 @@ def html_document(title: str, body: str, *, css_href: str = "style.css") -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escape(title)}</title>
 <link rel="stylesheet" href="{css_href}">
-<script>
-window.MathJax = {{
-  tex: {{
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true
-  }},
-  svg: {{ fontCache: 'global' }}
-}};
-</script>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+{head_extra}
 </head>
 <body>
 {body}
 </body>
 </html>
-"""
-
-
-def nav_links(prefix: str, current: str = "") -> str:
-    links = [
-        ("トップ", f"{prefix}index.html"),
-        ("問題解説", f"{prefix}contests/index.html"),
-        ("知識集（分野別）", f"{prefix}knowledge/by-category.html"),
-        ("知識集（難易度別）", f"{prefix}knowledge/by-level.html"),
-    ]
-    return "".join(
-        f'<a class="{"active" if label == current else ""}" href="{href}">{escape(label)}</a>'
-        for label, href in links
-    )
-
-
-def site_header(current: str = "", *, prefix: str = "") -> str:
-    return f"""
-<header class="site-header">
-  <div class="site-header-inner">
-    <a class="site-title" href="{prefix}index.html">{SITE_TITLE}</a>
-    <nav class="site-nav">
-      {nav_links(prefix, current)}
-    </nav>
-  </div>
-</header>
 """
 
 
@@ -1183,7 +1253,16 @@ def render_tags(tags: list[str], *, from_subdir: bool = False) -> str:
 
 
 
-def render_index_layout(title: str, inner_html: str, *, current: str = "", prefix: str = "", css_href: str = "style.css") -> str:
+def render_index_layout(
+    title: str,
+    inner_html: str,
+    *,
+    current: str = "",
+    prefix: str = "",
+    css_href: str = "style.css",
+    include_mathjax: bool = False,
+    include_problem_title_fit: bool = False,
+) -> str:
     body = f"""
 {site_header_compact(prefix=prefix)}
 <main class="page-layout">
@@ -1193,7 +1272,13 @@ def render_index_layout(title: str, inner_html: str, *, current: str = "", prefi
   {common_sidebar(prefix=prefix)}
 </main>
 """
-    return html_document(title, body, css_href=css_href)
+    return html_document(
+        title,
+        body,
+        css_href=css_href,
+        include_mathjax=include_mathjax,
+        include_problem_title_fit=include_problem_title_fit,
+    )
 
 
 def render_portal(pages_by_class: dict[str, list[ExplanationPage]], knowledge_pages: list[KnowledgePage]) -> str:
@@ -1295,14 +1380,10 @@ def render_table_page(title: str, pages: list[ExplanationPage], columns: list[st
                 cells.append('<td class="empty">-</td>')
             else:
                 problem_code = f"{p.contest.upper()} {p.problem.upper()}"
-                full_label = p.full_title
                 cells.append(
                     '<td>'
-                    f'<a class="problem-cell" href="../{escape(p.url)}" title="{escape(full_label)}">'
-                    f'<span class="problem-code">{escape(problem_code)}</span>'
-                    f'<span class="problem-title">{escape(p.problem_title)}</span>'
-                    '</a>'
-                    '</td>'
+                    + render_problem_card_link(p, code_label=problem_code, href=f"../{p.url}")
+                    + '</td>'
                 )
         rows.append(
             f'<tr><th><a href="https://atcoder.jp/contests/{contest.lower()}">{escape(contest)}</a></th>'
@@ -1329,7 +1410,14 @@ def render_table_page(title: str, pages: list[ExplanationPage], columns: list[st
   </table>
 </div>
 """
-    return render_index_layout(title, inner, current="問題解説", prefix="../", css_href="../style.css")
+    return render_index_layout(
+        title,
+        inner,
+        current="問題解説",
+        prefix="../",
+        css_href="../style.css",
+        include_problem_title_fit=any(p.problem_title_ja for p in pages),
+    )
 
 
 def render_list_page(title: str, pages: list[ExplanationPage], *, order: str, description: str = "") -> str:
@@ -1360,10 +1448,11 @@ def render_grouped_table_page(
     groups: list[str] | None = None,
     description: str = "",
 ) -> str:
-    """教育系コンテストなどを、グループごとの簡潔な一覧として表示する。
+    """教育系コンテストなどを、グループごとのカード一覧として表示する。
 
-    問題番号とタイトルは1つのリンクにまとめ、タグは出さない。
-    layout 名は後方互換のため grouped_table も受け付ける。
+    各カードは通常コンテスト表の問題セルと同じく、左上に問題コード、
+    中央に英語タイトル、右下に任意の日本語タイトルを表示する。
+    タグは出さない。layout 名は後方互換のため grouped_table も受け付ける。
     """
     pages_by_group: dict[str, list[ExplanationPage]] = defaultdict(list)
     for page in pages:
@@ -1387,14 +1476,21 @@ def render_grouped_table_page(
         )
         items = []
         for page in group_pages:
-            label = f"{group} {page.problem.upper()} - {page.problem_title}"
-            items.append(f'<li><a href="../{escape(page.url)}">{escape(label)}</a></li>')
+            code_label = f"{group} {page.problem.upper()}"
+            items.append(
+                render_problem_card_link(
+                    page,
+                    code_label=code_label,
+                    href=f"../{page.url}",
+                    css_class="problem-cell educational-problem-card",
+                )
+            )
         chunks.append(f"""
 <section class="contest-subsection">
   {heading}
-  <ul class="plain-list compact-explanation-list">
-    {''.join(items) if items else '<li class="muted">まだ解説がありません。</li>'}
-  </ul>
+  <div class="education-card-grid">
+    {''.join(items) if items else '<p class="muted">まだ解説がありません。</p>'}
+  </div>
 </section>
 """)
 
@@ -1406,7 +1502,14 @@ def render_grouped_table_page(
   {''.join(chunks) if chunks else '<p class="muted">まだ解説がありません。</p>'}
 </div>
 """
-    return render_index_layout(title, inner, current="問題解説", prefix="../", css_href="../style.css")
+    return render_index_layout(
+        title,
+        inner,
+        current="問題解説",
+        prefix="../",
+        css_href="../style.css",
+        include_problem_title_fit=any(p.problem_title_ja for p in pages),
+    )
 
 
 def get_alternative_submission_links(meta: dict) -> list[tuple[str, str]]:
@@ -1494,7 +1597,7 @@ def render_explanation_page(page: ExplanationPage) -> str:
   </aside>
 </main>
 """
-    return html_document(page.full_title, body, css_href="../style.css")
+    return html_document(page.full_title, body, css_href="../style.css", include_mathjax=page.needs_mathjax)
 
 
 def render_tag_page(tag: str, pages: list[ExplanationPage], knowledge_pages: list[KnowledgePage]) -> str:
@@ -1594,7 +1697,7 @@ def render_knowledge_page(
   </aside>
 </main>
 """
-    return html_document(page.title, body, css_href="../style.css")
+    return html_document(page.title, body, css_href="../style.css", include_mathjax=page.needs_mathjax)
 
 def render_knowledge_item(page: KnowledgePage, *, link_prefix: str = "") -> str:
     summary_html = f'<div class="knowledge-summary">{escape(page.summary)}</div>' if page.summary else ""
@@ -1825,6 +1928,8 @@ def write_css(out_dir: Path) -> None:
   --panel: #ffffff;
   --fg: #172033;
   --muted: #64748b;
+  --subtle: #8290a3;
+  --faint: #b8d0ee;
   --border: #cbd8e8;
   --header: #16233a;
   --header-subtle: #223553;
@@ -2265,12 +2370,13 @@ a:hover {
 }
 
 .problem-cell {
-  display: flex;
+  display: grid;
   min-width: 0;
   height: 100%;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 4px;
+  min-height: 42px;
+  grid-template-rows: auto auto auto;
+  align-content: space-between;
+  gap: 2px;
   color: var(--fg);
 }
 
@@ -2281,11 +2387,13 @@ a:hover {
 .problem-code {
   display: block;
   min-width: 0;
+  align-self: start;
+  justify-self: start;
   font-size: 0.68rem;
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: 0.02em;
-  color: var(--muted);
+  color: var(--faint);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2294,11 +2402,56 @@ a:hover {
 .problem-title {
   display: block;
   min-width: 0;
+  align-self: center;
+  justify-self: center;
+  max-width: 100%;
   font-size: 0.82rem;
+  font-weight: 400;
   line-height: 1.2;
+  text-align: center;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.problem-title-ja {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  align-self: end;
+  justify-self: stretch;
+  max-width: 100%;
+  color: var(--faint);
+  font-size: 0.70rem;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-inline: 3px;
+  box-sizing: border-box;
+}
+
+
+.education-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+.educational-problem-card {
+  min-height: 72px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(22,35,58,.04);
+}
+
+.educational-problem-card:hover {
+  border-color: #bcd7ff;
+  box-shadow: 0 8px 20px rgba(37,99,235,.08);
 }
 
 .plain-list {

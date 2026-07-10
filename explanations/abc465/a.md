@@ -2,6 +2,7 @@
 contest: ABC465
 problem: A
 problem_title: "Supermajority"
+problem_title_ja: "超多数派"
 problem_url: https://atcoder.jp/contests/abc465/tasks/abc465_a
 submission_url: https://atcoder.jp/contests/abc465/submissions/77219785
 tags:

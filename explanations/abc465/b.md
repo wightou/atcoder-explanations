@@ -2,6 +2,7 @@
 contest: ABC465
 problem: B
 problem_title: "Parking 2"
+problem_title_ja: "駐車場 2"
 problem_url: https://atcoder.jp/contests/abc465/tasks/abc465_b
 submission_url: https://atcoder.jp/contests/abc465/submissions/77219790
 tags:

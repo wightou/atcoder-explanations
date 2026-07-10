@@ -2,6 +2,7 @@
 contest: EDPC
 problem: B
 problem_title: "Frog 2"
+problem_title_ja: "カエル 2"
 problem_url: https://atcoder.jp/contests/dp/tasks/dp_b
 submission_url: https://atcoder.jp/contests/dp/submissions/77327500
 alternative_submission_urls:

@@ -2,6 +2,7 @@
 contest: ABC461
 problem: B
 problem_title: "The Honest Woodcutters"
+problem_title_ja: "正直な木こり"
 problem_url: https://atcoder.jp/contests/abc461/tasks/abc461_b
 submission_url: https://atcoder.jp/contests/abc461/submissions/76604370
 tags:

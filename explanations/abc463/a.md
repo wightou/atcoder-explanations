@@ -2,6 +2,7 @@
 contest: ABC463
 problem: A
 problem_title: "16:9"
+problem_title_ja: "16:9"
 problem_url: https://atcoder.jp/contests/abc463/tasks/abc463_a
 submission_url: https://atcoder.jp/contests/abc463/submissions/76862453
 tags:

@@ -6,16 +6,27 @@
 <title>教育系コンテスト</title>
 <link rel="stylesheet" href="../style.css">
 <script>
-window.MathJax = {
-  tex: {
-    inlineMath: [['$', '$'], ['\(', '\)']],
-    displayMath: [['$$', '$$'], ['\[', '\]']],
-    processEscapes: true
-  },
-  svg: { fontCache: 'global' }
-};
+function fitProblemTitleJa() {
+  const items = document.querySelectorAll('.problem-title-ja');
+  for (const el of items) {
+    el.style.fontSize = '';
+    const computed = window.getComputedStyle(el);
+    const base = Number.parseFloat(computed.fontSize);
+    if (!Number.isFinite(base) || base <= 0 || el.clientWidth <= 0) {
+      continue;
+    }
+    const minSize = Math.max(9, base * 0.86);
+    let size = base;
+    while (el.scrollWidth > el.clientWidth && size > minSize) {
+      size = Math.max(minSize, size - 0.5);
+      el.style.fontSize = size + 'px';
+    }
+  }
+}
+window.addEventListener('DOMContentLoaded', fitProblemTitleJa);
+window.addEventListener('load', fitProblemTitleJa);
+window.addEventListener('resize', fitProblemTitleJa);
 </script>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -35,9 +46,9 @@ window.MathJax = {
   
 <section class="contest-subsection">
   <h2><a href="https://atcoder.jp/contests/dp" target="_blank" rel="noopener noreferrer">EDPC</a></h2>
-  <ul class="plain-list compact-explanation-list">
-    <li><a href="../explanations/edpc-a.html">EDPC A - Frog 1</a></li><li><a href="../explanations/edpc-b.html">EDPC B - Frog 2</a></li><li><a href="../explanations/edpc-c.html">EDPC C - Vacation</a></li>
-  </ul>
+  <div class="education-card-grid">
+    <a class="problem-cell educational-problem-card" href="../explanations/edpc-a.html" title="EDPC A - Frog 1（カエル 1）"><span class="problem-code">EDPC A</span><span class="problem-title">Frog 1</span><span class="problem-title-ja">カエル 1</span></a><a class="problem-cell educational-problem-card" href="../explanations/edpc-b.html" title="EDPC B - Frog 2（カエル 2）"><span class="problem-code">EDPC B</span><span class="problem-title">Frog 2</span><span class="problem-title-ja">カエル 2</span></a><a class="problem-cell educational-problem-card" href="../explanations/edpc-c.html" title="EDPC C - Vacation（夏休み）"><span class="problem-code">EDPC C</span><span class="problem-title">Vacation</span><span class="problem-title-ja">夏休み</span></a>
+  </div>
 </section>
 
 </div>

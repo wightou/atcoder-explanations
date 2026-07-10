@@ -2,6 +2,7 @@
 contest: ABC461
 problem: D
 problem_title: "Count Subgrid Sum = K"
+problem_title_ja: "和=Kはいくつ"
 problem_url: https://atcoder.jp/contests/abc461/tasks/abc461_d
 submission_url: https://atcoder.jp/contests/abc461/submissions/76604386
 alternative_submission_urls:

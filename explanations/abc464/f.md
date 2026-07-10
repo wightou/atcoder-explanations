@@ -2,6 +2,7 @@
 contest: ABC464
 problem: F
 problem_title: "Random Vault Heist"
+problem_title_ja: "ランダム強盗"
 problem_url: https://atcoder.jp/contests/abc464/tasks/abc464_f
 submission_url: https://atcoder.jp/contests/abc464/submissions/77039510
 tags:

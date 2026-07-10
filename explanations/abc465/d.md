@@ -2,6 +2,7 @@
 contest: ABC465
 problem: D
 problem_title: "X to Y"
+problem_title_ja: "XからYへ"
 problem_url: https://atcoder.jp/contests/abc465/tasks/abc465_d
 submission_url: https://atcoder.jp/contests/abc465/submissions/77219806
 tags:

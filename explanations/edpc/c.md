@@ -2,6 +2,7 @@
 contest: EDPC
 problem: C
 problem_title: "Vacation"
+problem_title_ja: "夏休み"
 problem_url: https://atcoder.jp/contests/dp/tasks/dp_c
 submission_url: https://atcoder.jp/contests/dp/submissions/67455965
 tags:

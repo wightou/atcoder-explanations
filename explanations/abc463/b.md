@@ -2,6 +2,7 @@
 contest: ABC463
 problem: B
 problem_title: "Train Reservation"
+problem_title_ja: "列車の予約"
 problem_url: https://atcoder.jp/contests/abc463/tasks/abc463_b
 submission_url: https://atcoder.jp/contests/abc463/submissions/76862462
 tags:

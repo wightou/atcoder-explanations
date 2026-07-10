@@ -2,6 +2,7 @@
 contest: ABC462
 problem: A
 problem_title: "Secret Numbers"
+problem_title_ja: "隠された数"
 problem_url: https://atcoder.jp/contests/abc462/tasks/abc462_a
 submission_url: https://atcoder.jp/contests/abc462/submissions/76685454
 alternative_submission_urls:

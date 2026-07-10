@@ -2,6 +2,7 @@
 contest: ABC461
 problem: A
 problem_title: "Armor"
+problem_title_ja: "鎧"
 problem_url: https://atcoder.jp/contests/abc461/tasks/abc461_a
 submission_url: https://atcoder.jp/contests/abc461/submissions/76604367
 tags:

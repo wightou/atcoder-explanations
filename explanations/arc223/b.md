@@ -2,6 +2,7 @@
 contest: ARC223
 problem: B
 problem_title: "Valid Arrays by K-Divisible Swaps"
+problem_title_ja: "Kで割れる交換"
 problem_url: https://atcoder.jp/contests/arc223/tasks/arc223_b
 submission_url: https://atcoder.jp/contests/arc223/submissions/77113847
 tags:

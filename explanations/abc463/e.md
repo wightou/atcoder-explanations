@@ -2,6 +2,7 @@
 contest: ABC463
 problem: E
 problem_title: "Roads and Gates"
+problem_title_ja: "道と門"
 problem_url: https://atcoder.jp/contests/abc463/tasks/abc463_e
 submission_url: https://atcoder.jp/contests/abc463/submissions/76862476
 tags:

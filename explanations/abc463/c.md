@@ -2,6 +2,7 @@
 contest: ABC463
 problem: C
 problem_title: "Tallest at the Moment"
+problem_title_ja: "各瞬間のノッポ"
 problem_url: https://atcoder.jp/contests/abc463/tasks/abc463_c
 submission_url: https://atcoder.jp/contests/abc463/submissions/76862467
 tags:

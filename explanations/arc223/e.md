@@ -2,6 +2,7 @@
 contest: ARC223
 problem: E
 problem_title: "Yin-Yang Two Bits Insertion"
+problem_title_ja: "2ビットの挿入"
 problem_url: https://atcoder.jp/contests/arc223/tasks/arc223_e
 submission_url: https://atcoder.jp/contests/arc223/submissions/77116095
 tags:

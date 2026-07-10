@@ -2,6 +2,7 @@
 contest: ABC464
 problem: B
 problem_title: "Crop"
+problem_title_ja: "切り抜き"
 problem_url: https://atcoder.jp/contests/abc464/tasks/abc464_b
 submission_url: https://atcoder.jp/contests/abc464/submissions/77039503
 tags:

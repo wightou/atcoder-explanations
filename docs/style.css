@@ -3,6 +3,8 @@
   --panel: #ffffff;
   --fg: #172033;
   --muted: #64748b;
+  --subtle: #8290a3;
+  --faint: #b8d0ee;
   --border: #cbd8e8;
   --header: #16233a;
   --header-subtle: #223553;
@@ -443,12 +445,13 @@ a:hover {
 }
 
 .problem-cell {
-  display: flex;
+  display: grid;
   min-width: 0;
   height: 100%;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 4px;
+  min-height: 42px;
+  grid-template-rows: auto auto auto;
+  align-content: space-between;
+  gap: 2px;
   color: var(--fg);
 }
 
@@ -459,11 +462,13 @@ a:hover {
 .problem-code {
   display: block;
   min-width: 0;
+  align-self: start;
+  justify-self: start;
   font-size: 0.68rem;
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: 0.02em;
-  color: var(--muted);
+  color: var(--faint);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -472,11 +477,56 @@ a:hover {
 .problem-title {
   display: block;
   min-width: 0;
+  align-self: center;
+  justify-self: center;
+  max-width: 100%;
   font-size: 0.82rem;
+  font-weight: 400;
   line-height: 1.2;
+  text-align: center;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.problem-title-ja {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  align-self: end;
+  justify-self: stretch;
+  max-width: 100%;
+  color: var(--faint);
+  font-size: 0.70rem;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-inline: 3px;
+  box-sizing: border-box;
+}
+
+
+.education-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+.educational-problem-card {
+  min-height: 72px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(22,35,58,.04);
+}
+
+.educational-problem-card:hover {
+  border-color: #bcd7ff;
+  box-shadow: 0 8px 20px rgba(37,99,235,.08);
 }
 
 .plain-list {

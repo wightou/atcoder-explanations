@@ -2,6 +2,7 @@
 contest: ABC462
 problem: D
 problem_title: "Accomplice"
+problem_title_ja: "共犯"
 problem_url: https://atcoder.jp/contests/abc462/tasks/abc462_d
 submission_url: https://atcoder.jp/contests/abc462/submissions/76685485
 alternative_submission_urls:

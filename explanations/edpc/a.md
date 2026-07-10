@@ -2,6 +2,7 @@
 contest: EDPC
 problem: A
 problem_title: "Frog 1"
+problem_title_ja: "カエル 1"
 problem_url: https://atcoder.jp/contests/dp/tasks/dp_a
 submission_url: https://atcoder.jp/contests/dp/submissions/77326726
 alternative_submission_urls:

@@ -2,6 +2,7 @@
 contest: ABC465
 problem: F
 problem_title: "Sjeltzer?"
+problem_title_ja: "タソサソスイ？"
 problem_url: https://atcoder.jp/contests/abc465/tasks/abc465_f
 submission_url: https://atcoder.jp/contests/abc465/submissions/77273845
 tags:

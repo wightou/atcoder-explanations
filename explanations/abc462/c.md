@@ -2,6 +2,7 @@
 contest: ABC462
 problem: C
 problem_title: "Not Covered Points"
+problem_title_ja: "非被覆点"
 problem_url: https://atcoder.jp/contests/abc462/tasks/abc462_c
 submission_url: https://atcoder.jp/contests/abc462/submissions/76685473
 tags:

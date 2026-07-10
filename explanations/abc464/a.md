@@ -2,6 +2,7 @@
 contest: ABC464
 problem: A
 problem_title: "Decisive Battle"
+problem_title_ja: "決戦"
 problem_url: https://atcoder.jp/contests/abc464/tasks/abc464_a
 submission_url: https://atcoder.jp/contests/abc464/submissions/77039499
 alternative_submission_urls:

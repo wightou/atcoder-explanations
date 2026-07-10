@@ -2,6 +2,7 @@
 contest: ABC462
 problem: E
 problem_title: "Alternating Costs"
+problem_title_ja: "交互コスト"
 problem_url: https://atcoder.jp/contests/abc462/tasks/abc462_e
 submission_url: https://atcoder.jp/contests/abc462/submissions/76727375
 tags:

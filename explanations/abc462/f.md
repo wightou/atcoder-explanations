@@ -2,6 +2,7 @@
 contest: ABC462
 problem: F
 problem_title: "More ABC"
+problem_title_ja: "もっとABC"
 problem_url: https://atcoder.jp/contests/abc462/tasks/abc462_f
 submission_url: https://atcoder.jp/contests/abc462/submissions/76685511
 tags:

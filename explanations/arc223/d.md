@@ -2,6 +2,7 @@
 contest: ARC223
 problem: D
 problem_title: "Xpectation of Cards in Hand with Laboratory"
+problem_title_ja: "手札枚数の期待値"
 problem_url: https://atcoder.jp/contests/arc223/tasks/arc223_d
 submission_url: https://atcoder.jp/contests/arc223/submissions/77113964
 tags:

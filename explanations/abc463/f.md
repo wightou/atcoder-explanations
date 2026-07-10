@@ -2,6 +2,7 @@
 contest: ABC463
 problem: F
 problem_title: "Senshuraku"
+problem_title_ja: "千秋楽"
 problem_url: https://atcoder.jp/contests/abc463/tasks/abc463_f
 submission_url: https://atcoder.jp/contests/abc463/submissions/76862484
 tags:

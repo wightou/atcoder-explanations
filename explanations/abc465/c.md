@@ -2,6 +2,7 @@
 contest: ABC465
 problem: C
 problem_title: "Reverse Permutation"
+problem_title_ja: "順序反転"
 problem_url: https://atcoder.jp/contests/abc465/tasks/abc465_c
 submission_url: https://atcoder.jp/contests/abc465/submissions/77219802
 tags:

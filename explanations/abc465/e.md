@@ -2,6 +2,7 @@
 contest: ABC465
 problem: E
 problem_title: "Digit Circus"
+problem_title_ja: "数字サーカス"
 problem_url: https://atcoder.jp/contests/abc465/tasks/abc465_e
 submission_url: https://atcoder.jp/contests/abc465/submissions/77225605
 tags:
