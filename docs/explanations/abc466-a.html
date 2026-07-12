@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC466 A - Compromise</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ABC466 A - Compromise</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc466/tasks/abc466_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc466/submissions/77418200" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc466/submissions/77418207" target="_blank" rel="noopener noreferrer">別解</a></div>
+    <h2>考え方</h2>
+<p>入力は整数と数列が $1$ つずつ。<br>
+<code>int</code> 型の変数と <code>vector</code> を $1$ つずつ用意し、<code>cin</code> で入力を受け取る。</p>
+<p>さて、問題の意味がパッと読むだけだと分かりづらいが、タイトルから考えると少し理解できる。<br>
+「どんな選択でも損するけど仕方がないな」と妥協しなければいけない状況か、という意図らしい。</p>
+<p>これは、選択肢を $1$ つずつ見て、「これは損しますか？」と確認をしていくとよい。<br>
+全てが「損します」なら、答えは <code>&quot;Yes&quot;</code>。<br>
+$1$ つでも「損しません」があれば、答えは <code>&quot;No&quot;</code>。</p>
+<p>すべての選択肢がある条件を満たすかどうかの判定は、以下の手順で行う。</p>
+<ul>
+<li>まず、<code>bool</code> 型の変数を用意し、<code>true</code> で初期化する</li>
+<p>  - 本問では、代わりに <code>string</code> を用意して <code>&quot;Yes&quot;</code> で初期化する方がわかりやすい</p>
+<li>for ループで、ありえる可能性すべてを見るループを書く</li>
+<li>その中で、条件に反しているかどうかの if 文を書く</li>
+<p>  - 本問では、$-1$ 以下という条件に反しているか、つまり $0$ 以上かどうかを括弧内に書く</p>
+<li>条件に反していたら、用意した <code>bool</code> 型の変数を <code>false</code> に書き換える</li>
+<p>  - <code>string</code> 型を使った場合は <code>&quot;No&quot;</code> に書き換える<br>
+  - 条件に反していなかった場合は何もしない</p>
+</ul>
+<p>全部見終わった後で、<code>bool</code> 型変数の中身が <code>true</code> だったら <code>&quot;Yes&quot;</code>、そうでなければ <code>&quot;No&quot;</code> を出力。<br>
+最初から <code>string</code> 型変数を使った場合にはそのまま出力すればよい。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 4
+x: {2, 0, -1, 2}</code></pre>
+<p>答え用の変数 <code>result</code> を <code>&quot;Yes&quot;</code> で初期化する。</p>
+<pre><code>result: &quot;Yes&quot;</code></pre>
+<p><code>x</code> の要素を前から順に確認する。</p>
+<p><code>x[0]</code> は <code>2</code> であり、$0$ 以上なので、<code>result</code> を <code>&quot;No&quot;</code> にする。</p>
+<pre><code>result: &quot;No&quot;</code></pre>
+<p><code>x[1]</code> は <code>0</code> であり、$0$ 以上なので、<code>result</code> を <code>&quot;No&quot;</code> にする。</p>
+<pre><code>result: &quot;No&quot;</code></pre>
+<p><code>x[2]</code> は <code>-1</code> であり、$0$ 未満なので、<code>result</code> は変更しない。</p>
+<pre><code>result: &quot;No&quot;</code></pre>
+<p><code>x[3]</code> は <code>2</code> であり、$0$ 以上なので、<code>result</code> を <code>&quot;No&quot;</code> にする。</p>
+<pre><code>result: &quot;No&quot;</code></pre>
+<p>最後に、<code>result</code> を出力すればよい。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>ループ内で「今何番目であるか」を使わないので、範囲for文を使ってもよい。</p>
+<p>いちいち <code>.at(i)</code> を書く手間が省けるし、for ループを何回回すべきか考える必要もなくなる。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/input-output.html">入出力</a>
+<a class="tag" href="../tags/int.html">int型</a>
+<a class="tag" href="../tags/bool.html">bool型</a>
+<a class="tag" href="../tags/if-statement.html">if分岐</a>
+<a class="tag" href="../tags/for-loop.html">forループ</a>
+<a class="tag" href="../tags/vector.html">vector</a>
+      </div>
+      
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

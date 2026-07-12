@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC466 B - Representative Balls</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ABC466 B - Representative Balls</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc466/tasks/abc466_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc466/submissions/77418213" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>色ごとに、その色のボールの最大値を探す問題。<br>
+指示通りに $1$ 色ずつ調べることもできるが、ここではもっとスマートなやり方を考える。</p>
+<p>各色に対し、「今のところの最大値」を保管しておく変数を用意する。<br>
+色が $1$ から $M$ までなので、これを <code>0-indexed</code> に変換し、<code>vector</code> でデータを持てばよい。<br>
+そして、それぞれをどんなボールの大きさよりも小さい値で初期化しておく。<br>
+ここでは、後述する便利さを考えて、すべて <code>-1</code> で初期化しておく。</p>
+<p>そして、ボールを $1$ つずつ見ていく。<br>
+まずは色を確認する。<br>
+その後、該当する色の「今のところの最大値」データを更新する。<br>
+暫定最大値が <code>a</code> に保管されていて、<code>b</code> がそれより大きければ書き換えたい場合、以下でよい。<br>
+今回は <code>a</code> にあたる部分に <code>vector</code> の要素を書くことになる。</p>
+<pre><code>a = max(a,b);</code></pre>
+<p>これを全ボールについてループで処理する。<br>
+すると、$1$ 個でもボールがあった色は、<code>vector</code> 内に、その色のボールの大きさの最大値が入っている。<br>
+<code>-1</code> がどのボールの大きさよりも小さい値であるため、制約上最小のボールでも更新が行われている。<br>
+また、その色のボールが $1$ つもなかった場合、初期化した <code>-1</code> がそのまま入っている。<br>
+このような場合は、問題で <code>-1</code> と答えるよう指示されている。</p>
+<p>つまり、この <code>vector</code> を全てそのまま出力すれば、問題に対する答えとなっている。<br>
+$2$ 種類の意味の値が混在しているのにまとめて処理できるのが、<code>-1</code> で初期化した便利さである。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。<br>
+色は入力時に $1$ ずつ減らし、<code>0-indexed</code> に直す。</p>
+<pre><code>n: 4
+m: 5
+c: {0, 1, 0, 3}
+s: {3, 10, 7, 9}</code></pre>
+<p>答え用の配列 <code>result</code> を、長さ $5$ の <code>-1</code> で初期化する。</p>
+<pre><code>result: {-1, -1, -1, -1, -1}</code></pre>
+<p>$1$ 個目のボールを見る。<br>
+色は <code>0</code>、大きさは <code>3</code> なので、<code>result[0]</code> を最大値更新する。</p>
+<pre><code>result: {3, -1, -1, -1, -1}</code></pre>
+<p>$2$ 個目のボールを見る。<br>
+色は <code>1</code>、大きさは <code>10</code> なので、<code>result[1]</code> を最大値更新する。</p>
+<pre><code>result: {3, 10, -1, -1, -1}</code></pre>
+<p>$3$ 個目のボールを見る。<br>
+色は <code>0</code>、大きさは <code>7</code> なので、<code>result[0]</code> を最大値更新する。</p>
+<pre><code>result: {7, 10, -1, -1, -1}</code></pre>
+<p>$4$ 個目のボールを見る。<br>
+色は <code>3</code>、大きさは <code>9</code> なので、<code>result[3]</code> を最大値更新する。</p>
+<pre><code>result: {7, 10, -1, 9, -1}</code></pre>
+<p>最後に、<code>result</code> の要素を前から順に出力すればよい。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <span class="muted">なし</span>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
