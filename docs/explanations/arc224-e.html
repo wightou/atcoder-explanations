@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>貪欲法</title>
+<title>ARC224 E - ABC|AB|A</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,62 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>貪欲法</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <h1>ARC224 E - ABC|AB|A</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc224/tasks/arc224_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc224/submissions/77447869" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>削除可能な文字列はすべて <code>&#x27;A&#x27;</code> から始まっている。<br>
+よって、各 <code>&#x27;A&#x27;</code> の削除順を考えればよい。</p>
+<p><code>&quot;AABB&quot;</code> のような場合、先に後ろの <code>&#x27;A&#x27;</code> を使って <code>&quot;AB&quot;</code> を削除しなければならない。<br>
+先に前の <code>&#x27;A&#x27;</code> を使うと、最後尾の <code>&#x27;B&#x27;</code> が削除できなくなってしまう。<br>
+このように、複数の <code>&#x27;A&#x27;</code> に対し、前を先に削除すると最善を逃すケースが存在する。</p>
+<p>では一方で、後ろを先に削除して困る例はあるかというと、存在しない。<br>
+絶対に逆順に削除して全く同じ結果を作ることができる。<br>
+ということで、<code>&#x27;A&#x27;</code> はすべて後ろから順に削除していけばよい。</p>
+<p>また、<code>&quot;ABC&quot;</code> を消せるのに <code>&quot;AB&quot;</code> だけや <code>&quot;A&quot;</code> だけ削除するのも、特に優位性はない。<br>
+よって、非常に単純な以下のような貪欲で解ける。</p>
+<ul>
+<li>文字列を後ろから $1$ 文字ずつ見ていく</li>
+<li><code>&#x27;A&#x27;</code> があったら、それを削除</li>
+<li><code>&#x27;A&#x27;</code> 削除時、その後ろに <code>&#x27;B&#x27;</code> があったらそれも削除</li>
+<li><code>&#x27;B&#x27;</code> 削除時、その後ろに <code>&#x27;C&#x27;</code> があったらそれも削除</li>
+</ul>
+<p>最終的に残った文字列の長さが答えで、計算量は $O\left(\sum N\right)$。</p>
+<h2>入力例1での動作</h2>
+<p>$1$ つ目のテストケースのみ考える。</p>
+<p>入力を受け取る。</p>
+<pre><code>s: CAABCB</code></pre>
+<p><code>s</code> を右から見て、残る予定の文字列を逆順に <code>t</code> に入れていく。</p>
+<p>まず、右端の <code>B</code> を <code>t</code> に移す。</p>
+<pre><code>s: CAABC
+t: B</code></pre>
+<p>次に、<code>C</code>, <code>B</code> を順に <code>t</code> に移す。</p>
+<pre><code>s: CAA
+t: BCB</code></pre>
+<p>次に、<code>A</code> を <code>t</code> に移す。<br>
+<code>t</code> の末尾から <code>A</code>, <code>B</code>, <code>C</code> と並んでいるので、これらを削除する。</p>
+<pre><code>s: CA
+t: B</code></pre>
+<p>次の <code>A</code> を <code>t</code> に移す。<br>
+<code>t</code> の末尾から <code>A</code>, <code>B</code> と並んでいるので、これらを削除する。</p>
+<pre><code>s: C
+t:</code></pre>
+<p>最後に、<code>C</code> を <code>t</code> に移す。</p>
+<pre><code>s:
+t: C</code></pre>
+<p>最終的な <code>t</code> の長さは $1$ なので、答えは $1$ である。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> データ探索系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-c.html">ABC461 C - Variety</a></li><li><a href="../explanations/abc462-e.html">ABC462 E - Alternating Costs</a></li><li><a href="../explanations/abc463-d.html">ABC463 D - Maximize the Gap</a></li><li><a href="../explanations/arc223-a.html">ARC223 A - Unusual-Constraint Knapsack</a></li><li><a href="../explanations/arc224-b.html">ARC224 B - Adjacent Tiles</a></li><li><a href="../explanations/arc224-c.html">ARC224 C - Ascending Labels</a></li><li><a href="../explanations/arc224-d.html">ARC224 D - Angst for All Pairs</a></li><li><a href="../explanations/arc224-e.html">ARC224 E - ABC|AB|A</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/greedy.html">貪欲法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

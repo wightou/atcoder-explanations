@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>貪欲法</title>
+<title>ARC224 A - Attach 00</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,46 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>貪欲法</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <h1>ARC224 A - Attach 00</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc224/tasks/arc224_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc224/submissions/77447852" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>愚直に考えると、$\times 1$ から順に試し、<code>string</code> 化して、<code>&quot;00&quot;</code> を含むか調べたくなる。<br>
+これにどのくらい計算量がかかるか考えてみる。</p>
+<p>どんなに遅くても、$\times 100$ （末尾 $2$ 桁が <code>&quot;00&quot;</code>）で発見される。<br>
+すなわち、各クエリ $100$ 回の調査で済む。</p>
+<p>$k \times i$ の桁数が最大 $11$ 桁なので、<code>&quot;00&quot;</code> を含むかどうかの調査は $10$ 回の処理で済むはず。</p>
+<p>ということで、計算量はおよそ $1000Q$ くらいである。<br>
+つまり、愚直解がそのまま通る。</p>
+<h2>入力例1での動作</h2>
+<p>$2$ つ目のテストケースのみ考える。</p>
+<p>入力を受け取る。</p>
+<pre><code>k: 6801</code></pre>
+<p>$i=1$ から順に、$k \times i$ の十進表記に <code>&quot;00&quot;</code> が含まれるか確認する。</p>
+<p>$i=1$ のとき、値は $6801$。<br>
+<code>&quot;6801&quot;</code> に <code>&quot;00&quot;</code> は含まれない。</p>
+<p>$i=2$ のとき、値は $13602$。<br>
+<code>&quot;13602&quot;</code> に <code>&quot;00&quot;</code> は含まれない。</p>
+<p>$i=3$ のとき、値は $20403$。<br>
+<code>&quot;20403&quot;</code> に <code>&quot;00&quot;</code> は含まれない。</p>
+<p>$i=4$ のとき、値は $27204$。<br>
+<code>&quot;27204&quot;</code> に <code>&quot;00&quot;</code> は含まれない。</p>
+<p>$i=5$ のとき、<code>num=34005</code>。<br>
+<code>&quot;34005&quot;</code> に <code>&quot;00&quot;</code> が含まれるので、これを答えとしてループを終了する。</p>
+<p>以上より、答えは $34005$ である。</p>
+<h2>注意点</h2>
+<p>答えは、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> データ探索系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-c.html">ABC461 C - Variety</a></li><li><a href="../explanations/abc462-e.html">ABC462 E - Alternating Costs</a></li><li><a href="../explanations/abc463-d.html">ABC463 D - Maximize the Gap</a></li><li><a href="../explanations/arc223-a.html">ARC223 A - Unusual-Constraint Knapsack</a></li><li><a href="../explanations/arc224-b.html">ARC224 B - Adjacent Tiles</a></li><li><a href="../explanations/arc224-c.html">ARC224 C - Ascending Labels</a></li><li><a href="../explanations/arc224-d.html">ARC224 D - Angst for All Pairs</a></li><li><a href="../explanations/arc224-e.html">ARC224 E - ABC|AB|A</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

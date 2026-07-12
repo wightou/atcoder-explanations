@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>貪欲法</title>
+<title>ARC224 C - Ascending Labels</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,49 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>貪欲法</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <h1>ARC224 C - Ascending Labels</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc224/tasks/arc224_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc224/submissions/77447859" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>小さい数が大量にあると、隣接の中に $1$ 小さい値が複数あって条件に反する危険が大きい。<br>
+ということで、頂点 $1$ の値を $0$ を決めた後で、以下をループして貪欲に埋めていけばよい。</p>
+<ul>
+<li>まだ数を決めていない頂点の中で、隣接頂点に書かれている数の最大値が最も大きいものを選ぶ</li>
+<li>その最大値に $1$ を加えた数を、その頂点の値に決める</li>
+</ul>
+<p>さて、これで、どの頂点も隣接に自身より $1$ 小さい値が少なくとも $1$ つ存在することは保証される。<br>
+あとは、それが $2$ つ以上になることがないことを示せばよい。</p>
+<p>仮に、頂点 $X$ の隣接である $Y,Z$ が $1$ 小さい値をもつという状態が発生したとしよう。</p>
+<p>この $3$ つの中で、最後に追加したのが $X$ であることはありえない。<br>
+なぜなら、$Y$ と $Z$ の片方が決まった段階で $X$ が選択肢に入ってくるから。<br>
+$X$ を $Y$ の値より $1$ 大きい値に決める選択肢にあるのに、先に $Z$ が $Y$ と同じ値に決まることはない。</p>
+<p>しかし、最後に追加したのが $Y$ であることもありえない。<br>
+なぜなら、$Y$ は $X$ に隣接しているので、$Y$ が $X$ より $1$ 小さい値に決まることはありえない。<br>
+$Z$ についても同様。</p>
+<p>したがって、そのような状態が発生すると、決定順位に必ず矛盾が発生する。<br>
+すなわち、そのような状況は絶対に発生しない。</p>
+<p>ということで、冒頭に述べた貪欲法で構成していけばよい。<br>
+そして、実のところ、これはただの深さ優先探索であり、計算量は $O\left(\sum (N+M)\right)$ である。</p>
+<h2>入力例1での動作</h2>
+<p>ただの深さ優先探索なので省略。</p>
+<h2>注意点</h2>
+<p>再帰による深さ優先探索では、言語によっては再帰が深くなりすぎてエラーする場合がある。<br>
+その場合は、<code>stack</code> を用いる方の実装にする必要がある。</p>
+<p>C++では、この程度では何も問題ないようである。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> データ探索系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-c.html">ABC461 C - Variety</a></li><li><a href="../explanations/abc462-e.html">ABC462 E - Alternating Costs</a></li><li><a href="../explanations/abc463-d.html">ABC463 D - Maximize the Gap</a></li><li><a href="../explanations/arc223-a.html">ARC223 A - Unusual-Constraint Knapsack</a></li><li><a href="../explanations/arc224-b.html">ARC224 B - Adjacent Tiles</a></li><li><a href="../explanations/arc224-c.html">ARC224 C - Ascending Labels</a></li><li><a href="../explanations/arc224-d.html">ARC224 D - Angst for All Pairs</a></li><li><a href="../explanations/arc224-e.html">ARC224 E - ABC|AB|A</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+<a class="tag" href="../tags/adjacency-list.html">隣接リスト</a>
+<a class="tag" href="../tags/dfs.html">深さ優先探索</a>
+<a class="tag" href="../tags/greedy.html">貪欲法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

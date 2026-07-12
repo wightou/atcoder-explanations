@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC224 B - Adjacent Tiles</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ARC224 B - Adjacent Tiles</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc224/tasks/arc224_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc224/submissions/77447855" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>まず、角度が異なる正方形が存在することは考えなくてよい。<br>
+というのは、そのような並べ方は以下の方法で、同じスコアのまま角度を揃えられるため。</p>
+<ul>
+<li>その並べ方を同じ角度のものごとに分離する</li>
+<li>分離成分ごとにまとめて回転し、正方形の向きを同じにそろえる</li>
+</ul>
+<p>また、同様に、中途半端に辺を共有している正方形が存在することも考えなくてよい。<br>
+ということで、全て格子点を頂点にもつ正方形のみで考える。</p>
+<p>$N$ 個の正方形には、左辺が $N$ 個、上辺が $N$ 個ある。<br>
+このうち隣接に使われている個数が、隣接ペア数である。<br>
+そして、隣接ペア数が最大というのは、非隣接辺数が最小ということ。<br>
+つまり、この $2N$ 個の辺から、なるべく非隣接辺を生まない並べ方を考えればよい。</p>
+<p>正方形の存在範囲が、縦幅 $H$、横幅 $W$ であるとする。<br>
+$2N$ 個の辺のうち、少なくとも $H$ 個の左辺と少なくとも $W$ 個の上辺は必ず非隣接である。<br>
+そして、例えば存在範囲の左上から貪欲に詰めていけば、非隣接が $H+W$ 個で済む解が構成できる。<br>
+よって、縦幅 $H$、横幅 $W$ である物の中では、非隣接辺最小値は $H+W$ である。</p>
+<p>ここまで来れば、あとは「$HW \geq N$ である $H,W$ の中で $H+W$ の最小値は？」という問題。<br>
+$H+W$ が同じ値を取る中では $|H-W|$ が小さい方が積 $HW$ は大きくなる。<br>
+よって、$|H-W|$ が $0$ か $1$ のもののみ考えればよい。<br>
+$H \geq W$ としてもよいので、この問題は結局以下の順で解ける。</p>
+<ul>
+<li>$H^2 \geq N$ となる最小の $H$ を探す</li>
+<li>$H(H-1) \geq N$ ならば $W=H-1$、そうでなければ $W=H$ とする。</li>
+<li>非隣接辺の個数の最小値 $H+W$ を出す</li>
+</ul>
+<p>最後に、忘れずに $2N$ からそれを引けば、元の問題の答え。<br>
+計算量はテストケース当たり $O(1)$、全体で $O(T)$。</p>
+<h2>動作例</h2>
+<p>$N=18$ の場合を考える。</p>
+<pre><code>n: 18</code></pre>
+<p>まず、<code>h</code> を $\sqrt{n}$ 以上の最小の整数にする。</p>
+<p>$\sqrt{18}$ の整数部分は $4$ であり、$4^2&lt;18$ なので、$h = 5$ とする。</p>
+<p>次に、$5 \times 4 = 20$ が $18$ 以上なので、$w = h-1 = 4$ とする。</p>
+<p>各タイルの左辺と上辺を数えると、全部で $2n = 36$ 本ある。<br>
+そのうち、隣接に使われない辺は合計 $h+w = 9$ 本である。</p>
+<p>したがって、隣接に使われる辺の本数は、$2n-h-w = 36-5-4 = 27$ となる。</p>
+<p>以上より、答えは $27$ である。</p>
+<h2>注意点</h2>
+<p>$N$ や答えは、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+<a class="tag" href="../tags/greedy.html">貪欲法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

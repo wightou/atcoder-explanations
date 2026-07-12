@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>貪欲法</title>
+<title>ARC224 D - Angst for All Pairs</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,60 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>貪欲法</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <h1>ARC224 D - Angst for All Pairs</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc224/tasks/arc224_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc224/submissions/77447861" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ある数に着目し、各カードにその数が書いてあれば <code>1</code>、書いていなければ <code>0</code> を対応させる。<br>
+すると、書き込みパターンは $N$ 桁の二進数で表現できる。<br>
+条件の、片方のみが書かれているカードが存在というのは、この二進数が異なることに他ならない。</p>
+<p>これに気づけば、ただの簡単な貪欲法である。<br>
+$0$ から $2^N-1$ までの書き込みパターンの中で、<code>1</code> が少ないものを桁数が多い数に割り当てればよい。<br>
+<code>1</code> の個数が $i$ 個である書き込みパターンの個数は、二項係数 ${}_N\mathrm{C}_i$ として求められる。</p>
+<p>$0$ から $2^N-1$ までを全部使い切っても足りない場合は、不可能なので $-1$ を出力。</p>
+<p>同じ桁数のものをまとめて処理すれば高速であるが、愚直にやっても $O\left(\sum K\right)$ なので十分間に合う。</p>
+<h2>入力例1での動作</h2>
+<p>$1$ つ目のテストケースのみ考える。</p>
+<p>入力を受け取る。</p>
+<pre><code>n: 3
+k: 5</code></pre>
+<p><code>result=0</code> とする。</p>
+<p>まず、$i=0$ の場合を考える。<br>
+カードを $0$ 枚使うパターンは、${}_3\mathrm{C}_0=1$ 個ある。<br>
+このパターンを、まだ割り当てていない最大の値 <code>5</code> に割り当てる。</p>
+<p>カードを $0$ 枚使い、<code>5</code> は $1$ 桁なので、<code>result</code> に $0\times 1=0$ を加える。<br>
+<code>k=4</code> となる。</p>
+<p>次に、$i=1$ の場合を考える。<br>
+カードを $1$ 枚使うパターンは、${}_3\mathrm{C}_1=3$ 個ある。<br>
+これらを、<code>4</code>, <code>3</code>, <code>2</code> に割り当てる。</p>
+<p>いずれも $1$ 桁なので、<code>result</code> に、</p>
+<p>$$<br>
+1\times 1+1\times 1+1\times 1=3<br>
+$$</p>
+<p>を加える。<br>
+<code>result=3</code>, <code>k=1</code> となる。</p>
+<p>次に、$i=2$ の場合を考える。<br>
+カードを $2$ 枚使うパターンは、${}_3\mathrm{C}_2=3$ 個ある。<br>
+しかし、まだ割り当てていない値は <code>1</code> だけなので、$1$ パターンだけ使用する。</p>
+<p><code>1</code> は $1$ 桁なので、<code>result</code> に $2\times 1=2$ を加える。<br>
+<code>result=5</code>, <code>k=0</code> となる。</p>
+<p>すべての値への割り当てが終わったので、答えは $5$ である。</p>
+<h2>注意点</h2>
+<p>答えは、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> データ探索系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-c.html">ABC461 C - Variety</a></li><li><a href="../explanations/abc462-e.html">ABC462 E - Alternating Costs</a></li><li><a href="../explanations/abc463-d.html">ABC463 D - Maximize the Gap</a></li><li><a href="../explanations/arc223-a.html">ARC223 A - Unusual-Constraint Knapsack</a></li><li><a href="../explanations/arc224-b.html">ARC224 B - Adjacent Tiles</a></li><li><a href="../explanations/arc224-c.html">ARC224 C - Ascending Labels</a></li><li><a href="../explanations/arc224-d.html">ARC224 D - Angst for All Pairs</a></li><li><a href="../explanations/arc224-e.html">ARC224 E - ABC|AB|A</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/permutation-and-combination.html">順列組み合わせ</a>
+<a class="tag" href="../tags/binomial-coefficient.html">二項係数</a>
+<a class="tag" href="../tags/greedy.html">貪欲法</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">
