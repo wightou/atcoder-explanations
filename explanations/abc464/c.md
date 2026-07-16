@@ -7,7 +7,6 @@ problem_url: https://atcoder.jp/contests/abc464/tasks/abc464_c
 submission_url: https://atcoder.jp/contests/abc464/submissions/77039504
 tags:
   - 差分更新
-  - イベントソート
   - シミュレーション
 tag_note: B問題以下レベルの内容は省略。
 ---

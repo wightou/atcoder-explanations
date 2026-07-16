@@ -139,7 +139,7 @@ bitDP
 
 旧 slug `two-pointers` は `create_knowledge_stubs.py` 実行時に `shakutori-method` へリネームする。旧 v41 / v42 の `knowledge/sliding-window.md` が `title: 尺取法` の場合も、本文を保持して `knowledge/shakutori-method.md` へ条件付きリネームする。
 
-`Moアルゴリズム`、`平方分割`、`分割統治法` は `高速化系` として扱う。`イベントソート` と `貪欲法` は `データ探索系` として扱う。
+`Moアルゴリズム`、`平方分割`、`分割統治法` は `高速化系` として扱う。`貪欲法` は `データ探索系` として扱う。`イベントソート` は独立記事を作らず、`シミュレーション` の `absorbs` で吸収する。
 
 ### `summary`
 

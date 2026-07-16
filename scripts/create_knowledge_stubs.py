@@ -76,7 +76,7 @@ STUBS: list[KnowledgeStub] = [
     k("mathematical-expression", "数学的表現", "難易度問わず", "基本"),
     k("constructive-problem", "構築問題", "難易度問わず", "基本"),
     k("ad-hoc-thinking", "考察問題", "難易度問わず", "基本"),
-    k("simulation", "シミュレーション", "難易度問わず", "基本"),
+    k("simulation", "シミュレーション", "難易度問わず", "基本", absorbs=["イベントソート"]),
     k("corner-case", "コーナーケース", "難易度問わず", "基本"),
     k("divide-and-conquer", "分割統治法", "難易度問わず", "高速化系"),
     k("number-theory", "整数論", "難易度問わず", "その他数学系"),
@@ -121,7 +121,6 @@ STUBS: list[KnowledgeStub] = [
     k("base-n", "N進法", "B問題相当", "その他数学系"),
     k("bit-operation", "ビット演算", "B問題相当", "その他数学系", absorbs=["ビットシフト"]),
     k("brute-force", "全探索", "B問題相当", "データ探索系"),
-    k("event-sort", "イベントソート", "B問題相当", "データ探索系"),
     k("grid-operation", "グリッド操作", "B問題相当", "基本", absorbs=["グリッド回転"]),
     k("sentinel", "番兵法", "B問題相当", "基本"),
 

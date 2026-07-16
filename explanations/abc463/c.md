@@ -6,7 +6,7 @@ problem_title_ja: "各瞬間のノッポ"
 problem_url: https://atcoder.jp/contests/abc463/tasks/abc463_c
 submission_url: https://atcoder.jp/contests/abc463/submissions/76862467
 tags:
-  - イベントソート
+  - シミュレーション
 tag_note: B問題以下レベルの内容は省略。
 ---
 
