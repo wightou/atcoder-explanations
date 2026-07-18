@@ -164,6 +164,7 @@ STUBS: list[KnowledgeStub] = [
 
     # D問題相当
     k("dynamic-programming", "動的計画法", "D問題相当", "高速化系", aliases=["DP"]),
+    k("backtrace", "バックトレース", "D問題相当", "データ探索系", aliases=["経路復元", "解の復元"], related=["動的計画法", "最短経路問題"]),
     k("knapsack-problem", "ナップサック問題", "D問題相当", "典型問題集", aliases=["knapsack", "0/1ナップサック"], related=["動的計画法"]),
     k("interval-scheduling-problem", "区間スケジューリング問題", "C問題相当", "典型問題集", aliases=["interval scheduling"], related=["貪欲法", "ソート"]),
     k("shortest-path-problem", "最短経路問題", "D問題相当", "典型問題集", aliases=["迷路の最短経路", "shortest path"], related=["幅優先探索", "Dijkstra法", "Warshall-Floyd法"]),
