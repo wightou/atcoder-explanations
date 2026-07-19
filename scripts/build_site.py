@@ -157,6 +157,31 @@ IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".avif"}
 SIDEBAR_KNOWLEDGE_PAGES: list["KnowledgePage"] = []
 TAG_SLUG_MAP: dict[str, str] = {}
 
+TABLE_TEXT_COLORS = {
+    "red": "#b42318",
+    "coral": "#b53a32",
+    "orange": "#9a3412",
+    "amber": "#7a5200",
+    "yellow": "#713f12",
+    "olive": "#5f5b00",
+    "lime": "#4d7c0f",
+    "green": "#15803d",
+    "emerald": "#047857",
+    "teal": "#0f766e",
+    "cyan": "#0e7490",
+    "blue": "#1d4ed8",
+    "navy": "#1e3a5f",
+    "indigo": "#4338ca",
+    "violet": "#6d28d9",
+    "purple": "#7e22ce",
+    "magenta": "#a21caf",
+    "rose": "#be123c",
+    "pink": "#be185d",
+    "brown": "#6f4e37",
+    "gray": "#475569",
+    "black": "#111827",
+}
+
 CATEGORY_ORDER = [
     "基本",
     "変数とデータ構造",
@@ -567,6 +592,52 @@ def render_inline(s: str) -> str:
     s = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', s)
     return s
 
+
+def split_table_text_color_marker(cell: str) -> tuple[str | None, str]:
+    """表セル先頭の `{red}` 形式を取り出す。未対応色は通常文字列として残す。"""
+    match = re.match(r"^\{([a-z]+)\}\s*", cell, flags=re.I)
+    if match is None:
+        return None, cell
+    color = match.group(1).lower()
+    if color not in TABLE_TEXT_COLORS:
+        return None, cell
+    return color, cell[match.end():]
+
+
+def append_html_class(attrs: str, class_name: str) -> str:
+    """HTML開始タグの属性文字列へ class を安全に追記する。"""
+    class_match = re.search(r'\bclass=(["\'])(.*?)\1', attrs, flags=re.I | re.S)
+    if class_match is None:
+        return attrs + f' class="{class_name}"'
+    current = class_match.group(2).split()
+    if class_name in current:
+        return attrs
+    updated = " ".join([*current, class_name])
+    return attrs[:class_match.start(2)] + updated + attrs[class_match.end(2):]
+
+
+def apply_table_text_colors_to_html(html: str) -> str:
+    """Python-Markdown が生成した th / td の先頭色指定を CSS class に変換する。"""
+    color_pattern = "|".join(map(re.escape, TABLE_TEXT_COLORS))
+    pattern = re.compile(
+        rf"<(?P<tag>th|td)(?P<attrs>[^>]*)>(?P<space>\s*)\{{(?P<color>{color_pattern})\}}\s*",
+        flags=re.I,
+    )
+
+    def replace(match: re.Match[str]) -> str:
+        tag = match.group("tag")
+        attrs = append_html_class(match.group("attrs"), f'table-text-{match.group("color").lower()}')
+        return f'<{tag}{attrs}>{match.group("space")}'
+
+    return pattern.sub(replace, html)
+
+
+def table_cell_html(tag: str, cell: str) -> str:
+    color, content = split_table_text_color_marker(cell)
+    class_attr = f' class="table-text-{color}"' if color else ""
+    return f"<{tag}{class_attr}>" + render_inline(content) + f"</{tag}>"
+
+
 def is_markdown_table_separator(line: str) -> bool:
     parts = [part.strip() for part in line.strip().strip("|").split("|")]
     if not parts:
@@ -590,7 +661,7 @@ def render_markdown_table(table_lines: list[str]) -> str:
 
     out = ['<div class="markdown-table-scroll"><table>', "<thead><tr>"]
     for cell in header:
-        out.append("<th>" + render_inline(cell) + "</th>")
+        out.append(table_cell_html("th", cell))
     out.append("</tr></thead>")
 
     if body_rows:
@@ -599,7 +670,7 @@ def render_markdown_table(table_lines: list[str]) -> str:
             out.append("<tr>")
             for i in range(len(header)):
                 cell = row[i] if i < len(row) else ""
-                out.append("<td>" + render_inline(cell) + "</td>")
+                out.append(table_cell_html("td", cell))
             out.append("</tr>")
         out.append("</tbody>")
 
@@ -712,12 +783,14 @@ def markdown_needs_mathjax(body_md: str) -> bool:
 def markdown_to_html(body_md: str) -> str:
     body_md = remove_duplicate_top_h1(body_md)
     if markdown_lib is not None:
-        return markdown_lib.markdown(
+        html = markdown_lib.markdown(
             body_md,
             extensions=["extra", "toc", "fenced_code", "tables", "sane_lists", "nl2br"],
             output_format="html5",
         )
-    return fallback_markdown_to_html(body_md)
+    else:
+        html = fallback_markdown_to_html(body_md)
+    return apply_table_text_colors_to_html(html)
 
 
 def markdown_to_plain_text(body_md: str) -> str:
@@ -1922,6 +1995,16 @@ def copy_page_assets(pages: list[ExplanationPage] | list[KnowledgePage], out_dir
 
 
 def write_css(out_dir: Path) -> None:
+    table_color_variables = "\n".join(
+        f"  --table-text-{name}: {value};" for name, value in TABLE_TEXT_COLORS.items()
+    )
+    table_color_rules = "\n".join(
+        (
+            f".markdown-body .table-text-{name},\n"
+            f".markdown-body .table-text-{name} a {{ color: var(--table-text-{name}); }}"
+        )
+        for name in TABLE_TEXT_COLORS
+    )
     css = """
 :root {
   --bg: #f5f8fc;
@@ -1937,6 +2020,7 @@ def write_css(out_dir: Path) -> None:
   --accent-2: #14b8a6;
   --tag-bg: #e9f3ff;
   --tag-border: #bfdbfe;
+__TABLE_TEXT_COLOR_VARIABLES__
 }
 
 * { box-sizing: border-box; }
@@ -2141,6 +2225,9 @@ a:hover {
   font-weight: 700;
   text-align: center;
 }
+
+/* 表セル先頭の `{red}` などを文字色へ変換する。 */
+__TABLE_TEXT_COLOR_RULES__
 
 .markdown-table-scroll {
   overflow-x: auto;
@@ -2588,6 +2675,8 @@ a:hover {
   }
 }
 """
+    css = css.replace("__TABLE_TEXT_COLOR_VARIABLES__", table_color_variables)
+    css = css.replace("__TABLE_TEXT_COLOR_RULES__", table_color_rules)
     (out_dir / "style.css").write_text(css.lstrip(), encoding="utf-8")
 
 

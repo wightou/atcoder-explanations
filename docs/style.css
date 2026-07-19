@@ -12,6 +12,28 @@
   --accent-2: #14b8a6;
   --tag-bg: #e9f3ff;
   --tag-border: #bfdbfe;
+  --table-text-red: #b42318;
+  --table-text-coral: #b53a32;
+  --table-text-orange: #9a3412;
+  --table-text-amber: #7a5200;
+  --table-text-yellow: #713f12;
+  --table-text-olive: #5f5b00;
+  --table-text-lime: #4d7c0f;
+  --table-text-green: #15803d;
+  --table-text-emerald: #047857;
+  --table-text-teal: #0f766e;
+  --table-text-cyan: #0e7490;
+  --table-text-blue: #1d4ed8;
+  --table-text-navy: #1e3a5f;
+  --table-text-indigo: #4338ca;
+  --table-text-violet: #6d28d9;
+  --table-text-purple: #7e22ce;
+  --table-text-magenta: #a21caf;
+  --table-text-rose: #be123c;
+  --table-text-pink: #be185d;
+  --table-text-brown: #6f4e37;
+  --table-text-gray: #475569;
+  --table-text-black: #111827;
 }
 
 * { box-sizing: border-box; }
@@ -216,6 +238,52 @@ a:hover {
   font-weight: 700;
   text-align: center;
 }
+
+/* 表セル先頭の `{red}` などを文字色へ変換する。 */
+.markdown-body .table-text-red,
+.markdown-body .table-text-red a { color: var(--table-text-red); }
+.markdown-body .table-text-coral,
+.markdown-body .table-text-coral a { color: var(--table-text-coral); }
+.markdown-body .table-text-orange,
+.markdown-body .table-text-orange a { color: var(--table-text-orange); }
+.markdown-body .table-text-amber,
+.markdown-body .table-text-amber a { color: var(--table-text-amber); }
+.markdown-body .table-text-yellow,
+.markdown-body .table-text-yellow a { color: var(--table-text-yellow); }
+.markdown-body .table-text-olive,
+.markdown-body .table-text-olive a { color: var(--table-text-olive); }
+.markdown-body .table-text-lime,
+.markdown-body .table-text-lime a { color: var(--table-text-lime); }
+.markdown-body .table-text-green,
+.markdown-body .table-text-green a { color: var(--table-text-green); }
+.markdown-body .table-text-emerald,
+.markdown-body .table-text-emerald a { color: var(--table-text-emerald); }
+.markdown-body .table-text-teal,
+.markdown-body .table-text-teal a { color: var(--table-text-teal); }
+.markdown-body .table-text-cyan,
+.markdown-body .table-text-cyan a { color: var(--table-text-cyan); }
+.markdown-body .table-text-blue,
+.markdown-body .table-text-blue a { color: var(--table-text-blue); }
+.markdown-body .table-text-navy,
+.markdown-body .table-text-navy a { color: var(--table-text-navy); }
+.markdown-body .table-text-indigo,
+.markdown-body .table-text-indigo a { color: var(--table-text-indigo); }
+.markdown-body .table-text-violet,
+.markdown-body .table-text-violet a { color: var(--table-text-violet); }
+.markdown-body .table-text-purple,
+.markdown-body .table-text-purple a { color: var(--table-text-purple); }
+.markdown-body .table-text-magenta,
+.markdown-body .table-text-magenta a { color: var(--table-text-magenta); }
+.markdown-body .table-text-rose,
+.markdown-body .table-text-rose a { color: var(--table-text-rose); }
+.markdown-body .table-text-pink,
+.markdown-body .table-text-pink a { color: var(--table-text-pink); }
+.markdown-body .table-text-brown,
+.markdown-body .table-text-brown a { color: var(--table-text-brown); }
+.markdown-body .table-text-gray,
+.markdown-body .table-text-gray a { color: var(--table-text-gray); }
+.markdown-body .table-text-black,
+.markdown-body .table-text-black a { color: var(--table-text-black); }
 
 .markdown-table-scroll {
   overflow-x: auto;

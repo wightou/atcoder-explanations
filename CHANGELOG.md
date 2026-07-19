@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v63
+
+- Markdown表のセル文字色を指定できる独自記法を追加。
+  - セルの先頭に `{red}` のような色指定を書くと、そのセル内の文字色を変更する。
+  - 見出しセルと通常セルの両方に対応。
+  - `markdown` パッケージ使用時と簡易フォールバック変換時の両方で同じ表示になる。
+- 白いセル背景と薄青色の見出し背景の双方で読みやすい、22色のパレットを追加。
+  - `red`, `coral`, `orange`, `amber`, `yellow`, `olive`, `lime`, `green`, `emerald`, `teal`, `cyan`, `blue`, `navy`, `indigo`, `violet`, `purple`, `magenta`, `rose`, `pink`, `brown`, `gray`, `black`
+- 未対応の色名は変換せず、記述ミスを画面上で確認できるようにした。
+
 ## v62
 
 - `バックトレース` を独立した知識記事の生成対象として復活。

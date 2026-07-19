@@ -151,6 +151,19 @@ related:
 ### Markdown表示
 
 - Markdown表に対応しています。
+- 表セルの先頭に色指定を書くと、そのセル内の文字色を変更できます。
+  - 例:
+
+    ```md
+    | 値1 | 値2 |
+    |---|---|
+    | {red}$5$ | {blue}`3` |
+    ```
+  - 色指定はセルの先頭に置き、`{色名}` の直後に通常どおりセル内容を書きます。
+  - 見出しセルと通常セルの両方で使用できます。
+  - 対応色: `red`, `coral`, `orange`, `amber`, `yellow`, `olive`, `lime`, `green`, `emerald`, `teal`, `cyan`, `blue`, `navy`, `indigo`, `violet`, `purple`, `magenta`, `rose`, `pink`, `brown`, `gray`, `black`
+  - 未対応の色名は変換されず、`{色名}` がそのまま表示されます。
+  - 色だけに説明を依存させず、必要なら本文で色の意味も説明します。
 - Markdown画像記法に対応しています。
   - 例: `explanations/abc463/e.md` から同じディレクトリの `e1.png` を使う場合、本文に `![説明](e1.png)` と書きます。
   - 生成時に `docs/explanations/abc463/e1.png` へコピーし、HTML側の参照パスを自動補正します。
