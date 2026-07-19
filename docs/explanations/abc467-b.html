@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>if分岐</title>
+<title>ABC467 B - Keep the Change</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,49 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>if分岐</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <h1>ABC467 B - Keep the Change</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc467/tasks/abc467_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc467/submissions/77654138" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>問題文の通りにシミュレーションをしてもよいが、実際に買い物をする様子を想像すればもっと簡単。<br>
+要するに、辞退したおつりの合計額を出せばよいだけである。</p>
+<p>つまり、各買い物について、以下を行うだけでよい。</p>
+<ul>
+<li>まず、$S$ が <code>&quot;keep&quot;</code> かどうかを確認</li>
+<li>違ったらこの時点で次の買い物へ</li>
+<li><code>&quot;keep&quot;</code> だった場合、$B$ から $A$ を引いておつり額を出し、結果に加える</li>
+</ul>
+<p>なお、最初に $10000$ 円という数値があるが、これは全買い物で所持金が不足しないと言っているだけ。<br>
+大した意味はない。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 3
+a: {1, 3, 5}
+b: {2, 6, 9}
+s: {&quot;keep&quot;, &quot;take&quot;, &quot;keep&quot;}</code></pre>
+<p>答え用の変数 <code>result</code> を <code>0</code> で初期化する。</p>
+<pre><code>result: 0</code></pre>
+<p>$i=0$ のとき、<code>s[0]</code> は <code>&quot;keep&quot;</code> である。</p>
+<p><code>b[0]-a[0]</code> は $2-1=1$ なので、<code>result</code> に <code>1</code> を加える。</p>
+<pre><code>result: 1</code></pre>
+<p>$i=1$ のとき、<code>s[1]</code> は <code>&quot;take&quot;</code> である。</p>
+<p><code>result</code> は変更しない。</p>
+<pre><code>result: 1</code></pre>
+<p>$i=2$ のとき、<code>s[2]</code> は <code>&quot;keep&quot;</code> である。</p>
+<p><code>b[2]-a[2]</code> は $9-5=4$ なので、<code>result</code> に <code>4</code> を加える。</p>
+<pre><code>result: 5</code></pre>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 基本</p>
-      <p><strong>難易度:</strong> A問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-a.html">ABC461 A - Armor</a></li><li><a href="../explanations/abc462-a.html">ABC462 A - Secret Numbers</a></li><li><a href="../explanations/abc463-a.html">ABC463 A - 16:9</a></li><li><a href="../explanations/abc464-a.html">ABC464 A - Decisive Battle</a></li><li><a href="../explanations/abc465-a.html">ABC465 A - Supermajority</a></li><li><a href="../explanations/abc466-a.html">ABC466 A - Compromise</a></li><li><a href="../explanations/abc467-a.html">ABC467 A - Obesity</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <span class="muted">なし</span>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

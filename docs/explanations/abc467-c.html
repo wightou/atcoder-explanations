@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC467 C - Adjacent Sums (easy)</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ABC467 C - Adjacent Sums (easy)</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc467/tasks/abc467_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc467/submissions/77654759" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc467/submissions/77654715" target="_blank" rel="noopener noreferrer">E問題にも通る解法</a></div>
+    <h2>考え方</h2>
+<p>まず、前提として。<br>
+E問題と $M$ の制約が違うだけで、しかも $M=2$ のときだけ特殊な対応が必要になるわけでもない。<br>
+よって、E問題が解ける人は、あちらを解いて、そのコードをそのままC問題にも投げるだけである。</p>
+<p>以下は、E問題は見なかったことにしてまずは $M=2$ 固定で解こうとする人用の解説。</p>
+<p>各数に何回操作を行うかは $0$ か $1$ の $2$ 通りだけ考えればよい。<br>
+$2$ 回以上行うのは $2$ で割った余りに影響がないまま無意味に操作回数を増やしているだけである。<br>
+よって、全体で $2^N$ 通りのパターンを考えることになるが、これを全探索するのは間に合わない。<br>
+そこで、高速化を考える。</p>
+<p>例えば、先頭の $A_1$ には操作を $D_1$ 回、次の $A_2$ には操作を $D_2$ 回行うとする。<br>
+このとき、$A_1+D_1+A_2+D_2$ を $2$ で割った余りが $B_1$ でなければならない。<br>
+つまり、$D_2$ は $B_1-A_1-D_1-A_2$ を $2$ で割った余りになっていなければならないのである。<br>
+（C++の場合、負数の剰余の仕様が単純な $\mod$ 演算になっていないため、実装時に注意）<br>
+このように考えると、実は $D_1$ を決めた時点で $D_2$ にはすでに選択の余地がない。</p>
+<p>この先も、$D_2$ を決めた時点で $D_3$ にはすでに選択の余地がなく、以下すべて同様。<br>
+つまり、全探索の自由度は $D_1$ を $0$ にするか $1$ にするかの $2$ 通りしかない。</p>
+<p>ということで、まずは $D_1=0$ の方がこの方法で $O(N)$ で調査できる。<br>
+$D_1=1$ の方は $O(N)$ 同じようにもう一度調査してもよいし、$D_1=0$ の場合の解を利用してもよい。<br>
+（$0$ or $1$ が入れ替わるだけなので、$D_1=0$ の結果を $N$ から引けば $D_1=1$ の方の答え）<br>
+小さい方がこの問題の答えである。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 3
+m: 2
+a: {1, 1, 1}
+b: {1, 1}</code></pre>
+<p>先頭の値に $1$ すら足さない場合に、各値へ何回足すかを記録する配列 <code>d</code> を、すべて $0$ で初期化する。</p>
+<pre><code>d: {0, 0, 0}</code></pre>
+<p>$i=1$ のとき、$b[0]-a[1]-a[0]-d[0] = 1-1-1-0 = -1$ を $m$ で割った余りは $1$ なので <code>d[1]=1</code> とする。</p>
+<pre><code>d: {0, 1, 0}</code></pre>
+<p>$i=2$ のとき、$b[1]-a[2]-a[1]-d[1] = 1-1-1-1 = -2$ を $m$ で割った余りは $0$ なので <code>d[2]=0</code> とする。</p>
+<pre><code>d: {0, 1, 0}</code></pre>
+<p><code>d</code> の要素の合計である $1$ が、先頭の値に $1$ を足さない場合の操作回数である。<br>
+また、それを $N$ から引いた $2$ が、先頭の値に $1$ を足す場合の操作回数である。<br>
+小さい方である $1$ が答え。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

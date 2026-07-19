@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>if分岐</title>
+<title>ABC467 A - Obesity</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,45 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>if分岐</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <h1>ABC467 A - Obesity</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc467/tasks/abc467_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc467/submissions/77654066" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>入力は整数が $2$ つなので、<code>int</code> 型の変数を $2$ つ用意し、<code>cin</code> で入力を受け取る。</p>
+<p>さて、問題の単位を適切に変換すると、$W \div \left( \dfrac{H}{100} \right)^2 \geq 25$ であるか判定すればよい。<br>
+しかしここに $1$ つ罠がある。<br>
+プログラムは小数の扱いが苦手で、非常に細かい誤差が発生することがある。<br>
+そのため、等号や不等号の成立判定を、一部の値で間違えてしまう。<br>
+今回も、$H$ を $100$ で割ったり、$W$ をその $2$ 乗で割ったりすると、不等号判定の正確性が信頼できない。</p>
+<p>そこで、分数の割り算を逆数の掛け算に変えて分母を払った $10000W \geq 25H^2$ で判定を行う。<br>
+これを if 文の判定に書き、出力する文字列を決定する。</p>
+<p>if 文の中で直接 <code>cout</code> してもいいし、事前に出力用文字列を用意してもよい。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>h: 180
+w: 60</code></pre>
+<p>答え用の変数 <code>result</code> を <code>&quot;No&quot;</code> で初期化する。</p>
+<pre><code>result: &quot;No&quot;</code></pre>
+<p><code>w*10000</code> は $600000$、<code>25*h*h</code> は $810000$ である。</p>
+<p>$600000$ は $810000$ 以上ではないので、<code>result</code> は変更しない。</p>
+<pre><code>result: &quot;No&quot;</code></pre>
+<p>最後に、<code>result</code> を出力すればよい。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 基本</p>
-      <p><strong>難易度:</strong> A問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-a.html">ABC461 A - Armor</a></li><li><a href="../explanations/abc462-a.html">ABC462 A - Secret Numbers</a></li><li><a href="../explanations/abc463-a.html">ABC463 A - 16:9</a></li><li><a href="../explanations/abc464-a.html">ABC464 A - Decisive Battle</a></li><li><a href="../explanations/abc465-a.html">ABC465 A - Supermajority</a></li><li><a href="../explanations/abc466-a.html">ABC466 A - Compromise</a></li><li><a href="../explanations/abc467-a.html">ABC467 A - Obesity</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/input-output.html">入出力</a>
+<a class="tag" href="../tags/int.html">int型</a>
+<a class="tag" href="../tags/string.html">string型</a>
+<a class="tag" href="../tags/if-statement.html">if分岐</a>
+<a class="tag" href="../tags/arithmetic-operations.html">四則演算</a>
+      </div>
+      
     </section>
 
     <section class="side-card">
