@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC225 C - K Spanning Tree</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ARC225 C - K Spanning Tree</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc225/tasks/arc225_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc225/submissions/77683760" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>まず、重みの上限と下限を考える。</p>
+<p>重みの下限は、重み $1$ の辺を最低限いくつ使わなければならないかである。<br>
+つまり、重み $0$ の辺だけで Union-find 木を作り、連結成分数 $-1$ がその答えである。<br>
+また、その重みの全域木を作れるかという問いにも、簡単に作れるといえる。<br>
+重み $0$ の辺でできた連結成分ごとに木を作り、その森を重み $1$ の辺で連結すればいい。</p>
+<p>重みの上限は、重み $0$ の辺について同様に考えればよい。</p>
+<p>さて、では下限が $L$ で上限が $U$ だった場合に $L \leq x \leq U$ の範囲の重み $x$ の全域木が全て作れるか？<br>
+これは、可能である。<br>
+以下、証明。</p>
+<p>重み $L$ である全域木を $G_1$、重み $U$ である全域木を $G_2$、とする。<br>
+これらが作れることは証明済である。</p>
+<p>最初のグラフとして、$G_1$ を用意する。<br>
+ここに、グラフが $G_2$ に一致するまで以下を繰り返す。</p>
+<ul>
+<li>$G_2$ に含まれるが現在のグラフに含まれない辺を $1$ つ選び、現在のグラフに加える</li>
+<li>辺を加えたせいで、どこかにサイクルが発生している</li>
+<li>$G_2$ は木なので、サイクル中に $G_2$ に含まれない辺がある</li>
+<li>そのうち任意の $1$ つを取り除く</li>
+</ul>
+<p>この操作は $G_2$ に一致するまで続けることができ、重みは一度に最大 $1$ しか増減しない。<br>
+したがって、$L \leq x \leq U$ の範囲の重み $x$ の全域木は全て作れる。</p>
+<p>これで、<code>&quot;Yes&quot;</code> か <code>&quot;No&quot;</code> かで答える問題であれば解けた。<br>
+さて、では実際の構築を考える。<br>
+もちろん上の方法を実装できるならそれでもよいが、おそらく非常に難しい。</p>
+<p>ということで、作れることがわかっている前提での作り方を実行する。</p>
+<p>まず、重み $0$ の辺だけで Union-find 木を作ったとき、重み $1$ の辺が最低何本必要か考えた。<br>
+その最低限の個数の重み $1$ の辺の組の例を $1$ つ作り、それらの辺を全て採用する。<br>
+重み $1$ の辺だけで Union-find 木を作ったとき、重み $0$ の辺が最低何本必要かも考えた。<br>
+その最低限の個数の重み $0$ の辺の組の例を $1$ つ作り、それらの辺を全て採用する。</p>
+<p>この時点で、$K$ が作れる範囲の数であれば、重さ $0$ の辺も重さ $1$ の辺も個数が超過はしていない。<br>
+そして、残った連結成分は、重み $0$ の辺だけでも、重み $1$ の辺だけでも、他の連結成分と連結できる。<br>
+ということは残りは、各重みの残り本数に気をつけて、連結成分を新しく結べる辺を自由に選んでよい。<br>
+重み $0$ も重み $1$ も、全体の重みを $K$ にするための規定本数になったら構築終了。</p>
+<h2>入力例1での動作</h2>
+<p>入力例1の $1$ つ目のテストケースのみ考える。</p>
+<p>入力を受け取り、辺の両端を <code>0-indexed</code> に直す。</p>
+<pre><code>n: 4
+m: 5
+k: 2</code></pre>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th><code>i</code></th>
+<th><code>a[i]</code></th>
+<th><code>b[i]</code></th>
+<th><code>c[i]</code></th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$0$</td>
+<td>$0$</td>
+<td>$1$</td>
+<td>$0$</td>
+</tr>
+<tr>
+<td>$1$</td>
+<td>$0$</td>
+<td>$2$</td>
+<td>$0$</td>
+</tr>
+<tr>
+<td>$2$</td>
+<td>$1$</td>
+<td>$2$</td>
+<td>$0$</td>
+</tr>
+<tr>
+<td>$3$</td>
+<td>$3$</td>
+<td>$1$</td>
+<td>$1$</td>
+</tr>
+<tr>
+<td>$4$</td>
+<td>$3$</td>
+<td>$2$</td>
+<td>$1$</td>
+</tr>
+</tbody>
+</table></div>
+<p>$2$ つの Union-Find木 を作る。<br>
+重み $0$ の辺だけを加えた <code>d0</code> と、重み $1$ の辺だけを加えた <code>d1</code> を作る。<br>
+それぞれの連結成分は次のようになる。</p>
+<pre><code>d0: {0, 1, 2}, {3}
+d1: {0}, {1, 2, 3}</code></pre>
+<p><code>d0</code> の連結成分数が $2$ なので、重み $1$ の辺が最低 $1$ 本必要。<br>
+<code>d1</code> の連結成分数が $2$ なので、重み $0$ の辺が最低 $1$ 本必要。<br>
+よって、全域木を作る $3$ 本の辺の重み合計は、$1$ 以上 $2$ 以下となる。<br>
+今回は $2$ であるため、作成可能ということになる。</p>
+<p>重み $0$ の辺の残り本数を <code>count0</code> $=1$、重み $1$ の辺の残り本数を <code>count1</code> $=2$ とする。</p>
+<p>最終結果用の Union-Find木 <code>d</code> を作る。</p>
+<p>まず、最低限必要な辺を確保する。</p>
+<p>辺 $0$ は重み $0$ であり、<code>d1</code> では頂点 $0$ と頂点 $1$ が連結でないので採用する。<br>
+<code>result</code> に $0$ を追加し、<code>count0</code> $=0$ とする。<br>
+<code>d</code> と <code>d1</code> で、頂点 $0$ と頂点 $1$ を連結させる。</p>
+<p>辺 $1$ と $2$ は、重み $0$ で、<code>d1</code> 上で既に連結になっているので見送る。</p>
+<p>辺 $3$ は重み $1$ であり、<code>d0</code> では頂点 $3$ と頂点 $1$ が連結でないので採用する。<br>
+<code>result</code> に $3$ を追加し、<code>count1</code> $=1$ とする。<br>
+<code>d</code> と <code>d0</code> で、頂点 $3$ と頂点 $1$ を連結させる。</p>
+<p>辺 $4$ は、重み $1$ で、<code>d0</code> 上で既に連結になっているので見送る。</p>
+<p>この時点で、目的の木を管理する <code>d</code> の連結成分は次のようになる。</p>
+<pre><code>d: {0, 1, 3}, {2}</code></pre>
+<p>次に、各重みの残り本数を見ながら、残りの連結成分をつなぐ。</p>
+<p>辺 $0$ は採用済。</p>
+<p>辺 $1$ と $2$ は重み $0$ の残り本数が $0$ なので、見送る。</p>
+<p>辺 $3$ は採用済。</p>
+<p>辺 $4$ は重み $1$ であり、<code>d</code> では頂点 $3$ と頂点 $2$ が連結でない。<br>
+<code>count1</code> $=1$ なのでこの辺を採用し、<code>result</code> に $4$ を加えて <code>count1</code> $=0$ とする。<br>
+これにより、全頂点が連結になる。</p>
+<p><code>result</code> には $0$, $3$, $4$ が入っている。<br>
+<code>1-indexed</code> に直して $1\ 4\ 5$ を出力する。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+<a class="tag" href="../tags/union-find.html">UnionFind木</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
