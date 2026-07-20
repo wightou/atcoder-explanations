@@ -1640,7 +1640,10 @@ def render_explanation_page(page: ExplanationPage) -> str:
 {site_header_compact(prefix="../")}
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>{escape(page.full_title)}</h1>
+    <div class="explanation-heading">
+      <h1>{escape(page.full_title)}</h1>
+      {f'<p class="explanation-title-ja">{escape(page.problem_title_ja)}</p>' if page.problem_title_ja else ''}
+    </div>
     {auto_links}
     {page.body_html}
   </article>
@@ -2145,6 +2148,44 @@ a:hover {
   height: 4px;
   border-radius: 999px;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+/* 問題ページでは、英語タイトルと日本語タイトルを1つの見出し領域として扱う。 */
+.explanation-heading {
+  margin: 0 0 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.explanation-heading::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 88px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+.markdown-body .explanation-heading h1 {
+  margin: 0;
+  padding: 0;
+  border-bottom: 0;
+}
+
+.markdown-body .explanation-heading h1::after {
+  content: none;
+}
+
+.explanation-title-ja {
+  margin: .3rem 0 0;
+  color: var(--muted);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: right;
 }
 
 .markdown-body h2 {
@@ -2662,6 +2703,11 @@ __TABLE_TEXT_COLOR_RULES__
   .main-panel h1,
   .markdown-body h1 {
     font-size: 1.65rem;
+  }
+
+  .explanation-title-ja {
+    font-size: 1.05rem;
+    text-align: left;
   }
 
   .sidebar {
