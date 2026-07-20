@@ -4,7 +4,7 @@ problem: C
 problem_title: "Vacation"
 problem_title_ja: "夏休み"
 problem_url: https://atcoder.jp/contests/dp/tasks/dp_c
-submission_url: https://atcoder.jp/contests/dp/submissions/67455965
+submission_url: https://atcoder.jp/contests/dp/submissions/77327654
 tags:
   - 動的計画法
 tag_note: 簡単なレベルの内容は省略。
