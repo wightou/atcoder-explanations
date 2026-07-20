@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC225 E - Gap Swap (hard)</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <h1>ARC225 E - Gap Swap (hard)</h1>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc225/tasks/arc225_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc225/submissions/77686840" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>以下、<code>0-indexed</code> で考える。</p>
+<p>また、D問題でも使った文字列対応を考える。<br>
+すなわち、各数について、以下の文字を対応させる。</p>
+<ul>
+<li>ある数が本来そこより右にいるべき場合、<code>&#x27;R&#x27;</code></li>
+<li>ある数が本来そこより左にいるべき場合、<code>&#x27;L&#x27;</code></li>
+<li>正しい位置にいる場合は <code>&#x27;N&#x27;</code></li>
+</ul>
+<p>この文字列で、<code>&#x27;N&#x27;</code> 以外で最初に出現する文字は必ず <code>&#x27;R&#x27;</code> である。<br>
+また、<code>&#x27;N&#x27;</code> 以外で最後に出現する文字は必ず <code>&#x27;L&#x27;</code> である。<br>
+よって、<code>&#x27;N&#x27;</code> を無視した場合に <code>&#x27;R&#x27;</code> の次に <code>&#x27;L&#x27;</code> があるところが少なくとも $1$ ヶ所ある。<br>
+したがって、<code>&#x27;R&#x27;</code> の次に <code>&#x27;L&#x27;</code> があるところを探して交換することは、完了状態以外では必ず可能である。</p>
+<p>この交換を任意の順で続けることが最小手数になる証明のスケッチを示す。<br>
+（本気でやると手間なので、かなり荒い証明になっている）</p>
+<p>まず、<code>&#x27;R&#x27;</code> の次に <code>&#x27;L&#x27;</code> がある組のうち最も右にあるものを交換し続けることを考える。<br>
+この場合、最も右にある <code>&#x27;R&#x27;</code> がまっすぐ目的地に入ることになる。<br>
+もし最も右にある <code>&#x27;R&#x27;</code> より右にある <code>&#x27;L&#x27;</code> が、移動 $1$ 回で目的地に移動できたとしよう。<br>
+これを先に目的地に送ると、一見手数が減りそうに見えるが、実はそんなことはない。<br>
+というのは、これは <code>&#x27;L&#x27;</code> を揃えるのに $1$ 手使って <code>&#x27;R&#x27;</code> の移動を $1$ 回減らすだけ。<br>
+手数も終状態も何も変わらないのである。</p>
+<p>ということで、<code>&#x27;R&#x27;</code> の次に <code>&#x27;L&#x27;</code> がある組のうち最も右のものを交換し続けるのは、最短手順の $1$ つ。<br>
+<code>&#x27;R&#x27;</code> の次に <code>&#x27;L&#x27;</code> がある組を任意に選ぶとしても、最も右のものを選ぶ方法を並列処理しているだけ。<br>
+同時に交換可能な複数の組は要素を共有しないため、交換の順番を入れ替えても、特に影響はない。<br>
+したがって、好きな順で入れ替えを行ってよい。</p>
+<p>これで複数の <code>deque</code> などでそろったデータを中抜きしつつシミュレーションすることが可能になった。<br>
+しかし、計算量が $O(N^2)$ になるため、残念ながら <code>TLE</code> になる。</p>
+<p>ここから、これを高速化する。<br>
+$1$ つずつの <code>&#x27;R&#x27;</code> に順番に注目し、それの移動回数の合計を高速に求める。</p>
+<p>移動を $2$ 種類に分けて集計する。<br>
+<code>&#x27;R&#x27;</code> が移動する前にいたマスが、別の <code>&#x27;L&#x27;</code> の目的地だったか、別の <code>&#x27;R&#x27;</code> の目的地だったかで分ける。</p>
+<p>まず、移動前の位置が、ある <code>&#x27;L&#x27;</code> の目的地だった場合を考える。<br>
+これは、交換によって <code>&#x27;L&#x27;</code> が <code>&#x27;L&#x27;</code> （自身を含む）の目的地に乗る合計回数である。<br>
+自身を含まない分は、各 <code>&#x27;L&#x27;</code> の （目的地、現在地）という開区間の交錯数で求まる。<br>
+すなわち、値 $P_i$ と $P_j$ が位置 $i$ と $j$ にいて、$P_i&lt;P_j&lt;i&lt;j$ である組数を求める。<br>
+ここに、各 <code>&#x27;L&#x27;</code> の自身の目的地に乗る分を足せば、目的のものが求められる。</p>
+<p>次に、移動前の位置が、ある <code>&#x27;R&#x27;</code> の目的地だった場合を考える。<br>
+最初から乗っていた分を除いた回数は、各 <code>&#x27;R&#x27;</code> の （現在地、目的地）という開区間の交錯数で求まる。<br>
+すなわち、値 $P_i$ と $P_j$ が位置 $i$ と $j$ にいて、$i&lt;j&lt;P_i&lt;P_j$ である組数を求める。<br>
+ここに、各 <code>&#x27;R&#x27;</code> が最初から別の <code>&#x27;R&#x27;</code> の目的地にいた数を足せば、目的のものが求められる。<br>
+（最後に足す分は、各 <code>&#x27;R&#x27;</code> ごと自分の目的地に <code>&#x27;R&#x27;</code> がいる数としてカウントした方が扱いやすい）</p>
+<p>交錯数については、開区間内に、他のものの現在地側だけ入っている個数を数えればよい。<br>
+これは、Fenwick木で現在地に $+1$、目的地に $-1$ しながら区間和を求めて処理していく。<br>
+<code>&#x27;L&#x27;</code> については左から、<code>&#x27;R&#x27;</code> については右から、これを行うことで合計交錯数が求まる。</p>
+<p>Fenwick 木への加算と区間和の取得はそれぞれ $O(\log N)$ なので、全体の計算量は $O(N\log N)$ となる。</p>
+<h2>$\{3,5,4,1,2\}$ での動作</h2>
+<p>$N$ の値として $5$、順列 $P$ として $\{3,5,4,1,2\}$ を受け取った場合で例を示す。</p>
+<p>まず、<code>0-indexed</code> にして、$\{2,4,3,0,1\}$ としておく。</p>
+<p>前半として、Fenwick木 <code>fl</code> を用意して、左へ移動したいものを左から順に見ていく。</p>
+<pre><code>fl: {0,0,0,0,0} （実際にはFenwick木として対応する区間和を持っている、以下でも同様）</code></pre>
+<p>$i=0$ から $i=2$ は左へ移動したいものではないのでスキップ。</p>
+<p>$i=3$ のとき、$0$ が位置 $3$ から位置 $0$ へ移動しようとしている。<br>
+区間の交錯数は <code>fl</code> の区間 $(0,3)$ の総和 $0$。<br>
+これと、自身の最後の移動分 $1$ を結果に加える。<br>
+区間 $(0,3)$ の情報を <code>fl</code> に乗せる。</p>
+<pre><code>result: 1
+fl: {-1,0,0,1,0}</code></pre>
+<p>$i=4$ のとき、$1$ が位置 $4$ から位置 $1$ へ移動しようとしている。<br>
+区間の交錯数は <code>fl</code> の区間 $(1,4)$ の総和 $1$。<br>
+これは、先に見た $0$ が、$1$ の目的地である位置 $1$ を通る分である。<br>
+これと、自身の最後の移動分 $1$ を結果に加える。<br>
+区間 $(1,4)$ の情報を <code>fl</code> に乗せる。</p>
+<pre><code>result: 3
+fl: {-1,-1,0,1,1}</code></pre>
+<p>後半として、Fenwick木 <code>fr</code> を用意して、右へ移動したいものを右から順に見ていく。</p>
+<pre><code>fr: {0,0,0,0,0}</code></pre>
+<p>$i=4$ と $i=3$ は右へ移動したいものではないのでスキップ。</p>
+<p>$i=2$ のとき、$3$ が位置 $2$ から位置 $3$ へ移動しようとしている。<br>
+区間の交錯数は <code>fr</code> の区間 $(2,3)$ の総和 $0$。<br>
+目的地である位置 $3$ にある $0$ は <code>L</code> なので、最初から <code>R</code> が別の <code>R</code> の目的地に乗っている分は加えない。<br>
+区間 $(2,3)$ の情報を <code>fr</code> に乗せる。</p>
+<pre><code>result: 3
+fr: {0,0,1,-1,0}</code></pre>
+<p>$i=1$ のとき、$4$ が位置 $1$ から位置 $4$ へ移動しようとしている。<br>
+区間の交錯数は <code>fr</code> の区間 $(1,4)$ の総和 $0$。<br>
+目的地である位置 $4$ にある $1$ は <code>L</code> なので、最初から <code>R</code> が別の <code>R</code> の目的地に乗っている分は加えない。<br>
+区間 $(1,4)$ の情報を <code>fr</code> に乗せる。</p>
+<pre><code>result: 3
+fr: {0,1,1,-1,-1}</code></pre>
+<p>$i=0$ のとき、$2$ が位置 $0$ から位置 $2$ へ移動しようとしている。<br>
+区間の交錯数は <code>fr</code> の区間 $(0,2)$ の総和 $1$。<br>
+これは、$4$ が $2$ の目的地である位置 $2$ を通る分である。<br>
+また、目的地である位置 $2$ には、右へ移動しようとしている $3$ が最初から乗っている。<br>
+よって、さらに $1$ を結果に加える。<br>
+区間 $(0,2)$ の情報を <code>fr</code> に乗せる。</p>
+<pre><code>result: 5
+fr: {1,1,0,-1,-1}</code></pre>
+<p>よって答えは $5$ となる。</p>
+<h2>注意点</h2>
+<p>答えは、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>公式解説にあるように、目的地までの距離合計から転倒数を引いても答えが出るらしい。<br>
+確認してみると正しいものの、一体どこからその計算の発想が……？</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/fenwick-tree.html">Fenwick木</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
