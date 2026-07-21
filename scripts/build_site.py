@@ -157,29 +157,29 @@ IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".avif"}
 SIDEBAR_KNOWLEDGE_PAGES: list["KnowledgePage"] = []
 TAG_SLUG_MAP: dict[str, str] = {}
 
-TABLE_TEXT_COLORS = {
-    "red": "#b42318",
-    "coral": "#b53a32",
-    "orange": "#9a3412",
-    "amber": "#7a5200",
-    "yellow": "#713f12",
-    "olive": "#5f5b00",
-    "lime": "#4d7c0f",
-    "green": "#15803d",
-    "emerald": "#047857",
-    "teal": "#0f766e",
-    "cyan": "#0e7490",
-    "blue": "#1d4ed8",
-    "navy": "#1e3a5f",
-    "indigo": "#4338ca",
-    "violet": "#6d28d9",
-    "purple": "#7e22ce",
-    "magenta": "#a21caf",
-    "rose": "#be123c",
-    "pink": "#be185d",
-    "brown": "#6f4e37",
-    "gray": "#475569",
-    "black": "#111827",
+TABLE_CELL_BACKGROUNDS = {
+    "red": "#fee2e2",
+    "coral": "#ffe4e1",
+    "orange": "#ffedd5",
+    "amber": "#fef3c7",
+    "yellow": "#fef9c3",
+    "olive": "#eef0c8",
+    "lime": "#ecfccb",
+    "green": "#dcfce7",
+    "emerald": "#d1fae5",
+    "teal": "#ccfbf1",
+    "cyan": "#cffafe",
+    "blue": "#dbeafe",
+    "navy": "#dbe4f0",
+    "indigo": "#e0e7ff",
+    "violet": "#ede9fe",
+    "purple": "#f3e8ff",
+    "magenta": "#fae8ff",
+    "rose": "#ffe4e6",
+    "pink": "#fce7f3",
+    "brown": "#f5e6d3",
+    "gray": "#e2e8f0",
+    "black": "#cbd5e1",
 }
 
 CATEGORY_ORDER = [
@@ -593,13 +593,13 @@ def render_inline(s: str) -> str:
     return s
 
 
-def split_table_text_color_marker(cell: str) -> tuple[str | None, str]:
+def split_table_background_marker(cell: str) -> tuple[str | None, str]:
     """表セル先頭の `{red}` 形式を取り出す。未対応色は通常文字列として残す。"""
     match = re.match(r"^\{([a-z]+)\}\s*", cell, flags=re.I)
     if match is None:
         return None, cell
     color = match.group(1).lower()
-    if color not in TABLE_TEXT_COLORS:
+    if color not in TABLE_CELL_BACKGROUNDS:
         return None, cell
     return color, cell[match.end():]
 
@@ -616,9 +616,21 @@ def append_html_class(attrs: str, class_name: str) -> str:
     return attrs[:class_match.start(2)] + updated + attrs[class_match.end(2):]
 
 
-def apply_table_text_colors_to_html(html: str) -> str:
-    """Python-Markdown が生成した th / td の先頭色指定を CSS class に変換する。"""
-    color_pattern = "|".join(map(re.escape, TABLE_TEXT_COLORS))
+def append_html_style(attrs: str, declaration: str) -> str:
+    """HTML開始タグの属性文字列へ style 宣言を安全に追記する。"""
+    style_match = re.search(r'\bstyle=(["\'])(.*?)\1', attrs, flags=re.I | re.S)
+    if style_match is None:
+        return attrs + f' style="{declaration}"'
+    current = style_match.group(2).strip()
+    if current and not current.endswith(";"):
+        current += ";"
+    updated = f"{current} {declaration}".strip()
+    return attrs[:style_match.start(2)] + updated + attrs[style_match.end(2):]
+
+
+def apply_table_backgrounds_to_html(html: str) -> str:
+    """Python-Markdown が生成した th / td の先頭色指定を背景色へ変換する。"""
+    color_pattern = "|".join(map(re.escape, TABLE_CELL_BACKGROUNDS))
     pattern = re.compile(
         rf"<(?P<tag>th|td)(?P<attrs>[^>]*)>(?P<space>\s*)\{{(?P<color>{color_pattern})\}}\s*",
         flags=re.I,
@@ -626,16 +638,20 @@ def apply_table_text_colors_to_html(html: str) -> str:
 
     def replace(match: re.Match[str]) -> str:
         tag = match.group("tag")
-        attrs = append_html_class(match.group("attrs"), f'table-text-{match.group("color").lower()}')
+        color = match.group("color").lower()
+        attrs = append_html_class(match.group("attrs"), f"table-bg-{color}")
+        attrs = append_html_style(attrs, f"background-color: {TABLE_CELL_BACKGROUNDS[color]};")
         return f'<{tag}{attrs}>{match.group("space")}'
 
     return pattern.sub(replace, html)
 
 
 def table_cell_html(tag: str, cell: str) -> str:
-    color, content = split_table_text_color_marker(cell)
-    class_attr = f' class="table-text-{color}"' if color else ""
-    return f"<{tag}{class_attr}>" + render_inline(content) + f"</{tag}>"
+    color, content = split_table_background_marker(cell)
+    attrs = ""
+    if color:
+        attrs = f' class="table-bg-{color}" style="background-color: {TABLE_CELL_BACKGROUNDS[color]};"'
+    return f"<{tag}{attrs}>" + render_inline(content) + f"</{tag}>"
 
 
 def is_markdown_table_separator(line: str) -> bool:
@@ -790,7 +806,7 @@ def markdown_to_html(body_md: str) -> str:
         )
     else:
         html = fallback_markdown_to_html(body_md)
-    return apply_table_text_colors_to_html(html)
+    return apply_table_backgrounds_to_html(html)
 
 
 def markdown_to_plain_text(body_md: str) -> str:
@@ -1931,6 +1947,24 @@ def validate_project_euler_page(page: ExplanationPage) -> None:
         raise ValueError(f"{page.source_path}: Project Euler は100番までのみ掲載対象です")
 
 
+ALLOWED_EXPLANATION_FILE_SUFFIXES = {".md", ".cpp", ".png"}
+
+
+def warn_unexpected_explanation_files(src_dir: Path) -> None:
+    """解説ディレクトリ内の想定外ファイルを警告する。ビルド自体は継続する。"""
+    if not src_dir.exists():
+        return
+    for path in sorted(src_dir.rglob("*")):
+        if not path.is_file():
+            continue
+        if path.suffix.lower() in ALLOWED_EXPLANATION_FILE_SUFFIXES:
+            continue
+        print(
+            f"WARNING: explanations 配下に .md / .cpp / .png 以外のファイルがあります: {path}",
+            file=sys.stderr,
+        )
+
+
 def load_explanations(src_dir: Path) -> list[ExplanationPage]:
     pages = []
     for path in sorted(src_dir.glob("**/*.md")):
@@ -1998,15 +2032,12 @@ def copy_page_assets(pages: list[ExplanationPage] | list[KnowledgePage], out_dir
 
 
 def write_css(out_dir: Path) -> None:
-    table_color_variables = "\n".join(
-        f"  --table-text-{name}: {value};" for name, value in TABLE_TEXT_COLORS.items()
+    table_background_variables = "\n".join(
+        f"  --table-bg-{name}: {value};" for name, value in TABLE_CELL_BACKGROUNDS.items()
     )
-    table_color_rules = "\n".join(
-        (
-            f".markdown-body .table-text-{name},\n"
-            f".markdown-body .table-text-{name} a {{ color: var(--table-text-{name}); }}"
-        )
-        for name in TABLE_TEXT_COLORS
+    table_background_rules = "\n".join(
+        f".markdown-body .table-bg-{name} {{ background-color: var(--table-bg-{name}); }}"
+        for name in TABLE_CELL_BACKGROUNDS
     )
     css = """
 :root {
@@ -2023,7 +2054,7 @@ def write_css(out_dir: Path) -> None:
   --accent-2: #14b8a6;
   --tag-bg: #e9f3ff;
   --tag-border: #bfdbfe;
-__TABLE_TEXT_COLOR_VARIABLES__
+__TABLE_BACKGROUND_VARIABLES__
 }
 
 * { box-sizing: border-box; }
@@ -2267,8 +2298,8 @@ a:hover {
   text-align: center;
 }
 
-/* 表セル先頭の `{red}` などを文字色へ変換する。 */
-__TABLE_TEXT_COLOR_RULES__
+/* 表セル先頭の `{red}` などを淡い背景色へ変換する。 */
+__TABLE_BACKGROUND_RULES__
 
 .markdown-table-scroll {
   overflow-x: auto;
@@ -2721,13 +2752,14 @@ __TABLE_TEXT_COLOR_RULES__
   }
 }
 """
-    css = css.replace("__TABLE_TEXT_COLOR_VARIABLES__", table_color_variables)
-    css = css.replace("__TABLE_TEXT_COLOR_RULES__", table_color_rules)
+    css = css.replace("__TABLE_BACKGROUND_VARIABLES__", table_background_variables)
+    css = css.replace("__TABLE_BACKGROUND_RULES__", table_background_rules)
     (out_dir / "style.css").write_text(css.lstrip(), encoding="utf-8")
 
 
 
 def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
+    warn_unexpected_explanation_files(explanations_dir)
     clean_output(out_dir)
 
     for sub in ["explanations", "tags", "contests", "knowledge", "knowledge/categories", "knowledge/levels"]:

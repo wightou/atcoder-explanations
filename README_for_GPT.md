@@ -152,7 +152,7 @@ related:
 ### Markdown表示
 
 - Markdown表に対応しています。
-- 表セルの先頭に色指定を書くと、そのセル内の文字色を変更できます。
+- 表セルの先頭に色指定を書くと、そのセルの背景色を変更できます。
   - 例:
 
     ```md
@@ -162,12 +162,15 @@ related:
     ```
   - 色指定はセルの先頭に置き、`{色名}` の直後に通常どおりセル内容を書きます。
   - 見出しセルと通常セルの両方で使用できます。
+  - 背景色は CSS class とインライン `style` の両方へ出力します。文字色は通常の本文色のままです。
   - 対応色: `red`, `coral`, `orange`, `amber`, `yellow`, `olive`, `lime`, `green`, `emerald`, `teal`, `cyan`, `blue`, `navy`, `indigo`, `violet`, `purple`, `magenta`, `rose`, `pink`, `brown`, `gray`, `black`
   - 未対応の色名は変換されず、`{色名}` がそのまま表示されます。
   - 色だけに説明を依存させず、必要なら本文で色の意味も説明します。
 - Markdown画像記法に対応しています。
   - 例: `explanations/abc463/e.md` から同じディレクトリの `e1.png` を使う場合、本文に `![説明](e1.png)` と書きます。
   - 生成時に `docs/explanations/abc463/e1.png` へコピーし、HTML側の参照パスを自動補正します。
+- `explanations/` 配下には、解説 Markdown の `.md`、保存する解答コードの `.cpp`、解説画像の `.png` を置けます。
+- それ以外のファイルがある場合、`build_site.py` は実行ファイルなどの混入を疑って警告します。警告後もビルドは継続します。
   - `knowledge/` 側の記事でも、記事Markdownから見た相対パスで画像を参照できます。
 - `markdown` パッケージがない環境でも、基本的なMarkdown表と画像はフォールバック変換で表示できます。
 - 数式は MathJax 3 で表示します。

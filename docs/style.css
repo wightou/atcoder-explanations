@@ -12,28 +12,28 @@
   --accent-2: #14b8a6;
   --tag-bg: #e9f3ff;
   --tag-border: #bfdbfe;
-  --table-text-red: #b42318;
-  --table-text-coral: #b53a32;
-  --table-text-orange: #9a3412;
-  --table-text-amber: #7a5200;
-  --table-text-yellow: #713f12;
-  --table-text-olive: #5f5b00;
-  --table-text-lime: #4d7c0f;
-  --table-text-green: #15803d;
-  --table-text-emerald: #047857;
-  --table-text-teal: #0f766e;
-  --table-text-cyan: #0e7490;
-  --table-text-blue: #1d4ed8;
-  --table-text-navy: #1e3a5f;
-  --table-text-indigo: #4338ca;
-  --table-text-violet: #6d28d9;
-  --table-text-purple: #7e22ce;
-  --table-text-magenta: #a21caf;
-  --table-text-rose: #be123c;
-  --table-text-pink: #be185d;
-  --table-text-brown: #6f4e37;
-  --table-text-gray: #475569;
-  --table-text-black: #111827;
+  --table-bg-red: #fee2e2;
+  --table-bg-coral: #ffe4e1;
+  --table-bg-orange: #ffedd5;
+  --table-bg-amber: #fef3c7;
+  --table-bg-yellow: #fef9c3;
+  --table-bg-olive: #eef0c8;
+  --table-bg-lime: #ecfccb;
+  --table-bg-green: #dcfce7;
+  --table-bg-emerald: #d1fae5;
+  --table-bg-teal: #ccfbf1;
+  --table-bg-cyan: #cffafe;
+  --table-bg-blue: #dbeafe;
+  --table-bg-navy: #dbe4f0;
+  --table-bg-indigo: #e0e7ff;
+  --table-bg-violet: #ede9fe;
+  --table-bg-purple: #f3e8ff;
+  --table-bg-magenta: #fae8ff;
+  --table-bg-rose: #ffe4e6;
+  --table-bg-pink: #fce7f3;
+  --table-bg-brown: #f5e6d3;
+  --table-bg-gray: #e2e8f0;
+  --table-bg-black: #cbd5e1;
 }
 
 * { box-sizing: border-box; }
@@ -277,51 +277,29 @@ a:hover {
   text-align: center;
 }
 
-/* 表セル先頭の `{red}` などを文字色へ変換する。 */
-.markdown-body .table-text-red,
-.markdown-body .table-text-red a { color: var(--table-text-red); }
-.markdown-body .table-text-coral,
-.markdown-body .table-text-coral a { color: var(--table-text-coral); }
-.markdown-body .table-text-orange,
-.markdown-body .table-text-orange a { color: var(--table-text-orange); }
-.markdown-body .table-text-amber,
-.markdown-body .table-text-amber a { color: var(--table-text-amber); }
-.markdown-body .table-text-yellow,
-.markdown-body .table-text-yellow a { color: var(--table-text-yellow); }
-.markdown-body .table-text-olive,
-.markdown-body .table-text-olive a { color: var(--table-text-olive); }
-.markdown-body .table-text-lime,
-.markdown-body .table-text-lime a { color: var(--table-text-lime); }
-.markdown-body .table-text-green,
-.markdown-body .table-text-green a { color: var(--table-text-green); }
-.markdown-body .table-text-emerald,
-.markdown-body .table-text-emerald a { color: var(--table-text-emerald); }
-.markdown-body .table-text-teal,
-.markdown-body .table-text-teal a { color: var(--table-text-teal); }
-.markdown-body .table-text-cyan,
-.markdown-body .table-text-cyan a { color: var(--table-text-cyan); }
-.markdown-body .table-text-blue,
-.markdown-body .table-text-blue a { color: var(--table-text-blue); }
-.markdown-body .table-text-navy,
-.markdown-body .table-text-navy a { color: var(--table-text-navy); }
-.markdown-body .table-text-indigo,
-.markdown-body .table-text-indigo a { color: var(--table-text-indigo); }
-.markdown-body .table-text-violet,
-.markdown-body .table-text-violet a { color: var(--table-text-violet); }
-.markdown-body .table-text-purple,
-.markdown-body .table-text-purple a { color: var(--table-text-purple); }
-.markdown-body .table-text-magenta,
-.markdown-body .table-text-magenta a { color: var(--table-text-magenta); }
-.markdown-body .table-text-rose,
-.markdown-body .table-text-rose a { color: var(--table-text-rose); }
-.markdown-body .table-text-pink,
-.markdown-body .table-text-pink a { color: var(--table-text-pink); }
-.markdown-body .table-text-brown,
-.markdown-body .table-text-brown a { color: var(--table-text-brown); }
-.markdown-body .table-text-gray,
-.markdown-body .table-text-gray a { color: var(--table-text-gray); }
-.markdown-body .table-text-black,
-.markdown-body .table-text-black a { color: var(--table-text-black); }
+/* 表セル先頭の `{red}` などを淡い背景色へ変換する。 */
+.markdown-body .table-bg-red { background-color: var(--table-bg-red); }
+.markdown-body .table-bg-coral { background-color: var(--table-bg-coral); }
+.markdown-body .table-bg-orange { background-color: var(--table-bg-orange); }
+.markdown-body .table-bg-amber { background-color: var(--table-bg-amber); }
+.markdown-body .table-bg-yellow { background-color: var(--table-bg-yellow); }
+.markdown-body .table-bg-olive { background-color: var(--table-bg-olive); }
+.markdown-body .table-bg-lime { background-color: var(--table-bg-lime); }
+.markdown-body .table-bg-green { background-color: var(--table-bg-green); }
+.markdown-body .table-bg-emerald { background-color: var(--table-bg-emerald); }
+.markdown-body .table-bg-teal { background-color: var(--table-bg-teal); }
+.markdown-body .table-bg-cyan { background-color: var(--table-bg-cyan); }
+.markdown-body .table-bg-blue { background-color: var(--table-bg-blue); }
+.markdown-body .table-bg-navy { background-color: var(--table-bg-navy); }
+.markdown-body .table-bg-indigo { background-color: var(--table-bg-indigo); }
+.markdown-body .table-bg-violet { background-color: var(--table-bg-violet); }
+.markdown-body .table-bg-purple { background-color: var(--table-bg-purple); }
+.markdown-body .table-bg-magenta { background-color: var(--table-bg-magenta); }
+.markdown-body .table-bg-rose { background-color: var(--table-bg-rose); }
+.markdown-body .table-bg-pink { background-color: var(--table-bg-pink); }
+.markdown-body .table-bg-brown { background-color: var(--table-bg-brown); }
+.markdown-body .table-bg-gray { background-color: var(--table-bg-gray); }
+.markdown-body .table-bg-black { background-color: var(--table-bg-black); }
 
 .markdown-table-scroll {
   overflow-x: auto;
