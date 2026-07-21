@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>動的計画法</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -20,7 +30,560 @@
   <article class="markdown-body">
     <h1>動的計画法</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>再帰的な問題を高速に解くアルゴリズム。<br>
+つまり「少し小さい問題の答えがわかっていれば簡単」というタイプの問題を解く方法。</p>
+<p>英語での呼び方 Dynamic Programming の頭文字を取って DP と呼ばれることも多い。</p>
+<p>ABCでは主にD問題以降で登場する。<br>
+ただし、応用の幅が広く、内容によってはE・F問題級やそれ以上に難しい問題も多い。</p>
+<h2>アルゴリズム内容</h2>
+<p>動的計画法を用いる有名問題の例として、部分和問題を考える。</p>
+<pre><code>5 9 7 2 4 のうちいくつかを選んで、合計を15にすることができるか？</code></pre>
+<p>この場合、最後の <code>4</code> を使わないなら、前の $4$ 個で合計 $15$ を作れればよい。<br>
+最後の <code>4</code> を使うなら、前の $4$ 個で合計 $11$ を作れればよい。<br>
+つまり、この問題は</p>
+<pre><code>5 9 7 2 のうちいくつかを選んで、合計を11または15にすることができるか？</code></pre>
+<p>の答えがわかっていれば、すぐに答えられる。<br>
+数列の長さが $1$ つ少ない問題の答えを調べてあれば、元の問題は簡単に解けることになる。</p>
+<p>では、</p>
+<pre><code>5 9 7 2 のうちいくつかを選んで、合計を11にすることができるか？</code></pre>
+<p>は、どう解くか。<br>
+同じように、</p>
+<pre><code>5 9 7 のうちいくつかを選んで、合計を9または11にすることができるか？</code></pre>
+<p>を解けばよい。</p>
+<p>結局、数字が $1$ つもない状態という明らかにすぐ解ける問題から始めることになる。<br>
+その結果を継承しながら少しずつ大きな問題に答えていくことで、元の問題も解ける。<br>
+具体的には、次の表を上から順に埋めていけばよい。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>数列＼合計</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+<th>11</th>
+<th>12</th>
+<th>13</th>
+<th>14</th>
+<th>15</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>なし</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr>
+<td>5</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr>
+<td>5, 9</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td class="table-bg-yellow" style="background-color: #fef9c3;">×</td>
+<td>○</td>
+<td>×</td>
+</tr>
+<tr>
+<td>5, 9, 7</td>
+<td>○</td>
+<td class="table-bg-green" style="background-color: #dcfce7;">×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+</tr>
+<tr>
+<td>5, 9, 7, 2</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td class="table-bg-blue" style="background-color: #dbeafe;">○</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+</tr>
+<tr>
+<td>5, 9, 7, 2, 4</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>○</td>
+<td>○</td>
+<td class="table-bg-red" style="background-color: #fee2e2;">○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>○</td>
+<td>○</td>
+<td>○</td>
+<td>○</td>
+</tr>
+</tbody>
+</table></div>
+<p>例えば、色を付けた各マスは次のように決まる。</p>
+<ul>
+<li>黄色で示した <code>5, 9</code> の行の $13$ 列目では、<code>5</code> だけで合計 $4$ も $13$ も作れないため <code>×</code> となる。</li>
+<li>緑色で示した <code>5, 9, 7</code> の行の $1$ 列目では、<code>5, 9</code> で合計 $1$ を作れないため <code>×</code> となる。</li>
+<li>青色で示した <code>5, 9, 7, 2</code> の行の $11$ 列目では、<code>5, 9, 7</code> で合計 $9$ を作れるため <code>○</code> となる。</li>
+<li>赤色で示した <code>5, 9, 7, 2, 4</code> の行の $7$ 列目では、<code>5, 9, 7, 2</code> で合計 $7$ を作れるため <code>○</code> となる。</li>
+</ul>
+<p>$2$ 番目の例では、$1&lt;7$ なので、合計 $-6$ を作れるかどうかは調べていない。<br>
+最終的に、元の問題には表の右下を見て答えればよい。</p>
+<p>この部分和問題では、<code>vector&lt;bool&gt;</code> で「合計が $i$ であるような選び方ができるか」を表している。<br>
+そして、そのデータを継承しながら、数列の要素を $1$ つずつ増やしていった。</p>
+<p>問題によっては整数 $1$ つだけを継承したり、<code>vector&lt;int&gt;</code> を継承したり、文字列を継承したりする。<br>
+増やしていく内容も、数列を長くしていく以外にさまざまあり、$2$ 方向に増やしていくこともある。<br>
+見るのも $1$ 段上だけではなく、$2$ 段上を見たり、それまでの状態を全て見たりする。<br>
+「何をどう増やしていくのか」「継承するデータは何か」の選び方が、問題によって幅広く変わってくる。</p>
+<p><a href="https://atcoder.jp/contests/dp" target="_blank" rel="noopener noreferrer">DPまとめコンテスト</a>にはある程度パターンがそろっているので、有名なパターンには慣れておきたい。</p>
+<h2>コード例</h2>
+<p>上の部分和問題だと、数列の長さを $n$、要求される合計値を $s$ として、このようになる。</p>
+<pre><code>vector dp(n+1,vector&lt;bool&gt;(s+1,false));
+dp.at(0).at(0) = true;
+for (int i=1; i&lt;=n; i++) {
+  for (int j=0; j&lt;=s; j++) {
+    if (dp.at(i-1).at(j)) dp.at(i).at(j) = true;
+    if (j&gt;=a.at(i-1)&amp;&amp;dp.at(i-1).at(j-a.at(i-1))) dp.at(i).at(j) = true;
+  }
+}</code></pre>
+<p>$1$ 行目は、DPテーブルの用意。<br>
+$0$ のときから $n$ や $s$ ちょうどのときまで調べたいので、サイズが縦 $n+1$ で横 $s+1$ にする必要がある。</p>
+<p>$2$ 行目は、最も簡単に解けるところの仕込み。<br>
+前掲の表の最上段を全て埋めている。（<code>false</code> 初期化を活用してコード上は $1$ ヶ所しか変更していないが）</p>
+<p>$3$ 行目以降は、$2$ 行目で埋めたところ以外のデータ作成。<br>
+前述の規則で、$2$ 重ループで埋めている。<br>
+（<code>bool</code> 型の処理を工夫すればもっと高速化できるが、ここではわかりやすさを優先した）</p>
+<p>問題によって表の作り方は全く違うものになってくるので、都度しっかり考える必要がある。<br>
+考えるべき内容は、主に以下。</p>
+<ul>
+<li><code>dp[i][j]</code> などの各状態が何を表すか</li>
+<li>最初から答えがわかる初期状態はどこにあるか</li>
+<li>どの状態を参照して更新するか</li>
+<li>参照元が計算済みになる処理順</li>
+<li>最終的な答えがどの状態に入るか</li>
+<li>状態数と遷移数から求めた計算量</li>
+</ul>
+<h2>使い方の応用</h2>
+<h3>もらうDPと配るDP</h3>
+<p>DPテーブルのある位置 $A$ から $B$ にデータを反映させるやり方は、実は $2$ 種類ある。</p>
+<ul>
+<li>ループが $A$ を見るときにこの反映を実行する（配るDP）</li>
+<li>ループが $B$ を見るときにこの反映を実行する（もらうDP）</li>
+</ul>
+<p>簡単な問題にはもらうDPの方が考えやすい問題が多いため、最初はそちらから練習するとよい。<br>
+難しい問題になると配るDPの方がいい問題も出てくるので、最終的には両方できる必要があるが。</p>
+<p>上の部分和問題のコード（もらうDP）を、配るDPで書くと以下のようになる。</p>
+<pre><code>vector dp(n+1,vector&lt;bool&gt;(s+1,false));
+dp.at(0).at(0) = true;
+for (int i=0; i&lt;n; i++) {
+  for (int j=0; j&lt;=s; j++) {
+    if (!dp.at(i).at(j)) continue;
+    dp.at(i+1).at(j) = true;
+    if (j&lt;=s-a.at(i)) dp.at(i+1).at(j+a.at(i)) = true;
+  }
+}</code></pre>
+<h3>解の復元</h3>
+<p>上の部分和問題では、表の右下を見て <code>&quot;Yes&quot;</code> か <code>&quot;No&quot;</code> かを答えればよいとした。<br>
+しかし、問題によっては実際に和を作れるように数列の要素を選べという問題のこともある。</p>
+<p>その場合、バックトレースをすればよい。<br>
+最初に、右下のマスからスタートする。<br>
+右下のマスが○であるということは、参照した $2$ ヶ所のデータのどちらかに○があったはずである。<br>
+両方を調べて、○である方に移動する。<br>
+移動元と移動先の関係で、その数を和に入れたかどうかがわかるはずである。<br>
+これを左上の○にたどり着くまで繰り返せばよい。</p>
+<p>上の部分和問題の場合は、以下のように辿ることで、$9$ と $2$ と $4$ を採用すべきだとわかる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>数列＼合計</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+<th>11</th>
+<th>12</th>
+<th>13</th>
+<th>14</th>
+<th>15</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>なし</td>
+<td class="table-bg-red" style="background-color: #fee2e2;">○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr>
+<td>5</td>
+<td class="table-bg-red" style="background-color: #fee2e2;">○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr>
+<td>5, 9</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td class="table-bg-red" style="background-color: #fee2e2;">○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+</tr>
+<tr>
+<td>5, 9, 7</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td class="table-bg-red" style="background-color: #fee2e2;">○</td>
+<td>×</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+</tr>
+<tr>
+<td>5, 9, 7, 2</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td class="table-bg-red" style="background-color: #fee2e2;">○</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+</tr>
+<tr>
+<td>5, 9, 7, 2, 4</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>○</td>
+<td>○</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+<td>○</td>
+<td>○</td>
+<td>○</td>
+<td class="table-bg-red" style="background-color: #fee2e2;">○</td>
+</tr>
+</tbody>
+</table></div>
+<h3>インラインDP</h3>
+<p>DPテーブルを二次元配列ではなく一次元配列で持つ方法がある。<br>
+例えば、上の部分和問題のコードは以下のように書ける。</p>
+<pre><code>vector&lt;bool&gt; dp(s+1,false);
+dp.at(0) = true;
+for (int i=1; i&lt;=n; i++) {
+  for (int j=s; j&gt;=a.at(i-1); j--) {
+    if (dp.at(j-a.at(i-1))) dp.at(j) = true;
+  }
+}</code></pre>
+<p>毎回新しいデータ領域を使わずに、同じ場所を上書きで使いまわしている。<br>
+メモリが大幅に節約できるテクニックで、「インプレース更新」と呼ばれる。</p>
+<p>さらに今回は、元々入っていたデータをそのまま活かすことで、コピーの計算時間の削減もしている。<br>
+このように無更新を活かして高速化した動的計画法は「インラインDP」と呼ばれる。<br>
+（インプレース更新は広く使われる用語だが、インラインDPはそこまで一般的ではないらしい）</p>
+<p>しかし、更新順に注意が必要、バグの調査がしにくい、バックトレースが困難など、注意点も多い。<br>
+（$j$ を昇順にすると、同じ数を複数回使用してしまうことになる）<br>
+とはいえ、難しい問題になってくると、インラインにしないと計算量が間に合わない問題も出てくる。</p>
+<h3>bitDP</h3>
+<p>bit全探索の考えを動的計画法に組み込んだもの。<br>
+$N$ 個の要素の順序を考えたり、$N$ 個の条件を全て満たす方法を求めたりする際に用いられることが多い。<br>
+一般には、$N$ が最大 $20$ 程度の問題で使われる。<br>
+詳しくは「bitDP」の記事参照。</p>
+<h3>区間DP</h3>
+<p>各データに対する動的計画法ではなく、各区間を状態として動的計画法を行うもの。<br>
+区間の左端や右端を選んで操作するような問題で用いられることが多い。<br>
+詳しくは「区間DP」の記事参照。</p>
+<h3>桁DP</h3>
+<p>巨大な整数を上の桁から順に決めていく動的計画法。<br>
+ある数以下の整数のうち、何かの条件を満たすものの個数や総和などを求める際に用いられることが多い。<br>
+詳しくは「桁DP」の記事参照。</p>
+<h3>木DP</h3>
+<p>木の各頂点に状態を持ち、子の情報をまとめて親の状態を計算する動的計画法。<br>
+詳しくは「木DP」の記事参照。</p>
+<h3>全方位木DP</h3>
+<p>木の全ての頂点をそれぞれ根とした場合の答えを、計算結果を使い回しながら求める動的計画法。<br>
+子から親へ情報を集めた後、親側の情報も子へ渡すことで、全頂点に対する答えを効率よく求める。<br>
+詳しくは「全方位木DP」の記事参照。</p>
+<h3>DAG上のDP</h3>
+<p>DAGの各頂点に状態を持ち、辺に沿って遷移する動的計画法。<br>
+トポロジカル順に処理することで、参照元の状態を計算済みにできる。<br>
+経路数や最長経路を求める問題などで用いられる。<br>
+詳しくは「DAG上のDP」の記事参照。</p>
+<h2>注意点</h2>
+<h3>表のサイズに注意</h3>
+<p>動的計画法でデータを書き込む表の大きさには限界がある。<br>
+各マスを $O(1)$ で処理する場合でも、要素数が $10^8$ 程度になると、実行時間やメモリ制限が厳しい。<br>
+そのため、実装前に「表の要素数がいくつになり、各要素の計算にどれだけかかるか」を必ず確認する。</p>
+<p>さらに、同じ問題でも、各数値の制約に合わせて全く異なる方法で解かなくてはいけない場合がある。</p>
+<p>例えば、ナップサック問題を考える。<br>
+ざっくりいうと、次のような問題である。</p>
+<pre><code>N 個の荷物がある。
+i 番目の荷物は重さが w[i]、価値が v[i] である。
+重さの合計が W を超えないように、いくつかの荷物を選ぶ。
+価値の合計 V の最大値を求めよ。</code></pre>
+<p>それぞれの値が <code>long long</code> 型に収まるとしても、追加の制約によって解き方が大きく変わる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>$N$ 上限</th>
+<th>$W$ 上限</th>
+<th>$w_i$ 上限</th>
+<th>$v_i$ 上限</th>
+<th>その他の制約</th>
+<th>使える解法</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>約 $20$</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>bit全探索</td>
+</tr>
+<tr>
+<td>約 $40$</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>半分全列挙</td>
+</tr>
+<tr>
+<td>―</td>
+<td>約 $10^8/N$</td>
+<td>―</td>
+<td>―</td>
+<td>$v_i=w_i$（※1）</td>
+<td>部分和問題用の動的計画法</td>
+</tr>
+<tr>
+<td>―</td>
+<td>約 $10^8/N$</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>動的計画法</td>
+</tr>
+<tr>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>約 $10^8/N^2$</td>
+<td>―</td>
+<td>双対性を利用した動的計画法</td>
+</tr>
+<tr>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>答え $&lt;$ 約 $10^8/N$</td>
+<td>双対性を利用した動的計画法</td>
+</tr>
+<tr>
+<td>約 $10^5$？</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>$v_i/w_i$ が広く分布</td>
+<td>分枝限定法</td>
+</tr>
+<tr>
+<td>約 $10^7$</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>AHCでの出題</td>
+<td>貪欲法（ヒューリスティック系）</td>
+</tr>
+<tr>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>何らかの制約</td>
+<td>制約に合わせる</td>
+</tr>
+<tr>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>未解決問題（NP困難）</td>
+</tr>
+</tbody>
+</table></div>
+<p>（※1）重さの設定がなく、価値自体が基準を超えてはいけないという条件。</p>
+<p>動的計画法ですらない解法も多い。<br>
+「今回のこの制約では動的計画法を使うのか」というところから判断しにくい。<br>
+それが、このアルゴリズムの真の難しさである。</p>
+<h2>関連アルゴリズム</h2>
+<h3>メモ化再帰</h3>
+<p>役に立つ場面は動的計画法とほぼ同じ。<br>
+再帰的な問題をボトムアップで解くのが動的計画法、トップダウンで解くのがメモ化再帰である。<br>
+動的計画法で解ける問題はメモ化再帰でも解けることが多く、逆もまた同様である。</p>
+<h3>bitDP</h3>
+<p>bit全探索の考えを動的計画法に組み込んだもの。<br>
+$N$ 個の要素の順序を考えたり、$N$ 個の条件を全て満たす方法を求めたりする際に用いられることが多い。<br>
+一般には、$N$ が最大 $20$ 程度の問題で使われる。</p>
+<h3>区間DP</h3>
+<p>各データに対する動的計画法ではなく、各区間を状態として動的計画法を行うもの。<br>
+区間の左端や右端を選んで操作するような問題で用いられることが多い。</p>
+<h3>桁DP</h3>
+<p>巨大な整数を上の桁から順に決めていく動的計画法。<br>
+ある数以下の整数のうち、何かの条件を満たすものの個数や総和などを求める際に用いられることが多い。</p>
+<h3>木DP</h3>
+<p>木の各頂点に状態を持ち、子の情報をまとめて親の状態を計算する動的計画法。</p>
+<h3>全方位木DP</h3>
+<p>木の全ての頂点をそれぞれ根とした場合の答えを、計算結果を使い回しながら求める動的計画法。<br>
+子から親へ情報を集めた後、親側の情報も子へ渡すことで、全頂点に対する答えを効率よく求める。</p>
+<h3>DAG上のDP</h3>
+<p>DAGの各頂点に状態を持ち、辺に沿って遷移する動的計画法。<br>
+トポロジカル順に処理することで、参照元の状態を計算済みにできる。<br>
+経路数や最長経路を求める問題などで用いられる。</p>
+<h3>バックトレース</h3>
+<p>終了状態から逆再生しながら何かを調べるアルゴリズム。<br>
+動的計画法の後で、具体的な選び方や操作列などの詳細な情報を得るために用いられる。</p>
+<h3>最長増加部分列</h3>
+<p>数列の一部を、順序を保ったまま連続でなくてもよいので選び、単調増加列を作る。<br>
+その長さを最大化する問題であり、動的計画法の応用で解ける。</p>
+<h3>最長共通部分列</h3>
+<p>$2$ つの数列または文字列の一部を、順序を保ったまま連続でなくてもよいので選び、全く同じ列を作る。<br>
+その長さを最大化する問題であり、動的計画法の応用で解ける。</p>
   </article>
 
   <aside class="sidebar">
@@ -33,7 +596,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li class="muted">なし</li>
+        <li><a href="../knowledge/backtrace.html">バックトレース</a></li><li><a href="../knowledge/memoized-recursion.html">メモ化再帰</a></li><li><a href="../knowledge/bit-dp.html">bitDP</a></li><li><a href="../knowledge/knapsack-problem.html">ナップサック問題</a></li><li><a href="../knowledge/tree-dp.html">木DP</a></li><li><a href="../knowledge/rerooting-dp.html">全方位木DP</a></li><li><a href="../knowledge/dag-dp.html">DAG上のDP</a></li><li><a href="../knowledge/lcs.html">最長共通部分列</a></li><li><a href="../knowledge/lis.html">最長増加部分列</a></li>
       </ul>
     </section>
 
