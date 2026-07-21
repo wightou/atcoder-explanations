@@ -250,30 +250,30 @@ $i$ 番目以外の最大値を知りたければ、左から $i-1$ 番目まで
 <p>また、数値の種類数のように $1$ 箇所ごとのデータを詳細に持って大きくなってしまう場合は使えない。<br>
 sliding window法や尺取法、その他問題に対応できるアルゴリズムを用いること。</p>
 <h2>関連アルゴリズム</h2>
-<h3>sliding window法</h3>
+<h3><a href="sliding-window.html">sliding window法</a></h3>
 <p>長さ固定の区間を順に調べる処理を扱える。<br>
 種類数のように現在の状態を扱うデータが大きくなりがちなものに対しても使える場合がある。<br>
 一方で、後から改めて任意区間の処理を求められても何も答えられないのが難点。</p>
-<h3>尺取法</h3>
+<h3><a href="shakutori-method.html">尺取法</a></h3>
 <p>累積和と同じく、条件を満たす区間を探したり個数を数えたりするアルゴリズム。<br>
 累積和と二分探索の $2$ つが協力して $O(N\log N)$ でやることを、尺取法は $1$ つで $O(N)$ で処理できる。<br>
 sliding window法の長さ可変バージョンであり、累積和と比較した長所短所もほぼ同じ。</p>
-<h3>Fenwick木</h3>
+<h3><a href="fenwick-tree.html">Fenwick木</a></h3>
 <p>累積和の上位互換。<br>
 同じように任意の区間の和がすぐにわかるようになっているが、途中での値の更新もできる。</p>
-<h3>segment木</h3>
+<h3><a href="segment-tree.html">segment木</a></h3>
 <p>Fenwick木のさらに上位互換。<br>
 やはり、任意の区間の和がすぐにわかるようになっているが、途中での値の更新もできる。<br>
 逆演算を利用しないので、累積最大値なども任意区間で求められる。</p>
-<h3>lazy segment木</h3>
+<h3><a href="lazy-segment-tree.html">lazy segment木</a></h3>
 <p>segment木のさらに上位互換。<br>
 区間にまとめて代入とか、そういうことまでできるようになっている。</p>
-<h3>階差数列</h3>
+<h3><a href="difference-array.html">階差数列</a></h3>
 <p>累積和の逆。<br>
 階差数列の方をうまく処理し、累積和の方に真にほしいデータが出現するようにする。</p>
-<h3>二次元累積和</h3>
+<h3><a href="two-dimensional-cumulative-sum.html">二次元累積和</a></h3>
 <p>累積和、二次元配列バージョン。</p>
-<h3>動的計画法</h3>
+<h3><a href="dynamic-programming.html">動的計画法</a></h3>
 <p>あまり意識することはないが、実は累積和は動的計画法の一種である。</p>
   </article>
 

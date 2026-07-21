@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
-from html import escape
+from html import escape, unescape
 from pathlib import Path
 from urllib.parse import quote, urlparse
 import argparse
@@ -262,6 +262,94 @@ def make_knowledge_key_map(knowledge_pages: list["KnowledgePage"]) -> dict[str, 
         for key in page.tag_keys:
             result.setdefault(key, page)
     return result
+
+
+def make_knowledge_title_map(knowledge_pages: list["KnowledgePage"]) -> dict[str, "KnowledgePage"]:
+    """知識記事の正式な title からページを引く辞書を作る。
+
+    本文内の自動リンクは、意図しない別名展開を避けるため title 完全一致だけを対象にする。
+    通常の導線に出さない未分類ページはリンク候補から外す。
+    """
+    result: dict[str, KnowledgePage] = {}
+    for page in visible_knowledge_pages(knowledge_pages):
+        title = page.title.strip()
+        if title:
+            result.setdefault(title, page)
+    return result
+
+
+def link_knowledge_references_in_html(
+    body_html: str,
+    *,
+    current_page: "KnowledgePage",
+    title_map: dict[str, "KnowledgePage"],
+) -> str:
+    """知識記事本文の限定された参照表現だけを内部リンクへ変換する。
+
+    対象は次の2種類だけ。
+    - `## 関連アルゴリズム` 節内の、知識記事 title と完全一致する `###` 見出し
+    - Markdownの1行全体が `詳しくは「XXX」の記事参照。` と完全一致し、XXX が title と一致する文
+
+    aliases / absorbs では解決せず、既存リンクやそれ以外の文章も変更しない。
+    """
+
+    def target_for(raw_name: str) -> KnowledgePage | None:
+        name = unescape(raw_name).strip()
+        target = title_map.get(name)
+        if target is None or target.source_path == current_page.source_path:
+            return None
+        return target
+
+    section_pattern = re.compile(
+        r'(?P<head><h2\b[^>]*>\s*関連アルゴリズム\s*</h2>)(?P<body>.*?)(?=(?:<h2\b)|\Z)',
+        flags=re.S,
+    )
+    heading_pattern = re.compile(
+        r'<h3(?P<attrs>[^>]*)>(?P<name>[^<>]+)</h3>',
+        flags=re.S,
+    )
+
+    def replace_section(match: re.Match[str]) -> str:
+        def replace_heading(heading_match: re.Match[str]) -> str:
+            name_html = heading_match.group("name")
+            target = target_for(name_html)
+            if target is None:
+                return heading_match.group(0)
+            href = escape(Path(target.url).name, quote=True)
+            return (
+                f'<h3{heading_match.group("attrs")}>'
+                f'<a href="{href}">{name_html}</a>'
+                f'</h3>'
+            )
+
+        linked_body = heading_pattern.sub(replace_heading, match.group("body"))
+        return match.group("head") + linked_body
+
+    body_html = section_pattern.sub(replace_section, body_html)
+
+    # `nl2br` 使用時は、Markdown上の改行が <br> / <br /> になる。
+    # 段落の先頭、または <br> 直後から始まり、段落末尾または次の <br> 直前で終わる
+    # 完全一致の1行だけを対象にする。
+    reference_pattern = re.compile(
+        r'(?P<prefix><p>|<br\s*/?>\s*)'
+        r'詳しくは「(?P<name>[^<>「」]+)」の記事参照。'
+        r'(?=(?:</p>|<br\s*/?>))',
+        flags=re.I,
+    )
+
+    def replace_reference(match: re.Match[str]) -> str:
+        name_html = match.group("name")
+        target = target_for(name_html)
+        if target is None:
+            return match.group(0)
+        href = escape(Path(target.url).name, quote=True)
+        return (
+            f'{match.group("prefix")}詳しくは「'
+            f'<a href="{href}">{name_html}</a>'
+            f'」の記事参照。'
+        )
+
+    return reference_pattern.sub(replace_reference, body_html)
 
 
 def resolve_related_knowledge_pages(
@@ -1733,6 +1821,7 @@ def render_knowledge_page(
     page: KnowledgePage,
     related_explanations: list[ExplanationPage],
     related_knowledge: list[KnowledgePage],
+    knowledge_title_map: dict[str, KnowledgePage],
 ) -> str:
     related_explanation_items = "".join(
         f'<li><a href="../{escape(p.url)}">{escape(p.full_title)}</a></li>'
@@ -1744,12 +1833,18 @@ def render_knowledge_page(
         for k in sorted(related_knowledge, key=knowledge_sort_key)
     ) or '<li class="muted">なし</li>'
 
+    linked_body_html = link_knowledge_references_in_html(
+        page.body_html,
+        current_page=page,
+        title_map=knowledge_title_map,
+    )
+
     body = f"""
 {site_header_compact(prefix="../")}
 <main class="page-layout">
   <article class="markdown-body">
     <h1>{escape(page.title)}</h1>
-    {page.body_html}
+    {linked_body_html}
   </article>
 
   <aside class="sidebar">
@@ -2801,6 +2896,7 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
         (out_dir / p.url).write_text(render_explanation_page(p), encoding="utf-8")
 
     knowledge_key_map = make_knowledge_key_map(knowledge_pages)
+    knowledge_title_map = make_knowledge_title_map(knowledge_pages)
     missing_related_by_page: dict[Path, list[str]] = {}
 
     for k in knowledge_pages:
@@ -2812,7 +2908,12 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
         if missing_related:
             missing_related_by_page[k.source_path] = missing_related
         (out_dir / k.url).write_text(
-            render_knowledge_page(k, list(related_pages.values()), related_knowledge_pages),
+            render_knowledge_page(
+                k,
+                list(related_pages.values()),
+                related_knowledge_pages,
+                knowledge_title_map,
+            ),
             encoding="utf-8",
         )
 

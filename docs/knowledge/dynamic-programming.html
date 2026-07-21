@@ -421,27 +421,27 @@ for (int i=1; i&lt;=n; i++) {
 <p>bit全探索の考えを動的計画法に組み込んだもの。<br>
 $N$ 個の要素の順序を考えたり、$N$ 個の条件を全て満たす方法を求めたりする際に用いられることが多い。<br>
 一般には、$N$ が最大 $20$ 程度の問題で使われる。<br>
-詳しくは「bitDP」の記事参照。</p>
+詳しくは「<a href="bit-dp.html">bitDP</a>」の記事参照。</p>
 <h3>区間DP</h3>
 <p>各データに対する動的計画法ではなく、各区間を状態として動的計画法を行うもの。<br>
 区間の左端や右端を選んで操作するような問題で用いられることが多い。<br>
-詳しくは「区間DP」の記事参照。</p>
+詳しくは「<a href="interval-dp.html">区間DP</a>」の記事参照。</p>
 <h3>桁DP</h3>
 <p>巨大な整数を上の桁から順に決めていく動的計画法。<br>
 ある数以下の整数のうち、何かの条件を満たすものの個数や総和などを求める際に用いられることが多い。<br>
-詳しくは「桁DP」の記事参照。</p>
+詳しくは「<a href="digit-dp.html">桁DP</a>」の記事参照。</p>
 <h3>木DP</h3>
 <p>木の各頂点に状態を持ち、子の情報をまとめて親の状態を計算する動的計画法。<br>
-詳しくは「木DP」の記事参照。</p>
+詳しくは「<a href="tree-dp.html">木DP</a>」の記事参照。</p>
 <h3>全方位木DP</h3>
 <p>木の全ての頂点をそれぞれ根とした場合の答えを、計算結果を使い回しながら求める動的計画法。<br>
 子から親へ情報を集めた後、親側の情報も子へ渡すことで、全頂点に対する答えを効率よく求める。<br>
-詳しくは「全方位木DP」の記事参照。</p>
+詳しくは「<a href="rerooting-dp.html">全方位木DP</a>」の記事参照。</p>
 <h3>DAG上のDP</h3>
 <p>DAGの各頂点に状態を持ち、辺に沿って遷移する動的計画法。<br>
 トポロジカル順に処理することで、参照元の状態を計算済みにできる。<br>
 経路数や最長経路を求める問題などで用いられる。<br>
-詳しくは「DAG上のDP」の記事参照。</p>
+詳しくは「<a href="dag-dp.html">DAG上のDP</a>」の記事参照。</p>
 <h2>注意点</h2>
 <h3>表のサイズに注意</h3>
 <p>動的計画法でデータを書き込む表の大きさには限界がある。<br>
@@ -552,36 +552,36 @@ i 番目の荷物は重さが w[i]、価値が v[i] である。
 「今回のこの制約では動的計画法を使うのか」というところから判断しにくい。<br>
 それが、このアルゴリズムの真の難しさである。</p>
 <h2>関連アルゴリズム</h2>
-<h3>メモ化再帰</h3>
+<h3><a href="memoized-recursion.html">メモ化再帰</a></h3>
 <p>役に立つ場面は動的計画法とほぼ同じ。<br>
 再帰的な問題をボトムアップで解くのが動的計画法、トップダウンで解くのがメモ化再帰である。<br>
 動的計画法で解ける問題はメモ化再帰でも解けることが多く、逆もまた同様である。</p>
-<h3>bitDP</h3>
+<h3><a href="bit-dp.html">bitDP</a></h3>
 <p>bit全探索の考えを動的計画法に組み込んだもの。<br>
 $N$ 個の要素の順序を考えたり、$N$ 個の条件を全て満たす方法を求めたりする際に用いられることが多い。<br>
 一般には、$N$ が最大 $20$ 程度の問題で使われる。</p>
-<h3>区間DP</h3>
+<h3><a href="interval-dp.html">区間DP</a></h3>
 <p>各データに対する動的計画法ではなく、各区間を状態として動的計画法を行うもの。<br>
 区間の左端や右端を選んで操作するような問題で用いられることが多い。</p>
-<h3>桁DP</h3>
+<h3><a href="digit-dp.html">桁DP</a></h3>
 <p>巨大な整数を上の桁から順に決めていく動的計画法。<br>
 ある数以下の整数のうち、何かの条件を満たすものの個数や総和などを求める際に用いられることが多い。</p>
-<h3>木DP</h3>
+<h3><a href="tree-dp.html">木DP</a></h3>
 <p>木の各頂点に状態を持ち、子の情報をまとめて親の状態を計算する動的計画法。</p>
-<h3>全方位木DP</h3>
+<h3><a href="rerooting-dp.html">全方位木DP</a></h3>
 <p>木の全ての頂点をそれぞれ根とした場合の答えを、計算結果を使い回しながら求める動的計画法。<br>
 子から親へ情報を集めた後、親側の情報も子へ渡すことで、全頂点に対する答えを効率よく求める。</p>
-<h3>DAG上のDP</h3>
+<h3><a href="dag-dp.html">DAG上のDP</a></h3>
 <p>DAGの各頂点に状態を持ち、辺に沿って遷移する動的計画法。<br>
 トポロジカル順に処理することで、参照元の状態を計算済みにできる。<br>
 経路数や最長経路を求める問題などで用いられる。</p>
-<h3>バックトレース</h3>
+<h3><a href="backtrace.html">バックトレース</a></h3>
 <p>終了状態から逆再生しながら何かを調べるアルゴリズム。<br>
 動的計画法の後で、具体的な選び方や操作列などの詳細な情報を得るために用いられる。</p>
-<h3>最長増加部分列</h3>
+<h3><a href="lis.html">最長増加部分列</a></h3>
 <p>数列の一部を、順序を保ったまま連続でなくてもよいので選び、単調増加列を作る。<br>
 その長さを最大化する問題であり、動的計画法の応用で解ける。</p>
-<h3>最長共通部分列</h3>
+<h3><a href="lcs.html">最長共通部分列</a></h3>
 <p>$2$ つの数列または文字列の一部を、順序を保ったまま連続でなくてもよいので選び、全く同じ列を作る。<br>
 その長さを最大化する問題であり、動的計画法の応用で解ける。</p>
   </article>
@@ -596,7 +596,7 @@ $N$ 個の要素の順序を考えたり、$N$ 個の条件を全て満たす方
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li><a href="../knowledge/backtrace.html">バックトレース</a></li><li><a href="../knowledge/memoized-recursion.html">メモ化再帰</a></li><li><a href="../knowledge/bit-dp.html">bitDP</a></li><li><a href="../knowledge/knapsack-problem.html">ナップサック問題</a></li><li><a href="../knowledge/tree-dp.html">木DP</a></li><li><a href="../knowledge/rerooting-dp.html">全方位木DP</a></li><li><a href="../knowledge/dag-dp.html">DAG上のDP</a></li><li><a href="../knowledge/lcs.html">最長共通部分列</a></li><li><a href="../knowledge/lis.html">最長増加部分列</a></li>
+        <li><a href="../knowledge/backtrace.html">バックトレース</a></li><li><a href="../knowledge/memoized-recursion.html">メモ化再帰</a></li><li><a href="../knowledge/interval-dp.html">区間DP</a></li><li><a href="../knowledge/bit-dp.html">bitDP</a></li><li><a href="../knowledge/knapsack-problem.html">ナップサック問題</a></li><li><a href="../knowledge/tree-dp.html">木DP</a></li><li><a href="../knowledge/digit-dp.html">桁DP</a></li><li><a href="../knowledge/rerooting-dp.html">全方位木DP</a></li><li><a href="../knowledge/dag-dp.html">DAG上のDP</a></li><li><a href="../knowledge/lcs.html">最長共通部分列</a></li><li><a href="../knowledge/lis.html">最長増加部分列</a></li>
       </ul>
     </section>
 

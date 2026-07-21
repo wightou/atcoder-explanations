@@ -171,6 +171,8 @@ STUBS: list[KnowledgeStub] = [
     k("connected-components-count", "連結成分数", "C問題相当", "典型問題集", aliases=["連結成分の個数"], related=["幅優先探索", "深さ優先探索", "隣接リスト"]),
     k("tree-dp", "木DP", "D問題相当", "典型問題集", related=["動的計画法", "木"]),
     k("bit-dp", "bitDP", "D問題相当", "典型問題集", related=["動的計画法", "bit全探索"]),
+    k("interval-dp", "区間DP", "D問題相当", "高速化系", related=["動的計画法"]),
+    k("digit-dp", "桁DP", "E問題相当", "高速化系", related=["動的計画法"]),
     k("graph-theory-basics", "グラフ理論の基礎", "D問題相当", "グラフ理論系", aliases=["グラフ理論の基礎（知識としてのみ）"]),
     k("union-find", "UnionFind木", "D問題相当", "変数とデータ構造", aliases=["DSU", "Disjoint Set Union"]),
     k("rooted-tree", "根付き木", "D問題相当", "グラフ理論系"),
@@ -270,7 +272,9 @@ KNOWN_TITLE_RENAMES = {
 # 既存記事本文を壊さず、分類や別名だけを現行仕様へ寄せたい記事。
 # create_knowledge_stubs.py 実行時に、front matter だけを更新する。
 KNOWN_FRONT_MATTER_SYNCS = {
+    "digit-dp",
     "divide-and-conquer",
+    "interval-dp",
     "mo-algorithm",
     "shakutori-method",
     "sliding-window",

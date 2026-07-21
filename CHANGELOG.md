@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## v69
+
+- `区間DP` と `桁DP` を `典型問題集` から外し、`高速化系` に変更。
+  - `区間DP`: `D問題相当` / `高速化系`。
+  - `桁DP`: `E問題相当` / `高速化系`。
+- `scripts/create_knowledge_stubs.py` 実行時、既存の `knowledge/interval-dp.md` と `knowledge/digit-dp.md` も front matter の分類を同期するように変更。
+
+## v68
+
+- `区間DP` と `桁DP` を独立した知識記事の生成対象に追加。
+  - `区間DP`: `D問題相当` / `典型問題集` / `knowledge/interval-dp.md`。
+  - `桁DP`: `E問題相当` / `典型問題集` / `knowledge/digit-dp.md`。
+  - どちらも `動的計画法` を関連知識として登録。
+- 知識記事本文の内部リンクを追加。
+  - `## 関連アルゴリズム` 節内で、`###` 見出しが既存知識記事の正式な `title` と完全一致する場合、該当記事へのリンクにする。
+  - Markdownの1行全体が `詳しくは「XXX」の記事参照。` と完全一致し、`XXX` が正式な `title` と一致する場合、`XXX` だけをリンクにする。
+  - aliases / absorbs や、定型文と一致しない文章は自動リンクしない。
+
 ## v67
 
 - 表セルの `{red}` などの色指定を、文字色ではなく背景色へ変更。
