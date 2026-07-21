@@ -169,10 +169,11 @@ STUBS: list[KnowledgeStub] = [
     k("interval-scheduling-problem", "区間スケジューリング問題", "C問題相当", "典型問題集", aliases=["interval scheduling"], related=["貪欲法", "ソート"]),
     k("shortest-path-problem", "最短経路問題", "D問題相当", "典型問題集", aliases=["迷路の最短経路", "shortest path"], related=["幅優先探索", "Dijkstra法", "Warshall-Floyd法"]),
     k("connected-components-count", "連結成分数", "C問題相当", "典型問題集", aliases=["連結成分の個数"], related=["幅優先探索", "深さ優先探索", "隣接リスト"]),
-    k("tree-dp", "木DP", "D問題相当", "典型問題集", related=["動的計画法", "木"]),
-    k("bit-dp", "bitDP", "D問題相当", "典型問題集", related=["動的計画法", "bit全探索"]),
+    k("tree-dp", "木DP", "D問題相当", "高速化系", related=["動的計画法", "木"]),
+    k("bit-dp", "bitDP", "D問題相当", "高速化系", related=["動的計画法", "bit全探索"]),
     k("interval-dp", "区間DP", "D問題相当", "高速化系", related=["動的計画法"]),
     k("digit-dp", "桁DP", "E問題相当", "高速化系", related=["動的計画法"]),
+    k("dag-dp", "DAG上のDP", "D問題相当", "高速化系", aliases=["DAG DP", "DAG上DP"], absorbs=["トポロジカルソート"], related=["動的計画法", "グラフ理論の基礎"]),
     k("graph-theory-basics", "グラフ理論の基礎", "D問題相当", "グラフ理論系", aliases=["グラフ理論の基礎（知識としてのみ）"]),
     k("union-find", "UnionFind木", "D問題相当", "変数とデータ構造", aliases=["DSU", "Disjoint Set Union"]),
     k("rooted-tree", "根付き木", "D問題相当", "グラフ理論系"),
@@ -192,7 +193,7 @@ STUBS: list[KnowledgeStub] = [
     # E問題相当
     k("hash", "ハッシュ", "E問題相当", "文字列系"),
     k("rolling-hash", "ローリングハッシュ", "E問題相当", "文字列系", related=["ハッシュ"]),
-    k("rerooting-dp", "全方位木DP", "E問題相当", "グラフ理論系", related=["木DP"]),
+    k("rerooting-dp", "全方位木DP", "E問題相当", "高速化系", related=["木DP"]),
     k("ternary-search", "三分探索", "E問題相当", "データ探索系"),
     k("fenwick-tree", "Fenwick木", "E問題相当", "変数とデータ構造", aliases=["BIT", "Binary Indexed Tree"]),
     k("segment-tree", "segment木", "E問題相当", "変数とデータ構造", aliases=["セグメント木"]),
@@ -206,7 +207,6 @@ STUBS: list[KnowledgeStub] = [
     k("bellman-ford", "Bellman-Ford法", "E問題相当", "グラフ理論系"),
     k("warshall-floyd", "Warshall-Floyd法", "E問題相当", "グラフ理論系", aliases=["Floyd-Warshall"]),
     k("argument-sort", "偏角ソート", "E問題相当", "幾何学系"),
-    k("dag-dp", "DAG上のDP", "E問題相当", "典型問題集", aliases=["DAG DP", "DAG上DP"], absorbs=["トポロジカルソート"], related=["動的計画法", "グラフ理論の基礎"]),
 
     # F問題相当
     k("lazy-segment-tree", "lazy segment木", "F問題相当", "変数とデータ構造", aliases=["遅延セグメント木"]),
@@ -257,151 +257,6 @@ STUBS: list[KnowledgeStub] = [
 ]
 
 
-KNOWN_RENAMES = {
-    "topological-sort": "dag-dp",
-    "two-pointers": "shakutori-method",
-}
-
-# 旧 v41 / v42 では knowledge/sliding-window.md が「尺取法」だった。
-# その本文を保持したまま、新しい「尺取法」ページへ移すための条件付きリネーム。
-# すでに「sliding window法」として作成済みの場合はリネームしない。
-KNOWN_TITLE_RENAMES = {
-    ("sliding-window", "尺取法"): "shakutori-method",
-}
-
-# 既存記事本文を壊さず、分類や別名だけを現行仕様へ寄せたい記事。
-# create_knowledge_stubs.py 実行時に、front matter だけを更新する。
-KNOWN_FRONT_MATTER_SYNCS = {
-    "digit-dp",
-    "divide-and-conquer",
-    "interval-dp",
-    "mo-algorithm",
-    "shakutori-method",
-    "sliding-window",
-    "sqrt-decomposition",
-    "two-pointer-method",
-}
-
-
-def stub_by_slug(slug: str) -> KnowledgeStub:
-    for stub in STUBS:
-        if stub.slug == slug:
-            return stub
-    raise KeyError(slug)
-
-
-def replace_or_insert_front_matter_field(front: str, name: str, value: str) -> str:
-    lines = front.splitlines()
-    prefix = f"{name}:"
-    for i, line in enumerate(lines):
-        if line.startswith(prefix):
-            lines[i] = f"{name}: {value}"
-            return "\n".join(lines) + "\n"
-    lines.append(f"{name}: {value}")
-    return "\n".join(lines) + "\n"
-
-
-def replace_or_insert_front_matter_list(front: str, name: str, values: list[str]) -> str:
-    lines = front.splitlines()
-    prefix = f"{name}:"
-    start = None
-    for i, line in enumerate(lines):
-        if line.startswith(prefix):
-            start = i
-            break
-    new_lines = [f"{name}:"] + [f"  - {value}" for value in values]
-    if start is None:
-        lines.extend(new_lines)
-        return "\n".join(lines) + "\n"
-    end = start + 1
-    while end < len(lines) and (lines[end].startswith("  - ") or lines[end].strip() == ""):
-        end += 1
-    lines[start:end] = new_lines
-    return "\n".join(lines) + "\n"
-
-
-def sync_known_front_matter(*, dry_run: bool = False, skip_paths: set[Path] | None = None) -> list[Path]:
-    updated: list[Path] = []
-    skip_paths = skip_paths or set()
-    for slug in sorted(KNOWN_FRONT_MATTER_SYNCS):
-        path = KNOWLEDGE_DIR / f"{slug}.md"
-        if path in skip_paths or not path.exists():
-            continue
-        stub = stub_by_slug(slug)
-        text = path.read_text(encoding="utf-8")
-        if not text.startswith("---\n"):
-            continue
-        end = text.find("\n---\n", 4)
-        if end == -1:
-            continue
-        new_text = rewrite_front_matter_to_stub(text, stub)
-        if new_text != text:
-            if not dry_run:
-                path.write_text(new_text, encoding="utf-8")
-            updated.append(path)
-    return updated
-
-
-def front_matter_title(text: str) -> str | None:
-    if not text.startswith("---\n"):
-        return None
-    end = text.find("\n---\n", 4)
-    if end == -1:
-        return None
-    for line in text[4:end].splitlines():
-        if line.startswith("title:"):
-            return line.split(":", 1)[1].strip().strip('"\'')
-    return None
-
-
-def rewrite_front_matter_to_stub(text: str, stub: KnowledgeStub) -> str:
-    if not text.startswith("---\n"):
-        return text
-    end = text.find("\n---\n", 4)
-    if end == -1:
-        return text
-    front = text[4:end + 1]
-    body = text[end + len("\n---\n"):]
-    front = replace_or_insert_front_matter_field(front, "title", stub.title)
-    front = replace_or_insert_front_matter_field(front, "level", stub.level)
-    front = replace_or_insert_front_matter_field(front, "category", stub.category)
-    front = replace_or_insert_front_matter_list(front, "aliases", stub.aliases)
-    front = replace_or_insert_front_matter_list(front, "absorbs", stub.absorbs)
-    front = replace_or_insert_front_matter_list(front, "related", stub.related)
-    return "---\n" + front + "---\n" + body
-
-
-def apply_known_renames(*, dry_run: bool = False) -> list[tuple[Path, Path]]:
-    renamed: list[tuple[Path, Path]] = []
-    for old_slug, new_slug in KNOWN_RENAMES.items():
-        old_path = KNOWLEDGE_DIR / f"{old_slug}.md"
-        new_path = KNOWLEDGE_DIR / f"{new_slug}.md"
-        if not old_path.exists() or new_path.exists():
-            continue
-        new_stub = stub_by_slug(new_slug)
-        if not dry_run:
-            text = old_path.read_text(encoding="utf-8")
-            text = rewrite_front_matter_to_stub(text, new_stub)
-            new_path.write_text(text, encoding="utf-8")
-            old_path.unlink()
-        renamed.append((old_path, new_path))
-
-    for (old_slug, expected_title), new_slug in KNOWN_TITLE_RENAMES.items():
-        old_path = KNOWLEDGE_DIR / f"{old_slug}.md"
-        new_path = KNOWLEDGE_DIR / f"{new_slug}.md"
-        if not old_path.exists() or new_path.exists():
-            continue
-        text = old_path.read_text(encoding="utf-8")
-        if front_matter_title(text) != expected_title:
-            continue
-        new_stub = stub_by_slug(new_slug)
-        if not dry_run:
-            text = rewrite_front_matter_to_stub(text, new_stub)
-            new_path.write_text(text, encoding="utf-8")
-            old_path.unlink()
-        renamed.append((old_path, new_path))
-    return renamed
-
 
 def yaml_list(name: str, values: list[str]) -> str:
     if not values:
@@ -428,10 +283,8 @@ def render_stub(stub: KnowledgeStub) -> str:
     )
 
 
-def create_stubs(*, dry_run: bool = False) -> tuple[list[Path], list[Path], list[tuple[Path, Path]], list[Path]]:
+def create_stubs(*, dry_run: bool = False) -> tuple[list[Path], list[Path]]:
     KNOWLEDGE_DIR.mkdir(parents=True, exist_ok=True)
-    renamed = apply_known_renames(dry_run=dry_run)
-    synced = sync_known_front_matter(dry_run=dry_run, skip_paths={old_path for old_path, _ in renamed})
     created: list[Path] = []
     skipped: list[Path] = []
     seen_slugs: set[str] = set()
@@ -446,7 +299,7 @@ def create_stubs(*, dry_run: bool = False) -> tuple[list[Path], list[Path], list
         if not dry_run:
             path.write_text(render_stub(stub), encoding="utf-8")
         created.append(path)
-    return created, skipped, renamed, synced
+    return created, skipped
 
 
 def main() -> int:
@@ -455,16 +308,8 @@ def main() -> int:
     parser.add_argument("--show-skipped", action="store_true", help="skip した既存ファイルのパスだけを表示します。本文や front matter は表示しません。")
     args = parser.parse_args()
 
-    created, skipped, renamed, synced = create_stubs(dry_run=args.dry_run)
+    created, skipped = create_stubs(dry_run=args.dry_run)
     mode = "would create" if args.dry_run else "created"
-    rename_mode = "would rename" if args.dry_run else "renamed"
-    sync_mode = "would sync front matter" if args.dry_run else "synced front matter"
-    print(f"{rename_mode}: {len(renamed)}")
-    for old_path, new_path in renamed:
-        print(f"  ~ {old_path.relative_to(ROOT)} -> {new_path.relative_to(ROOT)}")
-    print(f"{sync_mode}: {len(synced)}")
-    for path in synced:
-        print(f"  * {path.relative_to(ROOT)}")
     print(f"{mode}: {len(created)}")
     for path in created:
         print(f"  + {path.relative_to(ROOT)}")
