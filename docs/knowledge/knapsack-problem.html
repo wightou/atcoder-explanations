@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ナップサック問題</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -20,7 +30,760 @@
   <article class="markdown-body">
     <h1>ナップサック問題</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>次のような問題を、ナップサック問題という。<br>
+ABCのC問題レベル（簡単なもの）～G問題以上レベル（難しいもの）。</p>
+<pre><code>N 個の品物がある。
+i 番目の品物の重さは w[i]、価値は v[i] である。
+重さの合計が W 以下になるように、いくつかの品物を選ぶ。
+選んだ品物の価値の合計の最大値を求めよ。</code></pre>
+<p>基本の問題では、各品物は高々 $1$ 回しか選べない。（$0/1$ ナップサック）<br>
+この場合、各品物について「選ばない」「選ぶ」の $2$ 通りがある。<br>
+よって、愚直に全ての選び方を調べると $O(2^N)$ かかる。</p>
+<p>特に制限のない一般の $0/1$ ナップサック問題はNP困難である。<br>
+すなわち、現実的な時間で解ける厳密解法があるかどうかは未解決問題である。</p>
+<p>一方、何か制約がある場合には、それを利用して解ける場合がある。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>$N$ 上限</th>
+<th>$W$ 上限</th>
+<th>$w_i$ 上限</th>
+<th>$v_i$ 上限</th>
+<th>その他の制約</th>
+<th>使える解法</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>約 $20$</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>bit全探索</td>
+</tr>
+<tr>
+<td>約 $40$</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>半分全列挙</td>
+</tr>
+<tr>
+<td>―</td>
+<td>約 $10^8/N$</td>
+<td>―</td>
+<td>―</td>
+<td>$v_i=w_i$（※1）</td>
+<td>部分和問題用の動的計画法</td>
+</tr>
+<tr>
+<td>―</td>
+<td>約 $10^8/N$</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>動的計画法</td>
+</tr>
+<tr>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>約 $10^8/N^2$</td>
+<td>―</td>
+<td>双対性を利用した動的計画法</td>
+</tr>
+<tr>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>答え $&lt;$ 約 $10^8/N$</td>
+<td>双対性を利用した動的計画法</td>
+</tr>
+<tr>
+<td>約 $10^5$？</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>$v_i/w_i$ が広く分布</td>
+<td>分枝限定法</td>
+</tr>
+<tr>
+<td>約 $10^7$</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>AHCでの出題</td>
+<td>貪欲法（ヒューリスティック系）</td>
+</tr>
+<tr>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>何らかの制約</td>
+<td>制約に合わせる</td>
+</tr>
+<tr>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>―</td>
+<td>未解決問題（NP困難）</td>
+</tr>
+</tbody>
+</table></div>
+<p>（※1）重さの設定がなく、価値自体が基準を超えてはいけないという条件。</p>
+<h2>典型問題例</h2>
+<ul>
+<li><a href="https://atcoder.jp/contests/dp/tasks/dp_d" target="_blank" rel="noopener noreferrer">Educational DP Contest D - Knapsack 1</a></li>
+<p>  - 重さを添字にする基本的な $0/1$ ナップサック問題。</p>
+<li><a href="https://atcoder.jp/contests/dp/tasks/dp_e" target="_blank" rel="noopener noreferrer">Educational DP Contest E - Knapsack 2</a></li>
+<p>  - 容量が大きく、価値の総和を添字にする問題。</p>
+<li><a href="https://atcoder.jp/contests/abc032/tasks/abc032_d" target="_blank" rel="noopener noreferrer">ABC032 D - ナップサック問題</a></li>
+<p>  - 制約に応じて、半分全列挙・重さDP・価値DPを使い分ける問題。</p>
+<li><a href="https://atcoder.jp/contests/tdpc/tasks/tdpc_contest" target="_blank" rel="noopener noreferrer">Typical DP Contest A - コンテスト</a></li>
+<p>  - 部分和問題で、作れる合計値の種類数を求める問題。</p>
+<li><a href="https://atcoder.jp/contests/abc286/tasks/abc286_d" target="_blank" rel="noopener noreferrer">ABC286 D - Money in Hand</a></li>
+<p>  - 各種類を使える個数に上限がある部分和問題。</p>
+</ul>
+<h2>コード例</h2>
+<h3>$0/1$ ナップサック問題、$N$ が最大 $20$ くらい（C問題レベル）</h3>
+<p>$N$ が最大 $20$ くらいであれば、$O(2^N)$ が間に合う。<br>
+これはbit全探索の典型問題なので、解説は省略。</p>
+<h3>$0/1$ ナップサック問題、$N$ が最大 $40$ くらい（F問題レベル）</h3>
+<p>$N$ が最大 $40$ くらいであれば、$O(2^{N/2})$ が間に合う。<br>
+これは半分全列挙の典型問題なので、概略のみ記す。</p>
+<ul>
+<li>前半の全ての部分集合について、重さと価値を列挙する</li>
+<li>後半についても同様に列挙する</li>
+<li>後半の状態を重さ順に並べ、他の候補より価値が小さいのに重い候補を削除する</li>
+<li>前半の各状態に対し、残り容量以下で価値が最大の後半状態を二分探索する</li>
+</ul>
+<h3>$0/1$ ナップサック問題、$W$ が小さめ、重さ合計は $W$ ちょうど指定（D問題レベル）</h3>
+<p>この形で出題されることはあまりないが、理解の順として必要なので掲載。<br>
+典型問題集という意味では、$1$ つ下の形の方が主役。<br>
+重さの合計が「$W$ 以下」ではなく、「$W$ ちょうど」にしなければいけない場合の問題。</p>
+<p>例として、以下を考える。</p>
+<pre><code>品物0: 重さ 2, 価値 2
+品物1: 重さ 1, 価値 3
+品物2: 重さ 3, 価値 4
+要求される重さ: 5</code></pre>
+<p>これに対し、以下のようにDPテーブルを用意する。</p>
+<pre><code>dp[i][j] = 先頭 i 個の品物だけを使い、重さの合計を j ちょうどにしたときの価値の最大値</code></pre>
+<p>明らかにわかる初期データとして、荷物なしの場合の値を埋める。<br>
+<code>-INF</code> は、全ての品物の価値を足してもまだ負の数になるくらいの、絶対値が大きな負の数。<br>
+そうすることで、負の数が入っていれば実現不可能と判定できる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>制限＼重さ</th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+<th>$5$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>品物なし</td>
+<td>$0$</td>
+<td><code>-INF</code></td>
+<td><code>-INF</code></td>
+<td><code>-INF</code></td>
+<td><code>-INF</code></td>
+<td><code>-INF</code></td>
+</tr>
+<tr>
+<td>品物 $0$ まで</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+<tr>
+<td>品物 $1$ まで</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+<tr>
+<td>品物 $2$ まで</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+</tbody>
+</table></div>
+<p>その後、品物を $1$ つずつ制限範囲に追加して、テーブルを $1$ 段ずつ埋めていく。<br>
+$i$ 番目の品物を制限範囲に追加するときは、次の $2$ 通りを比較する。</p>
+<ul>
+<li>$i$ 番目の品物を選ばない。</li>
+<li>$i$ 番目の品物を選ぶ。</li>
+</ul>
+<p>したがって、遷移は次のようになる。</p>
+<p>$$<br>
+dp[i+1][j]<br>
+=<br>
+\begin{cases}<br>
+\max(dp[i][j],\ dp[i][j-w_i]+v_i) &amp; (j\geq w_i) \\<br>
+dp[i][j] &amp; (j&lt;w_i)<br>
+\end{cases}<br>
+$$</p>
+<p>これに従ってテーブルを埋めると、以下のようになり、答えは $6$ となる。<br>
+重さがちょうど $5$ でなければならないので、重さ $4$ のところにある $7$ は採用できない。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>制限＼重さ</th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+<th>$5$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>品物なし</td>
+<td>$0$</td>
+<td><code>-INF</code></td>
+<td><code>-INF</code></td>
+<td><code>-INF</code></td>
+<td><code>-INF</code></td>
+<td><code>-INF</code></td>
+</tr>
+<tr>
+<td>品物 $0$ まで</td>
+<td>$0$</td>
+<td><code>-INF</code></td>
+<td>$2$</td>
+<td><code>-INF</code></td>
+<td><code>-INF</code></td>
+<td><code>-INF</code></td>
+</tr>
+<tr>
+<td>品物 $1$ まで</td>
+<td>$0$</td>
+<td>$3$</td>
+<td>$2$</td>
+<td>$5$</td>
+<td><code>-INF</code></td>
+<td><code>-INF</code></td>
+</tr>
+<tr>
+<td>品物 $2$ まで</td>
+<td>$0$</td>
+<td>$3$</td>
+<td>$2$</td>
+<td>$5$</td>
+<td>$7$</td>
+<td>$6$</td>
+</tr>
+</tbody>
+</table></div>
+<p>コードは次のようになる。</p>
+<pre><code>vector&lt;vector&lt;long long&gt;&gt; dp(N+1,vector&lt;long long&gt;(W+1,-INF));
+dp.at(0).at(0) = 0;
+
+for (int i=0; i&lt;N; i++) {
+  for (int j=0; j&lt;=W; j++) {
+    dp.at(i+1).at(j) = dp.at(i).at(j);
+    if (j&gt;=w.at(i)) {
+      dp.at(i+1).at(j) = max(dp.at(i+1).at(j),dp.at(i).at(j-w.at(i))+v.at(i));
+    }
+  }
+}
+
+cout &lt;&lt; dp.at(N).at(W) &lt;&lt; &#x27;\n&#x27;;</code></pre>
+<p>状態数は $(N+1)(W+1)$ 個で、各状態を $O(1)$ で更新する。</p>
+<ul>
+<li>時間計算量：$O(NW)$</li>
+<li>空間計算量：$O(NW)$</li>
+</ul>
+<p>【高度内容】インラインDPで以下のようにすることもできる。</p>
+<pre><code>dp[j] = 処理済みの品物だけを使い、重さの合計を j ちょうどにしたときの価値の最大値</code></pre>
+<pre><code>vector&lt;long long&gt; dp(W+1,-INF);
+dp.at(0) = 0;
+
+for (int i=0; i&lt;N; i++) {
+  for (int j=W; j&gt;=w.at(i); j--) {
+    dp.at(j) = max(dp.at(j),dp.at(j-w.at(i))+v.at(i));
+  }
+}
+
+cout &lt;&lt; dp.at(W) &lt;&lt; &#x27;\n&#x27;;</code></pre>
+<ul>
+<li>時間計算量：$O(NW)$</li>
+<li>空間計算量：$O(W)$</li>
+</ul>
+<p>容量 $j$ は、必ず大きい方から小さい方へ処理する。<br>
+昇順に処理すると、同じ品物を使って更新した値を、その品物の次の更新でも参照してしまう。</p>
+<p>空間計算量は大幅に軽量化、時間計算量は定数程度の軽量化。</p>
+<h3>$0/1$ ナップサック問題、$W$ が小さめ、重さ合計は $W$ 以下指定（D問題レベル）</h3>
+<p>最も典型的なナップサック問題。<br>
+重さ合計が $W$ ちょうどでなく、余裕を残してもよい場合。<br>
+この場合、$2$ つの考え方がある。</p>
+<p>$1$ つは、上の問題の方法で $W$ ちょうどの表を作り、最下段の最大値を全探索する方法。<br>
+初めてのナップサック問題なら、これで十分。</p>
+<p>だが、今後の応用のためにはもう $1$ つの方法を習得したい。<br>
+それは、「重さ $1$、価値 $0$ のダミー品物を好きなだけ入れてよい」とする方法。<br>
+こうすると、重さ合計 $4$ になる解が、ダミー品物を $1$ つ足した形で重さ合計 $5$ のデータにも反映される。<br>
+結果として、DPテーブルが以下の意味を持つようになる。</p>
+<pre><code>dp[i][j] = 先頭 i 個の品物だけを使い、重さの合計を j 以下にしたときの価値の最大値</code></pre>
+<p>そして、DPテーブルの初期化が次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>制限＼重さ</th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+<th>$5$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>品物なし</td>
+<td>$0$</td>
+<td>$0$</td>
+<td>$0$</td>
+<td>$0$</td>
+<td>$0$</td>
+<td>$0$</td>
+</tr>
+<tr>
+<td>品物 $0$ まで</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+<tr>
+<td>品物 $1$ まで</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+<tr>
+<td>品物 $2$ まで</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+</tbody>
+</table></div>
+<p>遷移は同じ式で、結果は以下のようになり、答えは $7$ になる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>制限＼重さ</th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+<th>$5$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>品物なし</td>
+<td>$0$</td>
+<td>$0$</td>
+<td>$0$</td>
+<td>$0$</td>
+<td>$0$</td>
+<td>$0$</td>
+</tr>
+<tr>
+<td>品物 $0$ まで</td>
+<td>$0$</td>
+<td>$0$</td>
+<td>$2$</td>
+<td>$2$</td>
+<td>$2$</td>
+<td>$2$</td>
+</tr>
+<tr>
+<td>品物 $1$ まで</td>
+<td>$0$</td>
+<td>$3$</td>
+<td>$3$</td>
+<td>$5$</td>
+<td>$5$</td>
+<td>$5$</td>
+</tr>
+<tr>
+<td>品物 $2$ まで</td>
+<td>$0$</td>
+<td>$3$</td>
+<td>$3$</td>
+<td>$5$</td>
+<td>$7$</td>
+<td>$7$</td>
+</tr>
+</tbody>
+</table></div>
+<p>コードは、初期化が変わるだけ。</p>
+<pre><code>vector&lt;vector&lt;long long&gt;&gt; dp(N+1,vector&lt;long long&gt;(W+1,0));
+
+for (int i=0; i&lt;N; i++) {
+  for (int j=0; j&lt;=W; j++) {
+    dp.at(i+1).at(j) = dp.at(i).at(j);
+    if (j&gt;=w.at(i)) {
+      dp.at(i+1).at(j) = max(dp.at(i+1).at(j),dp.at(i).at(j-w.at(i))+v.at(i));
+    }
+  }
+}
+
+cout &lt;&lt; dp.at(N).at(W) &lt;&lt; &#x27;\n&#x27;;</code></pre>
+<p>状態数は $(N+1)(W+1)$ 個で、各状態を $O(1)$ で更新する。</p>
+<ul>
+<li>時間計算量：$O(NW)$</li>
+<li>空間計算量：$O(NW)$</li>
+</ul>
+<p>【高度内容】インラインDPの場合のコードは以下。</p>
+<pre><code>vector&lt;long long&gt; dp(W+1,0);
+
+for (int i=0; i&lt;N; i++) {
+  for (int j=W; j&gt;=w.at(i); j--) {
+    dp.at(j) = max(dp.at(j),dp.at(j-w.at(i))+v.at(i));
+  }
+}
+
+cout &lt;&lt; dp.at(W) &lt;&lt; &#x27;\n&#x27;;</code></pre>
+<ul>
+<li>時間計算量：$O(NW)$</li>
+<li>空間計算量：$O(W)$</li>
+</ul>
+<p>容量 $j$ は、必ず大きい方から小さい方へ処理する。<br>
+昇順に処理すると、同じ品物を使って更新した値を、その品物の次の更新でも参照してしまう。</p>
+<p>空間計算量は大幅に軽量化、時間計算量は定数程度の軽量化。</p>
+<h3>$0/1$ ナップサック問題、$\sum v[i]$ が小さめ、重さ合計は $W$ 以下指定（D問題レベル）</h3>
+<p>容量 $W$ が大きすぎると、$O(NW)$ の標準的な解き方は不可能。<br>
+しかし、価値の総和 $\sum v[i]$ が小さければ、双対性を利用して解ける。<br>
+つまり、「ある重さ以下での価値の最大値」は、「ある価値に必要な重さの最小値」の一覧から求められる。</p>
+<p>例として、前と同じ品物を考える。</p>
+<pre><code>品物0: 重さ 2, 価値 2
+品物1: 重さ 1, 価値 3
+品物2: 重さ 3, 価値 4
+容量: 5</code></pre>
+<p>これに対し、以下のようにDPテーブルを用意する。</p>
+<pre><code>dp[i][x] = 先頭 i 個の品物だけを使い、価値の合計を x ちょうどにするために必要な重さの最小値</code></pre>
+<p>価値の合計は最大で $2+3+4=9$ なので、$x=0,1,\ldots,9$ の状態を用意する。<br>
+明らかにわかる初期データとして、品物なしの場合の値を埋める。<br>
+<code>INF</code> は、全ての品物の重さを足しても届かない程度に大きな値とする。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>制限＼価値</th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+<th>$5$</th>
+<th>$6$</th>
+<th>$7$</th>
+<th>$8$</th>
+<th>$9$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>品物なし</td>
+<td>$0$</td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+</tr>
+<tr>
+<td>品物 $0$ まで</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+<tr>
+<td>品物 $1$ まで</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+<tr>
+<td>品物 $2$ まで</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+</tbody>
+</table></div>
+<p>その後、品物を $1$ つずつ制限範囲に追加して、テーブルを $1$ 段ずつ埋めていく。<br>
+$i$ 番目の品物を制限範囲に追加するときは、次の $2$ 通りを比較する。</p>
+<ul>
+<li>$i$ 番目の品物を選ばない。</li>
+<li>$i$ 番目の品物を選ぶ。</li>
+</ul>
+<p>したがって、遷移は次のようになる。</p>
+<p>$$<br>
+dp[i+1][x]<br>
+=<br>
+\begin{cases}<br>
+\min(dp[i][x],\ dp[i][x-v_i]+w_i) &amp; (x\geq v_i) \\<br>
+dp[i][x] &amp; (x&lt;v_i)<br>
+\end{cases}<br>
+$$</p>
+<p>これに従ってテーブルを埋めると、以下のようになり、答えは $7$ となる。<br>
+価値 $7$ は重さ $4$ で作れるが、価値 $8$ は作れず、価値 $9$ には重さ $6$ が必要なので採用できない。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>制限＼価値</th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+<th>$5$</th>
+<th>$6$</th>
+<th>$7$</th>
+<th>$8$</th>
+<th>$9$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>品物なし</td>
+<td>$0$</td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+</tr>
+<tr>
+<td>品物 $0$ まで</td>
+<td>$0$</td>
+<td><code>INF</code></td>
+<td>$2$</td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+</tr>
+<tr>
+<td>品物 $1$ まで</td>
+<td>$0$</td>
+<td><code>INF</code></td>
+<td>$2$</td>
+<td>$1$</td>
+<td><code>INF</code></td>
+<td>$3$</td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+<td><code>INF</code></td>
+</tr>
+<tr>
+<td>品物 $2$ まで</td>
+<td>$0$</td>
+<td><code>INF</code></td>
+<td>$2$</td>
+<td>$1$</td>
+<td>$3$</td>
+<td>$3$</td>
+<td>$5$</td>
+<td>$4$</td>
+<td><code>INF</code></td>
+<td>$6$</td>
+</tr>
+</tbody>
+</table></div>
+<p>コードは次のようになる。</p>
+<pre><code>int sum_v = accumulate(v.begin(),v.end(),0);
+vector&lt;vector&lt;long long&gt;&gt; dp(N+1,vector&lt;long long&gt;(sum_v+1,INF));
+dp.at(0).at(0) = 0;
+
+for (int i=0; i&lt;N; i++) {
+  for (int x=0; x&lt;=sum_v; x++) {
+    dp.at(i+1).at(x) = dp.at(i).at(x);
+    if (x&gt;=v.at(i)) {
+      dp.at(i+1).at(x) = min(dp.at(i+1).at(x),dp.at(i).at(x-v.at(i))+w.at(i));
+    }
+  }
+}
+
+int answer = 0;
+for (int x=0; x&lt;=sum_v; x++) {
+  if (dp.at(N).at(x)&lt;=W) answer = x;
+}
+cout &lt;&lt; answer &lt;&lt; &#x27;\n&#x27;;</code></pre>
+<p>状態数は $(N+1)(\sum v[i]+1)$ 個で、各状態を $O(1)$ で更新する。</p>
+<ul>
+<li>時間計算量：$O\left(N\sum v[i]\right)$</li>
+<li>空間計算量：$O\left(N\sum v[i]\right)$</li>
+</ul>
+<p>価値の総和自体が大きくても、答えが $B$ 未満であると保証されている場合は有効。<br>
+具体的には、$0\leq x&lt;B$ の状態だけを持てばよい。<br>
+この場合、時間計算量は $O(NB)$、空間計算量も $O(NB)$ となる。</p>
+<p>【高度内容】インラインDPで以下のようにすることもできる。</p>
+<pre><code>dp[x] = 処理済みの品物だけを使い、価値の合計を x ちょうどにするために必要な重さの最小値</code></pre>
+<pre><code>int sum_v = accumulate(v.begin(),v.end(),0);
+vector&lt;long long&gt; dp(sum_v+1,INF);
+dp.at(0) = 0;
+
+for (int i=0; i&lt;N; i++) {
+  for (int x=sum_v; x&gt;=v.at(i); x--) {
+    dp.at(x) = min(dp.at(x),dp.at(x-v.at(i))+w.at(i));
+  }
+}
+
+int answer = 0;
+for (int x=0; x&lt;=sum_v; x++) {
+  if (dp.at(x)&lt;=W) answer = x;
+}
+cout &lt;&lt; answer &lt;&lt; &#x27;\n&#x27;;</code></pre>
+<ul>
+<li>時間計算量：$O\left(N\sum v[i]\right)$</li>
+<li>空間計算量：$O\left(\sum v[i]\right)$</li>
+</ul>
+<p>価値 $x$ は、必ず大きい方から小さい方へ処理する。<br>
+昇順に処理すると、同じ品物を使って更新した値を、その品物の次の更新でも参照してしまう。</p>
+<p>空間計算量は大幅に軽量化、時間計算量は定数程度の軽量化。</p>
+<h3>部分和問題（D問題レベル）</h3>
+<p>動的計画法のページで紹介したもの。<br>
+重さとコストに同じ値を使用するだけなので、解説は省略。</p>
+<h3>完全ナップサック問題（D問題レベル）</h3>
+<p>同じ品物を重ねていくつでも選んでもいい場合もある。<br>
+これは、完全ナップサック問題と呼ばれる。<br>
+この場合、遷移がこうなる。</p>
+<p>$$<br>
+dp[i+1][j]<br>
+=<br>
+\begin{cases}<br>
+\max(dp[i][j],\ dp[i+1][j-w_i]+v_i) &amp; (j\geq w_i) \\<br>
+dp[i][j] &amp; (j&lt;w_i)<br>
+\end{cases}<br>
+$$</p>
+<pre><code>for (int i=0; i&lt;N; i++) {
+  for (int j=0; j&lt;=W; j++) {
+    dp.at(i+1).at(j) = dp.at(i).at(j);
+    if (j&gt;=w.at(i)) {
+      dp.at(i+1).at(j) = max(dp.at(i+1).at(j),dp.at(i+1).at(j-w.at(i))+v.at(i));
+    }
+  }
+}</code></pre>
+<p>元の形との差は、その品物を選ぶ場合の遷移を <code>dp[i]</code> からではなく <code>dp[i+1]</code> から行う点。<br>
+これにより、一度その荷物を選んだデータに同じ荷物を重ねて採用できる遷移となっている。</p>
+<p>【高度内容】インラインDPの場合は、以下。</p>
+<pre><code>for (int i=0; i&lt;N; i++) {
+  for (int j=w.at(i); j&lt;=W; j++) {
+    dp.at(j) = max(dp.at(j),dp.at(j-w.at(i))+v.at(i));
+  }
+}</code></pre>
+<p>元の形との差は、$j$ のループを昇順に行っていること。<br>
+これにより、一度その荷物を選んだデータに同じ荷物を重ねて採用できる遷移となっている。</p>
+<h3>個数制限付きナップサック問題（E問題レベル？）</h3>
+<p>$i$ 番目の品物を最大 $c_i$ 個まで選べるという問題もある。<br>
+そのまま $0$ 個から $c_i$ 個まで試すと、計算量が大きくなる。</p>
+<p>基本的な高速化は、個数を二進法のように分割する方法である。<br>
+例えば、同じ品物を $13$ 個まで使える場合。<br>
+この場合、その $13$ 個を、$1$ 個入りパック、$2$ 個入りパック、$4$ 個入りパック、$6$ 個入りパックにわける。<br>
+すると、パックの組み合わせ次第で $0$ 個から $13$ 個まで任意の個数を選ぶことができる。</p>
+<p>これらを選ぶかどうかで、元の品物を $0$ 個から $13$ 個まで使う全ての場合を表せる。<br>
+しかも、$-1$ 個になったり $14$ 個以上になったりすることはない。<br>
+そのため、これら $4$ つを別個の品物と思って $0/1$ ナップサック問題を解けばよい。</p>
+<p>各個数 $c_i$ を $O(\log(c_i+1))$ 個に分解するため、計算量は $O\left(W\sum_{i=1}^{N}\log(c_i+1)\right)$。</p>
+<h3>分数ナップサック問題（C問題レベル）</h3>
+<p>品物が液体などで、「品物 $1$ を $1/3$ だけ選ぶ」のように、量が整数に限られない問題もある。<br>
+この場合、「価値/重さ」が大きい順に貪欲法で採用するだけでよい。</p>
+<h3>グループナップサック問題（D問題レベル）</h3>
+<p>品物がいくつかのグループに分かれていて、各グループから高々 $1$ 個を選ぶ問題もある。</p>
+<p>この場合、基本的には $0/1$ ナップサック問題の解き方となる。<br>
+ただし、DPテーブルの各段を、品物 $1$ つではなく、品物 $1$ グループ全てを考慮して更新する。</p>
+<h3>重さ以外の制限がある場合（F問題レベル？）</h3>
+<p>例えば、重さと体積の両方が制限以下、とかであれば、DPの次元を $1$ つ増やせばいいだけ。<br>
+重さと個数の制限の場合も同様。</p>
+<p>コードは圧倒的に複雑になるが、考え方が複雑になる部分はほぼない。<br>
+次元が $1$ つ上がるとテーブルが一気に大きくなるので、計算量などに注意。</p>
+<h3>何も制限がない場合（G問題以上レベル）</h3>
+<p>最悪計算量は $O(2^N)$ だが、$v_i/w_i$ が散らばっている場合に大抵解ける方法がある。<br>
+分枝限定法という方法で、以下のような手順になる。</p>
+<p>（勉強中。今後記述予定。）</p>
+<h3>AHCでの $0/1$ ナップサック問題</h3>
+<p>$v_i/w_i$ が大きい品物から選ぶ戦略は、最善の解になるとは限らない。<br>
+しかし、最善から遠い解になることもほとんどないので、AHCならそれなりに有効。</p>
+<h2>注意点</h2>
+<h3>オーバーフローに注意</h3>
+<p>たくさんの値を足すため、オーバーフローしやすい。<br>
+<code>long long</code> 型にする必要があるか、さらには <code>long long</code> 型でもあふれる可能性はないか、よく確認する。</p>
+<h3>到達不能状態を区別する</h3>
+<p>「容量以下で最大化」だけなら、全て <code>0</code> で初期化できる場合が多い。<br>
+しかし、合計をちょうど固定する場合や最小値を求める場合は、未到達状態を <code>-INF</code> や <code>INF</code> で区別する。</p>
+<p><code>INF</code> に値を足すとオーバーフローする場合がある。<br>
+<code>INF</code> を $2$ 倍してもオーバーフローしない程度にして、足し算後に <code>INF</code> 以上の値は <code>INF</code> に戻すなどする。</p>
+<h2>関連アルゴリズム</h2>
+<h3><a href="dynamic-programming.html">動的計画法</a></h3>
+<p>品物数多めのナップサック問題の基本解法。<br>
+品物を順に増やしながら、重さや価値ごとの最適値を引き継ぐ。</p>
+<h3><a href="bit-bruteforce.html">bit全探索</a></h3>
+<p>$N$ が最大 $20$ くらいの場合は、全ての選び方を直接調べられる。<br>
+重さや価値の上限が大きくても使える。</p>
+<h3><a href="meet-in-the-middle.html">半分全列挙</a></h3>
+<p>$N$ が最大 $40$ くらいの場合は、品物を $2$ つのグループに分けて考える。<br>
+支配される状態の削除や二分探索と組み合わせる。</p>
+<h3><a href="backtrace.html">バックトレース</a></h3>
+<p>最大値だけでなく、実際に選んだ品物を出力する場合に使う。<br>
+DP表の遷移を答えの状態から逆向きにたどる。</p>
+<h3><a href="greedy.html">貪欲法</a></h3>
+<p>品物を分割できる分数ナップサック問題では、価値密度順の貪欲法を使う。<br>
+一方、$0/1$ ナップサック問題では一般に使えない。</p>
+<h3><a href="ahc-greedy.html">貪欲法（AHC）</a></h3>
+<p>品物を分割できないナップサック問題でも、AHCなら価値密度順の貪欲法は有効。</p>
   </article>
 
   <aside class="sidebar">
@@ -33,7 +796,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li><a href="../knowledge/dynamic-programming.html">動的計画法</a></li>
+        <li><a href="../knowledge/backtrace.html">バックトレース</a></li><li><a href="../knowledge/bit-bruteforce.html">bit全探索</a></li><li><a href="../knowledge/greedy.html">貪欲法</a></li><li><a href="../knowledge/dynamic-programming.html">動的計画法</a></li><li><a href="../knowledge/meet-in-the-middle.html">半分全列挙</a></li>
       </ul>
     </section>
 
