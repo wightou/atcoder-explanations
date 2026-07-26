@@ -752,8 +752,7 @@ $$</p>
 次元が $1$ つ上がるとテーブルが一気に大きくなるので、計算量などに注意。</p>
 <h3>何も制限がない場合（G問題以上レベル）</h3>
 <p>最悪計算量は $O(2^N)$ だが、$v_i/w_i$ が散らばっている場合に大抵解ける方法がある。<br>
-分枝限定法という方法で、以下のような手順になる。</p>
-<p>（勉強中。今後記述予定。）</p>
+詳しくは「<a href="branch-and-bound.html">分枝限定法</a>」の記事参照。</p>
 <h3>AHCでの $0/1$ ナップサック問題</h3>
 <p>$v_i/w_i$ が大きい品物から選ぶ戦略は、最善の解になるとは限らない。<br>
 しかし、最善から遠い解になることもほとんどないので、AHCならそれなりに有効。</p>
@@ -776,6 +775,9 @@ $$</p>
 <h3><a href="meet-in-the-middle.html">半分全列挙</a></h3>
 <p>$N$ が最大 $40$ くらいの場合は、品物を $2$ つのグループに分けて考える。<br>
 支配される状態の削除や二分探索と組み合わせる。</p>
+<h3><a href="branch-and-bound.html">分枝限定法</a></h3>
+<p>暫定解と上界を用いて、最適解を更新できない探索範囲を打ち切る厳密解法。<br>
+一般の $0/1$ ナップサック問題に利用できる場合がある。</p>
 <h3><a href="backtrace.html">バックトレース</a></h3>
 <p>最大値だけでなく、実際に選んだ品物を出力する場合に使う。<br>
 DP表の遷移を答えの状態から逆向きにたどる。</p>
@@ -796,14 +798,14 @@ DP表の遷移を答えの状態から逆向きにたどる。</p>
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li><a href="../knowledge/backtrace.html">バックトレース</a></li><li><a href="../knowledge/bit-bruteforce.html">bit全探索</a></li><li><a href="../knowledge/greedy.html">貪欲法</a></li><li><a href="../knowledge/dynamic-programming.html">動的計画法</a></li><li><a href="../knowledge/meet-in-the-middle.html">半分全列挙</a></li>
+        <li><a href="../knowledge/backtrace.html">バックトレース</a></li><li><a href="../knowledge/bit-bruteforce.html">bit全探索</a></li><li><a href="../knowledge/greedy.html">貪欲法</a></li><li><a href="../knowledge/dynamic-programming.html">動的計画法</a></li><li><a href="../knowledge/meet-in-the-middle.html">半分全列挙</a></li><li><a href="../knowledge/branch-and-bound.html">分枝限定法</a></li>
       </ul>
     </section>
 
     <section class="side-card">
       <h2>この知識を使う解説</h2>
       <ul class="side-links">
-        <li><a href="../explanations/arc223-a.html">ARC223 A - Unusual-Constraint Knapsack</a></li>
+        <li><a href="../explanations/arc223-a.html">ARC223 A - Unusual-Constraint Knapsack</a></li><li><a href="../explanations/edpc-d.html">EDPC D - Knapsack 1</a></li><li><a href="../explanations/edpc-e.html">EDPC E - Knapsack 2</a></li>
       </ul>
     </section>
 

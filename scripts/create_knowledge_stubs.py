@@ -221,6 +221,7 @@ STUBS: list[KnowledgeStub] = [
     k("sqrt-decomposition", "平方分割", "F問題相当", "高速化系", aliases=["sqrt decomposition"]),
 
     # G問題以上相当
+    k("branch-and-bound", "分枝限定法", "G問題以上相当", "高速化系", aliases=["branch and bound", "Branch and Bound"], related=["全探索", "深さ優先探索", "貪欲法"]),
     k("catalan-number", "カタラン数", "G問題以上相当", "その他数学系", aliases=["Catalan number", "Catalan numbers", "Catalan数"], absorbs=["一般化カタラン数"], related=["順列組み合わせ", "二項係数"]),
     k("maximum-flow", "最大フロー", "G問題以上相当", "グラフ理論系"),
     k("minimum-cut", "最小カット", "G問題以上相当", "グラフ理論系"),

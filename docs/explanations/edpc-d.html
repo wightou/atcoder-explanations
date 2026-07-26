@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>貪欲法</title>
+<title>EDPC D - Knapsack 1</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,60 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>貪欲法</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>EDPC D - Knapsack 1</h1>
+      <p class="explanation-title-ja">ナップサック1</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77886288" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>重さ制限がある中で、価値の合計を最大化する問題。<br>
+典型的な $0/1$ ナップサック問題である。</p>
+<p><code>dp[j]</code> を、総重量 $j$ 以下での最大価値とする。<br>
+各品物について、使う場合と使わない場合を比較しながら DP テーブルを更新する。</p>
+<p>ただし、同じ品物を $2$ 回以上使わないようにするため、<code>dp</code> は重い方から更新する。<br>
+詳しくは「<a href="../knowledge/knapsack-problem.html">ナップサック問題</a>」の記事参照。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 3
+m: 8
+w: {3, 4, 5}
+v: {30, 50, 60}</code></pre>
+<p><code>dp[j]</code> を、総重量 $j$ 以下での最大価値とする。<br>
+今回は <code>dp[0]</code> から <code>dp[8]</code> までを用意する。</p>
+<p>何も品物を見ていない状態では、どの重さ上限でも価値は $0$ である。</p>
+<pre><code>dp: {0, 0, 0, 0, 0, 0, 0, 0, 0}</code></pre>
+<p>$1$ 個目の品物 $(w,v)=(3,30)$ を見る。<br>
+重さ上限 $3$ 以上であれば、この品物を入れられる。</p>
+<pre><code>dp: {0, 0, 0, 30, 30, 30, 30, 30, 30}</code></pre>
+<p>$2$ 個目の品物 $(w,v)=(4,50)$ を見る。<br>
+重さ上限 $4$ 以上であれば、この品物を入れられる。</p>
+<p>例えば、重さ上限 $8$ では、すでにある価値 $30$ と、<br>
+$1$ 個目と $2$ 個目を両方入れた価値 $30+50=80$ を比較する。<br>
+よって、<code>dp[8]</code> は $80$ になる。</p>
+<pre><code>dp: {0, 0, 0, 30, 50, 50, 50, 80, 80}</code></pre>
+<p>$3$ 個目の品物 $(w,v)=(5,60)$ を見る。<br>
+重さ上限 $5$ 以上であれば、この品物を入れられる。</p>
+<p>例えば、重さ上限 $8$ では、すでにある価値 $80$ と、<br>
+$1$ 個目と $3$ 個目を入れた価値 $30+60=90$ を比較する。<br>
+よって、<code>dp[8]</code> は $90$ になる。</p>
+<pre><code>dp: {0, 0, 0, 30, 50, 60, 60, 80, 90}</code></pre>
+<p>DP テーブルの一番後ろの値、つまり <code>dp[8]</code> の $90$ が答え。</p>
+<h2>注意点</h2>
+<h3>価値の和は <code>int</code> 型からはみ出る</h3>
+<p>価値の和は、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> データ探索系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-c.html">ABC461 C - Variety</a></li><li><a href="../explanations/abc462-e.html">ABC462 E - Alternating Costs</a></li><li><a href="../explanations/abc463-d.html">ABC463 D - Maximize the Gap</a></li><li><a href="../explanations/abc467-e.html">ABC467 E - Adjacent Sums (hard)</a></li><li><a href="../explanations/abc467-f.html">ABC467 F - Email Scheduling Optimization</a></li><li><a href="../explanations/abc468-f.html">ABC468 F - Chmax</a></li><li><a href="../explanations/arc223-a.html">ARC223 A - Unusual-Constraint Knapsack</a></li><li><a href="../explanations/arc224-b.html">ARC224 B - Adjacent Tiles</a></li><li><a href="../explanations/arc224-c.html">ARC224 C - Ascending Labels</a></li><li><a href="../explanations/arc224-d.html">ARC224 D - Angst for All Pairs</a></li><li><a href="../explanations/arc224-e.html">ARC224 E - ABC|AB|A</a></li><li><a href="../explanations/edpc-x.html">EDPC X - Tower</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/knapsack-problem.html">ナップサック問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

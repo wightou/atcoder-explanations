@@ -281,10 +281,11 @@ def make_knowledge_title_map(knowledge_pages: list["KnowledgePage"]) -> dict[str
 def link_knowledge_references_in_html(
     body_html: str,
     *,
-    current_page: "KnowledgePage",
+    current_source_path: Path | None,
     title_map: dict[str, "KnowledgePage"],
+    href_prefix: str,
 ) -> str:
-    """知識記事本文の限定された参照表現だけを内部リンクへ変換する。
+    """問題解説・知識記事本文の限定された参照表現だけを内部リンクへ変換する。
 
     対象は次の2種類だけ。
     - `## 関連アルゴリズム` 節内の、知識記事 title と完全一致する `###` 見出し
@@ -296,7 +297,9 @@ def link_knowledge_references_in_html(
     def target_for(raw_name: str) -> KnowledgePage | None:
         name = unescape(raw_name).strip()
         target = title_map.get(name)
-        if target is None or target.source_path == current_page.source_path:
+        if target is None:
+            return None
+        if current_source_path is not None and target.source_path == current_source_path:
             return None
         return target
 
@@ -315,7 +318,7 @@ def link_knowledge_references_in_html(
             target = target_for(name_html)
             if target is None:
                 return heading_match.group(0)
-            href = escape(Path(target.url).name, quote=True)
+            href = escape(f"{href_prefix}{Path(target.url).name}", quote=True)
             return (
                 f'<h3{heading_match.group("attrs")}>'
                 f'<a href="{href}">{name_html}</a>'
@@ -342,7 +345,7 @@ def link_knowledge_references_in_html(
         target = target_for(name_html)
         if target is None:
             return match.group(0)
-        href = escape(Path(target.url).name, quote=True)
+        href = escape(f"{href_prefix}{Path(target.url).name}", quote=True)
         return (
             f'{match.group("prefix")}詳しくは「'
             f'<a href="{href}">{name_html}</a>'
@@ -1722,7 +1725,10 @@ def get_alternative_submission_links(meta: dict) -> list[tuple[str, str]]:
     return links
 
 
-def render_explanation_page(page: ExplanationPage) -> str:
+def render_explanation_page(
+    page: ExplanationPage,
+    knowledge_title_map: dict[str, KnowledgePage],
+) -> str:
     tag_note = page.meta.get("tag_note")
     tag_note_html = f'<p class="tag-note">※ {escape(str(tag_note))}</p>' if tag_note else ""
 
@@ -1740,6 +1746,13 @@ def render_explanation_page(page: ExplanationPage) -> str:
         if auto_link_items else ""
     )
 
+    linked_body_html = link_knowledge_references_in_html(
+        page.body_html,
+        current_source_path=page.source_path,
+        title_map=knowledge_title_map,
+        href_prefix="../knowledge/",
+    )
+
     body = f"""
 {site_header_compact(prefix="../")}
 <main class="page-layout">
@@ -1749,7 +1762,7 @@ def render_explanation_page(page: ExplanationPage) -> str:
       {f'<p class="explanation-title-ja">{escape(page.problem_title_ja)}</p>' if page.problem_title_ja else ''}
     </div>
     {auto_links}
-    {page.body_html}
+    {linked_body_html}
   </article>
 
   <aside class="sidebar">
@@ -1835,8 +1848,9 @@ def render_knowledge_page(
 
     linked_body_html = link_knowledge_references_in_html(
         page.body_html,
-        current_page=page,
+        current_source_path=page.source_path,
         title_map=knowledge_title_map,
+        href_prefix="",
     )
 
     body = f"""
@@ -2892,11 +2906,15 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
     all_tag_names = sorted(explanation_tag_names | set(knowledge_tag_map), key=str)
     TAG_SLUG_MAP = make_tag_slug_map(all_tag_names, visible_knowledge)
 
-    for p in explanations:
-        (out_dir / p.url).write_text(render_explanation_page(p), encoding="utf-8")
-
     knowledge_key_map = make_knowledge_key_map(knowledge_pages)
     knowledge_title_map = make_knowledge_title_map(knowledge_pages)
+
+    for p in explanations:
+        (out_dir / p.url).write_text(
+            render_explanation_page(p, knowledge_title_map),
+            encoding="utf-8",
+        )
+
     missing_related_by_page: dict[Path, list[str]] = {}
 
     for k in knowledge_pages:
