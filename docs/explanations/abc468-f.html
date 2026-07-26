@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC468 F - Chmax</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC468 F - Chmax</h1>
+      <p class="explanation-title-ja">最大値更新</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc468/tasks/abc468_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc468/submissions/77868274" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>最初の数は、$x$ と $y$ のどちらの更新に使っても話が全く同じである。<br>
+よって、最初に操作 $1$ を行い $x$ を更新したと仮定して話をする。</p>
+<p>$x$ より大きい数が初めて来たときを考える。<br>
+このとき、条件から必ず $x&gt;y$ になっており、どちらの操作をしても必ず値が更新される。<br>
+そのため、貪欲に $x$ の更新に使うと決めてよい。<br>
+なぜなら、$y$ の更新に使った後に可能なすべての操作は、$x$ の更新に使った場合でも可能だからである。<br>
+（$x$ と $y$ の立場が逆になるが、最終的な $c$ の値は同じである）</p>
+<p>その次にまた $x$ より大きい数が来た場合も同様に、貪欲に $x$ の更新に使ってよい。<br>
+つまり、これまでで最大の数が来た場合、全て $x$ の更新に使うと決めてよい。<br>
+ということで、順列 $P$ の中の該当する個数をとりあえず結果に足し、該当する数を除去する。</p>
+<p>残った数は、以下の $2$ つのいずれかに使える。</p>
+<ul>
+<li>$y$ の最大値を更新する</li>
+<li>$y$ の最大値を更新しない（$x$ にぶつけて失敗させる）</li>
+</ul>
+<p>これの最大個数は、ただの最長増加部分列の問題である。<br>
+よって、その個数を結果に足すと、答えになる。</p>
+<p>$x$ 更新に使われた数の除去は、以下のどちらでもよい。</p>
+<ul>
+<li>それらを除去した数列を改めて作る</li>
+<li>除去する代わりに $n+1$ に書き換え、最後にも $n+1$ を書き足す（最長増加部分列長から $1$ を引く）</li>
+</ul>
+<p>計算量は最長増加部分列の処理部分が支配的で、普通の方法なら $O(N \log N)$。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+p: {4, 3, 1, 2, 5}
+result: 0</code></pre>
+<p>先頭から見て、それまでの最大値を更新する要素を数える。<br>
+<code>4</code> と <code>5</code> が該当するので、<code>result=2</code> となる。<br>
+また、この $2$ 要素を <code>n+1=6</code> に書き換える。</p>
+<pre><code>p: {6, 3, 1, 2, 6}
+result: 2</code></pre>
+<p>末尾に <code>n+1=6</code> を追加する。</p>
+<pre><code>p: {6, 3, 1, 2, 6, 6}</code></pre>
+<p>この配列の最長増加部分列の長さは $3$ である。<br>
+例えば、<code>1, 2, 6</code> を選べる。<br>
+末尾に追加した <code>6</code> の分を除いた $2$ を <code>result</code> に加える。</p>
+<pre><code>result: 4</code></pre>
+<h2>注意点</h2>
+<p>好きな単調増加列を $2$ つ取ることはできない。<br>
+例えば、 <code>5 3 4 1 2</code> の答えは $4$ ではなく $3$ である。<br>
+先頭の $5$ に対して、「使わない」という選択は許されていない。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/greedy.html">貪欲法</a>
+<a class="tag" href="../tags/lis.html">最長増加部分列</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC468 G - Restricted Permutation</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC468 G - Restricted Permutation</h1>
+      <p class="explanation-title-ja">制約付き順列</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc468/tasks/abc468_g" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc468/submissions/77868280" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>まず、入力の先頭が <code>&#x27;x&#x27;</code> だった場合。<br>
+これは、$1$ だけ見たときに $1$ の順列として連続していないと言っている。<br>
+そんなものがあるわけないので、答えは $0$。</p>
+<p>次に、入力の末尾が <code>&#x27;x&#x27;</code> だった場合。<br>
+これは、$1$ から $N$ までの順列全体を見たときに $1$ から $N$ までの順列として連続していないと言っている。<br>
+そんなものがあるわけないので、答えは $0$。</p>
+<p>そして、$N$ が $1$ である場合。<br>
+そもそも順列が $1$ つしかなく、それは条件を満たすので、答えは $1$。</p>
+<p>これらは、コーナーケースとして省いておく。</p>
+<p>さて、例えば入力で <code>&quot;ooxoxxo&quot;</code> が来たとしよう。<br>
+これにおける $5$ と $6$ と $7$ の置き方を考えると、以下のようになる。<br>
+ただし、$(1-4)$ は、$1$ から $4$ までを <code>&quot;ooxo&quot;</code> となるように並べたもの。</p>
+<ul>
+<li>$(1-4),6,7,5$</li>
+<li>$(1-4),7,5,6$</li>
+<li>$(1-4),7,6,5$</li>
+<li>$6,(1-4),7,5$</li>
+<li>$5,7,(1-4),6$</li>
+<li>$5,6,7,(1-4)$</li>
+<li>$5,7,6,(1-4)$</li>
+<li>$6,5,7,(1-4)$</li>
+</ul>
+<p>この  $5$ と $6$ と $7$ の置き方は実は、入力 <code>&quot;oxxo&quot;</code> に対する $1$ から $4$ までの並び順に対応する。<br>
+つまり、<code>&quot;ooxoxxo&quot;</code> のパターン数は、<code>&quot;ooxo&quot;</code> のパターン数と <code>&quot;oxxo&quot;</code> のパターン数の積である。</p>
+<p>同様に、<code>&quot;ooxo&quot;</code> のパターン数は <code>&quot;oo&quot;</code> のパターン数と <code>&quot;oxo&quot;</code> のパターン数の積である。<br>
+つまり、<code>&#x27;o&#x27;</code> が先頭と末尾だけという入力に対する答えが全て求まれば、あとはただの掛け算となる。</p>
+<p>そして、それは動的計画法で求まる。<br>
+ここからは <code>0-indexed</code> で考える。<br>
+<code>dp[i][j]</code> は、$0$ から $i$ までを並べたとき、$0$ 番目の次に初めて <code>o</code> となるのが $j$ 番目である並べ方の個数。<br>
+初期値として、 <code>dp[1][1]</code> の値は明らかに $2$ である。</p>
+<p>遷移は、以下のようになる。</p>
+<p>まず、$i&gt;j$ である場合。<br>
+この場合は、$0$ から $j$ までの並べ方 <code>dp[j][j]</code> 通りのいずれかを $1$ つ選ぶ。<br>
+それを $1$ つのカタマリとして、それと $j+1$ 以上の数を自由に並べればよい。<br>
+よって <code>dp[i][j]</code> は、<code>dp[j][j]</code> に $(i-j+1)!$ をかければよい。</p>
+<p>次に、$i=j$ である場合（<code>&#x27;o&#x27;</code> が先頭と末尾だけという入力に対応している）。<br>
+これは、$\sum\nolimits_{j=1}^{i} dp[i][j] = (i+1)!$ であることから求まる。<br>
+すなわち、$1 \leq j &lt; i$ であるようなものを全て $(i+1)!$ から引けばよい。</p>
+<p>これで <code>&#x27;o&#x27;</code> が先頭と末尾だけという入力に対する答えが全て求まった。<br>
+よって、あとは前述の通りのただの掛け算となる。<br>
+計算量は、DP部分が支配的で $O(N^2)$ となる。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 3
+s: &quot;oxo&quot;</code></pre>
+<p>先頭と末尾はどちらも <code>o</code> であり、$n=1$ でもないので、DP の処理へ進む。<br>
+<code>result</code> は $1$ で初期化されている。</p>
+<pre><code>result: 1</code></pre>
+<p>まず、$0$ と $1$ の並べ方は、</p>
+<pre><code>0 1
+1 0</code></pre>
+<p>の $2$ 通りである。<br>
+どちらも $0$ と $1$ が連続しているので、初期値は次のようになる。</p>
+<pre><code>dp[1][1]: 2</code></pre>
+<p>次に、<code>i=2</code> の場合を求める。<br>
+$0,1,2$ の並べ方は全部で $3!=6$ 通りなので、まず次のように初期化する。</p>
+<pre><code>dp[2][2]: 6</code></pre>
+<p>この中から、$0$ 番目の次に初めて <code>o</code> となるのが $1$ 番目である並べ方を除く。</p>
+<p>$0$ と $1$ の内部の並べ方は <code>dp[1][1]=2</code> 通りである。<br>
+さらに、$0$ と $1$ のまとまりブロックと $2$ の並べ方は $2!=2$ 通りである。<br>
+したがって、該当する並べ方は、$\mathrm{dp}[1][1]\times 2! = 2\times 2 = 4$ 通りである。<br>
+これを引いて、$\mathrm{dp}[2][2]=3!-\mathrm{dp}[1][1]\times 2!=6-4=2$ となる。</p>
+<pre><code>dp[2][2]: 2</code></pre>
+<p>DP テーブルを作り終えたら、文字列 <code>s</code> を先頭の次から見る。<br>
+<code>counter</code> は、直前の <code>o</code> から何文字進んだかを表し、最初は $0$ である。</p>
+<p>$i=1$ では、まず <code>counter</code> に $1$ 加える。</p>
+<pre><code>counter: 1</code></pre>
+<p><code>s[1]</code> は <code>x</code> なので、まだ <code>result</code> には何も掛けず、次へ進む。</p>
+<p>$i=2$ では、さらに <code>counter</code> に $1$ 加える。</p>
+<pre><code>counter: 2</code></pre>
+<p><code>s[2]</code> は <code>o</code> である。<br>
+直前の <code>o</code> である <code>s[0]</code> からの距離は $2$ である。<br>
+よって、この区間に対応する並べ方の個数 <code>dp[2][2]=2</code> を <code>result</code> に掛ける。</p>
+<pre><code>result: 2
+counter: 0</code></pre>
+<h2>注意点</h2>
+<p>階乗や DP の掛け算の途中結果は、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+何か足し算や掛け算をするたびに結果を <code>% 998244353</code> する。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC468 D - Pre-Palindrome</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC468 D - Pre-Palindrome</h1>
+      <p class="explanation-title-ja">準回文</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc468/tasks/abc468_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc468/submissions/77868264" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>可能性がある $L,R$ の組は、最大で $N(N+1)/2$ 個。<br>
+つまり、$1$ つの候補を $O(1)$ で調べられるなら、全探索で間に合う。</p>
+<p>例えば、「$3$ 文字目から $9$ 文字目は準回文か？」という問いには、以下で答えられる。</p>
+<ul>
+<li>$4$ 文字目から $8$ 文字目が完全回文、かつ $3$ 文字目と $9$ 文字目が一致なら、完全回文</li>
+<li>$4$ 文字目から $8$ 文字目が完全回文、かつ $3$ 文字目と $9$ 文字目が不一致なら、準回文</li>
+<li>$4$ 文字目から $8$ 文字目が準回文、かつ $3$ 文字目と $9$ 文字目が一致なら、準回文</li>
+</ul>
+<p>つまり、普通の回文判定と同じようにしながら、不一致 $1$ 回までならセーフという感じでやればよいだけ。<br>
+計算量は $O(N^2)$。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>s: &quot;ababa&quot;
+n: 5</code></pre>
+<p>個数を数える変数 <code>result</code> を $0$ で初期化する。</p>
+<pre><code>result: 0</code></pre>
+<p>まず <code>d=0</code> とし、奇数長の部分文字列を調べる。<br>
+このとき、<code>i</code> が部分文字列の中心になる。</p>
+<p>$i=0$ のとき、最初は $j=0$ である。<br>
+<code>s[0]</code> と <code>s[0]</code> は等しいので、<code>counter</code> は $0$ のままである。<br>
+条件を満たす部分文字列 <code>&quot;a&quot;</code> を数え、<code>result</code> に $1$ 加える。</p>
+<pre><code>result: 1</code></pre>
+<p>$i=1$ のとき、まず $j=0$ で <code>s[1]</code> と <code>s[1]</code> を比較する。<br>
+等しいので、部分文字列 <code>&quot;b&quot;</code> を数える。<br>
+次に $j=1$ で <code>s[0]</code> と <code>s[2]</code> を比較する。<br>
+どちらも <code>a</code> なので、部分文字列 <code>&quot;aba&quot;</code> も数える。</p>
+<pre><code>result: 3</code></pre>
+<p>$i=2$ のとき、中心から順に、</p>
+<ul>
+<li>$j=0$ で <code>s[2]</code> と <code>s[2]</code></li>
+<li>$j=1$ で <code>s[1]</code> と <code>s[3]</code></li>
+<li>$j=2$ で <code>s[0]</code> と <code>s[4]</code></li>
+</ul>
+<p>を比較する。<br>
+どの組も等しいので、部分文字列 <code>&quot;a&quot;</code>、<code>&quot;bab&quot;</code>、<code>&quot;ababa&quot;</code> を数える。</p>
+<pre><code>result: 6</code></pre>
+<p>$i=3$ のとき、部分文字列 <code>&quot;b&quot;</code> と <code>&quot;aba&quot;</code> を数える。</p>
+<pre><code>result: 8</code></pre>
+<p>$i=4$ のとき、部分文字列 <code>&quot;a&quot;</code> を数える。</p>
+<pre><code>result: 9</code></pre>
+<p>次に <code>d=1</code> とし、偶数長の部分文字列を調べる。<br>
+このとき、<code>i</code> と <code>i+1</code> の間が部分文字列の中心になる。</p>
+<p>$i=0$ のとき、$j=0$ で <code>s[0]</code> と <code>s[1]</code> を比較する。<br>
+<code>a</code> と <code>b</code> で異なるので、<code>counter</code> に $1$ 加える。<br>
+<code>counter</code> は $1$ 以下なので、$1$ 文字の書き換えで回文にできる部分文字列 <code>&quot;ab&quot;</code> を数える。</p>
+<pre><code>result: 10</code></pre>
+<p>$i=1$ のとき、まず $j=0$ で <code>s[1]</code> と <code>s[2]</code> を比較する。<br>
+<code>b</code> と <code>a</code> で異なるので、<code>counter</code> は $1$ となる。<br>
+部分文字列 <code>&quot;ba&quot;</code> は条件を満たすので数える。</p>
+<p>次に $j=1$ で <code>s[0]</code> と <code>s[3]</code> を比較する。<br>
+<code>a</code> と <code>b</code> で異なるので、<code>counter</code> は $2$ となる。<br>
+部分文字列 <code>&quot;abab&quot;</code> は $1$ 文字の書き換えでは回文にできないため数えない。<br>
+<code>counter&gt;1</code> となった時点で、この中心についての調査を終了する。</p>
+<pre><code>result: 11</code></pre>
+<p>$i=2$ のとき、$j=0$ で <code>s[2]</code> と <code>s[3]</code> を比較する。<br>
+<code>a</code> と <code>b</code> で異なるので、部分文字列 <code>&quot;ab&quot;</code> を数える。</p>
+<p>次に $j=1$ で <code>s[1]</code> と <code>s[4]</code> を比較する。<br>
+<code>b</code> と <code>a</code> で異なり、<code>counter</code> が $2$ となる。<br>
+部分文字列 <code>&quot;baba&quot;</code> は数えず、この中心についての調査を終了する。</p>
+<pre><code>result: 12</code></pre>
+<p>$i=3$ のとき、$j=0$ で <code>s[3]</code> と <code>s[4]</code> を比較する。<br>
+<code>b</code> と <code>a</code> で異なるので、部分文字列 <code>&quot;ba&quot;</code> を数える。</p>
+<pre><code>result: 13</code></pre>
+<p>$i=4$ のときは、右側の添字 <code>i+j+d</code> が最初から $n$ 以上になるため、調べる部分文字列はない。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/palindrome-check.html">回文判定</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC468 C - Between P and Q</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC468 C - Between P and Q</h1>
+      <p class="explanation-title-ja">PとQの間</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc468/tasks/abc468_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc468/submissions/77868255" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc468/submissions/77868259" target="_blank" rel="noopener noreferrer">別解</a></div>
+    <h2>考え方</h2>
+<p>$N$ 個の数の順列は、$N!$ 通りある。<br>
+$P$ と $Q$ それぞれより辞書順で前にある順列の個数を求めてしまえば、それらの差 $-1$ で答えとなる。</p>
+<p>さて、ある順列が何番目になるかは、高校数学の典型問題。<br>
+前から順に「その桁より前は同じで、その桁が $P$ より小さくなる個数を足していく」をやればよい。<br>
+その値は、その桁に使える数の個数 $\times$ 残り個数の階乗で求められる。</p>
+<p>そういう関数を作り、「$Q$ の前にある個数」$-$「$P$ の前にある個数」$-1$ を計算すればよい。<br>
+$-1$ は、$P$ そのものの分である。</p>
+<p>ただし、$P$ が $Q$ より後ろにある場合などは計算結果が誤って負の数になってしまう。<br>
+計算結果と $0$ との大きい方を答えとして出力する。</p>
+<p>計算量は、その桁に使える数の個数の管理方法次第。<br>
+ここを愚直にやれば $O(N^2)$、Fenwick木（E問題級）で高速化すれば $O(N \log N)$。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 3
+p: {1, 3, 2}
+q: {3, 1, 2}</code></pre>
+<p>$P$ が何番目の順列かを計算する。</p>
+<p>先頭の $1$ より小さい未使用の数はない。</p>
+<p>次の $3$ より小さい未使用の数は $2$ の $1$ 個である。<br>
+残り $1$ 個の並べ方は $1!=1$ 通りなので、$1$ を加える。</p>
+<p>最後の $2$ より小さい未使用の数はない。</p>
+<p>よって、$P$ より辞書順で小さい順列は $1$ 個である。</p>
+<pre><code>calc(p): 1</code></pre>
+<p>$Q$ が何番目の順列かを計算する。</p>
+<p>先頭の $3$ より小さい未使用の数は $1,2$ の $2$ 個である。<br>
+残り $2$ 個の並べ方は $2!=2$ 通りなので、$2\times2=4$ を加える。</p>
+<p>次の $1$ より小さい未使用の数はない。</p>
+<p>最後の $2$ より小さい未使用の数もない。</p>
+<p>よって、$Q$ より辞書順で小さい順列は $4$ 個である。</p>
+<pre><code>calc(q): 4</code></pre>
+<p>したがって、$P$ と $Q$ の間にある順列の個数は $4-1-1=2$ である。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>順列全探索で解くこともできる。<br>
+スタートを昇順ではなく $P$ そのものに設定し、毎回カウンタを $1$ 増やしていく。<br>
+$P$ と $Q$ が一致したら、<code>break</code> で脱出。</p>
+<p>間を数えるので、<code>do while</code> よりも、普通の <code>while</code> で最初に $1$ 回順列を進める方が正しく答えやすい。</p>
+<p>また、最初から $P \geq Q$ の場合にちゃんと $0$ と答えられるように注意する必要がある。</p>
+<p>計算量は $O(N \times N!)$ だが、 $N \leq 10$ なので間に合う。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/permutation-and-combination.html">順列組み合わせ</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/permutation-search.html">順列全探索</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
