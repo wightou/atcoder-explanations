@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>確率</title>
+<title>EDPC I - Coins</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,33 +28,56 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>確率</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>EDPC I - Coins</h1>
+      <p class="explanation-title-ja">コイン</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_i" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77902729" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、D問題級。</p>
+<p>「表が半分より多い確率」だけを継承してもしょうがないので、「表が $j$ 枚出る確率」を全部継承していく。</p>
+<p>コインが $0$ 枚のときは「$0$ 枚の確率は $1$、それ以外は $0$」で初期化する。<br>
+その後は $i$ 枚目までで $j$ 枚表が出るには</p>
+<ul>
+<li>$i-1$ 枚目までで $j-1$ 枚表が出て、$i$ 枚目も表が出る</li>
+<li>$i-1$ 枚目までで $j$ 枚表が出て、$i$ 枚目は裏が出る</li>
+</ul>
+<p>のどちらか、と考えて $2$ つの確率の和を計算していけばいい。<br>
+（全部表や全部裏の場合、片方しか値がないことに注意）</p>
+<p>最終的に $n$ 枚での確率を全部出したら、半分より多く表が出る範囲を合計すればいい。<br>
+もしくは、<code>dp[(N+1)/2]</code> を「半分以上」をまとめたものに対応させてもよい。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 3
+p: {0.30, 0.60, 0.80}</code></pre>
+<p>今回は、表が $2$ 個以上なら表の方が多くなる。<br>
+そのため、<code>dp[2]</code> には表が $2$ 個以上になる確率をまとめて入れる。</p>
+<p>最初は、表が $0$ 個である確率が $1$ である。</p>
+<pre><code>dp: {1.0, 0.0, 0.0}</code></pre>
+<p>$1$ 枚目のコインを見る。<br>
+表が出る確率は $0.30$、裏が出る確率は $0.70$ である。</p>
+<pre><code>dp: {0.70, 0.30, 0.0}</code></pre>
+<p>$2$ 枚目のコインを見る。<br>
+表が出る確率は $0.60$、裏が出る確率は $0.40$ である。</p>
+<pre><code>dp: {0.28, 0.54, 0.18}</code></pre>
+<p>$3$ 枚目のコインを見る。<br>
+表が出る確率は $0.80$、裏が出る確率は $0.20$ である。</p>
+<pre><code>dp: {0.056, 0.332, 0.612}</code></pre>
+<p><code>dp[2]</code> の $0.612$ が答え。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> その他数学系</p>
-      <p><strong>難易度:</strong> 難易度問わず</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc463-f.html">ABC463 F - Senshuraku</a></li>
-        <li><a href="../explanations/abc464-f.html">ABC464 F - Random Vault Heist</a></li>
-        <li><a href="../explanations/arc223-d.html">ARC223 D - Xpectation of Cards in Hand with Laboratory</a></li>
-        <li><a href="../explanations/edpc-i.html">EDPC I - Coins</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/probability.html">確率</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">
