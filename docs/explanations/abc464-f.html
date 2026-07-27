@@ -40,32 +40,32 @@ window.MathJax = {
 <div class="markdown-table-scroll"><table>
 <thead><tr>
 <th>開ける順序</th>
-<th>期待値の寄与</th>
+<th class="table-align-right" style="text-align: right;">期待値の寄与</th>
 </tr></thead>
 <tbody>
 <tr>
 <td>${2,3,4}$</td>
-<td>$(2+3+4)/6 = 3/2$</td>
+<td class="table-align-right" style="text-align: right;">$(2+3+4)/6 = 3/2$</td>
 </tr>
 <tr>
 <td>${2,4,3}$</td>
-<td>$(2+4+3)/6 = 3/2$</td>
+<td class="table-align-right" style="text-align: right;">$(2+4+3)/6 = 3/2$</td>
 </tr>
 <tr>
 <td>${3,2,4}$</td>
-<td>$(3+2+4)/6 = 3/2$</td>
+<td class="table-align-right" style="text-align: right;">$(3+2+4)/6 = 3/2$</td>
 </tr>
 <tr>
 <td>${3,4}$</td>
-<td>$(3+4)/6 = 7/6$</td>
+<td class="table-align-right" style="text-align: right;">$(3+4)/6 = 7/6$</td>
 </tr>
 <tr>
 <td>${4,2,3}$</td>
-<td>$(4+2+3)/6 = 3/2$</td>
+<td class="table-align-right" style="text-align: right;">$(4+2+3)/6 = 3/2$</td>
 </tr>
 <tr>
 <td>${4,3}$</td>
-<td>$(4+3)/6 = 7/6$</td>
+<td class="table-align-right" style="text-align: right;">$(4+3)/6 = 7/6$</td>
 </tr>
 </tbody>
 </table></div>
@@ -73,20 +73,20 @@ window.MathJax = {
 <div class="markdown-table-scroll"><table>
 <thead><tr>
 <th>何個目の金庫か</th>
-<th>期待値の寄与</th>
+<th class="table-align-right" style="text-align: right;">期待値の寄与</th>
 </tr></thead>
 <tbody>
 <tr>
 <td>$1$ 個目の金庫</td>
-<td>$(2+2+3+3+4+4)/6 = 3$</td>
+<td class="table-align-right" style="text-align: right;">$(2+2+3+3+4+4)/6 = 3$</td>
 </tr>
 <tr>
 <td>$2$ 個目の金庫</td>
-<td>$(3+4+2+4+2+3)/6 = 3$</td>
+<td class="table-align-right" style="text-align: right;">$(3+4+2+4+2+3)/6 = 3$</td>
 </tr>
 <tr>
 <td>$3$ 個目の金庫</td>
-<td>$(4+3+4+3)/6 = 7/3$</td>
+<td class="table-align-right" style="text-align: right;">$(4+3+4+3)/6 = 7/3$</td>
 </tr>
 </tbody>
 </table></div>
@@ -95,38 +95,38 @@ window.MathJax = {
 <thead><tr>
 <th>何個目の金庫か</th>
 <th>直前までに開けた金庫</th>
-<th>期待値の寄与</th>
+<th class="table-align-right" style="text-align: right;">期待値の寄与</th>
 </tr></thead>
 <tbody>
 <tr>
 <td>$1$ 個目の金庫</td>
 <td>$( )$</td>
-<td>$(2+3+4)/3 = 3$</td>
+<td class="table-align-right" style="text-align: right;">$(2+3+4)/3 = 3$</td>
 </tr>
 <tr>
 <td>$2$ 個目の金庫</td>
 <td>$(2)$</td>
-<td>$(3+4)/6 = 7/6$</td>
+<td class="table-align-right" style="text-align: right;">$(3+4)/6 = 7/6$</td>
 </tr>
 <tr>
 <td>$2$ 個目の金庫</td>
 <td>$(3)$</td>
-<td>$(2+4)/6 = 1$</td>
+<td class="table-align-right" style="text-align: right;">$(2+4)/6 = 1$</td>
 </tr>
 <tr>
 <td>$2$ 個目の金庫</td>
 <td>$(4)$</td>
-<td>$(2+3)/6 = 5/6$</td>
+<td class="table-align-right" style="text-align: right;">$(2+3)/6 = 5/6$</td>
 </tr>
 <tr>
 <td>$3$ 個目の金庫</td>
 <td>$(2,3)$</td>
-<td>$4/3 = 4/3$</td>
+<td class="table-align-right" style="text-align: right;">$4/3 = 4/3$</td>
 </tr>
 <tr>
 <td>$3$ 個目の金庫</td>
 <td>$(2,4)$</td>
-<td>$3/3 = 1$</td>
+<td class="table-align-right" style="text-align: right;">$3/3 = 1$</td>
 </tr>
 </tbody>
 </table></div>
@@ -140,24 +140,24 @@ $\dfrac{9-0}{{}_3\mathrm{C}_0 \times 3}+\dfrac{9-2}{{}_3\mathrm{C}_1 \times 2}+\
 つまり、以下のようなデータを高速に構築できれば、$7$ 未満のデータだけ拾うことで $O(2^N)$ で解ける。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th>選んだ金庫の個数</th>
+<th class="table-align-right" style="text-align: right;">選んだ金庫の個数</th>
 <th>合計額</th>
 </tr></thead>
 <tbody>
 <tr>
-<td>$0$ 個</td>
+<td class="table-align-right" style="text-align: right;">$0$ 個</td>
 <td>$0$</td>
 </tr>
 <tr>
-<td>$1$ 個</td>
+<td class="table-align-right" style="text-align: right;">$1$ 個</td>
 <td>$2, 3, 4$</td>
 </tr>
 <tr>
-<td>$2$ 個</td>
+<td class="table-align-right" style="text-align: right;">$2$ 個</td>
 <td>$5, 6, 7$</td>
 </tr>
 <tr>
-<td>$3$ 個</td>
+<td class="table-align-right" style="text-align: right;">$3$ 個</td>
 <td>$9$</td>
 </tr>
 </tbody>
@@ -166,24 +166,24 @@ $\dfrac{9-0}{{}_3\mathrm{C}_0 \times 3}+\dfrac{9-2}{{}_3\mathrm{C}_1 \times 2}+\
 <p>最初に、このような形のデータを用意する。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th>選んだ金庫の個数</th>
+<th class="table-align-right" style="text-align: right;">選んだ金庫の個数</th>
 <th>合計額</th>
 </tr></thead>
 <tbody>
 <tr>
-<td>$0$ 個</td>
+<td class="table-align-right" style="text-align: right;">$0$ 個</td>
 <td>$0$</td>
 </tr>
 <tr>
-<td>$1$ 個</td>
+<td class="table-align-right" style="text-align: right;">$1$ 個</td>
 <td></td>
 </tr>
 <tr>
-<td>$2$ 個</td>
+<td class="table-align-right" style="text-align: right;">$2$ 個</td>
 <td></td>
 </tr>
 <tr>
-<td>$3$ 個</td>
+<td class="table-align-right" style="text-align: right;">$3$ 個</td>
 <td></td>
 </tr>
 </tbody>
@@ -192,24 +192,24 @@ $\dfrac{9-0}{{}_3\mathrm{C}_0 \times 3}+\dfrac{9-2}{{}_3\mathrm{C}_1 \times 2}+\
 つまり、すべてのデータについて、合計額に $2$ を加えて、個数が $1$ 大きいところに付け加える。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th>選んだ金庫の個数</th>
+<th class="table-align-right" style="text-align: right;">選んだ金庫の個数</th>
 <th>合計額</th>
 </tr></thead>
 <tbody>
 <tr>
-<td>$0$ 個</td>
+<td class="table-align-right" style="text-align: right;">$0$ 個</td>
 <td>$0$</td>
 </tr>
 <tr>
-<td>$1$ 個</td>
+<td class="table-align-right" style="text-align: right;">$1$ 個</td>
 <td>$2$</td>
 </tr>
 <tr>
-<td>$2$ 個</td>
+<td class="table-align-right" style="text-align: right;">$2$ 個</td>
 <td></td>
 </tr>
 <tr>
-<td>$3$ 個</td>
+<td class="table-align-right" style="text-align: right;">$3$ 個</td>
 <td></td>
 </tr>
 </tbody>
@@ -219,24 +219,24 @@ $\dfrac{9-0}{{}_3\mathrm{C}_0 \times 3}+\dfrac{9-2}{{}_3\mathrm{C}_1 \times 2}+\
 （これは、$N \leq 20$ のときには特に意味がないが、$N \leq 40$ に対応するときに役に立つ）</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th>選んだ金庫の個数</th>
+<th class="table-align-right" style="text-align: right;">選んだ金庫の個数</th>
 <th>合計額</th>
 </tr></thead>
 <tbody>
 <tr>
-<td>$0$ 個</td>
+<td class="table-align-right" style="text-align: right;">$0$ 個</td>
 <td>$0$</td>
 </tr>
 <tr>
-<td>$1$ 個</td>
+<td class="table-align-right" style="text-align: right;">$1$ 個</td>
 <td>$2, 3$</td>
 </tr>
 <tr>
-<td>$2$ 個</td>
+<td class="table-align-right" style="text-align: right;">$2$ 個</td>
 <td>$5$</td>
 </tr>
 <tr>
-<td>$3$ 個</td>
+<td class="table-align-right" style="text-align: right;">$3$ 個</td>
 <td></td>
 </tr>
 </tbody>
@@ -329,116 +329,116 @@ id: 10</code></pre>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
 <th>後半側の合計 <code>k</code></th>
-<th><code>x-k</code></th>
-<th><code>id</code></th>
-<th><code>sum1[2][id]</code></th>
-<th><code>(sum_all-k)*id-sum1[2][id]</code></th>
+<th class="table-align-right" style="text-align: right;"><code>x-k</code></th>
+<th class="table-align-right" style="text-align: right;"><code>id</code></th>
+<th class="table-align-right" style="text-align: right;"><code>sum1[2][id]</code></th>
+<th class="table-align-right" style="text-align: right;"><code>(sum_all-k)*id-sum1[2][id]</code></th>
 </tr></thead>
 <tbody>
 <tr>
 <td>30</td>
-<td>30</td>
-<td>10</td>
-<td>112</td>
-<td>1188</td>
+<td class="table-align-right" style="text-align: right;">30</td>
+<td class="table-align-right" style="text-align: right;">10</td>
+<td class="table-align-right" style="text-align: right;">112</td>
+<td class="table-align-right" style="text-align: right;">1188</td>
 </tr>
 <tr>
 <td>32</td>
-<td>28</td>
-<td>10</td>
-<td>112</td>
-<td>1168</td>
+<td class="table-align-right" style="text-align: right;">28</td>
+<td class="table-align-right" style="text-align: right;">10</td>
+<td class="table-align-right" style="text-align: right;">112</td>
+<td class="table-align-right" style="text-align: right;">1168</td>
 </tr>
 <tr>
 <td>36</td>
-<td>24</td>
-<td>10</td>
-<td>112</td>
-<td>1128</td>
+<td class="table-align-right" style="text-align: right;">24</td>
+<td class="table-align-right" style="text-align: right;">10</td>
+<td class="table-align-right" style="text-align: right;">112</td>
+<td class="table-align-right" style="text-align: right;">1128</td>
 </tr>
 <tr>
 <td>36</td>
-<td>24</td>
-<td>10</td>
-<td>112</td>
-<td>1128</td>
+<td class="table-align-right" style="text-align: right;">24</td>
+<td class="table-align-right" style="text-align: right;">10</td>
+<td class="table-align-right" style="text-align: right;">112</td>
+<td class="table-align-right" style="text-align: right;">1128</td>
 </tr>
 <tr>
 <td>40</td>
-<td>20</td>
-<td>10</td>
-<td>112</td>
-<td>1088</td>
+<td class="table-align-right" style="text-align: right;">20</td>
+<td class="table-align-right" style="text-align: right;">10</td>
+<td class="table-align-right" style="text-align: right;">112</td>
+<td class="table-align-right" style="text-align: right;">1088</td>
 </tr>
 <tr>
 <td>42</td>
-<td>18</td>
-<td>9</td>
-<td>94</td>
-<td>968</td>
+<td class="table-align-right" style="text-align: right;">18</td>
+<td class="table-align-right" style="text-align: right;">9</td>
+<td class="table-align-right" style="text-align: right;">94</td>
+<td class="table-align-right" style="text-align: right;">968</td>
 </tr>
 <tr>
 <td>42</td>
-<td>18</td>
-<td>9</td>
-<td>94</td>
-<td>968</td>
+<td class="table-align-right" style="text-align: right;">18</td>
+<td class="table-align-right" style="text-align: right;">9</td>
+<td class="table-align-right" style="text-align: right;">94</td>
+<td class="table-align-right" style="text-align: right;">968</td>
 </tr>
 <tr>
 <td>44</td>
-<td>16</td>
-<td>8</td>
-<td>78</td>
-<td>850</td>
+<td class="table-align-right" style="text-align: right;">16</td>
+<td class="table-align-right" style="text-align: right;">8</td>
+<td class="table-align-right" style="text-align: right;">78</td>
+<td class="table-align-right" style="text-align: right;">850</td>
 </tr>
 <tr>
 <td>46</td>
-<td>14</td>
-<td>7</td>
-<td>64</td>
-<td>734</td>
+<td class="table-align-right" style="text-align: right;">14</td>
+<td class="table-align-right" style="text-align: right;">7</td>
+<td class="table-align-right" style="text-align: right;">64</td>
+<td class="table-align-right" style="text-align: right;">734</td>
 </tr>
 <tr>
 <td>48</td>
-<td>12</td>
-<td>5</td>
-<td>39</td>
-<td>521</td>
+<td class="table-align-right" style="text-align: right;">12</td>
+<td class="table-align-right" style="text-align: right;">5</td>
+<td class="table-align-right" style="text-align: right;">39</td>
+<td class="table-align-right" style="text-align: right;">521</td>
 </tr>
 <tr>
 <td>48</td>
-<td>12</td>
-<td>5</td>
-<td>39</td>
-<td>521</td>
+<td class="table-align-right" style="text-align: right;">12</td>
+<td class="table-align-right" style="text-align: right;">5</td>
+<td class="table-align-right" style="text-align: right;">39</td>
+<td class="table-align-right" style="text-align: right;">521</td>
 </tr>
 <tr>
 <td>50</td>
-<td>10</td>
-<td>4</td>
-<td>29</td>
-<td>411</td>
+<td class="table-align-right" style="text-align: right;">10</td>
+<td class="table-align-right" style="text-align: right;">4</td>
+<td class="table-align-right" style="text-align: right;">29</td>
+<td class="table-align-right" style="text-align: right;">411</td>
 </tr>
 <tr>
 <td>52</td>
-<td>8</td>
-<td>2</td>
-<td>12</td>
-<td>204</td>
+<td class="table-align-right" style="text-align: right;">8</td>
+<td class="table-align-right" style="text-align: right;">2</td>
+<td class="table-align-right" style="text-align: right;">12</td>
+<td class="table-align-right" style="text-align: right;">204</td>
 </tr>
 <tr>
 <td>54</td>
-<td>6</td>
-<td>1</td>
-<td>5</td>
-<td>101</td>
+<td class="table-align-right" style="text-align: right;">6</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-right" style="text-align: right;">5</td>
+<td class="table-align-right" style="text-align: right;">101</td>
 </tr>
 <tr>
 <td>60</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
 </tr>
 </tbody>
 </table></div>

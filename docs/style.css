@@ -277,6 +277,18 @@ a:hover {
   text-align: center;
 }
 
+.markdown-body .table-align-left {
+  text-align: left;
+}
+
+.markdown-body .table-align-center {
+  text-align: center;
+}
+
+.markdown-body .table-align-right {
+  text-align: right;
+}
+
 /* 表セル先頭の `{red}` などを淡い背景色へ変換する。 */
 .markdown-body .table-bg-red { background-color: var(--table-bg-red); }
 .markdown-body .table-bg-coral { background-color: var(--table-bg-coral); }

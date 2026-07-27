@@ -737,11 +737,29 @@ def apply_table_backgrounds_to_html(html: str) -> str:
     return pattern.sub(replace, html)
 
 
-def table_cell_html(tag: str, cell: str) -> str:
+def parse_markdown_table_alignment(separator_cell: str) -> str | None:
+    """Markdown表の区切りセルから配置指定を取り出す。"""
+    marker = separator_cell.strip()
+    if not re.fullmatch(r":?-{3,}:?", marker):
+        return None
+    if marker.startswith(":") and marker.endswith(":"):
+        return "center"
+    if marker.endswith(":"):
+        return "right"
+    if marker.startswith(":"):
+        return "left"
+    return None
+
+
+def table_cell_html(tag: str, cell: str, alignment: str | None = None) -> str:
     color, content = split_table_background_marker(cell)
     attrs = ""
     if color:
-        attrs = f' class="table-bg-{color}" style="background-color: {TABLE_CELL_BACKGROUNDS[color]};"'
+        attrs = append_html_class(attrs, f"table-bg-{color}")
+        attrs = append_html_style(attrs, f"background-color: {TABLE_CELL_BACKGROUNDS[color]};")
+    if alignment in {"left", "center", "right"}:
+        attrs = append_html_class(attrs, f"table-align-{alignment}")
+        attrs = append_html_style(attrs, f"text-align: {alignment};")
     return f"<{tag}{attrs}>" + render_inline(content) + f"</{tag}>"
 
 
@@ -764,11 +782,16 @@ def render_markdown_table(table_lines: list[str]) -> str:
     if len(table_lines) < 2:
         return ""
     header = split_markdown_table_row(table_lines[0])
+    separator = split_markdown_table_row(table_lines[1])
+    alignments = [
+        parse_markdown_table_alignment(separator[i]) if i < len(separator) else None
+        for i in range(len(header))
+    ]
     body_rows = [split_markdown_table_row(line) for line in table_lines[2:]]
 
     out = ['<div class="markdown-table-scroll"><table>', "<thead><tr>"]
-    for cell in header:
-        out.append(table_cell_html("th", cell))
+    for i, cell in enumerate(header):
+        out.append(table_cell_html("th", cell, alignments[i]))
     out.append("</tr></thead>")
 
     if body_rows:
@@ -777,7 +800,7 @@ def render_markdown_table(table_lines: list[str]) -> str:
             out.append("<tr>")
             for i in range(len(header)):
                 cell = row[i] if i < len(row) else ""
-                out.append(table_cell_html("td", cell))
+                out.append(table_cell_html("td", cell, alignments[i]))
             out.append("</tr>")
         out.append("</tbody>")
 
@@ -887,6 +910,40 @@ def markdown_needs_mathjax(body_md: str) -> bool:
     return bool(re.search(r"\$\$|(?<!\\)\$(?!\s)|\\\(|\\\[", text))
 
 
+def apply_table_alignments_to_html(html: str) -> str:
+    """Markdown実装が出力した表セルの配置指定をCSSより強いインライン指定へ統一する。"""
+    tag_pattern = re.compile(r"<(?P<tag>th|td)(?P<attrs>[^>]*)>", flags=re.I)
+    align_attr_pattern = re.compile(
+        r"\balign\s*=\s*(?:\"(?P<double>left|center|right)\"|'(?P<single>left|center|right)'|(?P<bare>left|center|right))",
+        flags=re.I,
+    )
+    style_pattern = re.compile(r"\btext-align\s*:\s*(left|center|right)\b", flags=re.I)
+
+    def replace(match: re.Match[str]) -> str:
+        attrs = match.group("attrs")
+        style_match = style_pattern.search(attrs)
+        alignment: str | None = None
+        if style_match is not None:
+            alignment = style_match.group(1).lower()
+        else:
+            align_match = align_attr_pattern.search(attrs)
+            if align_match is not None:
+                alignment = next(
+                    value.lower()
+                    for value in (align_match.group("double"), align_match.group("single"), align_match.group("bare"))
+                    if value is not None
+                )
+        if alignment is None:
+            return match.group(0)
+
+        attrs = append_html_class(attrs, f"table-align-{alignment}")
+        if style_match is None:
+            attrs = append_html_style(attrs, f"text-align: {alignment};")
+        return f'<{match.group("tag")}{attrs}>'
+
+    return tag_pattern.sub(replace, html)
+
+
 def markdown_to_html(body_md: str) -> str:
     body_md = remove_duplicate_top_h1(body_md)
     if markdown_lib is not None:
@@ -897,7 +954,8 @@ def markdown_to_html(body_md: str) -> str:
         )
     else:
         html = fallback_markdown_to_html(body_md)
-    return apply_table_backgrounds_to_html(html)
+    html = apply_table_backgrounds_to_html(html)
+    return apply_table_alignments_to_html(html)
 
 
 def markdown_to_plain_text(body_md: str) -> str:
@@ -2405,6 +2463,18 @@ a:hover {
   color: #1f3b65;
   font-weight: 700;
   text-align: center;
+}
+
+.markdown-body .table-align-left {
+  text-align: left;
+}
+
+.markdown-body .table-align-center {
+  text-align: center;
+}
+
+.markdown-body .table-align-right {
+  text-align: right;
 }
 
 /* 表セル先頭の `{red}` などを淡い背景色へ変換する。 */
