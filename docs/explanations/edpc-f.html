@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>隣接リスト</title>
+<title>EDPC F - LCS</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,103 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>隣接リスト</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>EDPC F - LCS</h1>
+      <p class="explanation-title-ja">最長共通部分列</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77899620" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、E問題級。</p>
+<p>文字列 $S$ と $T$ の最長共通部分列を $1$ つ求める問題。</p>
+<p>典型問題そのまま。<br>
+詳しくは「<a href="../knowledge/lcs.html">最長共通部分列</a>」の記事参照。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>s: axyb
+t: abyxb</code></pre>
+<p><code>dp[i][j]</code> を、<code>s</code> の先頭 $i$ 文字と <code>t</code> の先頭 $j$ 文字での最長共通部分列の長さとする。</p>
+<p>DP テーブルを埋めると、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th><code>s</code> ＼ <code>t</code></th>
+<th><code>&quot;&quot;</code></th>
+<th><code>a</code></th>
+<th><code>ab</code></th>
+<th><code>aby</code></th>
+<th><code>abyx</code></th>
+<th><code>abyxb</code></th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>&quot;&quot;</code></td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>&quot;a&quot;</code></td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>ax</code></td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>axy</code></td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>axyb</code></td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+</tr>
+</tbody>
+</table></div>
+<p>最後に、右下からバックトレースする。</p>
+<p>まず、<code>s[3]</code> と <code>t[4]</code> はどちらも <code>b</code> なので、答えに <code>b</code> を追加する。<br>
+その後、<code>s[2]</code> と <code>t[3]</code> は異なるので、DP テーブルの値を保てる方へ戻る。</p>
+<p>次に、<code>s[1]</code> と <code>t[3]</code> はどちらも <code>x</code> なので、答えに <code>x</code> を追加する。<br>
+その後、<code>s[0]</code> と <code>t[2]</code>、<code>s[0]</code> と <code>t[1]</code> は異なるので、DP テーブルの値を保てる方へ戻る。</p>
+<p>最後に、<code>s[0]</code> と <code>t[0]</code> はどちらも <code>a</code> なので、答えに <code>a</code> を追加する。</p>
+<p>この時点で、後ろから見た答えは <code>bxa</code> である。<br>
+これを反転した <code>axb</code> が答え。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> グラフ理論系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc462-b.html">ABC462 B - Gift</a></li><li><a href="../explanations/abc463-e.html">ABC463 E - Roads and Gates</a></li><li><a href="../explanations/arc224-c.html">ARC224 C - Ascending Labels</a></li><li><a href="../explanations/edpc-g.html">EDPC G - Longest Path</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/lcs.html">最長共通部分列</a>
+<a class="tag" href="../tags/backtrace.html">バックトレース</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

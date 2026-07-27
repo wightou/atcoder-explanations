@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>隣接リスト</title>
+<title>EDPC G - Longest Path</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,67 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>隣接リスト</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>EDPC G - Longest Path</h1>
+      <p class="explanation-title-ja">最長経路</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_g" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77899629" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、E問題級。</p>
+<p>木の高さを求める深さ優先探索と同じ発想でやればよい。</p>
+<p>つまり、トポロジカルソートをして、後ろから順に</p>
+<ul>
+<li>出次数が $0$ なら高さ $0$</li>
+<li>出次数が $1$ 以上なら、その行先の高さの最大値 $+1$</li>
+</ul>
+<p>を順に計算すればよい。<br>
+（この問題だけなら正順で配る DP した方が楽かもしれない）</p>
+<p>あとは、全頂点の高さの最大値を出すだけ。<br>
+動的計画法本体よりも、トポロジカルソートをすることの方が大変かもしれない。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取り、<code>0-indexed</code> の隣接リストにする。</p>
+<pre><code>graph[0]: {1, 2}
+graph[1]: {3}
+graph[2]: {1, 3}
+graph[3]: {}</code></pre>
+<p>トポロジカルソートすると、例えば次の順序になる。</p>
+<pre><code>vec: {0, 2, 1, 3}</code></pre>
+<p>これを逆順にしてから使う。</p>
+<pre><code>vec: {3, 1, 2, 0}</code></pre>
+<p><code>dp[i]</code> を、頂点 <code>i</code> から始めて最大で何本の辺を辿れるかとする。<br>
+最初は全て $0$ で初期化する。</p>
+<pre><code>dp: {0, 0, 0, 0}</code></pre>
+<p>頂点 <code>3</code> を見る。<br>
+頂点 <code>3</code> から出る辺はないので、更新はない。</p>
+<pre><code>dp: {0, 0, 0, 0}</code></pre>
+<p>頂点 <code>1</code> を見る。<br>
+辺 <code>1 -&gt; 3</code> があるので、<code>dp[1]</code> を <code>dp[3]+1 = 1</code> に更新する。</p>
+<pre><code>dp: {0, 1, 0, 0}</code></pre>
+<p>頂点 <code>2</code> を見る。<br>
+辺 <code>2 -&gt; 1</code> があるので、<code>dp[2]</code> を <code>dp[1]+1 = 2</code> に更新する。<br>
+また、辺 <code>2 -&gt; 3</code> もあるが、こちらは <code>dp[3]+1 = 1</code> なので最大値は変わらない。</p>
+<pre><code>dp: {0, 1, 2, 0}</code></pre>
+<p>頂点 <code>0</code> を見る。<br>
+辺 <code>0 -&gt; 1</code> があるので、<code>dp[0]</code> を <code>dp[1]+1 = 2</code> に更新する。<br>
+また、辺 <code>0 -&gt; 2</code> があるので、<code>dp[0]</code> を <code>dp[2]+1 = 3</code> に更新する。</p>
+<pre><code>dp: {3, 1, 2, 0}</code></pre>
+<p>DP テーブル内の最大値 $3$ が答え。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>メモ化再帰による深さ優先探索で、全頂点から探索しても解ける。<br>
+DP コンテストの意図からは外れるが。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> グラフ理論系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc462-b.html">ABC462 B - Gift</a></li><li><a href="../explanations/abc463-e.html">ABC463 E - Roads and Gates</a></li><li><a href="../explanations/arc224-c.html">ARC224 C - Ascending Labels</a></li><li><a href="../explanations/edpc-g.html">EDPC G - Longest Path</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/tag-da2d4113.html">トポロジカルソート</a>
+<a class="tag" href="../tags/adjacency-list.html">隣接リスト</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">
