@@ -1836,7 +1836,7 @@ def render_knowledge_page(
     related_knowledge: list[KnowledgePage],
     knowledge_title_map: dict[str, KnowledgePage],
 ) -> str:
-    related_explanation_items = "".join(
+    related_explanation_items = "\n        ".join(
         f'<li><a href="../{escape(p.url)}">{escape(p.full_title)}</a></li>'
         for p in sorted(related_explanations, key=page_sort_key)
     ) or '<li class="muted">なし</li>'
