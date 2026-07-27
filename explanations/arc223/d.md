@@ -7,6 +7,7 @@ problem_url: https://atcoder.jp/contests/arc223/tasks/arc223_d
 submission_url: https://atcoder.jp/contests/arc223/submissions/77113964
 tags:
   - 確率
+  - 期待値
   - 順列組み合わせ
   - 二項係数
   - 階乗

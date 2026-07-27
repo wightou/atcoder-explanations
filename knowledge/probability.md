@@ -6,8 +6,7 @@ summary: 今後記述予定。
 category_order: 9999
 level_order: 9999
 aliases: []
-absorbs:
-  - 期待値の線形性
+absorbs: []
 related: []
 ---
 

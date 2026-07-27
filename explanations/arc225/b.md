@@ -7,6 +7,7 @@ problem_url: https://atcoder.jp/contests/arc225/tasks/arc225_b
 submission_url: https://atcoder.jp/contests/arc225/submissions/77683757
 tags:
   - 考察問題
+  - 対戦ゲーム
 tag_note: 簡単なレベルの内容は省略。
 ---
 

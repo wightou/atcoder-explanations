@@ -84,7 +84,8 @@ STUBS: list[KnowledgeStub] = [
     k("geometric-vector", "ベクトル（幾何学）", "難易度問わず", "幾何学系"),
     k("distance", "距離", "難易度問わず", "幾何学系", absorbs=["マンハッタン距離", "ユークリッド距離", "チェビシェフ距離", "座標回転"]),
     k("permutation-and-combination", "順列組み合わせ", "難易度問わず", "その他数学系", absorbs=["数え上げ（複雑なもの）"]),
-    k("probability", "確率", "難易度問わず", "その他数学系", absorbs=["期待値の線形性"]),
+    k("probability", "確率", "難易度問わず", "その他数学系"),
+    k("expected-value", "期待値", "D問題相当", "その他数学系", absorbs=["期待値の線形性"], related=["確率"]),
 
     # A問題相当
     k("int", "int型", "A問題相当", "変数とデータ構造"),
@@ -164,6 +165,7 @@ STUBS: list[KnowledgeStub] = [
 
     # D問題相当
     k("dynamic-programming", "動的計画法", "D問題相当", "高速化系", aliases=["DP"]),
+    k("competitive-game", "対戦ゲーム", "D問題相当", "その他数学系", aliases=["二人零和有限確定完全情報ゲーム"], absorbs=["二人零和有限確定完全情報ゲーム、Nim、Grundy数"], related=["Nim", "動的計画法"]),
     k("backtrace", "バックトレース", "D問題相当", "データ探索系", aliases=["経路復元", "解の復元"], related=["動的計画法", "最短経路問題"]),
     k("knapsack-problem", "ナップサック問題", "D問題相当", "典型問題集", aliases=["knapsack", "0/1ナップサック"], related=["動的計画法"]),
     k("interval-scheduling-problem", "区間スケジューリング問題", "C問題相当", "典型問題集", aliases=["interval scheduling"], related=["貪欲法", "ソート"]),
@@ -214,7 +216,7 @@ STUBS: list[KnowledgeStub] = [
     k("coordinate-compression", "座標圧縮", "F問題相当", "高速化系"),
     k("trie", "Trie木", "F問題相当", "文字列系"),
     k("aho-corasick", "Aho-Corasick法", "F問題相当", "文字列系", related=["Trie木"]),
-    k("nim", "Nim", "F問題相当", "その他数学系", aliases=["Grundy数", "ゲーム理論"], absorbs=["二人零和有限確定完全情報ゲーム", "二人零和有限確定完全情報ゲーム、Nim、Grundy数"]),
+    k("nim", "Nim", "F問題相当", "その他数学系", aliases=["Grundy数", "ゲーム理論"]),
     k("mo-algorithm", "Moアルゴリズム", "F問題相当", "高速化系"),
     k("meet-in-the-middle", "半分全列挙", "F問題相当", "データ探索系", aliases=["meet-in-the-middle"]),
     k("inversion-number", "転倒数", "F問題相当", "典型問題集", related=["Fenwick木", "座標圧縮", "分割統治法"]),
