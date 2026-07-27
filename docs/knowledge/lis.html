@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>最長増加部分列</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -20,7 +30,325 @@
   <article class="markdown-body">
     <h1>最長増加部分列</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>数列の一部を、元の順序を保ったまま選んで狭義単調増加列を作るとき、その長さを最大化する問題。<br>
+動的計画法と二分探索を組み合わせて解ける。</p>
+<p>ABCでは主にE問題以降で登場する。</p>
+<h2>典型問題例</h2>
+<ul>
+<li><a href="https://atcoder.jp/contests/abc006/tasks/abc006_4" target="_blank" rel="noopener noreferrer">ABC006 D - トランプ挿入ソート</a></li>
+<p>  - 昇順のまま残せる最長部分列が最長増加部分列となる問題。</p>
+<li><a href="https://atcoder.jp/contests/typical90/tasks/typical90_bh" target="_blank" rel="noopener noreferrer">Typical90 060 - Chimera</a></li>
+<p>  - 左右から最長増加部分列を求め、増加してから減少する部分列の最大長を求める問題。</p>
+</ul>
+<h2>コード例</h2>
+<h3>最長増加部分列を求める（E問題レベル）</h3>
+<p>例えば、次の数列があったとする。</p>
+<pre><code>A = {1, 4, 3, 5, 2}</code></pre>
+<p>この場合、</p>
+<pre><code>B = {1, 4, 5}</code></pre>
+<p>という数列は狭義単調増加していて、しかも $A$ から一部の要素を元の順序を保って選ぶことで作られる。<br>
+このような $B$ を、$A$ の増加部分列という。<br>
+増加部分列の中で最も長いものを、最長増加部分列という。</p>
+<p>最長増加部分列は、動的計画法を用いて求められる。<br>
+まず、$A$ と同じ長さの <code>vector</code> である <code>len</code> と、空の <code>vector</code> である <code>vec</code> を用意する。</p>
+<pre><code>len[i] = A[i] を末尾とする最長増加部分列の長さ - 1
+vec[k] = 長さ k+1 の増加部分列の末尾として可能な最小値</code></pre>
+<p>$A$ の要素を先頭から $1$ つずつ処理する。<br>
+<code>A[i]</code> を処理するとき、以下の $2$ つの操作を行う。</p>
+<p>$1$ つめに、<code>vec</code> の中で <code>A[i]</code> より小さい値が何個あるかを二分探索で求める。<br>
+その個数は <code>len[i]</code> に記録しておく。<br>
+これは、<code>lower_bound</code> で <code>A[i]</code> 以上となる最初の位置を探すことで求められる。</p>
+<p>$2$ つめに、<code>vec[len[i]]</code> を <code>A[i]</code> に更新する。<br>
+<code>len[i]</code> が現在の <code>vec</code> の要素数と等しい場合は、末尾に <code>A[i]</code> を追加する。</p>
+<p>以下に例を示す。<br>
+最初は、次の状態である。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>A</code></td>
+<td>$1$</td>
+<td>$4$</td>
+<td>$3$</td>
+<td>$5$</td>
+<td>$2$</td>
+</tr>
+<tr>
+<td><code>len</code></td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+<tr>
+<td><code>vec</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>A[0]=1</code> を処理する。<br>
+<code>vec</code> は空なので、<code>len[0]=0</code> として <code>vec</code> の末尾に $1$ を追加する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>A</code></td>
+<td>$1$</td>
+<td>$4$</td>
+<td>$3$</td>
+<td>$5$</td>
+<td>$2$</td>
+</tr>
+<tr>
+<td><code>len</code></td>
+<td>$0$</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+<tr>
+<td><code>vec</code></td>
+<td>$1$</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>次に、<code>A[1]=4</code> を処理する。<br>
+<code>vec</code> の中には $4$ より小さい値が $1$ 個あるので、<code>len[1]=1</code> として <code>vec</code> の末尾に $4$ を追加する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>A</code></td>
+<td>$1$</td>
+<td>$4$</td>
+<td>$3$</td>
+<td>$5$</td>
+<td>$2$</td>
+</tr>
+<tr>
+<td><code>len</code></td>
+<td>$0$</td>
+<td>$1$</td>
+<td>？</td>
+<td>？</td>
+<td>？</td>
+</tr>
+<tr>
+<td><code>vec</code></td>
+<td>$1$</td>
+<td>$4$</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>次に、<code>A[2]=3</code> を処理する。<br>
+<code>vec</code> の中には $3$ より小さい値が $1$ 個あるので、<code>len[2]=1</code> として <code>vec[1]</code> を $3$ に更新する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>A</code></td>
+<td>$1$</td>
+<td>$4$</td>
+<td>$3$</td>
+<td>$5$</td>
+<td>$2$</td>
+</tr>
+<tr>
+<td><code>len</code></td>
+<td>$0$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>？</td>
+<td>？</td>
+</tr>
+<tr>
+<td><code>vec</code></td>
+<td>$1$</td>
+<td>$3$</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>次に、<code>A[3]=5</code> を処理する。<br>
+<code>vec</code> の中には $5$ より小さい値が $2$ 個あるので、<code>len[3]=2</code> として <code>vec</code> の末尾に $5$ を追加する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>A</code></td>
+<td>$1$</td>
+<td>$4$</td>
+<td>$3$</td>
+<td>$5$</td>
+<td>$2$</td>
+</tr>
+<tr>
+<td><code>len</code></td>
+<td>$0$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$2$</td>
+<td>？</td>
+</tr>
+<tr>
+<td><code>vec</code></td>
+<td>$1$</td>
+<td>$3$</td>
+<td>$5$</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>最後に、<code>A[4]=2</code> を処理する。<br>
+<code>vec</code> の中には $2$ より小さい値が $1$ 個あるので、<code>len[4]=1</code> として <code>vec[1]</code> を $2$ に更新する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>A</code></td>
+<td>$1$</td>
+<td>$4$</td>
+<td>$3$</td>
+<td>$5$</td>
+<td>$2$</td>
+</tr>
+<tr>
+<td><code>len</code></td>
+<td>$0$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$2$</td>
+<td>$1$</td>
+</tr>
+<tr>
+<td><code>vec</code></td>
+<td>$1$</td>
+<td>$2$</td>
+<td>$5$</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>最終的な <code>vec</code> の要素数が、最長増加部分列の長さである。<br>
+長さだけを求める場合、<code>len</code> を保存する必要はない。</p>
+<p>実際の最長増加部分列を復元する場合は、<code>len</code> を後ろから調べる。<br>
+この例では最長増加部分列の長さが $3$ なので、まず <code>len[i]=2</code> となる場所を後ろから探す。</p>
+<ul>
+<li>最初に見つかるのは <code>i=3</code> で、<code>A[3]=5</code> を答えの末尾にする。</li>
+<li>続いて <code>len[i]=1</code> となる場所を前方へ戻りながら探す。最初に見つかる <code>i=2</code> の <code>A[2]=3</code> を使う。</li>
+<li>続いて <code>len[i]=0</code> となる場所を探し、<code>i=0</code> の <code>A[0]=1</code> を使う。</li>
+</ul>
+<p>こうして、</p>
+<pre><code>{1, 3, 5}</code></pre>
+<p>という最長増加部分列を復元できる。<br>
+最長増加部分列は $1$ つとは限らないが、どれか $1$ つを求めればよい問題では、この方法で復元できる。</p>
+<p>C++での実装例は、次のようになる。</p>
+<pre><code>vector&lt;int&gt; lis(const vector&lt;int&gt;&amp; original) {
+  int n = original.size();
+  if (n==0) return {};
+  vector&lt;int&gt; len(n);
+  vector&lt;int&gt; vec;
+  vec.reserve(n);
+  for (int i=0; i&lt;n; i++) {
+    len[i] = distance(vec.begin(),lower_bound(vec.begin(),vec.end(),original[i]));
+    if (len[i]==(int)vec.size()) vec.emplace_back(original[i]);
+    else vec[len[i]] = original[i];
+  }
+  vector&lt;int&gt; result(vec.size());
+  int idx = vec.size()-1;
+  for (int i=n-1; i&gt;=0; i--) {
+    if (len[i]==idx) {
+      result[idx] = original[i];
+      idx--;
+    }
+  }
+  return result;
+}</code></pre>
+<p>各要素について <code>lower_bound</code> を $1$ 回行う。<br>
+復元のための後ろ向きの走査は $O(N)$ である。</p>
+<ul>
+<li>時間計算量：$O(N\log N)$</li>
+<li>空間計算量：$O(N)$</li>
+</ul>
+<h2>注意点</h2>
+<h3><code>vec</code> 自体が最長増加部分列とは限らない</h3>
+<p>最終的な <code>vec</code> は、各長さの増加部分列について、末尾として可能な最小値を記録したもの。<br>
+後から値が上書きされるため、<code>vec</code> の要素が元の数列に現れる順序と一致するとは限らない。</p>
+<p>上の例では、最終的な <code>vec</code> は <code>{1, 2, 5}</code> となる。<br>
+しかし、元の数列では $2$ が $5$ より後ろにあるため、<code>{1, 2, 5}</code> は $A$ の部分列ではない。<br>
+実際の最長増加部分列が必要な場合は、<code>len</code> を用いて復元する。</p>
+<h2>関連アルゴリズム</h2>
+<h3><a href="dynamic-programming.html">動的計画法</a></h3>
+<p>少し小さい問題の答えを利用して、より大きい問題を順に解くアルゴリズム。<br>
+最長増加部分列では、各長さの増加部分列について、末尾の最小値を順に更新する。</p>
+<h3><a href="binary-search.html">二分探索</a></h3>
+<p>条件を満たす境界を高速に探すアルゴリズム。<br>
+最長増加部分列では、<code>vec</code> の中で現在の値以上となる最初の位置を探すために使う。</p>
+<h3><a href="backtrace.html">バックトレース</a></h3>
+<p>終了状態から逆向きにたどり、具体的な選び方などを復元する方法。<br>
+最長増加部分列そのものを復元するために使う。</p>
+<h3><a href="lcs.html">最長共通部分列</a></h3>
+<p>$2$ つの数列または文字列の一部を、順序を保ったまま選び、同じ列を作るときの最大長を求める問題。<br>
+最長共通部分列を、最長増加部分列のアルゴリズムへ帰着して解くこともできる。</p>
   </article>
 
   <aside class="sidebar">
@@ -33,7 +361,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li><a href="../knowledge/binary-search.html">二分探索</a></li><li><a href="../knowledge/dynamic-programming.html">動的計画法</a></li>
+        <li><a href="../knowledge/backtrace.html">バックトレース</a></li><li><a href="../knowledge/binary-search.html">二分探索</a></li><li><a href="../knowledge/dynamic-programming.html">動的計画法</a></li><li><a href="../knowledge/lcs.html">最長共通部分列</a></li>
       </ul>
     </section>
 
