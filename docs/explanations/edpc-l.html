@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDPC L - Deque</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>EDPC L - Deque</h1>
+      <p class="explanation-title-ja">両端取り</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_l" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77904772" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、E問題級。</p>
+<p>値というよりは範囲を広げていく動的計画法、通称区間 DP。<br>
+といっても、そこまで特殊な考えなわけではない。<br>
+左端と右端の位置を使った $2$ 次元の動的計画法で、初期値を入れる場所と継承の方向が少し独特なだけ。</p>
+<p>まず、問題を少しわかりやすく言い換える。<br>
+太郎君は $X-Y$ を最大化しようとし、次郎君は最小化する、とあるが、これはわかりにくい。<br>
+太郎君は $X-Y$ を最大化しようとし、次郎君は $Y-X$ を最大化しようとする、の方がよい。</p>
+<p>なぜなら、その変更によって、単純な対戦ゲームになるから。<br>
+各局面で、自分の全行動について「その行動で得る点 $-$ その後の最善手での結果」を求めればよい。<br>
+採用するのは、そのうちの最大値である。</p>
+<p>終了パターンがある程度限られることもあり、バックトレースで考えることになる。</p>
+<p>あとは、これをコードにすればよい。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 4
+a: {10, 80, 90, 30}</code></pre>
+<p><code>dp[l][r]</code> を、区間 <code>a[l]</code> から <code>a[r]</code> までが残っているときの、<br>
+現在の手番の人の得点 $-$ 相手の得点の最大値とする。</p>
+<p>最初に、次のように初期化する。<br>
+残り $1$ つの場合、それを取るしか選択肢がないので、その得点がそのまま最大値になる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>左端＼右端</th>
+<th class="table-align-right" style="text-align: right;">10</th>
+<th class="table-align-right" style="text-align: right;">80</th>
+<th class="table-align-right" style="text-align: right;">90</th>
+<th class="table-align-right" style="text-align: right;">30</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>10</td>
+<td class="table-align-right" style="text-align: right;">10</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>80</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">80</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>90</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">90</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>30</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">30</td>
+</tr>
+</tbody>
+</table></div>
+<p>次に、たとえば <code>dp[2][3]</code> を考える。<br>
+このマスは、<code>{90, 30}</code> という状態での先手の得点予測である。</p>
+<p>左端から取る場合、まず自分に $90$ 点入る。<br>
+その後の展開は、下のマスを見れば、相手の方が $30$ 点多くなる展開が予測できる。<br>
+つまり、左端から取った場合の得点予測は $60$ 点となる。</p>
+<p>同様に、右端から取る場合、自分に $30$ 点、その後相手が $90$ 点多く取るので、得点予測は $-60$ 点となる。<br>
+よって、多い方を考えて、ここの得点予測は $60$ 点となる。</p>
+<pre><code>dp[2][3] = max(90 - dp[3][3], 30 - dp[2][2])
+         = max(60, -60)
+         = 60</code></pre>
+<p>この提出コードでは、表の下段から順に、左から埋めていく。<br>
+具体的には、次の順に値が確定する。</p>
+<pre><code>dp[2][3]
+dp[1][2] -&gt; dp[1][3]
+dp[0][1] -&gt; dp[0][2] -&gt; dp[0][3]</code></pre>
+<p>実際に埋めると、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>左端＼右端</th>
+<th class="table-align-right" style="text-align: right;">10</th>
+<th class="table-align-right" style="text-align: right;">80</th>
+<th class="table-align-right" style="text-align: right;">90</th>
+<th class="table-align-right" style="text-align: right;">30</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>10</td>
+<td class="table-align-right" style="text-align: right;">10</td>
+<td class="table-align-right" style="text-align: right;">70</td>
+<td class="table-align-right" style="text-align: right;">20</td>
+<td class="table-align-right" style="text-align: right;">10</td>
+</tr>
+<tr>
+<td>80</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">80</td>
+<td class="table-align-right" style="text-align: right;">10</td>
+<td class="table-align-right" style="text-align: right;">20</td>
+</tr>
+<tr>
+<td>90</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">90</td>
+<td class="table-align-right" style="text-align: right;">60</td>
+</tr>
+<tr>
+<td>30</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">30</td>
+</tr>
+</tbody>
+</table></div>
+<p>右上の $10$ が答えである。<br>
+左下部分はメモリが無駄になるので、実務だったらちょっと考えないといけないが、競プロなら関係ない。</p>
+<h2>注意点</h2>
+<p>答えは、<code>int</code> 型からはみ出る。<br>
+DP テーブルを含め、<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/interval-dp.html">区間DP</a>
+<a class="tag" href="../tags/backtrace.html">バックトレース</a>
+<a class="tag" href="../tags/competitive-game.html">対戦ゲーム</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
