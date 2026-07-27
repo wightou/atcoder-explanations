@@ -6,12 +6,16 @@ problem_title_ja: "塔"
 problem_url: https://atcoder.jp/contests/dp/tasks/dp_x
 submission_url: https://atcoder.jp/contests/dp/submissions/77885941
 tags:
+  - 考察問題
   - 動的計画法
   - 貪欲法
 tag_note: 簡単なレベルの内容は省略。
 ---
 
 ## 考え方
+
+ABCでいうと、F問題級。
+ただし、考察が重いという意味ではARC寄りかもしれない。
 
 まず、使うブロックを決めたときに、それで塔を作れるかを高速に判定したい。
 そこで、$(w_1,s_1)$ のブロックと $(w_2,s_2)$ のブロックの、どちらを上にするべきかを考えてみる。
