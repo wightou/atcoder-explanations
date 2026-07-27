@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDPC H - Grid 1</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>EDPC H - Grid 1</h1>
+      <p class="explanation-title-ja">グリッド1</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_h" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77901144" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/dp/submissions/77901177" target="_blank" rel="noopener noreferrer">インラインDP解</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、D問題級。</p>
+<p>動的計画法における考え方自体は単純。<br>
+もしかしたら、DP コンテストで一番簡単かもしれない。<br>
+高校数学でも典型問題である。<br>
+（組み合わせを駆使して解くことが多いが）</p>
+<p>「左上から順に、そのマスまでの経路数を全部埋めていく」だけ。<br>
+しかも、その経路数を求める計算は、左から来るものと上から来るものを加算するだけ。</p>
+<p>例えば入力例1ならこういう表を作るだけ。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>位置</th>
+<th>0列目</th>
+<th>1列目</th>
+<th>2列目</th>
+<th>3列目</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>0行目</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1行目</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2行目</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+</tbody>
+</table></div>
+<p>ただし、まず、二次元的に継承する動的計画法自体が書きなれていなければ大変。<br>
+さらに、</p>
+<ul>
+<li>壁だったら $0$ にする</li>
+<li>端だったら左からや上からの片方しかない</li>
+<li>左上だけは計算なしで $1$ を入れる特殊処理が必要</li>
+</ul>
+<p>など、実装上気を配らなくてはいけない箇所がたくさんある。<br>
+トドメに、「答えは非常に大きくなりうるので、$10^9+7$ で割った余りを求めてください。」の指示。<br>
+もちろん最後だけでなく途中もとんでもなく大きくなるので、剰余類環の考えを用いる。</p>
+<p>インラインDPにもできる。<br>
+（といっても、元の値への変更はしているので、インプレースという方が正しいか？）<br>
+とはいえ、グリッド問題なので、普通に二次元でやる方がしっくりくる。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>h: 3
+w: 4
+a:
+  ...#
+  .#..
+  ....</code></pre>
+<p><code>dp[i][j]</code> を、<code>i</code> 行目 <code>j</code> 列目にたどり着く方法の数とする。<br>
+最初に <code>dp[0][0] = 1</code> とする。</p>
+<p>各マスについて、壁 <code>#</code> なら <code>dp[i][j] = 0</code> にする。<br>
+壁でなければ、上から来る方法の数と左から来る方法の数を足す。</p>
+<p>入力例1では、DP テーブルは次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>位置</th>
+<th>0列目</th>
+<th>1列目</th>
+<th>2列目</th>
+<th>3列目</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>0行目</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1行目</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2行目</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+</tbody>
+</table></div>
+<p>最下段最右列の値 <code>dp[2][3]</code> の $3$ が答え。</p>
+<h2>注意点</h2>
+<h3>剰余類環</h3>
+<p>答えは $10^9+7$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+何か足し算や掛け算をするたびに結果を <code>% 1000000007</code> する。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
