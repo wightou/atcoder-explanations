@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDPC K - Stones</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>EDPC K - Stones</h1>
+      <p class="explanation-title-ja">石</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_k" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77903922" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、D問題級。</p>
+<p>対戦ゲームの問題で、</p>
+<ul>
+<li>「こうなったら終了」のパターンが少ない</li>
+<li>局面がループすることが絶対にない</li>
+</ul>
+<p>という場合には、バックトレースで動的計画法をするのが有効。<br>
+つまり、勝負の決着に近い方から順に考え、以下で更新していく。</p>
+<ul>
+<li>自分の行動後に後手必勝状態になるものが1つでもあれば、先手必勝</li>
+<li>自分の行動後が後手必勝状態になるものが1つもなければ、後手必勝</li>
+</ul>
+<p>この手の問題は ABC の E 問題以降で、他のいろいろと組み合わされて出題されることも多い。<br>
+この問題が簡単と感じるくらいに慣れておきたい。</p>
+<h2>入力例3での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 2
+k: 7
+a: {2, 3}</code></pre>
+<p><code>dp[i]</code> を、石が <code>i</code> 個ある状態が先手必勝かどうかとする。</p>
+<p>最初は、全て後手必勝として初期化されている。</p>
+<pre><code>dp: {false, false, false, false, false, false, false, false}</code></pre>
+<p>石の数が $0$ 個の場合、返す選択肢がないので、後手の勝ちである。</p>
+<pre><code>dp[0]: false</code></pre>
+<p>石の数が $1$ 個の場合も、返す選択肢がないので、後手の勝ちである。</p>
+<pre><code>dp[1]: false</code></pre>
+<p>石の数が $2$ 個の場合、石を $2$ 個取れば <code>dp[0]</code> の状態にできる。<br>
+これは後手勝ち状態で返す選択肢なので、先手の勝ちである。</p>
+<pre><code>dp[2]: true</code></pre>
+<p>石の数が $3$ 個の場合、石を $2$ 個取れば <code>dp[1]</code> の状態にできる。<br>
+これは後手勝ち状態で返す選択肢なので、先手の勝ちである。</p>
+<pre><code>dp[3]: true</code></pre>
+<p>石の数が $4$ 個の場合、石を $3$ 個取れば <code>dp[1]</code> の状態にできる。<br>
+これは後手勝ち状態で返す選択肢なので、先手の勝ちである。</p>
+<pre><code>dp[4]: true</code></pre>
+<p>石の数が $5$ 個の場合、石を $2$ 個取っても <code>dp[3]</code>、石を $3$ 個取っても <code>dp[2]</code> の状態になる。<br>
+どちらも先手勝ち状態なので、後手の勝ちである。</p>
+<pre><code>dp[5]: false</code></pre>
+<p>石の数が $6$ 個の場合、石を $2$ 個取っても <code>dp[4]</code>、石を $3$ 個取っても <code>dp[3]</code> の状態になる。<br>
+どちらも先手勝ち状態なので、後手の勝ちである。</p>
+<pre><code>dp[6]: false</code></pre>
+<p>石の数が $7$ 個の場合、石を $2$ 個取れば <code>dp[5]</code> の状態にできる。<br>
+これは後手勝ち状態で返す選択肢なので、先手の勝ちである。</p>
+<pre><code>dp[7]: true</code></pre>
+<p>最終的に、DP テーブルは次のようになる。</p>
+<pre><code>dp: {false, false, true, true, true, false, false, true}</code></pre>
+<p><code>dp[7]</code> は <code>true</code> なので、答えは <code>First</code>。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/tag-97337802.html">対戦ゲーム</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
