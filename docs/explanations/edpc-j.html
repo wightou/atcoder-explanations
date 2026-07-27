@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDPC J - Sushi</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>EDPC J - Sushi</h1>
+      <p class="explanation-title-ja">寿司</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_j" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77903301" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、E問題級。</p>
+<p>期待値の計算に慣れていれば、発想自体はそこまで難しくない。</p>
+<p>次のようにおく。</p>
+<ul>
+<li>$E$ は、今の状態から全て食べ終わるまでの期待値</li>
+<li>$p_i$ は、寿司が $i$ 個ある皿を選ぶ確率</li>
+<li>$E_i$ は、寿司が $i$ 個ある皿から $1$ 個取った後の期待値</li>
+</ul>
+<p>すると、次の式になる。</p>
+<p>$$<br>
+E = 1 + p_3E_3 + p_2E_2 + p_1E_1 + p_0E<br>
+$$</p>
+<p>最後の「$0$ 個の皿から $1$ つ取った（何も起こらない）後の期待値」は、求めたい期待値と同じものである。<br>
+自分を含めた再帰計算はできないので、これを以下のように変形する。</p>
+<p>$$<br>
+(1-p_0)E = 1 + p_3E_3 + p_2E_2 + p_1E_1<br>
+$$</p>
+<p>できるだけ小数計算をしたくないので、両辺に全皿枚数を掛ける。</p>
+<p>ここで、$c_i$ を寿司が $i$ 個ある皿の枚数とすると、次のようになる。</p>
+<p>$$<br>
+(n-c_0)E = n + c_3E_3 + c_2E_2 + c_1E_1<br>
+$$</p>
+<p>最初の括弧の中は $1$ 個以上の皿の枚数である。<br>
+したがって、全部 $0$ 個の場合を例外処理で取り除いておけば、割り算が可能で、遷移の式が求まる。</p>
+<p>$$<br>
+E = \dfrac{n + c_3E_3 + c_2E_2 + c_1E_1}{c_3 + c_2 + c_1}<br>
+$$</p>
+<p>あとは、これで動的計画法するだけではあるのだが、表が三次元なうえに表の幅が一定でないので注意。<br>
+サイズを大きめに取るという解決策もあるが、練習としてはピッタリサイズで作りたいところである。</p>
+<h2>入力例3での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 2
+a: {1, 2}</code></pre>
+<p>寿司が $1$ 個ある皿は $1$ 枚、寿司が $2$ 個ある皿は $1$ 枚、寿司が $3$ 個ある皿は $0$ 枚である。</p>
+<pre><code>n1: 1
+n2: 1
+n3: 0</code></pre>
+<p><code>dp[i3][i2][i1]</code> を、次の状態から全て食べ終わるまでの期待操作回数とする。</p>
+<ul>
+<li>寿司が $3$ 個ある皿が <code>i3</code> 枚</li>
+<li>寿司が $2$ 個ある皿が <code>i2</code> 枚</li>
+<li>寿司が $1$ 個ある皿が <code>i1</code> 枚</li>
+</ul>
+<p>全部 $0$ 個の状態は、すでに食べ終わっているので期待値は $0$ である。</p>
+<pre><code>dp[0][0][0]: 0.0</code></pre>
+<p>状態 <code>dp[0][0][1]</code> を考える。<br>
+$2$ 枚のうち $1$ 枚だけが空でない皿なので、次の寿司を食べるまでの期待操作回数は $2$ である。</p>
+<pre><code>dp[0][0][1] = (2 + dp[0][0][0] * 1) / 1
+            = 2.0</code></pre>
+<p>状態 <code>dp[0][0][2]</code> を考える。<br>
+$2$ 枚とも寿司が $1$ 個ある皿であり、寿司を $1$ 個食べると <code>dp[0][0][1]</code> の状態になる。</p>
+<pre><code>dp[0][0][2] = (2 + dp[0][0][1] * 2) / 2
+            = 3.0</code></pre>
+<p>状態 <code>dp[0][1][0]</code> を考える。<br>
+寿司が $2$ 個ある皿が $1$ 枚なので、寿司を $1$ 個食べると <code>dp[0][0][1]</code> の状態になる。</p>
+<pre><code>dp[0][1][0] = (2 + dp[0][0][1] * 1) / 1
+            = 4.0</code></pre>
+<p>最後に、状態 <code>dp[0][1][1]</code> を考える。<br>
+この状態では、次の $2$ 通りがある。</p>
+<ul>
+<li>寿司が $1$ 個ある皿を選ぶと <code>dp[0][1][0]</code> の状態になる。</li>
+<li>寿司が $2$ 個ある皿を選ぶと <code>dp[0][0][2]</code> の状態になる。</li>
+</ul>
+<pre><code>dp[0][1][1] = (2 + dp[0][1][0] * 1 + dp[0][0][2] * 1) / 2
+            = 4.5</code></pre>
+<p><code>dp[0][1][1]</code> の $4.5$ が答え。</p>
+<h2>注意点</h2>
+<h3>寿司が $1$ つ減った時の参照先に注意</h3>
+<p>寿司が $3$ 個乗っている皿が選ばれたときに、参照する先は「$3$ 個の皿が $1$ つ減ったデータ」ではない。<br>
+$3$ 個の皿から寿司を $1$ つ食べるということは、$2$ 個の皿が新しくできるということ。<br>
+つまり、参照先は「$3$ 個の皿が $1$ つ減り、$2$ 個の皿が $1$ つ増えたデータ」である。</p>
+<p>寿司が $2$ 個乗っている皿が選ばれたときも同様。</p>
+<p>その影響で、$2$ 個の皿や $1$ 個の皿の枚数が初期値より増える可能性がある。<br>
+DP テーブルの広さにも注意が必要。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/probability.html">確率</a>
+<a class="tag" href="../tags/tag-b7dcac93.html">期待値</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
