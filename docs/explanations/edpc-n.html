@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDPC N - Slimes</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>EDPC N - Slimes</h1>
+      <p class="explanation-title-ja">スライム</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_n" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77924604" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、E問題級。</p>
+<p>基本的にはただの区間 DP で、L 問題と同じように解けばよい。<br>
+ただし、「今回の合体コスト」を計算するときに長大な和を取る必要がある。<br>
+そのため、累積和のアルゴリズムを同時に用いる。</p>
+<p><code>dp[l][r]</code> を、<code>l</code> 番目から <code>r</code> 番目までのスライムを合体させる場合の最小コストとする。<br>
+最後に合体する境界を全パターン試すと、次の形になる。</p>
+<pre><code>dp[l][r] = min(dp[l][m-1] + dp[m][r]) + 区間全体の大きさ</code></pre>
+<p>区間全体の大きさは、累積和を使って求めればよい。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 4
+a: {10, 20, 30, 40}</code></pre>
+<p>まず、累積和を作る。</p>
+<pre><code>sum: {0, 10, 30, 60, 100}</code></pre>
+<p><code>dp[l][r]</code> を、区間 <code>a[l]</code> から <code>a[r]</code> までのスライムを合体させる最小コストとする。</p>
+<p>残り $1$ 匹の場合、合体する必要がないのでコストは $0$ である。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">左端＼右端</th>
+<th class="table-align-right" style="text-align: right;">10</th>
+<th class="table-align-right" style="text-align: right;">20</th>
+<th class="table-align-right" style="text-align: right;">30</th>
+<th class="table-align-right" style="text-align: right;">40</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">10</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">20</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">30</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">40</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table></div>
+<p>たとえば、<code>dp[2][3]</code> を考える。<br>
+この区間は <code>a[2]</code> と <code>a[3]</code> だけなので、最後にその $2$ 匹を合体させるしかない。</p>
+<pre><code>dp[2][3] = dp[2][2] + dp[3][3] + (sum[4] - sum[2])
+         = 0 + 0 + 70
+         = 70</code></pre>
+<p>この提出コードでは、表の下段から順に、左から埋めていく。<br>
+具体的には、次の順に値が確定する。</p>
+<pre><code>dp[2][3]
+dp[1][2] -&gt; dp[1][3]
+dp[0][1] -&gt; dp[0][2] -&gt; dp[0][3]</code></pre>
+<p><code>dp[0][3]</code> では、最後に合体する境界を全て試す。</p>
+<pre><code>dp[0][3] = min(
+  dp[0][0] + dp[1][3],
+  dp[0][1] + dp[2][3],
+  dp[0][2] + dp[3][3]
+) + (sum[4] - sum[0])</code></pre>
+<p>それぞれの値を入れると、次のようになる。</p>
+<pre><code>dp[0][3] = min(0 + 140, 30 + 70, 90 + 0) + 100
+         = min(140, 100, 90) + 100
+         = 190</code></pre>
+<p>実際に埋めると、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">左端＼右端</th>
+<th class="table-align-right" style="text-align: right;">10</th>
+<th class="table-align-right" style="text-align: right;">20</th>
+<th class="table-align-right" style="text-align: right;">30</th>
+<th class="table-align-right" style="text-align: right;">40</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">10</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">30</td>
+<td class="table-align-right" style="text-align: right;">90</td>
+<td class="table-align-right" style="text-align: right;">190</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">20</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">50</td>
+<td class="table-align-right" style="text-align: right;">140</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">30</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">70</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">40</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table></div>
+<p>右上の $190$ が答えである。</p>
+<h2>注意点</h2>
+<p>答えは、<code>int</code> 型からはみ出る。<br>
+DP テーブルを含め、<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/interval-dp.html">区間DP</a>
+<a class="tag" href="../tags/cumulative-sum.html">累積和</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
