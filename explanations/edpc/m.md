@@ -2,7 +2,7 @@
 contest: EDPC
 problem: M
 problem_title: "Candies"
-problem_title_ja: "飴配り"
+problem_title_ja: "飴"
 problem_url: https://atcoder.jp/contests/dp/tasks/dp_m
 submission_url: https://atcoder.jp/contests/dp/submissions/77924314
 tags:
