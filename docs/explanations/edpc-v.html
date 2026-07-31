@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDPC V - Subtree</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>EDPC V - Subtree</h1>
+      <p class="explanation-title-ja">部分木</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_v" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77959971" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、F問題級。</p>
+<p>いわゆる全方位木DPの問題だが、この問題は普通の木DPっぽい思考で解ける。</p>
+<p>まず、適当な頂点を根として選び、根付き木にしておく。<br>
+この上で黒い頂点全体が連結になるように塗ると、塗った部分もまた根付き木のようになる。<br>
+このとき、各頂点について、以下の $2$ つを考える。 </p>
+<ul>
+<li>その頂点が、黒い頂点の根付き木の根になっている塗り方の個数 <code>black_root[i]</code></li>
+<li>その頂点が、黒い頂点の根付き木の葉になっている塗り方の個数 <code>black_leaf[i]</code></li>
+</ul>
+<p>すると、その頂点が黒く塗られるパターンは、この積で求められる。</p>
+<p>まず、<code>black_root[i]</code> を葉側から求める。</p>
+<p>自身が全体の葉だった場合は、$1$。<br>
+子がある場合、それぞれの子 <code>j</code> について、白い頂点にするか黒い頂点にするかをわけて考える。<br>
+すると、子 <code>j</code> からの寄与は <code>black_root[j] + 1</code> である。<br>
+これを全ての子について掛け合わせれば、<code>black_root[i]</code> が求まる。</p>
+<p>そして、<code>black_leaf[j]</code> を根側から求める。<br>
+自身が全体の根だった場合は、$1$。<br>
+そうではなかった場合の説明を親を <code>i</code> として以下に書く。</p>
+<p>親 <code>i</code> より上側から来る寄与は <code>black_leaf[i]</code> である。<br>
+また、子 <code>j</code> 以外の子 <code>x</code> については、それぞれ <code>black_root[x] + 1</code> 通りの選び方がある。<br>
+したがって、<code>black_leaf[j]</code> は次のようになる。</p>
+<pre><code>black_leaf[j]
+= 1 + black_leaf[i] * 子 j 以外の子 x についての (black_root[x]+1) の積</code></pre>
+<p>ただし、子を $1$ つ固定するたびに、他の子の積を愚直に取り直すと $O(N^2)$ になって遅い。<br>
+そこで、<code>black_root[i]</code> を作っているときに一工夫。<br>
+左からの累積積と右からの累積積を求めることで、<code>(black_root[x]+1) の積</code> 部分だけ求めてしまう。<br>
+すると、後からちゃんと計算するときに、そこに <code>black_leaf[i]</code> をかけて $+1$ するだけでよくなる。</p>
+<p>これで <code>black_root[i]</code> と <code>black_leaf[i]</code> が求まったので、各頂点ごと積を取れば答え。</p>
+<p>計算量は $O(N)$。</p>
+<h2>動作例</h2>
+<p>ここでは、説明用に次の独自入力例で考える。</p>
+<pre><code>5 100
+1 2
+1 3
+2 4
+2 5</code></pre>
+<p>0-indexed に直すと、辺は次のようになる。</p>
+<pre><code>0 - 1
+0 - 2
+1 - 3
+1 - 4</code></pre>
+<p>頂点 <code>0</code> を根とする根付き木として見る。</p>
+<pre><code>children[0]: {1, 2}
+children[1]: {3, 4}
+children[2]: {}
+children[3]: {}
+children[4]: {}</code></pre>
+<p>まず、葉側から <code>black_root</code> を求める。</p>
+<p>頂点 <code>2, 3, 4</code> は葉なので、子からの寄与はない。</p>
+<pre><code>black_root[2] = 1
+black_root[3] = 1
+black_root[4] = 1</code></pre>
+<p>頂点 <code>1</code> には子 <code>3, 4</code> がある。<br>
+それぞれの子について、使わない場合と使う場合がある。</p>
+<pre><code>black_root[1]
+= (black_root[3] + 1) * (black_root[4] + 1)
+= (1 + 1) * (1 + 1)
+= 4</code></pre>
+<p>このとき、後で <code>black_leaf</code> を配るために、子を $1$ つ除いた積も累積積で求めておく。<br>
+子 <code>3, 4</code> からの寄与は、それぞれ次の値である。</p>
+<pre><code>black_root[3] + 1 = 2
+black_root[4] + 1 = 2</code></pre>
+<p>左からの累積積と右からの累積積を作る。</p>
+<pre><code>left:  {1, 2, 4}
+right: {4, 2, 1}</code></pre>
+<p>これにより、それぞれの子を除いた積が $O(1)$ で求まる。</p>
+<pre><code>子 3 以外の積: left[0] * right[1] = 1 * 2 = 2
+子 4 以外の積: left[1] * right[2] = 2 * 1 = 2</code></pre>
+<p>頂点 <code>0</code> には子 <code>1, 2</code> がある。</p>
+<pre><code>black_root[0]
+= (black_root[1] + 1) * (black_root[2] + 1)
+= (4 + 1) * (1 + 1)
+= 10</code></pre>
+<p>ここでも、子 <code>1, 2</code> をそれぞれ除いた積を累積積で求めておく。<br>
+子 <code>1, 2</code> からの寄与は、それぞれ次の値である。</p>
+<pre><code>black_root[1] + 1 = 5
+black_root[2] + 1 = 2</code></pre>
+<p>左からの累積積と右からの累積積は次のようになる。</p>
+<pre><code>left:  {1, 5, 10}
+right: {10, 2, 1}</code></pre>
+<p>したがって、それぞれの子を除いた積は次のようになる。</p>
+<pre><code>子 1 以外の積: left[0] * right[1] = 1 * 2 = 2
+子 2 以外の積: left[1] * right[2] = 5 * 1 = 5</code></pre>
+<p>よって、<code>black_root</code> は次のようになる。</p>
+<pre><code>black_root: {10, 4, 1, 1, 1}</code></pre>
+<p>次に、根側から <code>black_leaf</code> を求める。</p>
+<p>根 <code>0</code> には親側がないので、次から始める。</p>
+<pre><code>black_leaf[0] = 1</code></pre>
+<p>頂点 <code>0</code> から子 <code>1</code> に値を渡す。<br>
+子 <code>1</code> から見た親側には、兄弟である子 <code>2</code> 側の寄与が含まれる。<br>
+これは先ほど求めた、子 <code>1</code> 以外の積である。</p>
+<pre><code>black_leaf[1]
+= 1 + black_leaf[0] * 子 1 以外の積
+= 1 + 1 * 2
+= 3</code></pre>
+<p>頂点 <code>0</code> から子 <code>2</code> に値を渡す。<br>
+子 <code>2</code> から見た親側には、兄弟である子 <code>1</code> 側の寄与が含まれる。<br>
+これは先ほど求めた、子 <code>2</code> 以外の積である。</p>
+<pre><code>black_leaf[2]
+= 1 + black_leaf[0] * 子 2 以外の積
+= 1 + 1 * 5
+= 6</code></pre>
+<p>次に、頂点 <code>1</code> から子 <code>3</code> に値を渡す。<br>
+子 <code>3</code> から見た親側には、頂点 <code>1</code> より上側の寄与と、兄弟である子 <code>4</code> 側の寄与が含まれる。<br>
+これは先ほど求めた、子 <code>3</code> 以外の積である。</p>
+<pre><code>black_leaf[3]
+= 1 + black_leaf[1] * 子 3 以外の積
+= 1 + 3 * 2
+= 7</code></pre>
+<p>同様に、頂点 <code>1</code> から子 <code>4</code> に値を渡す。<br>
+ここでも、先ほど求めた子 <code>4</code> 以外の積を使う。</p>
+<pre><code>black_leaf[4]
+= 1 + black_leaf[1] * 子 4 以外の積
+= 1 + 3 * 2
+= 7</code></pre>
+<p>よって、<code>black_leaf</code> は次のようになる。</p>
+<pre><code>black_leaf: {1, 3, 6, 7, 7}</code></pre>
+<p>最後に、それぞれの頂点について <code>black_root[i] * black_leaf[i]</code> を求める。</p>
+<pre><code>頂点 0: 10 * 1 = 10
+頂点 1: 4 * 3 = 12
+頂点 2: 1 * 6 = 6
+頂点 3: 1 * 7 = 7
+頂点 4: 1 * 7 = 7</code></pre>
+<p>よって、この入力例に対する出力は次である。</p>
+<pre><code>10
+12
+6
+7
+7</code></pre>
+<h2>注意点</h2>
+<p>答えは <code>m</code> で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+今回は法が $10^9+7$ 固定ではなく、入力で与えられる <code>m</code> である点に注意する。</p>
+<h2>別解</h2>
+<p>根付きにしないまま、各辺に「そこから先の部分木を、根を黒くして塗る方法」を持たせる実装もある。<br>
+深さ優先探索的に求めていくことになるが、「自身以外の積を求める」部分がかなり複雑になる。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/rerooting-dp.html">全方位木DP</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

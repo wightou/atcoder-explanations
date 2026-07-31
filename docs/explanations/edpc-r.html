@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>木DP</title>
+<title>EDPC R - Walk</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,54 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>木DP</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>EDPC R - Walk</h1>
+      <p class="explanation-title-ja">歩行</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_r" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77959904" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、E問題級。</p>
+<p>隣接行列を $K$ 乗すれば、各点から各点へ $K$ ステップで移動する経路数がわかる。<br>
+つまり、その成分を全部足せば OK。</p>
+<p>$K$ が非常に大きいので、$K$ 乗にはダブリングを使うこと。</p>
+<p>計算量は $O(N^3\log K)$。</p>
+<p>……DPまとめコンテストとは？</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 4
+k: 2
+a:
+  {0, 1, 0, 0}
+  {0, 0, 1, 1}
+  {0, 0, 0, 1}
+  {1, 0, 0, 0}</code></pre>
+<p>隣接行列 <code>a</code> の $2$ 乗を求める。<br>
+<code>a^2[i][j]</code> は、頂点 <code>i</code> から頂点 <code>j</code> へ長さ $2$ で移動する方法数である。</p>
+<pre><code>a^2:
+  {0, 0, 1, 1}
+  {1, 0, 0, 1}
+  {1, 0, 0, 0}
+  {0, 1, 0, 0}</code></pre>
+<p>全成分の和を取る。</p>
+<pre><code>2 + 2 + 1 + 1 = 6</code></pre>
+<p>よって答えは $6$ である。</p>
+<h2>注意点</h2>
+<p>答えは $10^9+7$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+足し算や掛け算をするたびに結果を <code>% 1000000007</code> する。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 高速化系</p>
-      <p><strong>難易度:</strong> D問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li><a href="../knowledge/dynamic-programming.html">動的計画法</a></li><li><a href="../knowledge/tree.html">木</a></li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/edpc-p.html">EDPC P - Independent Set</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/adjacency-matrix.html">隣接行列</a>
+<a class="tag" href="../tags/matrix-computation.html">行列計算</a>
+<a class="tag" href="../tags/doubling.html">ダブリング</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

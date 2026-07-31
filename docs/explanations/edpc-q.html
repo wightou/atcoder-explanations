@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>木DP</title>
+<title>EDPC Q - Flowers</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,57 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>木DP</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>EDPC Q - Flowers</h1>
+      <p class="explanation-title-ja">花</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_q" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77959884" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>左から順に、その花を最後に残す場合の最大値を求めていけばよい。<br>
+その値は、自分より前にある自分より低い花の中での最大値+自分の価値とすればよい。<br>
+$O(N^2)$ でよいのであれば、これで簡単。</p>
+<p>あとは高速化だが、最大値を取得できるsegment木を用いるのが有効。<br>
+花 $1$ 本を処理するごとに、最後の花の高さが $i$ である場合の情報を位置 $i$ に入れてやる。<br>
+すると、「高さが自身未満の中で最大値」を $O(\log N)$ で取得できる。<br>
+これで全体計算量は $O(N\log N)$ となる。</p>
+<p>最後の答えは、任意の花を最後に残した場合の最大値であり、つまりsegment木の全体処理した値である。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取り、高さを <code>0-indexed</code> に直す。</p>
+<pre><code>n: 4
+h: {2, 0, 3, 1}
+a: {10, 20, 30, 40}</code></pre>
+<p><code>seg[x]</code> を、高さ <code>x</code> の花を最後に残す場合の最大価値とする。</p>
+<p>最初は全て $0$ である。</p>
+<pre><code>seg: {0, 0, 0, 0}</code></pre>
+<p>$1$ 本目の花は、高さ <code>2</code>、価値 <code>10</code> である。<br>
+高さ <code>2</code> より低い花で終わる最大価値は $0$ なので、<code>seg[2]</code> を $10$ にする。</p>
+<pre><code>seg: {0, 0, 10, 0}</code></pre>
+<p>$2$ 本目の花は、高さ <code>0</code>、価値 <code>20</code> である。<br>
+高さ <code>0</code> より低い花はないので、<code>seg[0]</code> を $20$ にする。</p>
+<pre><code>seg: {20, 0, 10, 0}</code></pre>
+<p>$3$ 本目の花は、高さ <code>3</code>、価値 <code>30</code> である。<br>
+高さ <code>3</code> より低い花で終わる最大価値は $20$ なので、<code>seg[3]</code> を $50$ にする。</p>
+<pre><code>seg: {20, 0, 10, 50}</code></pre>
+<p>$4$ 本目の花は、高さ <code>1</code>、価値 <code>40</code> である。<br>
+高さ <code>1</code> より低い花で終わる最大価値は $20$ なので、<code>seg[1]</code> を $60$ にする。</p>
+<pre><code>seg: {20, 60, 10, 50}</code></pre>
+<p>全体の最大値 $60$ が答えである。</p>
+<h2>注意点</h2>
+<p>答えは、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 高速化系</p>
-      <p><strong>難易度:</strong> D問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li><a href="../knowledge/dynamic-programming.html">動的計画法</a></li><li><a href="../knowledge/tree.html">木</a></li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/edpc-p.html">EDPC P - Independent Set</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/segment-tree.html">segment木</a>
+<a class="tag" href="../tags/lis.html">最長増加部分列</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">
