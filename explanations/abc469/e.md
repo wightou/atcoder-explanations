@@ -5,12 +5,16 @@ problem_title: "Pro Exam Eligibility"
 problem_title_ja: "プロ試験資格"
 problem_url: https://atcoder.jp/contests/abc469/tasks/abc469_e
 submission_url: https://atcoder.jp/contests/abc469/submissions/78058427
+alternative_submission_urls:
+  - label: 別解
+    url: https://atcoder.jp/contests/abc469/submissions/78066463
 tags:
   - 累積和
   - 尺取法
   - ツーポインタ法
   - ベクトル（幾何学）
   - 凸包
+  - 二分探索
 tag_note: B問題以下レベルの内容は省略。
 ---
 
@@ -190,4 +194,16 @@ $$
 
 ## 別解
 
-特になし。
+勝率を固定したとき、その勝率以上を達成できる区間が存在するかは判定可能。
+そして、その判定結果には単調性があるので、答えを二分探索できる。
+
+$(試合数,勝利数-目標勝率\times 試合数)$ を二次元でプロットすることを考える。
+どこかの $2$ 点を結んだ傾きが $0$ 以上になっていれば、その区間の勝率は目標勝率以上である。
+
+ある大きな値 $G$ を設定し、一旦 $G\times$ 勝率の最大値を整数で求めることにする。
+真の答えとの差は $1/G$ 未満なので、$G=10^7$ とすれば誤差は $10^{-7}$ 未満となる。
+この場合、$(試合数,G\times 勝利数-(G\times 目標勝率)\times 試合数)$ をプロットすればよい。
+
+勝利数は単調非減少なので、勝利数が $k$ 以上少ない範囲での最小値は尺取法で追加できる。
+つまり、$G\times$ 勝率の候補 $1$ つの判定を $O(N)$ で行える。
+二分探索分も考慮して、計算量は $O(N\log G)$ となる。

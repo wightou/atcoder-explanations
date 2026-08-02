@@ -32,7 +32,7 @@ window.MathJax = {
       <h1>ABC469 E - Pro Exam Eligibility</h1>
       <p class="explanation-title-ja">プロ試験資格</p>
     </div>
-    <div class="auto-links"><a href="https://atcoder.jp/contests/abc469/tasks/abc469_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc469/submissions/78058427" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc469/tasks/abc469_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc469/submissions/78058427" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc469/submissions/78066463" target="_blank" rel="noopener noreferrer">別解</a></div>
     <h2>考え方</h2>
 <p>ある時点からある時点までの勝率の表現を言い換える。<br>
 $0$ 試合時点を含めた各タイミングでの（これまでの試合数、勝利数）を二次元プロットする。<br>
@@ -151,7 +151,16 @@ $$</p>
 <p>外積や傾きの比較に用いる積は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
 <h2>別解</h2>
-<p>特になし。</p>
+<p>勝率を固定したとき、その勝率以上を達成できる区間が存在するかは判定可能。<br>
+そして、その判定結果には単調性があるので、答えを二分探索できる。</p>
+<p>$(試合数,勝利数-目標勝率\times 試合数)$ を二次元でプロットすることを考える。<br>
+どこかの $2$ 点を結んだ傾きが $0$ 以上になっていれば、その区間の勝率は目標勝率以上である。</p>
+<p>ある大きな値 $G$ を設定し、一旦 $G\times$ 勝率の最大値を整数で求めることにする。<br>
+真の答えとの差は $1/G$ 未満なので、$G=10^7$ とすれば誤差は $10^{-7}$ 未満となる。<br>
+この場合、$(試合数,G\times 勝利数-(G\times 目標勝率)\times 試合数)$ をプロットすればよい。</p>
+<p>勝利数は単調非減少なので、勝利数が $k$ 以上少ない範囲での最小値は尺取法で追加できる。<br>
+つまり、$G\times$ 勝率の候補 $1$ つの判定を $O(N)$ で行える。<br>
+二分探索分も考慮して、計算量は $O(N\log G)$ となる。</p>
   </article>
 
   <aside class="sidebar">
@@ -163,6 +172,7 @@ $$</p>
 <a class="tag" href="../tags/two-pointer-method.html">ツーポインタ法</a>
 <a class="tag" href="../tags/geometric-vector.html">ベクトル（幾何学）</a>
 <a class="tag" href="../tags/convex-hull.html">凸包</a>
+<a class="tag" href="../tags/binary-search.html">二分探索</a>
       </div>
       <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
     </section>
