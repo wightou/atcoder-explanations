@@ -1,16 +1,16 @@
 ---
-title: 凸包
+title: 挿入DP
 level: F問題相当
-category: 幾何学系
+category: 高速化系
 summary: 今後記述予定。
 category_order: 9999
 level_order: 9999
 aliases:
-  - Convex Hull
-  - convex hull
+  - Insertion DP
+  - insertion DP
 absorbs: []
 related:
-  - 偏角ソート
+  - 動的計画法
 ---
 
 ## 概要
