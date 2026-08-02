@@ -242,7 +242,8 @@ a:hover {
 
 .markdown-body table {
   width: max-content;
-  min-width: 100%;
+  min-width: 0;
+  max-width: none;
   border-collapse: separate;
   border-spacing: 0;
   margin: 16px 0;
@@ -314,7 +315,9 @@ a:hover {
 .markdown-body .table-bg-black { background-color: var(--table-bg-black); }
 
 .markdown-table-scroll {
+  max-width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
   margin: 16px 0;
 }
 

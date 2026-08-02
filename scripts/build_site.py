@@ -789,7 +789,7 @@ def render_markdown_table(table_lines: list[str]) -> str:
     ]
     body_rows = [split_markdown_table_row(line) for line in table_lines[2:]]
 
-    out = ['<div class="markdown-table-scroll"><table>', "<thead><tr>"]
+    out = ['<table>', "<thead><tr>"]
     for i, cell in enumerate(header):
         out.append(table_cell_html("th", cell, alignments[i]))
     out.append("</tr></thead>")
@@ -804,7 +804,7 @@ def render_markdown_table(table_lines: list[str]) -> str:
             out.append("</tr>")
         out.append("</tbody>")
 
-    out.append("</table></div>")
+    out.append("</table>")
     return "\n".join(out)
 
 
@@ -944,6 +944,12 @@ def apply_table_alignments_to_html(html: str) -> str:
     return tag_pattern.sub(replace, html)
 
 
+def wrap_markdown_tables_html(html: str) -> str:
+    """Markdown本文中の表を横スクロール用の要素で囲む。"""
+    pattern = re.compile(r"(<table\b[^>]*>.*?</table>)", flags=re.I | re.S)
+    return pattern.sub(r'<div class="markdown-table-scroll">\1</div>', html)
+
+
 def markdown_to_html(body_md: str) -> str:
     body_md = remove_duplicate_top_h1(body_md)
     if markdown_lib is not None:
@@ -955,7 +961,8 @@ def markdown_to_html(body_md: str) -> str:
     else:
         html = fallback_markdown_to_html(body_md)
     html = apply_table_backgrounds_to_html(html)
-    return apply_table_alignments_to_html(html)
+    html = apply_table_alignments_to_html(html)
+    return wrap_markdown_tables_html(html)
 
 
 def markdown_to_plain_text(body_md: str) -> str:
@@ -2430,7 +2437,8 @@ a:hover {
 
 .markdown-body table {
   width: max-content;
-  min-width: 100%;
+  min-width: 0;
+  max-width: none;
   border-collapse: separate;
   border-spacing: 0;
   margin: 16px 0;
@@ -2481,7 +2489,9 @@ a:hover {
 __TABLE_BACKGROUND_RULES__
 
 .markdown-table-scroll {
+  max-width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
   margin: 16px 0;
 }
 
