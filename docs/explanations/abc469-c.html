@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>約数列挙</title>
+<title>ABC469 C - Cantrip</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,31 +28,42 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>約数列挙</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC469 C - Cantrip</h1>
+      <p class="explanation-title-ja">魔法の呪文</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc469/tasks/abc469_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc469/submissions/78057096" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>手作業でシミュレーションしてみると何が起こるかすぐにわかる。</p>
+<p>どれだけ当たりを引いても、手元にある袋の個数は変わらない（不変量）。<br>
+つまり、最初に $k$ 個袋を持っているなら、<code>&#x27;x&#x27;</code> を $k$ 個手にしたところで手元に当たりがなくなって終了。</p>
+<p>よって、最初に $k$ 個袋を持っている場合は、前から $k$ 番目の <code>&#x27;x&#x27;</code> がある位置が答え。<br>
+<code>&#x27;x&#x27;</code> が $k$ 個ない場合は答えは $n$。</p>
+<p>文字列を前から見ていって、<code>&#x27;x&#x27;</code> の位置を配列に記録していき、長さが足りない分を $n$ で埋めればよい。</p>
+<p>計算量は $O(N)$ である。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+s: &quot;oxoxo&quot;</code></pre>
+<p>文字列を左から調べ、<code>x</code> が現れる位置を <code>1-indexed</code> で <code>result</code> に入れる。</p>
+<p><code>x</code> は左から $2$ 文字目と $4$ 文字目にあるので、次のようになる。</p>
+<pre><code>result: {2, 4}</code></pre>
+<p><code>result</code> の要素数が $N$ 個になるまで、最後の位置を表す $5$ で埋める。</p>
+<pre><code>result: {2, 4, 5, 5, 5}</code></pre>
+<h2>注意点</h2>
+<p>問題文中の位置は <code>1-indexed</code> だが、文字列 <code>s</code> の添字は <code>0-indexed</code> である。<br>
+コード中で両者が入り混じるので、丁寧に確認しながら書く。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> その他数学系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-f.html">ABC461 F - Total Product is N</a></li>
-        <li><a href="../explanations/abc469-f.html">ABC469 F - GCD Maximum Spanning Tree</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

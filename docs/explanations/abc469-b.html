@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>約数列挙</title>
+<title>ABC469 B - Isolated Seats</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,31 +28,54 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>約数列挙</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC469 B - Isolated Seats</h1>
+      <p class="explanation-title-ja">孤立した空席</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc469/tasks/abc469_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc469/submissions/78057085" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>条件を満たす個数を数えるので、全探索をすればよい。<br>
+for ループで座席を $1$ つずつ見て、条件を満たしていれば $1$ ずつカウントする。</p>
+<p>条件は、左の席、その席、右の席に <code>&#x27;o&#x27;</code> がないこと。<br>
+つまり、以下の $3$ つを全て満たすならカウントすればよい。</p>
+<ul>
+<li>左の席が存在しない、または左の席が <code>&#x27;x&#x27;</code> : <code>i==0||s.at(i-1)==&#x27;x&#x27;</code></li>
+<li>自身の席が <code>&#x27;x&#x27;</code> : <code>s.at(i)==&#x27;x&#x27;</code></li>
+<li>右の席が存在しない、または右の席が <code>&#x27;x&#x27;</code> : <code>i==n-1||s.at(i+1)==&#x27;x&#x27;</code></li>
+</ul>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 8
+s: &quot;xxoxxxox&quot;</code></pre>
+<p>条件を満たす椅子の個数を数える変数 <code>result</code> を $0$ で初期化する。</p>
+<pre><code>result: 0</code></pre>
+<p>各位置 <code>i</code> を順に調べる。</p>
+<p><code>i=0</code> では、自身の <code>s[0]</code> と右の <code>s[1]</code> はどちらも <code>&#x27;x&#x27;</code> であり、左の席は存在しない。<br>
+条件を満たすので、<code>result</code> に $1$ 加える。</p>
+<pre><code>result: 1</code></pre>
+<p><code>i=1</code> では、右の <code>s[2]</code> が <code>&#x27;o&#x27;</code> なので、条件を満たさない。</p>
+<p><code>i=2</code> では、自身の <code>s[2]</code> が <code>&#x27;o&#x27;</code> なので、条件を満たさない。</p>
+<p><code>i=3</code> では、左の <code>s[2]</code> が <code>&#x27;o&#x27;</code> なので、条件を満たさない。</p>
+<p><code>i=4</code> では、左の <code>s[3]</code>、自身の <code>s[4]</code>、右の <code>s[5]</code> がすべて <code>&#x27;x&#x27;</code> であるので、<code>result</code> に $1$ 加える。</p>
+<pre><code>result: 2</code></pre>
+<p><code>i=5</code> では、右の <code>s[6]</code> が <code>&#x27;o&#x27;</code> なので、条件を満たさない。</p>
+<p><code>i=6</code> では、自身の <code>s[6]</code> が <code>&#x27;o&#x27;</code> なので、条件を満たさない。</p>
+<p><code>i=7</code> では、左の <code>s[6]</code> が <code>&#x27;o&#x27;</code> なので、条件を満たさない。</p>
+<p>すべての位置を調べ終えたとき、<code>result</code> は $2$ となる。</p>
+<p>最後に、<code>result</code> の値である $2$ を出力する。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> その他数学系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-f.html">ABC461 F - Total Product is N</a></li>
-        <li><a href="../explanations/abc469-f.html">ABC469 F - GCD Maximum Spanning Tree</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/brute-force.html">全探索</a>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

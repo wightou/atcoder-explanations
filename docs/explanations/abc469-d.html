@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC469 D - The Big Two</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC469 D - The Big Two</h1>
+      <p class="explanation-title-ja">二大選手</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc469/tasks/abc469_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc469/submissions/78064928" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>まず、条件を満たす可能性がある組は $N(N-1)/2$ 通りありそうに見える。<br>
+しかし、実は最初の $1$ 試合に出ているどちらかが含まれていなければ条件を満たさない。<br>
+その $1$ つだけで、候補は $2N-3$ 通りにまで減る。<br>
+よって、この中で答えの組を探して全て列挙するのも、高速にやれば十分間に合う。</p>
+<p>まず、最初の $1$ 試合の $1$ 人目に注目して考えて、条件を満たす組を列挙する。<br>
+もう $1$ 人として可能性がある人を <code>set</code> で管理する。<br>
+最初は、注目している人以外すべてを入れておく。<br>
+$1$ 試合ずつ見て、注目している人がいない試合だったら、<code>set</code> からその $2$ 人以外削除する。<br>
+（実装上は、その $2$ 人が <code>set</code> にいるか確認をして、作り直して <code>swap</code> すると高速）<br>
+最後に残った人が、最初の $1$ 試合の $1$ 人目とペアになれる人である。</p>
+<p>同様に最初の $1$ 試合の $2$ 人目にも注目して考える。</p>
+<p>あとは、最初の $2$ 人の組を重複カウントしないように気を付けて全組数を数えればよい。</p>
+<p>計算量は $O((M+N)\log N)$ である。</p>
+<h2>入力例1での動作</h2>
+<p>入力される各決勝進出者の組は、次のようになる。</p>
+<pre><code>a, b:
+(1, 2)
+(3, 4)
+(1, 3)
+(2, 3)
+(2, 5)</code></pre>
+<p>条件を満たす組の少なくとも一方は、最初の試合の決勝進出者 <code>1</code> または <code>2</code> である。<br>
+この $2$ 人を順に中心として調べる。</p>
+<p>まず、中心を <code>1</code> とする。<br>
+相方候補として、<code>1</code> 以外の全員を <code>st</code> に入れる。</p>
+<pre><code>st: {2, 3, 4, 5}</code></pre>
+<p>組 <code>(1, 2)</code> には中心 <code>1</code> が含まれているので、<code>st</code> は変更しない。</p>
+<p>組 <code>(3, 4)</code> には中心 <code>1</code> が含まれていない。<br>
+相方は <code>3</code> または <code>4</code> でなければならないので、<code>st</code> を集合 <code>{3, 4}</code> との共通部分に絞る。</p>
+<pre><code>st: {3, 4}</code></pre>
+<p>組 <code>(1, 3)</code> には中心 <code>1</code> が含まれているので、<code>st</code> は変更しない。</p>
+<p>組 <code>(2, 3)</code> には中心 <code>1</code> が含まれていない。<br>
+<code>st</code> を集合 <code>{2, 3}</code> との共通部分に絞る。</p>
+<pre><code>st: {3}</code></pre>
+<p>組 <code>(2, 5)</code> にも中心 <code>1</code> が含まれていない。<br>
+しかし、現在の候補 <code>3</code> はこの組に含まれないので、<code>st</code> は空になる。</p>
+<pre><code>st: {}</code></pre>
+<p>したがって、中心が <code>1</code> の組は <code>result</code> に追加されない。</p>
+<p>次に、中心を <code>2</code> とする。<br>
+相方候補として、<code>2</code> 以外の全員を <code>st</code> に入れる。</p>
+<pre><code>st: {1, 3, 4, 5}</code></pre>
+<p>組 <code>(1, 2)</code> には中心 <code>2</code> が含まれているので、<code>st</code> は変更しない。</p>
+<p>組 <code>(3, 4)</code> には中心 <code>2</code> が含まれていないので、<code>st</code> を集合 <code>{3, 4}</code> との共通部分に絞る。</p>
+<pre><code>st: {3, 4}</code></pre>
+<p>組 <code>(1, 3)</code> にも中心 <code>2</code> が含まれていないので、<code>st</code> を集合 <code>{1, 3}</code> との共通部分に絞る。</p>
+<pre><code>st: {3}</code></pre>
+<p>残りの組 <code>(2, 3)</code> と <code>(2, 5)</code> には中心 <code>2</code> が含まれているので、<code>st</code> は変更しない。</p>
+<p>最後まで残った <code>3</code> は、中心 <code>2</code> の相方にできる。<br>
+組 <code>(2, 3)</code> を <code>result</code> に追加する。</p>
+<pre><code>result: {(2, 3)}</code></pre>
+<p>最後に、<code>result</code> の要素数である $1$ を出力する。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
