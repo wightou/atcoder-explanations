@@ -3,19 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>long long型</title>
+<title>auto型</title>
 <link rel="stylesheet" href="../style.css">
-<script>
-window.MathJax = {
-  tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true
-  },
-  svg: { fontCache: 'global' }
-};
-</script>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
 </head>
 <body>
 
@@ -28,52 +18,29 @@ window.MathJax = {
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>long long型</h1>
+    <h1>auto型</h1>
     <h2>概要</h2>
-<p><code>int</code> 型より大きな数を扱える整数型。</p>
-<p><code>long long</code> 型は $64$ ビットの整数型（AtCoder環境の場合）。<br>
-符号用の $1$ ビットと、値の大きさ用の $63$ ビットを使う。<br>
-そのため、扱える値の範囲は $-9{,}223{,}372{,}036{,}854{,}775{,}808$ から $9{,}223{,}372{,}036{,}854{,}775{,}807$ まで。<br>
-およそ $\pm 9 \times 10^{18}$ くらいまでは大丈夫で、それを超えると危ないと認識するとよい。</p>
-<p>整数リテラルの後ろに <code>LL</code> を付けると、<code>long long</code> 型になる。</p>
-<pre><code>1LL</code></pre>
+<p>実際は <code>auto</code> 型という型はない。<br>
+型を書くのが面倒な場合に、コンピューターに「型書かなくてもわかるでしょ？」と押し付けるための型。</p>
+<p>イテレータなど一部の型は、型宣言が長くて非常に面倒くさい。<br>
+そこで、型宣言をコンピュータに任せるということができる。</p>
+<p>もちろん、コンピュータが十分に型を判断できるような状況を用意しなければならない。<br>
+それに失敗すると、意図したものとは異なる型と判断されてバグが発生する可能性もある。<br>
+そのため、使うのはイテレータと構造化束縛くらいにとどめておいた方が無難。</p>
 <h2>宣言と初期化</h2>
-<h3>宣言だけする場合</h3>
-<pre><code>long long a;</code></pre>
-<h3>初期化もする場合</h3>
-<pre><code>long long a = 0LL;  // 固定値で初期化。0 とだけ書いても変換されるので問題ない
-long long b = a;    // 他の整数型や double 型の変数で初期化</code></pre>
+<h3>イテレータの型宣言</h3>
+<pre><code>auto a = vec.begin();</code></pre>
+<p>もちろん型を真面目に書いてもいいが……。</p>
+<h3>構造化束縛での宣言</h3>
+<pre><code>auto [a,b] = p;</code></pre>
+<p>この例では <code>p</code> は <code>pair</code> 型を想定している。</p>
 <h2>可能な演算</h2>
-<p><code>long long</code> 型では、<code>int</code> 型とほぼ同じ演算ができる。</p>
-<p>詳しくは「<a href="int.html">int型</a>」の記事参照。</p>
+<p>実際の型による。</p>
 <h2>よく使う処理</h2>
-<p><code>long long</code> 型でも、<code>int</code> 型とほぼ同じ処理ができる。</p>
-<p>詳しくは「<a href="int.html">int型</a>」の記事参照。</p>
-<h3>文字列化</h3>
-<p><code>long long</code> 型の数 <code>a</code> を <code>string</code> 型に変換したい場合、以下のようにする。</p>
-<pre><code>to_string(a)</code></pre>
-<p>逆に、<code>string</code> 型の文字列 <code>s</code> を <code>long long</code> 型にしたい場合、以下のようにする。</p>
-<pre><code>stoll(s)</code></pre>
-<p>ただし、変換後の値が <code>long long</code> 型に収まるかどうかを確認すること。</p>
-<h3><code>int</code> 型の積が一時的に範囲を超える場合</h3>
-<p>例えば、$10^6$ 程度の <code>int</code> 型の数 <code>a</code> と <code>b</code> を掛け、$10^7$ 程度の数 <code>c</code> で割った余りを求める場合を考える。</p>
-<pre><code>(a*b)%c</code></pre>
-<p>このように書くと、掛け算の時点では <code>int</code> 型として計算される。<br>
-<code>a*b</code> が <code>int</code> 型の範囲を超えるため、最後の結果も正しくならない。</p>
-<pre><code>(1LL*a*b)%c</code></pre>
-<p>このように <code>1LL</code> を掛けると、<code>long long</code> 型として計算されるため、途中のオーバーフローを防げる。</p>
+<p>実際の型による。</p>
 <h2>注意点</h2>
-<p><code>int</code> 型と同様に、桁あふれや負数の除算などに注意する。</p>
-<p>詳しくは「<a href="int.html">int型</a>」の記事参照。</p>
-<p><code>long long</code> 型でも桁あふれしそうな場合は、別の計算方法を考えた方がよいことが多い。<br>
-さらに大きな桁数を扱う型を持ち出すのは大変だし、たいていの場合その方法は想定解ではない。</p>
+<p>概要のところを参照。</p>
 <h2>関連アルゴリズム</h2>
-<h3><a href="int.html">int型</a></h3>
-<p><code>long long</code> 型より小さい整数を扱う、最も代表的な整数型。<br>
-可能な演算やよく使う処理は、<code>long long</code> 型とほぼ同じ。</p>
-<h3><a href="string.html">string型</a></h3>
-<p>文字列を扱う型。<br>
-<code>to_string</code> で <code>long long</code> 型から変換でき、<code>stoll</code> で <code>long long</code> 型へ変換できる。</p>
   </article>
 
   <aside class="sidebar">
@@ -86,7 +53,7 @@ long long b = a;    // 他の整数型や double 型の変数で初期化</code>
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li><a href="../knowledge/int.html">int型</a></li><li><a href="../knowledge/string.html">string型</a></li>
+        <li class="muted">なし</li>
       </ul>
     </section>
 

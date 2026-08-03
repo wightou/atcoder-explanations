@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>long long型</title>
+<title>size_t型</title>
 <link rel="stylesheet" href="../style.css">
 <script>
 window.MathJax = {
@@ -28,52 +28,64 @@ window.MathJax = {
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>long long型</h1>
+    <h1>size_t型</h1>
     <h2>概要</h2>
-<p><code>int</code> 型より大きな数を扱える整数型。</p>
-<p><code>long long</code> 型は $64$ ビットの整数型（AtCoder環境の場合）。<br>
-符号用の $1$ ビットと、値の大きさ用の $63$ ビットを使う。<br>
-そのため、扱える値の範囲は $-9{,}223{,}372{,}036{,}854{,}775{,}808$ から $9{,}223{,}372{,}036{,}854{,}775{,}807$ まで。<br>
-およそ $\pm 9 \times 10^{18}$ くらいまでは大丈夫で、それを超えると危ないと認識するとよい。</p>
-<p>整数リテラルの後ろに <code>LL</code> を付けると、<code>long long</code> 型になる。</p>
-<pre><code>1LL</code></pre>
+<p><code>vector</code> や <code>string</code> 型などの添え字やデータサイズを扱うときに使う整数型。<br>
+<code>.size()</code> を取得するたびに <code>int</code> 型変数へ代入してから使うなら、知らなくても問題ない。</p>
+<p><code>size_t</code> 型は符号なしの整数型。<br>
+何ビットであるかは環境によるが、AtCoder環境では $64$ ビット。<br>
+現代なら、ほとんどの環境で $64$ ビットであると思われる。</p>
+<p>$64$ ビットの場合、扱える値の範囲は $0$ から $18{,}446{,}744{,}073{,}709{,}551{,}615$ まで。<br>
+これより大きいサイズのデータを扱うことはないので、上限超えは心配しなくてよい。<br>
+むしろ、意図せず $0$ より小さい数を扱ってしまう不具合が出やすいので注意。</p>
 <h2>宣言と初期化</h2>
 <h3>宣言だけする場合</h3>
-<pre><code>long long a;</code></pre>
+<pre><code>size_t a;</code></pre>
 <h3>初期化もする場合</h3>
-<pre><code>long long a = 0LL;  // 固定値で初期化。0 とだけ書いても変換されるので問題ない
-long long b = a;    // 他の整数型や double 型の変数で初期化</code></pre>
+<pre><code>size_t a = 0;  // 固定値で初期化
+size_t b = a;  // 他の整数型や double 型の変数で初期化</code></pre>
 <h2>可能な演算</h2>
-<p><code>long long</code> 型では、<code>int</code> 型とほぼ同じ演算ができる。</p>
+<p><code>size_t</code> 型では、<code>int</code> 型とほぼ同じ演算ができる。</p>
 <p>詳しくは「<a href="int.html">int型</a>」の記事参照。</p>
+<p>ただし、符号なし整数型なので、小さい方から大きい方を引くと正しい結果にならない点に注意。</p>
 <h2>よく使う処理</h2>
-<p><code>long long</code> 型でも、<code>int</code> 型とほぼ同じ処理ができる。</p>
-<p>詳しくは「<a href="int.html">int型</a>」の記事参照。</p>
-<h3>文字列化</h3>
-<p><code>long long</code> 型の数 <code>a</code> を <code>string</code> 型に変換したい場合、以下のようにする。</p>
-<pre><code>to_string(a)</code></pre>
-<p>逆に、<code>string</code> 型の文字列 <code>s</code> を <code>long long</code> 型にしたい場合、以下のようにする。</p>
-<pre><code>stoll(s)</code></pre>
-<p>ただし、変換後の値が <code>long long</code> 型に収まるかどうかを確認すること。</p>
-<h3><code>int</code> 型の積が一時的に範囲を超える場合</h3>
-<p>例えば、$10^6$ 程度の <code>int</code> 型の数 <code>a</code> と <code>b</code> を掛け、$10^7$ 程度の数 <code>c</code> で割った余りを求める場合を考える。</p>
-<pre><code>(a*b)%c</code></pre>
-<p>このように書くと、掛け算の時点では <code>int</code> 型として計算される。<br>
-<code>a*b</code> が <code>int</code> 型の範囲を超えるため、最後の結果も正しくならない。</p>
-<pre><code>(1LL*a*b)%c</code></pre>
-<p>このように <code>1LL</code> を掛けると、<code>long long</code> 型として計算されるため、途中のオーバーフローを防げる。</p>
+<h3><code>vector</code> や <code>string</code> 型の中身を全てループ</h3>
+<p>大きさが変数で与えられていない場合、ループを普通に書くと、以下のようにしたくなる。</p>
+<pre><code>for (int i=0; i&lt;vec.size(); i++)</code></pre>
+<p>ところが、<code>.size()</code> の返り値は <code>size_t</code> 型なので、<br>
+<code>int</code> 型と <code>size_t</code> 型の比較を行っているという警告が出る。</p>
+<pre><code>for (size_t i=0; i&lt;vec.size(); i++)</code></pre>
+<p>と書くことで警告を防ぐことができる。</p>
+<p>もっとも、警告が出ても無視してよい場合もあるし、<br>
+ループ前に <code>.size()</code> の値を <code>int</code> 型変数へ入れて使用してもよい。</p>
+<p>C++20以降であれば、<code>ssize()</code> 関数を利用して、以下のように書いて <code>size_t</code> 型を避けてもよい。</p>
+<pre><code>for (int i=0; i&lt;ssize(vec); i++)</code></pre>
 <h2>注意点</h2>
-<p><code>int</code> 型と同様に、桁あふれや負数の除算などに注意する。</p>
-<p>詳しくは「<a href="int.html">int型</a>」の記事参照。</p>
-<p><code>long long</code> 型でも桁あふれしそうな場合は、別の計算方法を考えた方がよいことが多い。<br>
-さらに大きな桁数を扱う型を持ち出すのは大変だし、たいていの場合その方法は想定解ではない。</p>
+<h3>$18{,}446{,}744{,}073{,}709{,}551{,}615$ 番目へのアクセスが発生した場合</h3>
+<p><code>vector</code> や <code>string</code> 型の中の要素へアクセスするとき、<br>
+添え字 <code>i</code> は <code>size_t</code> 型として扱われる。</p>
+<p>想定外の挙動によって <code>i</code> が <code>-1</code> だった場合、<br>
+<code>size_t</code> 型へ変換されたときに<br>
+$18{,}446{,}744{,}073{,}709{,}551{,}615$ として扱われる。</p>
+<p>配列の範囲外アクセスのエラーメッセージで、<br>
+$18{,}446{,}744{,}073{,}709{,}551{,}615$ を見かけたら、<br>
+<code>-1</code> 番目へアクセスしようとした可能性が高いことを覚えておくとよい。</p>
+<h3>逆順ループをする場合のループ条件に注意</h3>
+<p>問題の内容次第では、以下のような逆順ループを書きたい場合がある。</p>
+<pre><code>for (int i=n-1; i&gt;=0; i--)</code></pre>
+<p><code>int</code> 型であれば問題ないが、<code>i</code> が <code>size_t</code> 型の場合、<br>
+<code>i=0</code> の次が $18{,}446{,}744{,}073{,}709{,}551{,}615$ になり、<br>
+ループが継続してしまう。</p>
+<pre><code>for (size_t i=a.size()-1; i&lt;a.size(); i--)</code></pre>
+<p>のように書くと防げる。</p>
 <h2>関連アルゴリズム</h2>
 <h3><a href="int.html">int型</a></h3>
-<p><code>long long</code> 型より小さい整数を扱う、最も代表的な整数型。<br>
-可能な演算やよく使う処理は、<code>long long</code> 型とほぼ同じ。</p>
+<p>最も代表的な符号付き整数型。<br>
+<code>.size()</code> の値を <code>int</code> 型へ代入してから扱う方法もある。</p>
+<h3><a href="vector.html">vector</a></h3>
+<p>要素数や添え字を扱うときに、<code>size_t</code> 型が使われる。</p>
 <h3><a href="string.html">string型</a></h3>
-<p>文字列を扱う型。<br>
-<code>to_string</code> で <code>long long</code> 型から変換でき、<code>stoll</code> で <code>long long</code> 型へ変換できる。</p>
+<p>文字数や添え字を扱うときに、<code>size_t</code> 型が使われる。</p>
   </article>
 
   <aside class="sidebar">
@@ -86,7 +98,7 @@ long long b = a;    // 他の整数型や double 型の変数で初期化</code>
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li><a href="../knowledge/int.html">int型</a></li><li><a href="../knowledge/string.html">string型</a></li>
+        <li><a href="../knowledge/int.html">int型</a></li><li><a href="../knowledge/string.html">string型</a></li><li><a href="../knowledge/vector.html">vector</a></li>
       </ul>
     </section>
 

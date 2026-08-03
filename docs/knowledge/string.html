@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>string型</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -20,7 +30,228 @@
   <article class="markdown-body">
     <h1>string型</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>文字列型。<br>
+自由な文字数の文字列を入れることができる。<br>
+ダブルクオーテーション <code>&quot;</code> を使うことで <code>string</code> 型として扱われる。</p>
+<p>$1$ つの変数のようにも扱えるが、実際の中身は <code>char</code> 型変数の集合体である。<br>
+コードを書くときは $2$ 種類の見方を上手に切り替えながら行う必要がある。</p>
+<h2>宣言と初期化</h2>
+<h3>宣言だけする場合</h3>
+<pre><code>string s;  // 宣言だけで実は空文字列 &quot;&quot; で初期化される</code></pre>
+<h3>代入で初期化する場合</h3>
+<pre><code>string s = &quot;Hello World!&quot;;  // 固定値で初期化
+string s = string(5,&#x27;a&#x27;);   // 文字数と文字種で初期化、この場合は &quot;aaaaa&quot; となる
+string s = t;               // 他の変数（文字列型）で初期化</code></pre>
+<h3>（コピー）コンストラクタで初期化する場合</h3>
+<pre><code>string s(&quot;Hello World!&quot;);  // 固定値で初期化
+string s(5,&#x27;a&#x27;);           // 文字数と文字種で初期化、この場合は &quot;aaaaa&quot; となる
+string s(t);               // 他の変数（文字列型）で初期化</code></pre>
+<h2>可能な演算</h2>
+<h3>基本的なもの</h3>
+<h4>$i$ 文字目を参照 <code>.at(i)</code> または <code>[i]</code></h4>
+<p>例えば、</p>
+<pre><code>s.at(3)</code></pre>
+<p>と書けば、「<code>s</code> という文字列の $3$ 文字目」という <code>char</code> 型変数であるかのように扱える。<br>
+ただし、コンピューター的には文字数は $0$ から始まることに注意。<br>
+<code>&quot;abcde&quot;</code> の $3$ 文字目は <code>&#x27;d&#x27;</code> である。<br>
+以後の計算でも全て同様。</p>
+<pre><code>s[3]</code></pre>
+<p>と書いてもほぼ同じ。<br>
+違いは、範囲外（$3$ 文字しかないのに $5$ 文字目を参照しようとする）などしたときの挙動の違い。</p>
+<p>前者はエラーしてくれるのでバグの修正がしやすいが、コードがちょっと見にくい。<br>
+後者はちょっとコードが見やすいが、範囲外アクセスが未定義動作になるのでバグの修正が大変。<br>
+急いでバグ修正する必要がある競プロでは <code>.at(i)</code> を使う方が無難。</p>
+<h4>長さの取得 <code>.size()</code> または <code>.length()</code></h4>
+<pre><code>s.size()</code></pre>
+<p>で文字列 <code>s</code> の長さを <code>size_t</code> 型で取得できる。<br>
+<code>size_t</code> 型は扱いの注意点も多いので、取得したら <code>int</code> 型変数に一度代入してしまうのも $1$ つの手。<br>
+C++20以降なら、<code>ssize(s)</code> で直接に符号付きで長さを取得することもできる。</p>
+<h4>代入 <code>=</code></h4>
+<p><code>s=t;</code> で、変数 <code>s</code> の中身を <code>t</code> に書き換える。<br>
+数学とは違い、左右を逆にして <code>t=s;</code> と書くと意味が変わるので注意。</p>
+<h4>連結 <code>+</code></h4>
+<p><code>s+t</code> で、<code>s</code> に <code>t</code> を連結する。<br>
+<code>t</code> は <code>char</code> 型でもよい。<br>
+複合代入演算子 <code>+=</code> も使える。</p>
+<h4>空判定 <code>.empty()</code></h4>
+<p><code>s.empty()</code> で、<code>s</code> が空っぽかどうかを <code>bool</code> 型で返す。<br>
+結果自体は <code>s==&quot;&quot;</code> や <code>s.size()==0</code> と書くのと変わらない。<br>
+一応、<code>.empty()</code> が最も高速らしいが、誤差レベルなので書きやすさ優先で選んでよい。</p>
+<h4>一致判定 <code>==</code></h4>
+<p><code>s==t</code> で、文字列が一致するか判定する。<br>
+すなわち、長さが同じで、各位置の文字もすべて一致するか判定する。<br>
+<code>!=</code> も使える。</p>
+<h4>辞書順判定 <code>&lt;</code></h4>
+<p><code>s&lt;t</code> で、辞書順で <code>s</code> が <code>t</code> より前かどうかを判定する。<br>
+すなわち、以下のように判定する。</p>
+<ul>
+<li>前から順に、初めて同じ位置に異なる文字があるところを探す</li>
+<li>その異なった場所で <code>s</code> の方が前であるかを判定する。</li>
+<p>  - 前であるとは、ASCIIコードが小さいか、文字列がもう終了していること</p>
+</ul>
+<p>逆向きの <code>&gt;</code> も使える。<br>
+<code>&lt;=</code> や <code>&gt;=</code> も使える。</p>
+<h4>コンストラクタ <code>string(文字数,文字)</code>（B問題相当）</h4>
+<p><code>string(5,&#x27;a&#x27;)</code> と書くと、<code>&#x27;a&#x27;</code> を $5$ 文字並べた文字列 <code>&quot;aaaaa&quot;</code> を意味する。<br>
+$5$ 文字くらいなら直接書いた方が早いが、$100$ 文字並べる場合などにはコンストラクタで書いた方が便利。</p>
+<h4>メモリ確保 <code>.reserve(文字数)</code>（C問題相当）</h4>
+<p><code>s.reserve(100000)</code> と書くと、$100000$ 文字分のメモリを確保する。<br>
+確保できない場合は、今のうちに $100000$ 文字確保できるところにデータをお引越ししてくれる。<br>
+後で文字をどんどん追加して長くなっていく場合に、可能性のある最長文字数以上に確保しておくとよい。</p>
+<p>別にこれをやらなくても、よしなに引越ししてくれるため、必須ではない。<br>
+とはいえ、長い文字列の引越しが発生したせいでTLEしたら悲しい。</p>
+<h3>文字列編集系（全体的にB問題相当）</h3>
+<h4>先頭参照 <code>.front()</code></h4>
+<p><code>s.front()</code> で先頭の文字を <code>char</code> 型で参照する。<br>
+……普通に <code>s.at(0)</code> でいい気も。</p>
+<h4>末尾参照 <code>.back()</code></h4>
+<p><code>s.back()</code> で末尾の文字を <code>char</code> 型で参照する。<br>
+文字列の長さが途中で変化するような場合には便利。</p>
+<h4>部分文字列取得 <code>.substr(開始位置,文字数)</code> または <code>string(イテレータ1,イテレータ2)</code></h4>
+<p><code>s.substr(4,2)</code> なら、$4$ 文字目からの $2$ 文字を別の文字列として取得する。<br>
+参照ではないので、<code>substr()</code> したものを変更しても、元の文字列には何も起こらない。<br>
+<code>string(s.begin()+4,s.begin()+6)</code> でも同じことができる。</p>
+<h4>末尾挿入 <code>.push_back(文字)</code></h4>
+<p><code>s.push_back(&#x27;x&#x27;);</code> なら文字列の最後に <code>&#x27;x&#x27;</code> を $1$ 文字追加する。<br>
+……普通に <code>+=&#x27;x&#x27;</code> でいい気が。<br>
+また、<code>vector</code> とは異なり <code>.emplace_back()</code> は使えない。</p>
+<h4>末尾削除 <code>.pop_back()</code></h4>
+<p><code>s.pop_back();</code> で、<code>s</code> の最後の $1$ 文字を削除する。</p>
+<h4>途中挿入 <code>.insert(イテレータ,文字)</code></h4>
+<p><code>s.insert(itr,&#x27;a&#x27;);</code> で、<code>itr</code> の位置に <code>&#x27;a&#x27;</code> という文字を挿入する。</p>
+<h4>途中削除 <code>.erase(開始位置,文字数)</code> または <code>.erase(イテレータ)</code></h4>
+<p><code>s.erase(4,2);</code> なら、$4$ 文字目からの $2$ 文字を削除する。<br>
+<code>s.erase(4)</code> のように文字数を省略すれば、$4$ 文字目から後ろ全てを削除する。<br>
+引数をイテレータにした場合は、その場所の文字を削除する。</p>
+<h4>全削除 <code>.clear()</code></h4>
+<p><code>s.clear();</code> で <code>s</code> を空文字列にする。<br>
+……普通に <code>s=&quot;&quot;;</code> でいい気も。</p>
+<h4>置換 <code>.replace(開始位置,文字数,置換文字列)</code></h4>
+<p><code>s.replace(3,2,&quot;abc&quot;);</code> なら、$3$ 文字目から $2$ 文字を削除し、代わりに <code>&quot;abc&quot;</code> をそこに入れる。</p>
+<h4>サイズ変更 <code>.resize(文字数,文字)</code></h4>
+<p>文字列の長さを変更する。<br>
+短くする場合は後ろを削除し、長くする場合は後ろを指定文字で埋める。<br>
+例えば <code>s</code> の中身が <code>&quot;abcde&quot;</code> である場合、以下のようになる。</p>
+<ul>
+<li><code>s.resize(3)</code> なら <code>&quot;abc&quot;</code> になる</li>
+<li><code>s.resize(8,&#x27;x&#x27;)</code> なら <code>&quot;abcdexxx&quot;</code> になる</li>
+</ul>
+<h4>交換 <code>.swap(別の文字列変数)</code></h4>
+<p><code>s.swap(t);</code> で、<code>s</code> と <code>t</code> の中身が入れ替わる。<br>
+<code>swap(s,t);</code> でも同じ。<br>
+実は中身ではなくデータに紐づく変数名などの情報の方を入れ替えるので、中身が長くても一瞬で終わる。</p>
+<h3>検索系（全体的にB問題相当）</h3>
+<h4>文字列検索 <code>.find(文字列,開始位置)</code></h4>
+<p><code>s.find(&quot;abc&quot;,3)</code> と書けば、<code>s</code> の中で $3$ 文字目以降に初めて <code>&quot;abc&quot;</code> という並びがある場所を検索する。<br>
+返り値は「該当場所の先頭が何文字目か」で、存在しなかった場合は <code>size_t</code> 型の最大値になる。<br>
+使いにくいので、一度 <code>int</code> 型に入れて <code>-1</code> として扱わせるとよい。<br>
+<code>s.find(&quot;abc&quot;)</code> と開始位置を省略した場合は先頭から検索する。</p>
+<h4>文字列逆順検索 <code>.rfind(文字列,開始位置)</code></h4>
+<p><code>s.rfind(&quot;abc&quot;,3)</code> と書けば、<code>s</code> の中で $3$ 文字目以前に最後に <code>&quot;abc&quot;</code> という並びがある場所を検索する。<br>
+返り値は「該当場所の先頭が何文字目か」で、存在しなかった場合は <code>size_t</code> 型の最大値。<br>
+<code>s.rfind(&quot;abc&quot;)</code> と開始位置を省略した場合は末尾から検索する。</p>
+<h4>先頭一致判定 <code>.starts_with(文字または文字列)</code></h4>
+<p><code>s.starts_with(&quot;abc&quot;)</code> と書くと、<code>s</code> が <code>&quot;abc&quot;</code> で始まるか判定し、<code>bool</code> 型で返してくれる。</p>
+<h4>末尾一致判定 <code>.ends_with(文字または文字列)</code></h4>
+<p><code>s.ends_with(&quot;abc&quot;)</code> と書くと、<code>s</code> が <code>&quot;abc&quot;</code> で終わるか判定し、<code>bool</code> 型で返してくれる。</p>
+<h4>中間一致判定 <code>.contains(文字または文字列)</code></h4>
+<p><code>s.contains(&quot;abc&quot;)</code> と書くと、<code>s</code> が <code>&quot;abc&quot;</code> を含むか判定し、<code>bool</code> 型で返してくれる。</p>
+<h4>該当文字数カウント <code>count(イテレータ,イテレータ,要素)</code></h4>
+<p><code>count(s.begin(),s.end(),&#x27;a&#x27;)</code> と書けば、<code>s</code> 内に <code>&#x27;a&#x27;</code> という文字が何個あるかを数える。</p>
+<h2>よく使う処理</h2>
+<h3>中身を逆順に並べなおす</h3>
+<pre><code>reverse(s.begin(),s.end());</code></pre>
+<p>文字列が逆順の方が都合がよい場合などに。</p>
+<h3>回文判定</h3>
+<p>逆順にしても元と同じ、をそのとおりにやればよい。<br>
+元の文字列を残す必要があるので、コピーしてから逆順にすること。</p>
+<pre><code>string t = s;
+reverse(t.begin(),t.end());
+if (s==t) {
+  // 回文だった場合のコード
+}</code></pre>
+<h3>中身をアルファベット順に並べる</h3>
+<pre><code>sort(s.begin(),s.end());</code></pre>
+<p>文字の並び順はもはや壊れてもよいので、中の文字を全部アルファベット順に並べてほしい場合に。</p>
+<pre><code>sort(s.rbegin(),s.rend());</code></pre>
+<p>なら、逆順に並ぶ。</p>
+<h3>アナグラム判定</h3>
+<p><code>s</code> と <code>t</code> がアナグラムになっているか、つまり文字の順番を入れ替えて一致させられるかを判定する場合。<br>
+<code>s</code> と <code>t</code> を両方「中身をアルファベット順に並べる」をし、結果が一致するか見ればよい。</p>
+<pre><code>sort(s.begin(),s.end());
+sort(t.begin(),t.end());
+if (s==t) {
+  // アナグラムだった場合のコード
+}</code></pre>
+<p><code>s</code> や <code>t</code> の中身が壊れたら困る場合は、事前に文字列をコピーし、そちらを判定に使うこと。</p>
+<pre><code>string str1 = s;
+string str2 = t;
+sort(str1.begin(),str1.end());
+sort(str2.begin(),str2.end());
+if (str1==str2) {
+  // アナグラムだった場合のコード
+}</code></pre>
+<h3>$1$ 文字ずつ何か処理する</h3>
+<p><code>.at(i)</code> で $1$ 文字ずつ見ていく。<br>
+長さ $n$ が与えられている場合。</p>
+<pre><code>for (int i=0; i&lt;n; i++) {
+  // 中身の文字 s.at(i) に対してしたいことを書く
+}</code></pre>
+<p>長さ $n$ が与えられていない場合。<br>
+一度 <code>.size()</code> で長さを取得してから上のものを用いてもよい。</p>
+<pre><code>for (size_t i=0; i&lt;s.size(); i++) {
+  // 中身の文字 s.at(i) に対してしたいことを書く
+}</code></pre>
+<h3>$1$ 文字ずつ何か処理する、その2（B問題相当）</h3>
+<p>範囲for文で $1$ 文字ずつ取り出すことができる。</p>
+<pre><code>for (char c : s) {
+  // 中身の文字 c に対してしたいことを書く
+}</code></pre>
+<p>中身の書き換えまでしたい場合は <code>char&amp;</code> として参照渡しをする。</p>
+<h3>文字ごとの出現回数を全種カウント（B問題相当）</h3>
+<p>文字列を見て、<code>&#x27;a&#x27;</code> が何回、<code>&#x27;b&#x27;</code> が何回、<code>&#x27;c&#x27;</code> が何回、（中略）、<code>&#x27;z&#x27;</code> が何回、とカウントする方法。</p>
+<pre><code>vector&lt;int&gt; counters(26);
+for (int i=0; i&lt;n; i++) {
+  counters.at(s.at(i)-&#x27;a&#x27;)++;
+}</code></pre>
+<p><code>counters</code> の <code>.at(0)</code> に <code>&#x27;a&#x27;</code> の個数、<code>.at(1)</code> に <code>&#x27;b&#x27;</code> の個数、（中略）、<code>.at(25)</code> に <code>&#x27;z&#x27;</code> の個数が入る。<br>
+コピペする場合、ループの終了条件の <code>n</code> の部分を <code>s</code> の文字数を表すものに書き換えること。<br>
+あるいは、範囲for文が使いこなせるのであれば、下のものの方が使いやすい。</p>
+<pre><code>vector&lt;int&gt; counters(26);
+for (char c : s) {
+  counters.at(c-&#x27;a&#x27;)++;
+}</code></pre>
+<h3>指定文字で分割（B問題相当）</h3>
+<p>例えば <code>&quot;abc,de,fghi&quot;</code> という文字列を <code>&#x27;,&#x27;</code> で分割して <code>vector&lt;string&gt;</code> に変更したい場合。</p>
+<pre><code>vector&lt;string&gt; parts(1,&quot;&quot;);
+for (char c : s) {
+  if (c==&#x27;,&#x27;) parts.emplace_back(&quot;&quot;);
+  else parts.back() += c;
+}</code></pre>
+<p>if文の中を変更すれば、他の文字での分割もできる。</p>
+<h3>数値化（B問題相当）</h3>
+<p>文字列型を <code>int</code> 型にしたい場合、以下のようにする。<br>
+ただし、そもそも <code>int</code> 型に収まるような数値かどうかを確認すること。</p>
+<pre><code>stoi(s)</code></pre>
+<p>同様に <code>stoll()</code> で <code>long long</code> 型に、<code>stod()</code> で <code>double</code> 型にできる。</p>
+<p>逆に、<code>int</code> 型の数である <code>a</code> を文字列型に変換したい場合、以下のようにすればよい。</p>
+<pre><code>to_string(a)</code></pre>
+<h2>注意点</h2>
+<h3>処理速度に注意（C問題相当）</h3>
+<p>長さ $n$ の文字列は、それ自体 $1$ つの変数のように扱えるが、実際の中身は長さが $n$ の <code>vector&lt;char&gt;</code> に近い。<br>
+つまり、中身を $1$ 文字ずつ見ていく系の処理や、先頭や途中の文字が増減する処理は、$O(n)$ かかる。<br>
+コードの見た目で処理時間を見積もると、わりと痛い目を見るので注意。</p>
+<h2>関連アルゴリズム</h2>
+<h3><a href="char.html">char型</a></h3>
+<p><code>string</code> 型の各文字は、<code>char</code> 型として扱う。</p>
+<h3><a href="size-t.html">size_t型</a></h3>
+<p><code>.size()</code> や <code>.find()</code> などの返り値には、<code>size_t</code> 型が使われる。</p>
+<h3><a href="vector.html">vector</a></h3>
+<p>文字を並べて保持し、添字アクセスや末尾への追加・削除などができる点で似ている。</p>
+<h3><a href="iterator.html">イテレータ</a></h3>
+<p><code>.begin()</code> や <code>.end()</code> でイテレータを取得し、範囲の指定などに用いる。</p>
+<h3><a href="palindrome-check.html">回文判定</a></h3>
+<p>文字列を逆順にしたものと元の文字列を比較することで、回文かどうかを判定できる。</p>
   </article>
 
   <aside class="sidebar">
@@ -33,7 +264,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li class="muted">なし</li>
+        <li><a href="../knowledge/char.html">char型</a></li><li><a href="../knowledge/vector.html">vector</a></li><li><a href="../knowledge/size-t.html">size_t型</a></li><li><a href="../knowledge/iterator.html">イテレータ</a></li><li><a href="../knowledge/palindrome-check.html">回文判定</a></li>
       </ul>
     </section>
 

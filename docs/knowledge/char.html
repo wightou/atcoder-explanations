@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>char型</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -20,7 +30,75 @@
   <article class="markdown-body">
     <h1>char型</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>文字を $1$ 文字だけ扱う型。<br>
+$2$ 文字以上をまとめて扱いたい場合は、<code>string</code> 型を利用する。</p>
+<p>文字リテラルをシングルクォーテーション <code>&#x27;</code> で囲むと、<code>char</code> 型として扱われる。</p>
+<pre><code>&#x27;A&#x27;</code></pre>
+<p>AtCoder環境では、<code>char</code> 型は $8$ ビットの整数型として文字コードを保持する。<br>
+例えば、ASCIIコードでは <code>&#x27;0&#x27;</code> は <code>48</code>、<code>&#x27;A&#x27;</code> は <code>65</code>、<code>&#x27;a&#x27;</code> は <code>97</code> である。<br>
+実際の番号を覚える必要はほぼない。<br>
+<code>&#x27;0&#x27;</code> から <code>&#x27;9&#x27;</code>、<code>&#x27;A&#x27;</code> から <code>&#x27;Z&#x27;</code>、<code>&#x27;a&#x27;</code> から <code>&#x27;z&#x27;</code> がそれぞれ連続していると認識しておけばよい。</p>
+<p>特に、文字 <code>&#x27;0&#x27;</code> の文字コードは数値の <code>0</code> ではないことに注意。</p>
+<h2>宣言と初期化</h2>
+<h3>宣言だけする場合</h3>
+<pre><code>char c;</code></pre>
+<h3>初期化もする場合</h3>
+<pre><code>char c = &#x27;A&#x27;;  // 固定値で初期化
+char d = c;    // 他の整数型や char 型の変数で初期化</code></pre>
+<p>整数型の値で初期化した場合、その文字コードに対応する文字になる。</p>
+<h2>可能な演算</h2>
+<h3>代入 <code>=</code></h3>
+<p><code>a=b;</code> で、変数 <code>a</code> の中身を <code>b</code> に書き換える。<br>
+数学とは違い、左右を逆にして <code>b=a;</code> と書くと意味が変わるので注意。</p>
+<p>整数型の値を代入した場合、その文字コードに対応する文字になる。</p>
+<h3>加算 <code>+</code></h3>
+<p><code>a+b</code> で、<code>a</code> と <code>b</code> の文字コードの和を計算する。<br>
+<code>char</code> 型同士の加算も、<code>char</code> 型と整数型の加算もでき、結果は整数型になる。</p>
+<h3>減算 <code>-</code></h3>
+<p><code>a-b</code> で、<code>a</code> と <code>b</code> の文字コードの差を計算する。<br>
+<code>char</code> 型同士の減算も、<code>char</code> 型と整数型の減算もでき、結果は整数型になる。</p>
+<h3>各種複合代入演算子</h3>
+<p><code>char</code> 型では、<code>+=</code>、<code>-=</code>、および <code>++</code>、<code>--</code> が使える。</p>
+<h2>よく使う処理</h2>
+<h3><code>int</code> 型化（B問題相当）</h3>
+<p>ASCIIコード上で <code>&#x27;0&#x27;</code> から <code>&#x27;9&#x27;</code> までが連続していることを利用できる。</p>
+<p>数字を表す <code>char</code> 型の文字 <code>c</code> を、<code>0</code> 以上 <code>9</code> 以下の整数に変換する場合は、以下のようにする。</p>
+<pre><code>c-&#x27;0&#x27;</code></pre>
+<p>逆に、<code>0</code> 以上 <code>9</code> 以下の整数 <code>a</code> を、その数字を表す <code>char</code> 型へ変換する場合は、以下のようにする。<br>
+これを <code>cout</code> する場合は、一度 <code>char</code> 型の変数に入れた方がよい。</p>
+<pre><code>a+&#x27;0&#x27;</code></pre>
+<h3>文字種判定</h3>
+<p><code>isupper(c)</code> で英大文字、<code>islower(c)</code> で英小文字、<code>isdigit(c)</code> で数字かどうかを判定できる。</p>
+<pre><code>isupper(c)
+islower(c)
+isdigit(c)</code></pre>
+<p>自分で条件を書く場合は、例えば英大文字を次のように判定できる。</p>
+<pre><code>&#x27;A&#x27;&lt;=c &amp;&amp; c&lt;=&#x27;Z&#x27;</code></pre>
+<h3>大文字小文字変換</h3>
+<p>英大文字の <code>c</code> を対応する英小文字へ変換する場合は、以下のようにする。</p>
+<pre><code>c += &#x27;a&#x27;-&#x27;A&#x27;;</code></pre>
+<p>英小文字の <code>c</code> を対応する英大文字へ変換する場合は、以下のようにする。</p>
+<pre><code>c += &#x27;A&#x27;-&#x27;a&#x27;;</code></pre>
+<h3>次の文字、前の文字</h3>
+<p>文字コードが連続している範囲では、<code>++</code> で次の文字、<code>--</code> で前の文字にできる。</p>
+<p>例えば、以下のように書けば、全ての英小文字についてループできる。</p>
+<pre><code>for (char c=&#x27;a&#x27;; c&lt;=&#x27;z&#x27;; c++)</code></pre>
+<h3><code>string</code> 型の範囲for文（B問題相当）</h3>
+<p><code>string</code> 型の全ての文字について処理する場合は、次のように範囲for文を書ける。</p>
+<pre><code>for (char c : s)</code></pre>
+<h2>注意点</h2>
+<h3>数値と数字を表す文字の違いに注意</h3>
+<p>数値の <code>8</code> と、数字を表す文字の <code>&#x27;8&#x27;</code> は別の値である。<br>
+<code>char</code> 型の文字と比較する場合は、シングルクォーテーションで囲むこと。</p>
+<pre><code>if (c==&#x27;8&#x27;)</code></pre>
+<p>また、<code>&#x27;A&#x27;</code> は <code>char</code> 型だが、<code>&quot;A&quot;</code> は文字列を表すため、同じものではない。</p>
+<h2>関連アルゴリズム</h2>
+<h3><a href="int.html">int型</a></h3>
+<p>最も代表的な整数型。<br>
+数字を表す文字との相互変換や、文字コードを用いた計算で関係する。</p>
+<h3><a href="string.html">string型</a></h3>
+<p>文字列を扱う型。<br>
+各文字を取り出すと <code>char</code> 型になり、範囲for文で全ての文字を順に処理できる。</p>
   </article>
 
   <aside class="sidebar">
@@ -33,7 +111,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li class="muted">なし</li>
+        <li><a href="../knowledge/int.html">int型</a></li><li><a href="../knowledge/string.html">string型</a></li>
       </ul>
     </section>
 

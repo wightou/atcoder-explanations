@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>bool型</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -20,7 +30,61 @@
   <article class="markdown-body">
     <h1>bool型</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>$1$ bitで <code>true</code> と <code>false</code> のみ入れられる型。<br>
+if分岐などの条件に長々と書きたくないときに、<code>bool</code> 型変数に一度書き込んだりする。<br>
+あるいは、大量の条件を処理する場合に事前に <code>bool</code> 型変数を用意して処理することもある。</p>
+<h2>宣言と初期化</h2>
+<h3>宣言だけする場合</h3>
+<pre><code>bool a;</code></pre>
+<h3>初期化もする場合</h3>
+<pre><code>bool a = true;</code></pre>
+<h2>可能な演算</h2>
+<h3>代入 <code>=</code></h3>
+<p><code>a=b;</code> で、変数 <code>a</code> の中身を <code>b</code> に書き換える。<br>
+数学とは違い、左右を逆にして <code>b=a;</code> と書くと意味が変わるので注意。</p>
+<h3>かつ <code>&amp;&amp;</code></h3>
+<p><code>a&amp;&amp;b</code> で、<code>a</code> と <code>b</code> が両方 <code>true</code> なら <code>true</code>、片方でも <code>false</code> なら <code>false</code>、という演算になる。<br>
+<code>bool</code> 型変数でなくても <code>bool</code> 型を返す判定に対しても使える。<br>
+例えば、以下で「<code>x</code> は $1$ 以上かつ $10$ 以下」という条件を表せることになる。</p>
+<pre><code>1&lt;=x&amp;&amp;x&lt;=10</code></pre>
+<h3>または <code>||</code></h3>
+<p><code>a||b</code> で、<code>a</code> と <code>b</code> が片方でも <code>true</code> なら <code>true</code>、両方 <code>false</code> なら <code>false</code>、という演算になる。<br>
+<code>bool</code> 型変数でなくても <code>bool</code> 型を返す判定に対しても使える。<br>
+例えば、以下で「<code>x</code> と <code>y</code> のどちらか一方でも $0$」という条件を表せることになる。</p>
+<pre><code>x==0||y==0</code></pre>
+<h3>反転 <code>!</code></h3>
+<p><code>!a</code> で、<code>a</code> が <code>true</code> なら <code>false</code>、<code>a</code> が <code>false</code> なら <code>true</code>、という演算になる。</p>
+<h3>ビット演算系</h3>
+<p>一応ビット演算は可能だが、あまり使うことはないかも……。</p>
+<h2>よく使う処理</h2>
+<h3>if分岐のときに大量の条件をループで扱う処理</h3>
+<h4>全部 <code>true</code> なら実行したい／$1$ つでも <code>false</code> なら実行したい</h4>
+<p>全部 <code>true</code> なら実行するコード。</p>
+<pre><code>bool flag = true;
+for (int i=0; i&lt;n; i++) {
+  if (!i個めの判定) flag = false;  // 条件は否定形なので注意
+}
+if (flag) 実行したい処理</code></pre>
+<p>最後の行を</p>
+<pre><code>if (!flag) 実行したい処理</code></pre>
+<p>に変更すれば、$1$ つでも <code>false</code> で実行。</p>
+<h4>$1$ つでも <code>true</code> なら実行したい／全部 <code>false</code> なら実行したい</h4>
+<p>$1$ つでも <code>true</code> なら実行。</p>
+<pre><code>bool flag = false;
+for (int i=0; i&lt;n; i++) {
+  if (i個めの判定) flag = true;
+}
+if (flag) 実行したい処理</code></pre>
+<p>最後の行を</p>
+<pre><code>if (!flag) 実行したい処理</code></pre>
+<p>に変更すれば、全部 <code>false</code> で実行。</p>
+<h2>注意点</h2>
+<h3>「かつ」と「または」の優先順位</h3>
+<p><code>a||b&amp;&amp;c</code> と書いた場合、<code>&amp;&amp;</code> の方が優先順位が高いので、<code>a||(b&amp;&amp;c)</code> と解釈される。<br>
+……が、ややこしいので、括弧をつけて書くように心がけたい。</p>
+<h2>関連アルゴリズム</h2>
+<h3><a href="if-statement.html">if分岐</a></h3>
+<p>条件が <code>true</code> か <code>false</code> かによって、処理を分岐させる。</p>
   </article>
 
   <aside class="sidebar">
@@ -33,7 +97,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li class="muted">なし</li>
+        <li><a href="../knowledge/if-statement.html">if分岐</a></li>
       </ul>
     </section>
 

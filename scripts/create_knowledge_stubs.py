@@ -106,6 +106,9 @@ STUBS: list[KnowledgeStub] = [
 
     # B問題相当
     k("long-long", "long long型", "B問題相当", "変数とデータ構造"),
+    k("size-t", "size_t型", "B問題相当", "変数とデータ構造", aliases=["size_t", "std::size_t"], related=["int型", "long long型", "vector"]),
+    k("auto", "auto型", "B問題相当", "変数とデータ構造", aliases=["auto"], related=["C++のコードの書き方", "範囲for文"]),
+    k("iterator", "イテレータ", "B問題相当", "変数とデータ構造", aliases=["iterator", "イテレーター"], related=["vector", "string型", "auto型"]),
     k("pair", "pair型", "B問題相当", "変数とデータ構造"),
     k("tuple", "tuple型", "B問題相当", "変数とデータ構造"),
     k("stack", "stack", "B問題相当", "変数とデータ構造"),

@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>double型</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -20,7 +30,84 @@
   <article class="markdown-body">
     <h1>double型</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>小数を扱う浮動小数点型。</p>
+<p><code>double</code> 型は $64$ ビットの浮動小数点型（AtCoder環境の場合）。<br>
+符号用の $1$ ビット、値の桁数を表す指数部の $11$ ビット、値の並びを表す仮数部の $52$ ビットを使う。<br>
+仮数部では先頭の $1$ が省略されるため、精度は $53$ ビット分になる。</p>
+<p>$0$ と、絶対値がおよそ $10^{-308}$ から $10^{308}$ までの数を表せる。<br>
+この範囲を逸脱することはまずないので、通常は気にしなくてよい。<br>
+むしろ、値が十進数でおよそ $15$ 桁の概数となるため、そちらによる影響を気にするべきである。</p>
+<p>整数を <code>double</code> 型として扱いたい場合、<code>2.0</code> のように書けば <code>double</code> 型の <code>2</code> となる。</p>
+<h2>宣言と初期化</h2>
+<h3>宣言だけする場合</h3>
+<pre><code>double a;</code></pre>
+<h3>初期化もする場合</h3>
+<pre><code>double a = 0.0;  // 固定値で初期化。0 とだけ書いても変換されるので問題ない
+double b = a;    // 他の整数型や double 型の変数で初期化</code></pre>
+<h2>可能な演算</h2>
+<h3>代入 <code>=</code></h3>
+<p><code>a=b;</code> で、変数 <code>a</code> の中身を <code>b</code> に書き換える。<br>
+数学とは違い、左右を逆にして <code>b=a;</code> と書くと意味が変わるので注意。</p>
+<p><code>int</code> 型に <code>double</code> 型を代入すると、小数部分を捨てた値が代入される。（オーバーフローに注意）<br>
+<code>double</code> 型に <code>int</code> 型を代入すると、その整数と同じ値が代入される。</p>
+<h3>加算 <code>+</code></h3>
+<p><code>a+b</code> で、<code>a</code> と <code>b</code> の和を計算する。<br>
+片方が整数型の場合も、結果は <code>double</code> 型になる。</p>
+<h3>減算 <code>-</code></h3>
+<p><code>a-b</code> で、<code>a</code> と <code>b</code> の差を計算する。<br>
+片方が整数型の場合も、結果は <code>double</code> 型になる。</p>
+<h3>乗算 <code>*</code></h3>
+<p><code>a*b</code> で、<code>a</code> と <code>b</code> の積を計算する。<br>
+片方が整数型の場合も、結果は <code>double</code> 型になる。</p>
+<h3>除算 <code>/</code></h3>
+<p><code>a/b</code> で、<code>a</code> を <code>b</code> で割った値を計算する。<br>
+片方が整数型の場合も、小数部分まで計算し、結果は <code>double</code> 型になる。</p>
+<h3>各種複合代入演算子</h3>
+<p><code>double</code> 型では、<code>+=</code>、<code>-=</code>、<code>*=</code>、<code>/=</code> が使える。</p>
+<h2>よく使う処理</h2>
+<h3>固定小数表示で出力する</h3>
+<p><code>double</code> 型を <code>cout</code> で出力する場合、通常は有効数字 $6$ 桁で出力される。<br>
+値によっては <code>1.2e+06</code> のような表記になる。</p>
+<p>固定小数表示にしたい場合は、以下のようにする。</p>
+<pre><code>cout &lt;&lt; fixed &lt;&lt; a &lt;&lt; endl;</code></pre>
+<p>この場合は小数点以下 $6$ 桁を出力する。<br>
+もっと高い精度が求められる場合は、以下のように小数点以下の桁数を指定する。</p>
+<pre><code>cout &lt;&lt; fixed &lt;&lt; setprecision(10) &lt;&lt; a &lt;&lt; endl;</code></pre>
+<h3>整数型の割り算を小数部分まで行う</h3>
+<p>整数型同士の割り算は、通常は整数部分だけを求める。<br>
+小数部分まで計算したい場合は、以下のようにする。</p>
+<pre><code>1.0*a/b</code></pre>
+<p>定数で割る場合は、以下のように書いてもよい。</p>
+<pre><code>a/10.0</code></pre>
+<h3>整数への切り下げ、切り上げ、四捨五入</h3>
+<p><code>a</code> 以下の最大の整数は <code>floor(a)</code> で求められる。<br>
+<code>a</code> 以上の最小の整数は <code>ceil(a)</code> で求められる。<br>
+最も近い整数は <code>round(a)</code> で求められる。</p>
+<h3>小数点以下を残した切り下げ、切り上げ、四捨五入</h3>
+<p>例えば、小数点以下 $1$ 桁を残す場合は、$10$ 倍して整数に丸めてから $10$ で割る。</p>
+<p>小数点以下 $3$ 桁を残す場合なども同様に、$1000$ 倍してから丸め、$1000$ で割ればよい。</p>
+<h2>注意点</h2>
+<h3><code>double</code> 型の <code>==</code> 判定を信用してはいけない</h3>
+<p><code>double</code> 型は概数で保持するため、末尾の数桁は不正確なことがある。<br>
+そのため、本来一致するはずの $2$ つの値が一致しないことがある。</p>
+<p>例えば、以下のコードは <code>No</code> と出力される。</p>
+<pre><code>double a = 4.1;
+double b = 3.1;
+double c = 1.0;
+if (a-b==c) cout &lt;&lt; &quot;Yes&quot; &lt;&lt; endl;
+else cout &lt;&lt; &quot;No&quot; &lt;&lt; endl;</code></pre>
+<p>可能な限り、整数型で判定できる方法を考えた方が安全。</p>
+<h3>切り下げ時に誤差が発生することがある</h3>
+<p>本来ぴったり <code>3</code> のときに、内部の値が <code>2.9999999999</code> などになっていることがある。<br>
+この場合、<code>floor</code> によって <code>2</code> にされる可能性がある。</p>
+<p>これを避けるために、非常に小さい値を足してから <code>floor</code> する手法がある。<br>
+ただし、<code>a</code> の値の大きさによって、事故も起こる。<br>
+足す値が小さすぎると影響がなかったり、大きすぎると <code>2.98</code> が <code>3.01</code> になったり、など。<br>
+適切な値を決めるのは難しいので注意。</p>
+<h2>関連アルゴリズム</h2>
+<h3><a href="int.html">int型</a></h3>
+<p>最も代表的な整数型。<br>
+<code>double</code> 型との演算では結果が <code>double</code> 型になり、<code>double</code> 型から代入すると小数部分が捨てられる。</p>
   </article>
 
   <aside class="sidebar">
@@ -33,7 +120,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li class="muted">なし</li>
+        <li><a href="../knowledge/int.html">int型</a></li>
       </ul>
     </section>
 
