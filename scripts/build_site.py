@@ -475,6 +475,10 @@ class KnowledgePage:
         return str(self.meta.get("summary", "")).strip()
 
     @property
+    def summary_needs_mathjax(self) -> bool:
+        return markdown_needs_mathjax(self.summary)
+
+    @property
     def needs_mathjax(self) -> bool:
         return markdown_needs_mathjax(self.body_md)
 
@@ -1892,7 +1896,13 @@ def render_tag_page(tag: str, pages: list[ExplanationPage], knowledge_pages: lis
   </ul>
 </section>
 """
-    return render_index_layout(f"タグ: {tag}", inner, prefix="../", css_href="../style.css")
+    return render_index_layout(
+        f"タグ: {tag}",
+        inner,
+        prefix="../",
+        css_href="../style.css",
+        include_mathjax=any(k.summary_needs_mathjax for k in knowledge_pages),
+    )
 
 
 def render_knowledge_page(
@@ -2033,7 +2043,14 @@ def render_knowledge_grouped_page(
   {''.join(chunks) if chunks else '<p class="muted">まだ知識ページがありません。</p>'}
 </div>
 """
-    return render_index_layout(title, inner, current=title, prefix="../", css_href="../style.css")
+    return render_index_layout(
+        title,
+        inner,
+        current=title,
+        prefix="../",
+        css_href="../style.css",
+        include_mathjax=any(p.summary_needs_mathjax for p in knowledge_pages),
+    )
 
 
 def render_knowledge_filtered_page(
@@ -2088,7 +2105,14 @@ def render_knowledge_filtered_page(
   {''.join(chunks) if chunks else '<p class="muted">まだ知識ページがありません。</p>'}
 </div>
 """
-    return render_index_layout(title, inner, current="", prefix="../../", css_href="../../style.css")
+    return render_index_layout(
+        title,
+        inner,
+        current="",
+        prefix="../../",
+        css_href="../../style.css",
+        include_mathjax=any(p.summary_needs_mathjax for p in pages),
+    )
 
 
 def render_knowledge_index(knowledge_pages: list[KnowledgePage]) -> str:
