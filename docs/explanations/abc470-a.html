@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>確率</title>
+<title>ABC470 A - Fizz</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,35 +28,58 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>確率</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC470 A - Fizz</h1>
+      <p class="explanation-title-ja">Fizz</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc470/tasks/abc470_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc470/submissions/78235612" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>プログラミングの練習問題として有名な FizzBuzz 問題の Fizz だけバージョン。</p>
+<p>入力は整数が $1$ つなので、<code>int</code> 型の変数を用意し、<code>cin</code> で入力を受け取る。</p>
+<p>まず、Fizz のことを無視して、$1$ から $N$ までを順番に出力していくコードを作る。</p>
+<pre><code>for (int i=1; i&lt;=n; i++) {
+  cout &lt;&lt; i &lt;&lt; endl;
+}</code></pre>
+<p>この出力部分を、$3$ の倍数のときだけ <code>Fizz</code> に変えてやればよい。</p>
+<pre><code>if (3の倍数じゃないなら) {
+  cout &lt;&lt; i &lt;&lt; endl;
+} else {
+  cout &lt;&lt; &quot;Fizz&quot; &lt;&lt; endl;
+}</code></pre>
+<p>$3$ の倍数でない判定は、<code>i%3</code> をすればよい。<br>
+これが $0$ でない場合は、$i$ は $3$ の倍数ではない。<br>
+if 文の判定条件に <code>int</code> 型の値を書いた場合、 $0$ 以外だったら <code>true</code> とみなされる仕様を利用できる。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 4</code></pre>
+<p><code>i=1</code> から <code>i=4</code> まで順に処理する。</p>
+<p><code>i=1</code> では、$1$ は $3$ の倍数ではないので、<code>1</code> を出力する。</p>
+<p><code>i=2</code> では、$2$ は $3$ の倍数ではないので、<code>2</code> を出力する。</p>
+<p><code>i=3</code> では、$3$ は $3$ の倍数なので、<code>&quot;Fizz&quot;</code> を出力する。</p>
+<p><code>i=4</code> では、$4$ は $3$ の倍数ではないので、<code>4</code> を出力する。</p>
+<p>したがって、出力は次のようになる。</p>
+<pre><code>1
+2
+Fizz
+4</code></pre>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> その他数学系</p>
-      <p><strong>難易度:</strong> 難易度問わず</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc463-f.html">ABC463 F - Senshuraku</a></li>
-        <li><a href="../explanations/abc464-f.html">ABC464 F - Random Vault Heist</a></li>
-        <li><a href="../explanations/abc470-e.html">ABC470 E - Concentration</a></li>
-        <li><a href="../explanations/arc223-d.html">ARC223 D - Xpectation of Cards in Hand with Laboratory</a></li>
-        <li><a href="../explanations/edpc-i.html">EDPC I - Coins</a></li>
-        <li><a href="../explanations/edpc-j.html">EDPC J - Sushi</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/input-output.html">入出力</a>
+<a class="tag" href="../tags/int.html">int型</a>
+<a class="tag" href="../tags/if-statement.html">if分岐</a>
+<a class="tag" href="../tags/for-loop.html">forループ</a>
+<a class="tag" href="../tags/arithmetic-operations.html">四則演算</a>
+<a class="tag" href="../tags/multiple-check.html">倍数判定</a>
+      </div>
+      
     </section>
 
     <section class="side-card">

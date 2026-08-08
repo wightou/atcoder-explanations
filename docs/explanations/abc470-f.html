@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC470 F - Googol Swaps</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC470 F - Googol Swaps</h1>
+      <p class="explanation-title-ja">グーゴル交換</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc470/tasks/abc470_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc470/submissions/78235670" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>$10^{100}$ は、好きな回数交換できるという意味と考えてよさそう、という前提でまず考える。</p>
+<p>各文字の位置をグラフの頂点と考えて、交換可能なところを辺で結ぶ。<br>
+すると、各連結成分内では、十分な回数があれば好きな配置に交換できる。<br>
+よって、その個数は、重複のある順列として計算できる。<br>
+全連結成分でこれを求めて全てかければ、好きな回数交換できる場合の答えである。</p>
+<p>ただし、最後に罠がある。<br>
+パリティの問題で、全て異なる文字だった場合、指定配置にできるのは奇数回目か偶数回目のみ。<br>
+どの連結成分内も全て異なる文字で構成されている場合、偶数回目に作れるのは積のうち半分だけとなる。</p>
+<p>計算量は $O((N+M)\alpha(N))$ である。<br>
+ただし、$\alpha(N)$ はアッカーマン関数の逆関数。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。<br>
+辺の両端はコード内で <code>0-indexed</code> に直すので、次のようになる。</p>
+<pre><code>n: 5
+m: 3
+s: &quot;miria&quot;
+a, b:
+(0, 2)
+(1, 4)
+(3, 4)</code></pre>
+<p>UnionFind木で連結成分を求めると、位置の集合は次の $2$ 個に分かれる。</p>
+<pre><code>{0, 2}
+{1, 3, 4}</code></pre>
+<p>まず、連結成分 <code>{0, 2}</code> を調べる。<br>
+この成分にある文字は <code>m</code>, <code>r</code> であり、それぞれ $1$ 個ずつである。<br>
+この成分内での並べ方は、$\binom{2}{1}\binom{1}{1}=2$ 通り。<br>
+よって、<code>result</code> に $2$ をかける。</p>
+<pre><code>result: 2</code></pre>
+<p>次に、連結成分 <code>{1, 3, 4}</code> を調べる。<br>
+この成分にある文字は <code>i</code>, <code>i</code>, <code>a</code> であり、<code>a</code> が $1$ 個、<code>i</code> が $2$ 個である。<br>
+この成分内での並べ方は、$\binom{3}{1}\binom{2}{2}=3$ 通り。<br>
+よって、<code>result</code> に $3$ を掛ける。</p>
+<pre><code>result: 6</code></pre>
+<p>また、同じ連結成分に <code>i</code> が $2$ 個あるので、<code>flag</code> は <code>true</code> になる。<br>
+そのため、最後の $2$ で割る処理は行わない。</p>
+<p>最後に、<code>result</code> の値である $6$ を出力する。</p>
+<h2>注意点</h2>
+<p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+何か足し算や掛け算をするたびに結果を <code>% 998244353</code> し、割り算は $998244353-2$ 乗したものを掛ける。<br>
+累乗計算を何度も行うため、繰り返し二乗法のアルゴリズムも用意しておくこと。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/permutation-and-combination.html">順列組み合わせ</a>
+<a class="tag" href="../tags/parity.html">パリティ</a>
+<a class="tag" href="../tags/union-find.html">UnionFind木</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/binomial-coefficient.html">二項係数</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/binary-exponentiation.html">繰り返し二乗法</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC470 C - Inc, Dec, Xor</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC470 C - Inc, Dec, Xor</h1>
+      <p class="explanation-title-ja">増減XOR</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc470/tasks/abc470_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc470/submissions/78235631" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>まず、実際に $A$ を用意したとして、愚直解を考えてみる。<br>
+クエリ $1$ は、その値を $1$ 増やして、全体の <code>XOR</code> を計算する。<br>
+クエリ $2$ は、$A$ 全体を見て、正のものは $1$ ずつ減らして、全体の <code>XOR</code> を計算する。<br>
+これで、 $O(NQ)$ でよければ答えが出る。<br>
+しかし、今回の制約ではこれは間に合わない。</p>
+<p>間に合っていない部分は $2$ つ。<br>
+これらをうまく高速化してやることを考える。</p>
+<p>まず $1$ つめは、毎回全部の <code>XOR</code> を取っている点。<br>
+これは、差分更新を考えることで高速化できる。<br>
+つまり、最初に全体の <code>XOR</code> を $1$ 度だけ計算し、その後は変化分だけ反映する。<br>
+具体的には、$A_i$ が $1$ 増減する場合、増減前の $A_i$ と増減後の $A_i$ をそれぞれ追加で <code>XOR</code> すればいい。</p>
+<p>そして $2$ つめは、クエリ $2$ のときに正のものを全体探している点。<br>
+これは、実際にはかなりの部分が $0$ であることが大きな無駄となっている。<br>
+ということは、どこか別のデータに「今正の値になってる位置一覧」を用意すればよい。<br>
+減少させる回数が増加させる回数を超えることはないので、延べ回数で最大 $Q$ 回で減少処理を行える。</p>
+<p>今正の値になってる位置一覧に <code>set</code> を利用した場合、計算量は $O(N+Q\log N)$ である。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。<br>
+配列 <code>a</code> をすべて <code>0</code>、XOR の値 <code>result</code> を $0$、正の値の位置の集合 <code>st</code> を空集合で初期化する。</p>
+<pre><code>n: 2
+q: 5
+a: {0, 0}
+result: 0
+st: {}</code></pre>
+<p>$1$ 個目のクエリは <code>1 2</code> である。<br>
+<code>a[1]</code> を <code>0</code> から <code>1</code> に増やし、<code>st</code> に <code>1</code> を追加する。<br>
+変更前後の値を XOR して <code>result</code> を更新する。</p>
+<pre><code>a: {0, 1}
+result: 1
+st: {1}</code></pre>
+<p>$2$ 個目のクエリも <code>1 2</code> である。<br>
+<code>a[1]</code> を <code>1</code> から <code>2</code> に増やす。<br>
+変更前後の値を XOR して <code>result</code> を更新する。</p>
+<pre><code>a: {0, 2}
+result: 2
+st: {1}</code></pre>
+<p>$3$ 個目のクエリは <code>1 1</code> である。<br>
+<code>a[0]</code> を <code>0</code> から <code>1</code> に増やし、<code>st</code> に <code>0</code> を追加する。<br>
+変更前後の値を XOR して <code>result</code> を更新する。</p>
+<pre><code>a: {1, 2}
+result: 3
+st: {0, 1}</code></pre>
+<p>$4$ 個目のクエリは <code>2</code> である。<br>
+<code>st</code> に入っている位置の値をそれぞれ $1$ 減らす。<br>
+<code>a[0]</code> は <code>0</code> になるので、走査後に <code>st</code> から削除する。<br>
+変更前後の値を XOR して <code>result</code> を更新する。</p>
+<pre><code>a: {0, 1}
+result: 1
+st: {1}</code></pre>
+<p>$5$ 個目のクエリも <code>2</code> である。<br>
+<code>a[1]</code> を <code>1</code> から <code>0</code> に減らし、走査後に <code>st</code> から削除する。<br>
+変更前後の値を XOR して <code>result</code> を更新する。</p>
+<pre><code>a: {0, 0}
+result: 0
+st: {}</code></pre>
+<p>各クエリの直後に <code>result</code> を出力するので、出力は次のようになる。</p>
+<pre><code>1
+2
+3
+1
+0</code></pre>
+<h2>注意点</h2>
+<p><code>set</code> の値を走査しながら $0$ になったら消す処理の書き方に注意。<br>
+範囲 for 文は、走っている最中にデータサイズを変えると壊れる。<br>
+よって、削除したいものを別管理しておき、範囲 for 文が終わってから削除を実行する必要がある。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/difference-update.html">差分更新</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

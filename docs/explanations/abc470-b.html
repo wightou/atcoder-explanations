@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>確率</title>
+<title>ABC470 B - Monocolor</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,35 +28,39 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>確率</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC470 B - Monocolor</h1>
+      <p class="explanation-title-ja">単色</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc470/tasks/abc470_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc470/submissions/78235624" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>色を変えるボールの個数を最小にしたい。<br>
+それはつまり、色を変えなくていいボールの個数を最大にすればよい。</p>
+<p>どの色が何個あるかカウンティングを行って、最大値を探す。<br>
+すると、それが色を変えなくていいボールの最大値となる。<br>
+よって、それを全ボール数から引けば答えとなる。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 4
+a: {3, 1, 2, 1}</code></pre>
+<p>各色のボールが何個あるかを <code>counters</code> に数える。<br>
+<code>counters[0]</code> はダミーとして、次のようになる。</p>
+<pre><code>counters: {-, 2, 1, 1, 0}</code></pre>
+<p>最も多い色は色 $1$ で、その個数は $2$ 個である。<br>
+この $2$ 個以外のボールの色を変えればよいので、答えは $4-2=2$ となる。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> その他数学系</p>
-      <p><strong>難易度:</strong> 難易度問わず</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc463-f.html">ABC463 F - Senshuraku</a></li>
-        <li><a href="../explanations/abc464-f.html">ABC464 F - Random Vault Heist</a></li>
-        <li><a href="../explanations/abc470-e.html">ABC470 E - Concentration</a></li>
-        <li><a href="../explanations/arc223-d.html">ARC223 D - Xpectation of Cards in Hand with Laboratory</a></li>
-        <li><a href="../explanations/edpc-i.html">EDPC I - Coins</a></li>
-        <li><a href="../explanations/edpc-j.html">EDPC J - Sushi</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <span class="muted">なし</span>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">
