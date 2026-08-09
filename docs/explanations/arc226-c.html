@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC226 C - Square Corner Packing</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ARC226 C - Square Corner Packing</h1>
+      <p class="explanation-title-ja">正方形の角詰め</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc226/tasks/arc226_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc226/submissions/78264496" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>場合分けをして考える。</p>
+<h3>$(\mathrm{i})$ $H$ と $W$ がともに偶数の場合</h3>
+<p>この場合、左上詰めで $2 \times 2$ の小正方形を並べれば、全体を埋め尽くすことができる。<br>
+これは明らかに最大値であるので、それを答えればよい。</p>
+<h3>$(\mathrm{ii})$ $H$ は偶数で、$W$ が奇数の場合</h3>
+<p>マスの選び方の規則からして、各行各列から選べるマスは偶数個である。<br>
+つまり、この場合、各列 $W-1$ 個しか黒く塗ることはできない。</p>
+<p>したがって、黒く塗れる個数は、高々 $H(W-1)$ 個である。<br>
+これは、左上詰めで $2 \times 2$ の小正方形を並べれば、達成可能である。</p>
+<h3>$(\mathrm{iii})$ $H$ は奇数で、$W$ が偶数の場合</h3>
+<p>$(\mathrm{ii})$ の $H$ と $W$ が入れ替わっただけなので、同じ議論でよい。</p>
+<h3>$(\mathrm{iv})$ $H=W$ の正方形で、それを $4$ で割った余りが $1$ である場合</h3>
+<p>これは、各行各列から少なくとも $1$ つ余りが出る。<br>
+それを行や列が重複しないように取ったとしても、黒く塗れる個数は高々 $H(H-1)$ 個。<br>
+そして、これは実現できる。</p>
+<p>まず、縦横の中央ラインを除くと、辺長 $(H-1)/2$ の正方形 $4$ つになる。<br>
+これらはそれぞれ、$2 \times 2$ の小正方形 $(H-1)^2/16$ 個で埋めることができる。</p>
+<p>その状態から、対角線を踏んでいる小正方形を時計回りに $1$ マス移動する。<br>
+移動先に別の小正方形があれば、中央ラインのところまで再帰的に押し出す。<br>
+（下にある動作例に、$9 \times 9$ の場合の画像あり）</p>
+<p>これにより、対角線上、中央から偶数マスのところが全て白マスに戻った。<br>
+よって、ここに同心正方形を $(H-1)/4$ 個追加でとることができる。</p>
+<p>以上で、正方形を $(H-1)^2/16\times 4+(H-1)/4 = H(H-1)/4$ 個取れた。<br>
+黒マスの個数は $H(H-1)$ 個となっており、これが最大値である。</p>
+<h3>$(\mathrm{v})$ $H,W$ が異なる奇数で、小さい方を $4$ で割った余りが $1$である場合</h3>
+<p>$H&gt;W$ の場合を考える。<br>
+各行の黒マス数の考察により、黒く塗れる個数は高々 $H(W-1)$ 個。<br>
+そして、これは実現できる。</p>
+<p>まず、上に $W \times W$ の正方形を取り、$(\mathrm{iv})$ の方法で塗る。<br>
+この時点で黒マスの個数は $W(W-1)$ 個となる。</p>
+<p>その後、残りの $(H-W) \times W$ の領域は、$H-W$ が偶数であることから、$(\mathrm{ii})$ の方法で塗る。<br>
+追加で塗られる黒マスの個数は $(H-W)(W-1)$ 個となる。</p>
+<p>両方を合わせて黒マスの個数は $H(W-1)$ 個となり、これが最大値である。</p>
+<p>$H&lt;W$ の場合も同様。</p>
+<h3>$(\mathrm{vi})$ $H,W$ が異なる奇数で、小さい方を $4$ で割った余りが $3$である場合</h3>
+<p>$H&gt;W$ の場合を考える。<br>
+各行の黒マス数の考察により、黒く塗れる個数は高々 $H(W-1)$ 個。<br>
+しかし、黒マスの個数は $4$ の倍数でなくてはならない。<br>
+$H(W-1)$ は $4$ で割った余りが $2$ であるため、高々 $H(W-1)-2$ 個と修正できる。<br>
+そして、これは実現できる。</p>
+<p>まず、左上に $(W-2) \times (W-2)$ の正方形領域を取り、ここを $(\mathrm{v})$ の方法で埋める。<br>
+この時点で黒マスの個数は $(W-2)(W-3)$ 個となる。</p>
+<p>その後、残りの領域を、右下詰めで $2 \times 2$ の小正方形を並べる。<br>
+これにより塗られる範囲は、$(H-1)\times (W-1)$ の長方形から $(W-3)^2$ の正方形を取り除いた部分。</p>
+<p>両方を合わせて黒マスの個数は $(W-2)(W-3)+(H-1)(W-1)-(W-3)^2 = H(W-1)-2$ 個。<br>
+これが最大値である。</p>
+<p>$H&lt;W$ の場合も同様。</p>
+<h3>まとめ</h3>
+<p>以上の考察により、コードは $2$ 種類あれば全パターンに対応できる。</p>
+<p>まず、少なくとも片方が偶数の場合。<br>
+これは、左上詰めで $2 \times 2$ の小正方形を並べればよい。</p>
+<p>そして、両方が奇数の場合。<br>
+まず、$H,W$ の小さい方以下で、$4$ で割ると $1$ 余る最大数を探す。<br>
+その数を辺長に持つ正方形領域を左上に取り、$(\mathrm{iv})$ の方法で埋める。<br>
+そして、残りの領域は右上詰めで $2 \times 2$ の小正方形を並べればよい。</p>
+<p>各テストケースの計算量は $O(HW)$。<br>
+全テストケースでは $O\left(\sum HW\right)$。</p>
+<h2>動作例</h2>
+<p>ここでは、$H = 11$, $W = 13$ のテストケースを考える。<br>
+これらはともに奇数なので、両方が奇数の場合の処理を行う。</p>
+<p>まず、$4$ で割って $1$ 余る最大内包正方形の辺の長さを求めると、$9$ である。</p>
+<p>前半では、左上の $9 \times 9$ の範囲（下図の緑範囲）を構築する。</p>
+<p><img src="arc226/c01.png" alt="左上の9x9範囲"></p>
+<p>左上の $1/4$（下図の青範囲）では、$i = 1, 3$、$j = 1, 3$ を順に見る。</p>
+<p><img src="arc226/c02.png" alt="左上領域"></p>
+<p>それぞれ、そこを左上とする $2\times2$ の正方形を採用する。<br>
+ただし、$i \leq j$ であれば、$1$ つ右にずらして採用する。<br>
+結果、次の $4$ 個（下図の赤と黄色）が追加される。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$i$</th>
+<th class="table-align-right" style="text-align: right;">$j$</th>
+<th class="table-align-center" style="text-align: center;">$i \leq j$</th>
+<th class="table-align-left" style="text-align: left;">実際の値</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-center" style="text-align: center;">真</td>
+<td class="table-align-left" style="text-align: left;"><code>(1, 2, 1)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-right" style="text-align: right;">3</td>
+<td class="table-align-center" style="text-align: center;">真</td>
+<td class="table-align-left" style="text-align: left;"><code>(1, 4, 1)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">3</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-center" style="text-align: center;">偽</td>
+<td class="table-align-left" style="text-align: left;"><code>(3, 1, 1)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">3</td>
+<td class="table-align-right" style="text-align: right;">3</td>
+<td class="table-align-center" style="text-align: center;">真</td>
+<td class="table-align-left" style="text-align: left;"><code>(3, 4, 1)</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><img src="arc226/c03.png" alt="左上で追加される4個"></p>
+<p>右上の $1/4$（下図の青範囲）では、$i = 1, 3$、$j = 6, 8$ を順に見る。</p>
+<p><img src="arc226/c04.png" alt="右上領域"></p>
+<p>それぞれ、そこを左上とする $2\times2$ の正方形を採用する。<br>
+ただし、$i+j \geq 9$ であれば、$1$ つ下にずらして採用する。<br>
+結果、次の $4$ 個（下図の赤と黄色）が追加される。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$i$</th>
+<th class="table-align-right" style="text-align: right;">$j$</th>
+<th class="table-align-center" style="text-align: center;">$i+j \geq 9$</th>
+<th class="table-align-left" style="text-align: left;">実際の値</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-right" style="text-align: right;">6</td>
+<td class="table-align-center" style="text-align: center;">偽</td>
+<td class="table-align-left" style="text-align: left;"><code>(1, 6, 1)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-right" style="text-align: right;">8</td>
+<td class="table-align-center" style="text-align: center;">真</td>
+<td class="table-align-left" style="text-align: left;"><code>(2, 8, 1)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">3</td>
+<td class="table-align-right" style="text-align: right;">6</td>
+<td class="table-align-center" style="text-align: center;">真</td>
+<td class="table-align-left" style="text-align: left;"><code>(4, 6, 1)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">3</td>
+<td class="table-align-right" style="text-align: right;">8</td>
+<td class="table-align-center" style="text-align: center;">真</td>
+<td class="table-align-left" style="text-align: left;"><code>(4, 8, 1)</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><img src="arc226/c05.png" alt="右上で追加される4個"></p>
+<p>左下の $1/4$（下図の青範囲）では、$i = 6, 8$、$j = 1, 3$ を順に見る。</p>
+<p><img src="arc226/c06.png" alt="左下領域"></p>
+<p>それぞれ、そこを左上とする $2\times2$ の正方形を採用する。<br>
+ただし、$i+j \leq 9$ であれば、$1$ つ上にずらして採用する。<br>
+結果、次の $4$ 個（下図の赤と黄色）が追加される。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$i$</th>
+<th class="table-align-right" style="text-align: right;">$j$</th>
+<th class="table-align-center" style="text-align: center;">$i+j \leq 9$</th>
+<th class="table-align-left" style="text-align: left;">実際の値</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">6</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-center" style="text-align: center;">真</td>
+<td class="table-align-left" style="text-align: left;"><code>(5, 1, 1)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">6</td>
+<td class="table-align-right" style="text-align: right;">3</td>
+<td class="table-align-center" style="text-align: center;">真</td>
+<td class="table-align-left" style="text-align: left;"><code>(5, 3, 1)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">8</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-center" style="text-align: center;">真</td>
+<td class="table-align-left" style="text-align: left;"><code>(7, 1, 1)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">8</td>
+<td class="table-align-right" style="text-align: right;">3</td>
+<td class="table-align-center" style="text-align: center;">偽</td>
+<td class="table-align-left" style="text-align: left;"><code>(8, 3, 1)</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><img src="arc226/c07.png" alt="左下で追加される4個"></p>
+<p>右下の $1/4$（下図の青範囲）では、$i = 6, 8$、$j = 6, 8$ を順に見る。</p>
+<p><img src="arc226/c08.png" alt="右下領域"></p>
+<p>それぞれ、そこを左上とする $2\times2$ の正方形を採用する。<br>
+ただし、$i \geq j$ であれば、$1$ つ左にずらして採用する。<br>
+結果、次の $4$ 個（下図の赤と黄色）が追加される。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$i$</th>
+<th class="table-align-right" style="text-align: right;">$j$</th>
+<th class="table-align-center" style="text-align: center;">$i \geq j$</th>
+<th class="table-align-left" style="text-align: left;">実際の値</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">6</td>
+<td class="table-align-right" style="text-align: right;">6</td>
+<td class="table-align-center" style="text-align: center;">真</td>
+<td class="table-align-left" style="text-align: left;"><code>(6, 5, 1)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">6</td>
+<td class="table-align-right" style="text-align: right;">8</td>
+<td class="table-align-center" style="text-align: center;">偽</td>
+<td class="table-align-left" style="text-align: left;"><code>(6, 8, 1)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">8</td>
+<td class="table-align-right" style="text-align: right;">6</td>
+<td class="table-align-center" style="text-align: center;">真</td>
+<td class="table-align-left" style="text-align: left;"><code>(8, 5, 1)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">8</td>
+<td class="table-align-right" style="text-align: right;">8</td>
+<td class="table-align-center" style="text-align: center;">真</td>
+<td class="table-align-left" style="text-align: left;"><code>(8, 7, 1)</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><img src="arc226/c09.png" alt="右下で追加される4個"></p>
+<p>そして、対角線上の処理を行う。<br>
+$9 \times 9$ の中心から、対角線に沿って偶数マス行ったところにある頂点で正方形を作る（下図の赤と黄色）。<br>
+<img src="arc226/c10.png" alt="同心正方形で追加される2個"></p>
+<p>ここまでで、採用した正方形は $4 \times 4 + 2 = 18$ 個となる。</p>
+<p>後半では、左上の $9 \times 9$ 以外の部分を埋める。<br>
+これは、右下詰めで、$2 \times 2$ の正方形を埋めればよい（下図の赤と黄色）。</p>
+<pre><code>(2, 10, 1), (2, 12, 1)
+(4, 10, 1), (4, 12, 1)
+(6, 10, 1), (6, 12, 1)
+(8, 10, 1), (8, 12, 1)
+(10, 2, 1), (10, 4, 1), (10, 6, 1), (10, 8, 1), (10, 10, 1), (10, 12, 1)</code></pre>
+<p><img src="arc226/c11.png" alt="最後に追加される14個"></p>
+<p>左上の $9 \times 9$ の範囲で $18$ 個、それ以外の範囲で $14$ 個追加したので、採用した正方形は $32$ となる。<br>
+実際の出力は次のようになる。</p>
+<pre><code>32
+1 2 1
+1 4 1
+3 1 1
+3 4 1
+1 6 1
+2 8 1
+4 6 1
+4 8 1
+5 1 1
+5 3 1
+7 1 1
+8 3 1
+6 5 1
+6 8 1
+8 5 1
+8 7 1
+1 1 8
+3 3 4
+2 10 1
+2 12 1
+4 10 1
+4 12 1
+6 10 1
+6 12 1
+8 10 1
+8 12 1
+10 2 1
+10 4 1
+10 6 1
+10 8 1
+10 10 1
+10 12 1</code></pre>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>剰余類環</title>
+<title>ARC226 A - Meeting Division</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,51 +28,61 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>剰余類環</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ARC226 A - Meeting Division</h1>
+      <p class="explanation-title-ja">会議の分担</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc226/tasks/arc226_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc226/submissions/78264483" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>会議の開始時刻に、何人空いているかで分けて考える。</p>
+<p>$1$ 人も空いていない場合、その時点で無理なので、その時点で打ち切ってよく答えは $0$ となる。<br>
+$1$ 人だけ空いている場合、その人を割り当てることしかできないので、パターン数に何も影響しない。</p>
+<p>$2$ 人とも空いている場合、どちらに割り当てることもできる。<br>
+それぞれの片方に割り当てた場合のパターンは同じなので、片方で固定した場合の $2$ 倍とすればよい。</p>
+<p>以上より、イベントソートでシミュレーションをすれば簡単に答えが出る。<br>
+すなわち、各会議の開始時点で何人が暇かを全てかけ合わせればよいだけである。</p>
+<p>計算量はソートが支配的で $O(N\log N)$。<br>
+バケツソート等を使えば $O(N)$ にもできる。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取り、開始時刻が早い順にソートすると、以下のようになる。</p>
+<pre><code>vec = [(1, 3), (2, 4), (5, 6)]</code></pre>
+<p>はじめ、$2$ 人の拘束終了時刻（フリーなら $-1$）と結果を以下のようにしておく。</p>
+<pre><code>a = -1
+b = -1
+result = 1</code></pre>
+<p><code>(1, 3)</code> を処理する。<br>
+$2$ 人ともフリーなので、<code>result</code> を $2$ 倍し、<code>a</code> を時刻 $3$ まで拘束する。</p>
+<pre><code>a = 3
+b = -1
+result = 2</code></pre>
+<p><code>(2, 4)</code> を処理する。<br>
+<code>a</code> は時刻 $3$ まで拘束されているが、<code>b</code> はフリーなので、割り当て可能な人数は $1$ 人である。<br>
+<code>result</code> は変わらず、<code>b</code> を時刻 $4$ まで拘束する。</p>
+<pre><code>a = 3
+b = 4
+result = 2</code></pre>
+<p><code>(5, 6)</code> を処理する。<br>
+<code>a</code>, <code>b</code> ともに会議が終わっているのでフリーに戻す。<br>
+$2$ 人ともフリーなので、<code>result</code> を $2$ 倍し、<code>a</code> を時刻 $6$ まで拘束する。</p>
+<pre><code>a = 6
+b = -1
+result = 4</code></pre>
+<p>よって、答えは $4$。</p>
+<h2>注意点</h2>
+<p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+何か足し算や掛け算をするたびに結果を <code>% 998244353</code> する。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> その他数学系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li><a href="../knowledge/binary-exponentiation.html">繰り返し二乗法</a></li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-f.html">ABC461 F - Total Product is N</a></li>
-        <li><a href="../explanations/abc463-f.html">ABC463 F - Senshuraku</a></li>
-        <li><a href="../explanations/abc464-f.html">ABC464 F - Random Vault Heist</a></li>
-        <li><a href="../explanations/abc465-e.html">ABC465 E - Digit Circus</a></li>
-        <li><a href="../explanations/abc467-c.html">ABC467 C - Adjacent Sums (easy)</a></li>
-        <li><a href="../explanations/abc467-e.html">ABC467 E - Adjacent Sums (hard)</a></li>
-        <li><a href="../explanations/abc468-e.html">ABC468 E - Sum of Average</a></li>
-        <li><a href="../explanations/abc468-g.html">ABC468 G - Restricted Permutation</a></li>
-        <li><a href="../explanations/abc470-f.html">ABC470 F - Googol Swaps</a></li>
-        <li><a href="../explanations/arc223-b.html">ARC223 B - Valid Arrays by K-Divisible Swaps</a></li>
-        <li><a href="../explanations/arc223-c.html">ARC223 C - Whole Product of Pairwise Distances</a></li>
-        <li><a href="../explanations/arc223-d.html">ARC223 D - Xpectation of Cards in Hand with Laboratory</a></li>
-        <li><a href="../explanations/arc226-a.html">ARC226 A - Meeting Division</a></li>
-        <li><a href="../explanations/edpc-h.html">EDPC H - Grid 1</a></li>
-        <li><a href="../explanations/edpc-m.html">EDPC M - Candies</a></li>
-        <li><a href="../explanations/edpc-o.html">EDPC O - Matching</a></li>
-        <li><a href="../explanations/edpc-p.html">EDPC P - Independent Set</a></li>
-        <li><a href="../explanations/edpc-r.html">EDPC R - Walk</a></li>
-        <li><a href="../explanations/edpc-s.html">EDPC S - Digit Sum</a></li>
-        <li><a href="../explanations/edpc-t.html">EDPC T - Permutation</a></li>
-        <li><a href="../explanations/edpc-v.html">EDPC V - Subtree</a></li>
-        <li><a href="../explanations/edpc-y.html">EDPC Y - Grid 2</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/tag-a201ba7a.html">イベントソート</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">
