@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC226 D - Penta-Queue</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ARC226 D - Penta-Queue</h1>
+      <p class="explanation-title-ja">五本のキュー</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc226/tasks/arc226_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc226/submissions/78267388" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>クエリ $2$ は、全体の最小値をすぐにどこかのキューの先頭から出せという意味。<br>
+つまり、クエリ $1$ にしろクエリ $2$ にしろ、処理後に全体の最小値がキューの先頭にいる必要がある。</p>
+<p>しかし、クエリ $2$ の後には入れ替え操作はできない。<br>
+つまり、クエリ $1$ の処理後に、$5$ 本のキューそれぞれがソートされた状態になっている必要がある。</p>
+<p>ということで、考えるべきは有名なソート方法のどれを模倣するか。<br>
+作業回数的に $O(N \log N)$ のアルゴリズムをベースにした方がよさそう。<br>
+そして、部分部分はすでにソート済という状況に近しい。<br>
+これらを考えると、マージソートをベースにする方法が相性がよさそうである。</p>
+<p>このキュー上でのマージソートは、長さ $M$ と $N$ のものをマージするのに $M+N$ 回操作が必要。<br>
+つまり、長いほど触る頻度を下げたいので、長いものへのマージはやや長めのものを一気に行いたい。<br>
+ということで、各キューの長さを等比数列的にするのがよさそう。<br>
+長さ $2$ のものは操作 $1$ 回でソートできること、最大 $5000$ 要素来ることから、以下がよい。</p>
+<ul>
+<li>キュー$1$ : サイズ上限 $2$</li>
+<li>キュー$2$ : サイズ上限 $14$</li>
+<li>キュー$3$ : サイズ上限 $98$</li>
+<li>キュー$4$ : サイズ上限 $686$</li>
+<li>キュー$5$ : サイズ上限 $4802$</li>
+</ul>
+<p>実際には、要素数で判定するよりもクエリ $1$ が来た回数で処理してしまったほうが実装が楽。</p>
+<ul>
+<li>回数が $2$ の倍数のとき、最初にキュー $1$ 内に値が $2$ つあったらソートしてから以下の分岐に入る</li>
+<li>回数が $686$ の倍数になったとき、キュー $1$ から $5$ をキュー $5$ にマージ</li>
+<li>それ以外で回数が $98$ の倍数になったとき、キュー $1$ から $4$ をキュー $4$ にマージ</li>
+<li>それ以外で回数が $14$ の倍数になったとき、キュー $1$ から $3$ をキュー $3$ にマージ</li>
+<li>それ以外で回数が $2$ の倍数になったとき、キュー $1$ から $2$ をキュー $2$ にマージ</li>
+</ul>
+<p>さて、問題はこれで回数が足りるかどうか。<br>
+最悪のケースは、明らかに、$5000$ 個の数値が降順で push されたあと $5000$ 回 pop するケース。<br>
+このとき、操作回数は以下の合計で、$66398$ 回であり、間に合う。</p>
+<ul>
+<li>キュー $5$ へのマージ $7$ 回で、操作は $686*(1+2+3+4+5+6+7)=19208$ 回</li>
+<li>キュー $4$ へのマージ $44$ 回で、操作は $98*\{(1+2+3+4+5+6)*7+1+2\}=14700$ 回</li>
+<li>キュー $3$ へのマージ $306$ 回で、操作は $14*\{(1+2+3+4+5+6)*51\}=14994$ 回</li>
+<li>キュー $2$ へのマージ $2143$ 回で、操作は $2*\{(1+2+3+4+5+6)*357+1\}=14996$ 回</li>
+<li>キュー $1$ 内のソート $2500$ 回で、操作は $2500$ 回</li>
+</ul>
+<p>移動操作の総数を $M$ とすると、計算量は $O(Q+M)$。</p>
+<p>なお、AI に調査してもらったところ、公比 $7$ というのは最善ではないそうである。<br>
+公比は $8$ の方がわずかに回数が少なく、最悪 $65624$ 回とのこと。<br>
+さらに、最初は $9$ 倍、次は $8$ 倍、次は $5$ 倍か $6$ 倍か $7$ 倍とすると、最悪 $65106$ 回とのこと。</p>
+<h2>動作例</h2>
+<p>$Q=17$ とし、push クエリで <code>X</code> が次の順で与えられる場合を考える。</p>
+<pre><code>X: 42 17 33 8 55 31 74 12 48 26 69 5 37 21 58 14 46</code></pre>
+<p>途中の pop クエリも含め、$17$ 回目の push クエリまでのクエリを次の順とする。<br>
+この後の残り $7$ 回の pop クエリは省略する。</p>
+<pre><code>1 42
+1 17
+1 33
+2
+2
+1 8
+1 55
+1 31
+2
+1 74
+2
+1 12
+2
+1 48
+1 26
+2
+2
+1 69
+2
+1 5
+2
+1 37
+2
+1 21
+1 58
+1 14
+1 46</code></pre>
+<p>最初の $2$ 回の push クエリで <code>42</code>, <code>17</code> がキュー $1$ に入る。<br>
+<code>q1_count</code> が $2$ の倍数になるので、キュー $1$ の $2$ 個を昇順にした後、キュー $2$ へマージする。</p>
+<pre><code>出力
+0</code></pre>
+<pre><code>出力
+3
+1 1
+1 2
+1 2</code></pre>
+<pre><code>キュー1:
+キュー2: 17 42
+キュー3:
+キュー4:
+キュー5:</code></pre>
+<p>$3$ 回目の push クエリで <code>33</code> がキュー $1$ に入る。</p>
+<pre><code>出力
+0</code></pre>
+<pre><code>キュー1: 33
+キュー2: 17 42
+キュー3:
+キュー4:
+キュー5:</code></pre>
+<p>その次の pop クエリでは全キューの先頭の最小値である <code>17</code> をキュー $2$ から取り除く。<br>
+もう $1$ つ pop クエリが来るので全キューの先頭の最小値である <code>33</code> をキュー $1$ から取り除く。</p>
+<pre><code>出力
+2</code></pre>
+<pre><code>出力
+1</code></pre>
+<pre><code>キュー1:
+キュー2: 42
+キュー3:
+キュー4:
+キュー5:</code></pre>
+<p>$4$ 回目の push クエリで <code>8</code> がキュー $1$ に入る。<br>
+<code>q1_count</code> が $2$ の倍数になるので、キュー $1$ が $2$ 個でないことを確認した後、キュー $2$ へマージする。</p>
+<pre><code>出力
+2
+1 2
+2 2</code></pre>
+<pre><code>キュー1:
+キュー2: 8 42
+キュー3:
+キュー4:
+キュー5:</code></pre>
+<p>途中を省略すると、$13$ 回目の push クエリで <code>37</code> が入った時点では次の状態になる。</p>
+<pre><code>キュー1: 37
+キュー2: 55 69 74
+キュー3:
+キュー4:
+キュー5:</code></pre>
+<p>次の pop クエリでは <code>37</code> がキュー $1$ から取り除かれる。</p>
+<pre><code>出力
+1</code></pre>
+<p>ここまでの $10$ 回の pop クエリで取り除かれた値は、順に次の通り。</p>
+<pre><code>17 33 8 31 12 26 42 48 5 37</code></pre>
+<p>$14$ 回目の push クエリで <code>21</code> がキュー $1$ に入る。<br>
+この時点で残っているデータは $4$ 個で、状態は次の通り。</p>
+<pre><code>キュー1: 21
+キュー2: 55 69 74
+キュー3:
+キュー4:
+キュー5:</code></pre>
+<p><code>q1_count</code> が $14$ の倍数になるので、キュー $1$ からキュー $3$ までをマージする。<br>
+今回は次の $4$ 回の移動操作を行う。</p>
+<pre><code>出力
+4
+1 3
+2 3
+2 3
+2 3</code></pre>
+<p>マージ後は次の状態になる。</p>
+<pre><code>キュー1:
+キュー2:
+キュー3: 21 55 69 74
+キュー4:
+キュー5:</code></pre>
+<p>$15$ 回目の push クエリで <code>58</code> がキュー $1$ に入る。<br>
+$16$ 回目の push クエリで <code>14</code> が入り、キュー $1$ の $2$ 個を昇順にした後、キュー $2$ へマージする。</p>
+<pre><code>出力
+0</code></pre>
+<pre><code>出力
+3
+1 1
+1 2
+1 2</code></pre>
+<pre><code>キュー1:
+キュー2: 14 58
+キュー3: 21 55 69 74
+キュー4:
+キュー5:</code></pre>
+<p>最後に、$17$ 回目の push クエリで <code>46</code> がキュー $1$ に入る。</p>
+<pre><code>キュー1: 46
+キュー2: 14 58
+キュー3: 21 55 69 74
+キュー4:
+キュー5:</code></pre>
+<p>この後は常に最小のものがどこかの先頭にいるようになっている。</p>
+<h2>注意点</h2>
+<p>インタラクティブ問題なので、各クエリへの応答を出力するたびに標準出力を flush すること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
