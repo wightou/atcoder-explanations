@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDPC Z - Frog 3</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>EDPC Z - Frog 3</h1>
+      <p class="explanation-title-ja">カエル3</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_z" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/78340247" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、F問題級。</p>
+<p>$O(N^2)$ でよければ非常に簡単。<br>
+手前の全ての足場から実際に移動するコストを $O(N)$ で求めて、最小値を探す動的計画法でよい。<br>
+このコスト最小値を求める部分をどうにか平均 $O(1)$ に高速化できれば、全体が $O(N)$ になる。</p>
+<p>足場 $i$ から足場 $j$ に移動するコストは、$(h_j-h_i)^2+C=h_i^2-2h_ih_j+h_j^2+C$ である。<br>
+つまり、足場 $j$ に移動する最小コストは、以下である。</p>
+<p>$$<br>
+DP[j] = \min_{i&lt;j} \{(DP[i]+h_i^2)-2h_ih_j\}+(h_j^2+C)<br>
+$$</p>
+<p>最後の $h_j^2+C$ 部分は $i$ によらないので、最小値を求めた後で別途足せばよい。<br>
+$\{(DP[i]+h_i^2)-2h_ih_j\}$ についてなのだが、これは二次元平面上の話に読み替える。</p>
+<p>$xy$ 平面上に点 $(h_i,DP[i]+h_i^2)$ の点を取り、そこを通る傾き $2h_j$ の直線を引く。<br>
+このとき、$y$ 切片の値が、まさに $\{(DP[i]+h_i^2)-2h_ih_j\}$ となる。</p>
+<p>ということで、$i&lt;j$ である全ての $i$ について $(h_i,DP[i]+h_i^2)$ という点をプロットした平面を用意する。<br>
+これら全ての点から傾き $2h_j$ の直線を引き、最も下に来るものがどれか考える問題が解ければよい。<br>
+そして、これはプロットした点の凸包（下側）を用いれば解ける。<br>
+凸包上を左から見ていき、次の点との傾きが $2h_j$ より少ない限り右へ進んでいけばよい。<br>
+初めて傾きが $2h_j$ 以上になったところ、または凸包の右端が、足場 $j$ の直前に使うべき足場  $i$ である。 <br>
+足場番号の記録は不要で、座標 $(x,y)$ から $y-2xh_j+h_j^2+C$ を足場 $j$ の最小コストとすればよい。</p>
+<p>あとはこれを平均 $O(1)$、延べ $O(N)$ で達成できるか。</p>
+<p>凸包の計算は、普通のモノトーンチェーンを動的に行えばよい。<br>
+新しい点が $x$ 座標の昇順にしか追加されないため、延べ $O(N)$ で達成できる。</p>
+<p>凸包上の走査も、調べる傾きは単調増加するので、走査用インデックスが左へ戻ることは基本的にない。<br>
+よって、凸包を作るインデックスと併走させるツーポインタ法で行えば、延べ $O(N)$ で済む。<br>
+唯一、凸包生成で今いる点が消された場合だけ、走査用インデックスが例外的に左へ戻ることがある。<br>
+その場合も、傾きの構成を考えれば凸包の末尾に移動させればいいだけなので、計算量に影響はない。</p>
+<p>以上で高速化を達成できた。<br>
+計算量は $O(N)$。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+c: 6
+h: {1, 2, 3, 4, 5}</code></pre>
+<p>ここでは、コードに合わせて、足場番号を $0$ から始めて見る。</p>
+<p>$dp[i]$ を、足場 $i$ まで移動する最小コストとする。<br>
+また、$d$ を、これまでに追加した点 $(h[i], dp[i] + h[i]^2)$ の下側凸包を管理する配列とする。<br>
+$l$ は、現在の $d$ の中で最小値を与える候補の位置を表す。</p>
+<p>最初の足場では、まだ移動していないので次の状態である。</p>
+<pre><code>dp[0] = 0
+d: {(1, 1)}
+l: 0</code></pre>
+<p>足場 $1$ を見る。<br>
+この時点では $d$ に点が $1$ つしかないので、その点を使う。</p>
+<pre><code>dp[1] = 1 - 2 * 1 * 2 + 2 * 2 + 6
+      = 7</code></pre>
+<p>点 $(2, 11)$ を追加する。</p>
+<pre><code>d: {(1, 1), (2, 11)}
+l: 0</code></pre>
+<p>足場 $2$ を見る。<br>
+調べる傾きは $2h[2] = 6$ である。<br>
+点 $(1, 1)$ から点 $(2, 11)$ への傾きは $10$ なので、$l$ は進めない。</p>
+<pre><code>dp[2] = 1 - 2 * 1 * 3 + 3 * 3 + 6
+      = 10</code></pre>
+<p>点 $(3, 19)$ を追加する。<br>
+このとき、点 $(2, 11)$ は下側凸包から外れる。</p>
+<pre><code>d: {(1, 1), (3, 19)}
+l: 0</code></pre>
+<p>足場 $3$ を見る。<br>
+調べる傾きは $2h[3] = 8$ である。<br>
+点 $(1, 1)$ から点 $(3, 19)$ への傾きは $9$ なので、ここでも $l$ は進めない。</p>
+<pre><code>dp[3] = 1 - 2 * 1 * 4 + 4 * 4 + 6
+      = 15</code></pre>
+<p>点 $(4, 31)$ を追加する。</p>
+<pre><code>d: {(1, 1), (3, 19), (4, 31)}
+l: 0</code></pre>
+<p>足場 $4$ を見る。<br>
+調べる傾きは $2h[4] = 10$ である。</p>
+<p>点 $(1, 1)$ から点 $(3, 19)$ への傾きは $9$ なので、$l$ を $1$ つ進める。<br>
+次に、点 $(3, 19)$ から点 $(4, 31)$ への傾きは $12$ なので、そこで止まる。</p>
+<pre><code>l: 1</code></pre>
+<p>よって、点 $(3, 19)$ を使う。</p>
+<pre><code>dp[4] = 19 - 2 * 3 * 5 + 5 * 5 + 6
+      = 20</code></pre>
+<p>最後の $dp[4]$ が答えである。</p>
+<pre><code>20</code></pre>
+<h2>注意点</h2>
+<p>答えは、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/convex-hull.html">凸包</a>
+<a class="tag" href="../tags/two-pointer-method.html">ツーポインタ法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
