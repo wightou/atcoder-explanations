@@ -289,7 +289,8 @@ def link_knowledge_references_in_html(
 
     対象は次の2種類だけ。
     - `## 関連アルゴリズム` 節内の、知識記事 title と完全一致する `###` 見出し
-    - Markdownの1行全体が `詳しくは「XXX」の記事参照。` と完全一致し、XXX が title と一致する文
+    - Markdownの1行全体が `詳しくは「XXX」の記事参照。` または
+      `詳しくは「XXX」「YYY」...の記事参照。` と完全一致し、各記事名が title と一致する文
 
     aliases / absorbs では解決せず、既存リンクやそれ以外の文章も変更しない。
     """
@@ -335,21 +336,32 @@ def link_knowledge_references_in_html(
     # 完全一致の1行だけを対象にする。
     reference_pattern = re.compile(
         r'(?P<prefix><p>|<br\s*/?>\s*)'
-        r'詳しくは「(?P<name>[^<>「」]+)」の記事参照。'
+        r'詳しくは(?P<names>(?:「[^<>「」]+」)+)の記事参照。'
         r'(?=(?:</p>|<br\s*/?>))',
         flags=re.I,
     )
+    quoted_name_pattern = re.compile(r'「(?P<name>[^<>「」]+)」')
 
     def replace_reference(match: re.Match[str]) -> str:
-        name_html = match.group("name")
-        target = target_for(name_html)
-        if target is None:
+        quoted_names = list(quoted_name_pattern.finditer(match.group("names")))
+        if not quoted_names:
             return match.group(0)
-        href = escape(f"{href_prefix}{Path(target.url).name}", quote=True)
+
+        linked_names: list[str] = []
+        for quoted_match in quoted_names:
+            name_html = quoted_match.group("name")
+            target = target_for(name_html)
+            if target is None:
+                # 従来どおり、定型文中に解決できない記事名が1つでもある場合は
+                # 文全体を変更しない。部分的な自動リンクを避ける。
+                return match.group(0)
+            href = escape(f"{href_prefix}{Path(target.url).name}", quote=True)
+            linked_names.append(f'「<a href="{href}">{name_html}</a>」')
+
         return (
-            f'{match.group("prefix")}詳しくは「'
-            f'<a href="{href}">{name_html}</a>'
-            f'」の記事参照。'
+            f'{match.group("prefix")}詳しくは'
+            f'{"".join(linked_names)}'
+            f'の記事参照。'
         )
 
     return reference_pattern.sub(replace_reference, body_html)
