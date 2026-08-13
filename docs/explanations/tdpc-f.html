@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDPC F - 準急</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>TDPC F - 準急</h1>
+      
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/tdpc/tasks/tdpc_semiexp" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/tdpc/submissions/78345167" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、E問題級。</p>
+<p>停車する駅よりも通過する駅に注目する方が簡単。<br>
+DPテーブルに持たせるデータを「その駅までルール通りに進み、その駅を通過するパターン数」とする。<br>
+すると更新は、基本的には直前 $K$ 駅の値の和を取ればよいだけだということになる。</p>
+<p>ただし、いくつか問題がある。<br>
+まず、上で書いたことを愚直にやると、$O(NK)$ かかってしまう点。<br>
+これを高速化するには、区間和の長さが（はみ出る部分を除き）一定であることが利用できる。<br>
+区間和の長さが $K$ になるまでは普通に直前までの和を保管しておけば $1$ 駅あたり $O(1)$。<br>
+その先はsliding window法を用いれば、やはり $1$ 駅あたり $O(1)$。<br>
+これで、全体の計算量が $O(N)$ となる。</p>
+<p>そしてもう $1$ つ、最初の駅と最後の駅には必ず停車することが条件になっている点。<br>
+停車側に注目するので、DPテーブルの初期条件の設定が難しいのと、最後の集計が難しいことが問題。<br>
+しかしこれは、その前後にさらに確定で通過する駅を番兵的に用意しておくことで解決する。<br>
+片側の通過駅の通過方法を $1$ 通りとしてスタートして、逆側の通過駅の通過方法数を答えればよい。<br>
+確定停車駅の通過方法は $0$ であることを忘れずに処理すること。</p>
+<p>計算量は $O(N)$。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 10
+k: 2</code></pre>
+<p><code>dp[i]</code> を、駅 $i$ までルール通りに進み、駅 $i$ を通過するパターン数とする。<br>
+駅 $0$ と駅 $11$ は、番兵として通過する駅とする。<br>
+駅 $1$ と駅 $10$ は必ず停車するので、<code>dp[1]</code> と <code>dp[10]</code> は $0$ になる。</p>
+<p>今回は $K=2$ なので、駅 $i$ を通過するとき、その直前に通過した駅は $i-2$ または $i-1$ である。<br>
+この $2$ 個の値の和を <code>sum</code> で管理しながら更新する。</p>
+<p>DP テーブルは次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>$i$</th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+<th>$5$</th>
+<th>$6$</th>
+<th>$7$</th>
+<th>$8$</th>
+<th>$9$</th>
+<th>$10$</th>
+<th>$11$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>dp[i]</code></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>5</td>
+<td>8</td>
+<td>13</td>
+<td>21</td>
+<td>0</td>
+<td>21</td>
+</tr>
+</tbody>
+</table></div>
+<p>例えば、</p>
+<pre><code>dp[4] = dp[2] + dp[3]
+      = 1 + 1
+      = 2</code></pre>
+<p>となる。</p>
+<p>駅 $10$ は必ず停車するので <code>dp[10] = 0</code> とする。<br>
+最後の番兵では、</p>
+<pre><code>dp[11] = dp[9] + dp[10]
+       = 21 + 0
+       = 21</code></pre>
+<p>となるので、答えは $21$。</p>
+<h2>注意点</h2>
+<p>答えは $10^9+7$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+足し算や引き算をするたびに結果を <code>% 1000000007</code> する。<br>
+引き算で負になることがあるので、負数を補正する。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/sliding-window.html">sliding window法</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

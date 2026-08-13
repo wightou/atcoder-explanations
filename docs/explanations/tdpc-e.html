@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>タグ: 確率</title>
+<title>TDPC E - 数</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -17,32 +27,39 @@
 </header>
 
 <main class="page-layout">
-  <article class="main-panel">
-    
-<h1>タグ: 確率</h1>
-
-<section class="tag-section">
-  <h2>知識解説</h2>
-  <ul class="plain-list">
-    <li><a href="../knowledge/probability.html">確率</a><div class="knowledge-summary">今後記述予定。</div></li>
-  </ul>
-</section>
-
-<section class="tag-section">
-  <h2>問題解説</h2>
-  <p class="lead">ABCのA問題から順、ARCのA問題から順、AGCのA問題から順、その他の順で表示します。</p>
-  <ul class="plain-list">
-    <li><a href="../explanations/abc470-e.html">ABC470 E - Concentration</a></li><li><a href="../explanations/abc463-f.html">ABC463 F - Senshuraku</a></li><li><a href="../explanations/abc464-f.html">ABC464 F - Random Vault Heist</a></li><li><a href="../explanations/arc223-d.html">ARC223 D - Xpectation of Cards in Hand with Laboratory</a></li><li><a href="../explanations/tdpc-c.html">TDPC C - トーナメント</a></li><li><a href="../explanations/tdpc-d.html">TDPC D - サイコロ</a></li><li><a href="../explanations/edpc-i.html">EDPC I - Coins</a></li><li><a href="../explanations/edpc-j.html">EDPC J - Sushi</a></li>
-  </ul>
-</section>
-
-  </article>
-  
-<aside class="sidebar">
-  <section class="side-card">
-    <h2>リンク</h2>
-    <ul class="side-links">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>TDPC E - 数</h1>
       
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/tdpc/tasks/tdpc_number" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/tdpc/submissions/78345000" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、E問題級。</p>
+<p>EDPCのS問題と同じなので、あちらを参照。<br>
+相違点は、以下の $3$ つの非常に細かい点だけである。</p>
+<ul>
+<li>変数名が $K$ か $N$ か</li>
+<li>その範囲が $10^{10000}$ 「以下」か「未満」か</li>
+<li>入力の順序</li>
+</ul>
+<p>計算量は $O(|N|D)$。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/digit-dp.html">桁DP</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
 <li><a href="../index.html">トップ</a></li>
 <li class="side-nav-group">
   <a href="../contests/index.html">問題解説</a>
@@ -63,17 +80,16 @@
   </ul>
 </li>
 
-    </ul>
-  </section>
+      </ul>
+    </section>
 
-  <section class="side-card">
-    <h2>外部リンク</h2>
-    <ul class="side-links">
-      <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
-    </ul>
-  </section>
-</aside>
-
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
 </main>
 
 </body>

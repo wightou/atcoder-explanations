@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDPC B - ゲーム</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>TDPC B - ゲーム</h1>
+      
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/tdpc/tasks/tdpc_game" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/tdpc/submissions/78344378" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、難しめD問題級。</p>
+<p>最初に入力を反転するとコードが書きやすいので、説明も全て反転した状態に合わせて書く。</p>
+<p>Aが残り $i$ 個、Bが残り $j$ 個の場合の得点を求めていく動的計画法で解けそう。<br>
+が、問題は値として何を持つか。<br>
+その状況での手番がすぬけくんかすめけくんかで、保持する値を変えるのは、複雑。<br>
+そこで、少し工夫する。</p>
+<p>Aが残り $i$ 個、Bが残り $j$ 個の場合の「先手の点数 $-$ 後手の点数」を持つことにする。<br>
+すると、DP は以下のように遷移する。</p>
+<p>$$<br>
+DP[i][j] =<br>
+\begin{cases}<br>
+0 &amp; (i=0,\ j=0), \\<br>
+b_{j-1} - DP[i][j-1] &amp; (i=0,\ j&gt;0), \\<br>
+a_{i-1} - DP[i-1][j] &amp; (i&gt;0,\ j=0), \\<br>
+\max\left(b_{j-1} - DP[i][j-1], a_{i-1} - DP[i-1][j]\right) &amp; (i&gt;0,\ j&gt;0).<br>
+\end{cases}<br>
+$$</p>
+<p>こうすると、DPテーブルの右下の値が、最終的な「すぬけくんの点数 $-$ すめけくんの点数」となる。<br>
+よって、これに $a$ も $b$ も含めた全ての価値の合計を加えて $2$ で割ると答えになる。</p>
+<p>また、一次元データでインライン（というかインプレース）で更新してもよい。</p>
+<p>計算量は $O(AB)$。</p>
+<h2>入力例2での動作</h2>
+<p>入力を受け取る。<br>
+コードでは、左の山の長さを <code>n</code>、右の山の長さを <code>m</code> としている。</p>
+<pre><code>n: 5
+m: 5
+a: {2, 4, 5, 4, 2}
+b: {2, 8, 3, 4, 5}</code></pre>
+<p>後ろ側から DP を組み立てるため、<code>a</code> と <code>b</code> を反転する。</p>
+<pre><code>a: {2, 4, 5, 4, 2}
+b: {5, 4, 3, 8, 2}</code></pre>
+<p>説明用に、<code>dp[i][j]</code> を、反転後の <code>a</code> の先頭 $i$ 個と <code>b</code> の先頭 $j$ 個からなる状態での<br>
+「現在の手番の人の得点 $-$ 相手の得点」の最大値とする。<br>
+実際のコードでは、この表の $1$ 行分だけを配列 <code>dp</code> に持っている。<br>
+（書きやすさのために、二次元でコードを書いてもよい）</p>
+<p>DP テーブルは次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th><code>a</code> の個数＼<code>b</code> の個数</th>
+<th>$0$</th>
+<th>$1$</th>
+<th>$2$</th>
+<th>$3$</th>
+<th>$4$</th>
+<th>$5$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$0$</td>
+<td>0</td>
+<td>5</td>
+<td>-1</td>
+<td>4</td>
+<td>4</td>
+<td>-2</td>
+</tr>
+<tr>
+<td>$1$</td>
+<td>2</td>
+<td>3</td>
+<td>3</td>
+<td>0</td>
+<td>8</td>
+<td>4</td>
+</tr>
+<tr>
+<td>$2$</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+<td>4</td>
+<td>4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>$3$</td>
+<td>3</td>
+<td>2</td>
+<td>4</td>
+<td>1</td>
+<td>7</td>
+<td>5</td>
+</tr>
+<tr>
+<td>$4$</td>
+<td>1</td>
+<td>4</td>
+<td>0</td>
+<td>3</td>
+<td>5</td>
+<td>-1</td>
+</tr>
+<tr>
+<td>$5$</td>
+<td>1</td>
+<td>4</td>
+<td>2</td>
+<td>1</td>
+<td>7</td>
+<td>3</td>
+</tr>
+</tbody>
+</table></div>
+<p>例えば <code>dp[1][1]</code> では、<code>a</code> から取る場合と <code>b</code> から取る場合を比較する。</p>
+<pre><code>aから取る: 2 - 5 = -3
+bから取る: 5 - 2 = 3</code></pre>
+<p>よって <code>dp[1][1] = 3</code> となる。</p>
+<p>最終的に、すぬけ君の得点 $-$ すめけ君の得点は <code>dp[5][5] = 3</code> である。<br>
+全ての価値の合計は $17+22=39$ なので、答えは $(3+39)/2=21$。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/competitive-game.html">対戦ゲーム</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

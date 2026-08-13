@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDPC C - トーナメント</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>TDPC C - トーナメント</h1>
+      
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/tdpc/tasks/tdpc_tournament" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/tdpc/submissions/78344690" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>ABCでいうと、易しめのE問題級。</p>
+<p>とはいえ、素直な方針でほぼ通る。<br>
+トーナメントの山ごとに、誰が勝ち残る確率がどの程度かを、下から順に求めていけばいいだけである。<br>
+ただし、全ての試合で全 $2^K$ 人分の確率を持つと、計算量が厳しい。<br>
+試合 $1$ 回ごとに $2^K\times 2^K$ 回の計算が必要で、それを $2^K-1$ 試合やるので、$O(2^{3K})$。<br>
+小数計算になるのもあって、$K=10$ の場合には流石の C++ でもちょっと厳しい。</p>
+<p>そこで、少しだけ工夫。<br>
+その山にいない人がその山から上がってくる確率は $0$ である。<br>
+よって、各人が $i$ 回戦を勝ち上がる確率データは、長さ $2^K$ で持たなくても、長さ $2^i$ でいい。</p>
+<p>そうすることで、$i$ 回戦目は $2^{i-1}\times 2^{i-1}$ 回の計算を $2^{K-i}$ 試合分やればよくなる。<br>
+つまり、$i$ 回戦目の計算量は $O(2^{K+i})$ となり、全体では $O(4^K)$ となる。</p>
+<p>データの持ち方は、segment木のように $2$ 個ずつ合体する木でもいいし、<code>deque</code> などを用いてもよい。<br>
+ものによっては、DPテーブルと呼ぶのに多少違和感がある姿にはなるが……。</p>
+<h2>入力例2での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>k: 3
+r: {2000, 2500, 2300, 2700, 2100, 2400, 2600, 2200}</code></pre>
+<p>最初は各選手 $1$ 人だけの山を作り、その山から勝ち上がる確率を $1$ とする。<br>
+隣り合う山を順に統合していく。</p>
+<p>例えば、第 $1$ ラウンド第 $1$ 試合。<br>
+人 $1$ が人 $2$ に勝つ確率は、$\frac{1}{1+10^{(2500-2000)/400}}=0.053240\ldots$ である。<br>
+よって、この山のデータは、人 $1$ から順に $\{0.053240\ldots,0.946760\ldots\}$ となる。</p>
+<p>同様に、あと $3$ 回分、$1$ 回戦を行う。</p>
+<p>そして、第 $2$ ラウンド第 $1$ 試合。<br>
+片方の山は、人 $1$ から順に $\{0.053240\ldots,0.946760\ldots\}$ という山。<br>
+片方の山は、人 $3$ から順に $\{0.090909\ldots,0.909091\ldots\}$ という山。</p>
+<p>ここからそれぞれの人の勝率を求めると、</p>
+<ul>
+<li>人 $1$：$0.053240\ldots \times (0.090909\ldots \times \frac{1}{1+10^{(2300-2000)/400}} + 0.909091\ldots \times \frac{1}{1+10^{(2700-2000)/400}})=0.001576\ldots$</li>
+<li>人 $2$：$0.946760\ldots \times (0.090909\ldots \times \frac{1}{1+10^{(2300-2500)/400}} + 0.909091\ldots \times \frac{1}{1+10^{(2700-2500)/400}})=0.272174\ldots$</li>
+<li>人 $3$：$0.090909\ldots \times (0.053240\ldots \times \frac{1}{1+10^{(2000-2300)/400}} + 0.946760\ldots \times \frac{1}{1+10^{(2500-2300)/400}})=0.024788\ldots$</li>
+<li>人 $4$：$0.909091\ldots \times (0.053240\ldots \times \frac{1}{1+10^{(2000-2700)/400}} + 0.946760\ldots \times \frac{1}{1+10^{(2500-2700)/400}})=0.701462\ldots$</li>
+</ul>
+<p>となるので、この山のデータは、人 $1$ から順に $\{0.001576\ldots,0.272174\ldots,0.024788\ldots,0.701462\ldots\}$</p>
+<p>同様に決勝まで各山を統合すると、各選手がそれぞれのラウンドを勝ち上がる確率は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>人</th>
+<th>レーティング</th>
+<th>第 $1$ ラウンド後</th>
+<th>第 $2$ ラウンド後</th>
+<th>優勝確率</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$1$</td>
+<td>$2000$</td>
+<td>$0.053240\ldots$</td>
+<td>$0.001576\ldots$</td>
+<td>$0.000087\ldots$</td>
+</tr>
+<tr>
+<td>$2$</td>
+<td>$2500$</td>
+<td>$0.946760\ldots$</td>
+<td>$0.272174\ldots$</td>
+<td>$0.122043\ldots$</td>
+</tr>
+<tr>
+<td>$3$</td>
+<td>$2300$</td>
+<td>$0.090909\ldots$</td>
+<td>$0.024788\ldots$</td>
+<td>$0.005523\ldots$</td>
+</tr>
+<tr>
+<td>$4$</td>
+<td>$2700$</td>
+<td>$0.909091\ldots$</td>
+<td>$0.701462\ldots$</td>
+<td>$0.493465\ldots$</td>
+</tr>
+<tr>
+<td>$5$</td>
+<td>$2100$</td>
+<td>$0.150980\ldots$</td>
+<td>$0.012248\ldots$</td>
+<td>$0.000652\ldots$</td>
+</tr>
+<tr>
+<td>$6$</td>
+<td>$2400$</td>
+<td>$0.849020\ldots$</td>
+<td>$0.244076\ldots$</td>
+<td>$0.053982\ldots$</td>
+</tr>
+<tr>
+<td>$7$</td>
+<td>$2600$</td>
+<td>$0.909091\ldots$</td>
+<td>$0.716347\ldots$</td>
+<td>$0.321828\ldots$</td>
+</tr>
+<tr>
+<td>$8$</td>
+<td>$2200$</td>
+<td>$0.090909\ldots$</td>
+<td>$0.027329\ldots$</td>
+<td>$0.002420\ldots$</td>
+</tr>
+</tbody>
+</table></div>
+<p>最後の列にあたる値を上から順に出力すればよい。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/probability.html">確率</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
