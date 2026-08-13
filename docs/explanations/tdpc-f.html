@@ -58,7 +58,7 @@ k: 2</code></pre>
 駅 $0$ と駅 $11$ は、番兵として通過する駅とする。<br>
 駅 $1$ と駅 $10$ は必ず停車するので、<code>dp[1]</code> と <code>dp[10]</code> は $0$ になる。</p>
 <p>今回は $K=2$ なので、駅 $i$ を通過するとき、その直前に通過した駅は $i-2$ または $i-1$ である。<br>
-この $2$ 個の値の和を <code>sum</code> で管理しながら更新する。</p>
+この $2$ 個の値の和をsliding window法で管理しながら更新する。</p>
 <p>DP テーブルは次のようになる。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
