@@ -289,9 +289,10 @@ def link_knowledge_references_in_html(
 
     対象は次の2種類だけ。
     - `## 関連アルゴリズム` 節内の、知識記事 title と完全一致する `###` 見出し
-    - Markdownの1行全体が `詳しくは「XXX」の記事参照。` または
-      `詳しくは「XXX」「YYY」...の記事参照。` と完全一致し、各記事名が title と一致する文
+    - 本文中で `「XXX」の記事参照。` または `「XXX」「YYY」...の記事参照。` の形になっていて、
+      各記事名が title と一致する箇所
 
+    記事参照では鍵括弧より前の文言を問わない。
     aliases / absorbs では解決せず、既存リンクやそれ以外の文章も変更しない。
     """
 
@@ -331,14 +332,11 @@ def link_knowledge_references_in_html(
 
     body_html = section_pattern.sub(replace_section, body_html)
 
-    # `nl2br` 使用時は、Markdown上の改行が <br> / <br /> になる。
-    # 段落の先頭、または <br> 直後から始まり、段落末尾または次の <br> 直前で終わる
-    # 完全一致の1行だけを対象にする。
+    # 鍵括弧で囲まれた記事名が1つ以上連続し、その直後が `の記事参照。` なら対象にする。
+    # 鍵括弧より前の文言は判定しない。既存リンクやHTMLタグの内部を誤って拾わないよう、
+    # 記事名部分にはHTMLタグを許さない。
     reference_pattern = re.compile(
-        r'(?P<prefix><p>|<br\s*/?>\s*)'
-        r'詳しくは(?P<names>(?:「[^<>「」]+」)+)の記事参照。'
-        r'(?=(?:</p>|<br\s*/?>))',
-        flags=re.I,
+        r'(?P<names>(?:「[^<>「」]+」)+)の記事参照。'
     )
     quoted_name_pattern = re.compile(r'「(?P<name>[^<>「」]+)」')
 
@@ -359,12 +357,39 @@ def link_knowledge_references_in_html(
             linked_names.append(f'「<a href="{href}">{name_html}</a>」')
 
         return (
-            f'{match.group("prefix")}詳しくは'
             f'{"".join(linked_names)}'
             f'の記事参照。'
         )
 
-    return reference_pattern.sub(replace_reference, body_html)
+    # 既存リンクやコードの中には新しいリンクを作らない。
+    # Markdownから生成されたHTMLをタグ単位に分け、a/code/pre/script/style の外側にある
+    # テキストだけを置換する。
+    html_parts = re.split(r'(<[^>]+>)', body_html)
+    blocked_tags = {"a", "code", "pre", "script", "style"}
+    blocked_depth = 0
+
+    for i, part in enumerate(html_parts):
+        if not part:
+            continue
+        if part.startswith("<"):
+            closing = re.match(r'</\s*([A-Za-z0-9]+)\b', part)
+            if closing and closing.group(1).lower() in blocked_tags:
+                blocked_depth = max(0, blocked_depth - 1)
+                continue
+
+            opening = re.match(r'<\s*([A-Za-z0-9]+)\b', part)
+            if (
+                opening
+                and opening.group(1).lower() in blocked_tags
+                and not part.rstrip().endswith("/>")
+            ):
+                blocked_depth += 1
+            continue
+
+        if blocked_depth == 0:
+            html_parts[i] = reference_pattern.sub(replace_reference, part)
+
+    return "".join(html_parts)
 
 
 def resolve_related_knowledge_pages(
