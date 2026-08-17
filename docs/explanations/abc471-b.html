@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>map</title>
+<title>ABC471 B - Survey Tabulation</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,98 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>map</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC471 B - Survey Tabulation</h1>
+      <p class="explanation-title-ja">アンケート集計</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc471/tasks/abc471_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc471/submissions/78494136" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>指示通り、同内容の回答数をカウンティングすればよい。<br>
+問題は $2$ 点。</p>
+<p>$1$ つは、回答の大文字小文字を区別せずに数えなければならないこと。<br>
+これは、全ての回答を小文字に（または大文字に）統一してしまえばよい。<br>
+$1$ 文字ずつ見て、<code>isupper(c)</code> で大文字かどうか判定し、<code>c += &#x27;a&#x27;-&#x27;A&#x27;;</code> で小文字化する。</p>
+<p>もう $1$ つは、票の内容が文字列であること。<br>
+カウンティングでよく行う、$i$ があったら配列の $i$ 番目を $1$ 増やす方法が使えない。<br>
+これは <code>map</code> を使うことで解決する。<br>
+その後最大回答数を調べるときには、範囲for文を用いればよい。</p>
+<h2>入力例1での動作</h2>
+<p>回答を順に小文字化すると、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>元の回答</th>
+<th>小文字化後</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>ARC</code></td>
+<td><code>arc</code></td>
+</tr>
+<tr>
+<td><code>abc</code></td>
+<td><code>abc</code></td>
+</tr>
+<tr>
+<td><code>ahc</code></td>
+<td><code>ahc</code></td>
+</tr>
+<tr>
+<td><code>ABC</code></td>
+<td><code>abc</code></td>
+</tr>
+<tr>
+<td><code>beginner</code></td>
+<td><code>beginner</code></td>
+</tr>
+<tr>
+<td><code>AbC</code></td>
+<td><code>abc</code></td>
+</tr>
+<tr>
+<td><code>ahc</code></td>
+<td><code>ahc</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>これらを <code>map</code> で数えると、各回答数は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>回答</th>
+<th class="table-align-right" style="text-align: right;">回答数</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>abc</code></td>
+<td class="table-align-right" style="text-align: right;">3</td>
+</tr>
+<tr>
+<td><code>ahc</code></td>
+<td class="table-align-right" style="text-align: right;">2</td>
+</tr>
+<tr>
+<td><code>arc</code></td>
+<td class="table-align-right" style="text-align: right;">1</td>
+</tr>
+<tr>
+<td><code>beginner</code></td>
+<td class="table-align-right" style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table></div>
+<p>このなかの最大値は $3$ なので、<code>3</code> を出力する。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 変数とデータ構造</p>
-      <p><strong>難易度:</strong> B問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc471-b.html">ABC471 B - Survey Tabulation</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/map.html">map</a>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

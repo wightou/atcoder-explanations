@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>map</title>
+<title>ABC471 A - Nine or Nein</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,30 +28,52 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>map</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC471 A - Nine or Nein</h1>
+      <p class="explanation-title-ja">9か否か</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc471/tasks/abc471_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc471/submissions/78494132" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>入力は整数が $2$ つなので、<code>int</code> 型の変数を $2$ つ用意し、<code>cin</code> で入力を受け取る。</p>
+<p>$4$ つの条件のうち $1$ つでも成り立てば、という条件は、以下のように書ける。</p>
+<pre><code>if (条件1||条件2||条件3||条件4) {
+  処理
+}</code></pre>
+<p>足し算、引き算、掛け算、までは普通に <code>a+b==9</code> <code>a-b==9</code> <code>a*b==9</code> でよい。<br>
+問題は割り算で、<code>a/b==9</code> と書くと、 $a$ が $19$ で $b$ が $2$ のような場合に誤判定する。<br>
+かといって小数で判定するのは不安があるので、<code>a==9*b</code> で判定すること。</p>
+<p>あとは、条件に当てはまるかどうかで出力を <code>Nine</code> か <code>Nein</code> かを変更すればよい。</p>
+<p>if 文の中で直接 <code>cout</code> してもいいし、事前に出力用文字列を用意してもよい。</p>
+<p>余談だが、<code>Nein</code> はドイツ語で「いいえ」を意味する単語で、発音は「ナイン」である。</p>
+<h2>入力例1での動作</h2>
+<p>$a=16$, $b=7$ を受け取る。<br>
+出力用文字列は、最初 <code>Nein</code> である。</p>
+<p>$4$ つの条件をそれぞれ確認する。</p>
+<ul>
+<li><code>a+b==9</code> は、$16+7=23$ なので成り立たない。</li>
+<li><code>a-b==9</code> は、$16-7=9$ なので成り立つ。</li>
+<li><code>a*b==9</code> は、$16\times7=112$ なので成り立たない。</li>
+<li><code>a==9*b</code> は、$16\neq9\times7=63$ なので成り立たない。</li>
+</ul>
+<p>$4$ つの条件のうち <code>a-b==9</code> が成り立つので、if 文の条件全体が真になる。<br>
+よって、出力用文字列を <code>Nine</code> に変更する。</p>
+<p>最後に出力用文字列を出力するので、答えは <code>Nine</code> となる。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 変数とデータ構造</p>
-      <p><strong>難易度:</strong> B問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc471-b.html">ABC471 B - Survey Tabulation</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/input-output.html">入出力</a>
+<a class="tag" href="../tags/int.html">int型</a>
+<a class="tag" href="../tags/if-statement.html">if分岐</a>
+<a class="tag" href="../tags/arithmetic-operations.html">四則演算</a>
+      </div>
+      
     </section>
 
     <section class="side-card">
