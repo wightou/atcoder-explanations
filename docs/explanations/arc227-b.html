@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>貪欲法</title>
+<title>ARC227 B - Know Your Place</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,47 +28,58 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>貪欲法</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ARC227 B - Know Your Place</h1>
+      <p class="explanation-title-ja">各自の場所</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc227/tasks/arc227_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc227/submissions/78512719" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>仮に $B$ が構成できたとして、値 $i$ がどこに入れられるか考えてみる。<br>
+以下、順番は <code>0-indexed</code> で表記する。</p>
+<p>まず、条件を満たしている以上、$i$ 番目より前は全て $i$ 未満の数。<br>
+よって、$i$ 番目以後、次に $i$ 未満の値が初めて登場する前まで。<br>
+これが、値 $i$ を使用できる範囲である。</p>
+<p>ということは、$i$ 番目は「それまでに未使用な $i$ 以下の数で最大のもの」でよい。</p>
+<p>カウンティングソートと <code>stack</code> を利用すれば、計算量は $O(N)$ となる。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 4
+a: {3, 0, 1, 0}</code></pre>
+<p>各値の個数を数えると、<code>counters</code> は次のようになる。</p>
+<pre><code>counters: {2, 1, 0, 1}</code></pre>
+<p><code>que</code> を、現在使用できる未使用の値を小さい順に持つ <code>stack</code> として使う。</p>
+<p>$i=0$ では、値 $0$ を $2$ 個 <code>que</code> に追加する。<br>
+この中で最大の値 $0$ を採用する。</p>
+<pre><code>que: {0}
+result: {0}</code></pre>
+<p>$i=1$ では、値 $1$ を $1$ 個 <code>que</code> に追加する。<br>
+最大の値 $1$ を採用する。</p>
+<pre><code>que: {0}
+result: {0, 1}</code></pre>
+<p>$i=2$ では、値 $2$ は存在しないので何も追加しない。<br>
+<code>que</code> に残っている最大の値 $0$ を採用する。</p>
+<pre><code>que: {}
+result: {0, 1, 0}</code></pre>
+<p>$i=3$ では、値 $3$ を $1$ 個 <code>que</code> に追加する。<br>
+最大の値 $3$ を採用する。</p>
+<pre><code>que: {}
+result: {0, 1, 0, 3}</code></pre>
+<p>最後まで構築できたので、<code>Yes</code> と <code>0 1 0 3</code> を出力する。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> データ探索系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-c.html">ABC461 C - Variety</a></li>
-        <li><a href="../explanations/abc462-e.html">ABC462 E - Alternating Costs</a></li>
-        <li><a href="../explanations/abc463-d.html">ABC463 D - Maximize the Gap</a></li>
-        <li><a href="../explanations/abc467-e.html">ABC467 E - Adjacent Sums (hard)</a></li>
-        <li><a href="../explanations/abc467-f.html">ABC467 F - Email Scheduling Optimization</a></li>
-        <li><a href="../explanations/abc468-f.html">ABC468 F - Chmax</a></li>
-        <li><a href="../explanations/abc471-c.html">ABC471 C - Cookies and Greedy Takahashi</a></li>
-        <li><a href="../explanations/abc471-f.html">ABC471 F - Concat (maximize)</a></li>
-        <li><a href="../explanations/arc223-a.html">ARC223 A - Unusual-Constraint Knapsack</a></li>
-        <li><a href="../explanations/arc224-b.html">ARC224 B - Adjacent Tiles</a></li>
-        <li><a href="../explanations/arc224-c.html">ARC224 C - Ascending Labels</a></li>
-        <li><a href="../explanations/arc224-d.html">ARC224 D - Angst for All Pairs</a></li>
-        <li><a href="../explanations/arc224-e.html">ARC224 E - ABC|AB|A</a></li>
-        <li><a href="../explanations/arc226-b.html">ARC226 B - Bin-ary Packing</a></li>
-        <li><a href="../explanations/arc227-b.html">ARC227 B - Know Your Place</a></li>
-        <li><a href="../explanations/edpc-x.html">EDPC X - Tower</a></li>
-        <li><a href="../explanations/tdpc-g.html">TDPC G - 辞書順</a></li>
-        <li><a href="../explanations/tdpc-i.html">TDPC I - イウィ</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+<a class="tag" href="../tags/greedy.html">貪欲法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

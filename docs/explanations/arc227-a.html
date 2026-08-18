@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>貪欲法</title>
+<title>ARC227 A - Fermat Point of Binary Strings</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,47 +28,61 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>貪欲法</h1>
-    <h2>概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ARC227 A - Fermat Point of Binary Strings</h1>
+      <p class="explanation-title-ja">二進フェルマー点</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc227/tasks/arc227_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc227/submissions/78512281" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>$0$ 同士や $1$ 同士を入れ替えるのは、考えなくてよい。<br>
+コストだけかかって何も状況が変化しないからである。<br>
+したがって、<code>A</code> の $i$ 個目、<code>B</code> の $i$ 個目、<code>C</code> の $i$ 個目、の $1$ を同じ位置に揃えることになる。</p>
+<p>それぞれの位置を $a,b,c$ として、位置 $x$ に揃えるとする。<br>
+この場合、揃えるコストは $|x-a|+|x-b|+|x-c|$ となる。<br>
+そして、この形の関数の最小値は、奇数個の和なら中央値で最小値を取る。<br>
+これを全ての $i$ 番目の組について実行すればよい。</p>
+<p>問題は中央値の逆転が起こらないかどうか。<br>
+だが、$i$ 番目の組の中央値が $x_i$ だとして、$i+1$ 番目には、それより大きい値が $2$ つ以上ある。<br>
+よって、$x_{i+1}$ は必ず $x_i$ より大きい。<br>
+従って、前述の方法で問題は発生しないことが示された。</p>
+<p>計算量は $O(N)$ となる。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 2
+a: 1100
+b: 1010
+c: 0011</code></pre>
+<p>各文字列について、<code>1</code> の位置を <code>0-indexed</code> で拾い出す。</p>
+<pre><code>vec_a: {0, 1}
+vec_b: {0, 2}
+vec_c: {2, 3}</code></pre>
+<p>はじめ、距離の和 <code>result</code> を $0$、構築する文字列 <code>result2</code> を <code>0000</code> としておく。</p>
+<p>まず $0$ 個目の <code>1</code> を考える。<br>
+$3$ つの位置は $0,0,2$ なので、最小値は $0$、中央値は $0$、最大値は $2$ である。<br>
+中央値の位置 $0$ に <code>1</code> を置き、距離の和に $2-0=2$ を加える。</p>
+<pre><code>result: 2
+result2: 1000</code></pre>
+<p>次に $1$ 個目の <code>1</code> を考える。<br>
+$3$ つの位置は $1,2,3$ なので、最小値は $1$、中央値は $2$、最大値は $3$ である。<br>
+中央値の位置 $2$ に <code>1</code> を置き、距離の和に $3-1=2$ を加える。</p>
+<pre><code>result: 4
+result2: 1010</code></pre>
+<p>よって、最小値として $4$、よい文字列として <code>1010</code> を出力する。</p>
+<h2>注意点</h2>
+<p>距離の和は、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> データ探索系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-c.html">ABC461 C - Variety</a></li>
-        <li><a href="../explanations/abc462-e.html">ABC462 E - Alternating Costs</a></li>
-        <li><a href="../explanations/abc463-d.html">ABC463 D - Maximize the Gap</a></li>
-        <li><a href="../explanations/abc467-e.html">ABC467 E - Adjacent Sums (hard)</a></li>
-        <li><a href="../explanations/abc467-f.html">ABC467 F - Email Scheduling Optimization</a></li>
-        <li><a href="../explanations/abc468-f.html">ABC468 F - Chmax</a></li>
-        <li><a href="../explanations/abc471-c.html">ABC471 C - Cookies and Greedy Takahashi</a></li>
-        <li><a href="../explanations/abc471-f.html">ABC471 F - Concat (maximize)</a></li>
-        <li><a href="../explanations/arc223-a.html">ARC223 A - Unusual-Constraint Knapsack</a></li>
-        <li><a href="../explanations/arc224-b.html">ARC224 B - Adjacent Tiles</a></li>
-        <li><a href="../explanations/arc224-c.html">ARC224 C - Ascending Labels</a></li>
-        <li><a href="../explanations/arc224-d.html">ARC224 D - Angst for All Pairs</a></li>
-        <li><a href="../explanations/arc224-e.html">ARC224 E - ABC|AB|A</a></li>
-        <li><a href="../explanations/arc226-b.html">ARC226 B - Bin-ary Packing</a></li>
-        <li><a href="../explanations/arc227-b.html">ARC227 B - Know Your Place</a></li>
-        <li><a href="../explanations/edpc-x.html">EDPC X - Tower</a></li>
-        <li><a href="../explanations/tdpc-g.html">TDPC G - 辞書順</a></li>
-        <li><a href="../explanations/tdpc-i.html">TDPC I - イウィ</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

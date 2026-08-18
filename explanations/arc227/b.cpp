@@ -23,25 +23,33 @@ int main () {
 
   //////////////////// 処理 ////////////////////
 
-  priority_queue<int,vector<int>,greater<int>> tmp;
-  priority_queue<int> que;
-
+  // 全ての数をカウンティングする
+  vector<int> counters(n,0);
   for (int i : a) {
-    tmp.emplace(i);
+    counters.at(i)++;
   }
-  tmp.emplace(n);
+  
+  // i以下の未使用の数を管理する stack（のつもりの deque）
+  deque<int> que;
 
+  // 前から順に値を決めていく
   for (int i=0; i<n; i++) {
-    while(tmp.top()==i) {
-      que.emplace(i);
-      tmp.pop();
+
+    // i という値があれば、que に全部入れる
+    for (int j=0; j<counters.at(i); j++) {
+      que.emplace_back(i);
     }
+
+    // i 以下の未使用の数がなければ構築不可能
     if (que.empty()) {
       result.clear();
       break;
     }
-    result.emplace_back(que.top());
-    que.pop();
+
+    // i 以下の未使用の数で最大のものを採用する
+    result.emplace_back(que.back());
+    que.pop_back();
+
   }
 
   //////////////////// 出力 ////////////////////
