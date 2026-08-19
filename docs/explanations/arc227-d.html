@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC227 D - Median of Binary Strings</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ARC227 D - Median of Binary Strings</h1>
+      <p class="explanation-title-ja">二進文字列中央値</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc227/tasks/arc227_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc227/submissions/78530827" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>目標文字列 $1$ つを作れる必要十分条件について考える。</p>
+<p>まず、問題を簡略化して、目標は <code>000...00</code> であると仮定してよい。<br>
+目標文字列に <code>1</code> が含まれている場合、全文字列のその位置の <code>0</code> <code>1</code> を入れ替えればよい。<br>
+$S$ 側も含めて全て入れ替えを行うならば、問題としては同等のものとなる。</p>
+<p>まず、$2$ 文字の文字列で考えてみる。<br>
+仮に、<code>01</code> <code>10</code> <code>11</code> と、目標以外の文字列が全てあったとしよう。<br>
+ここから <code>00</code> を作れるかというと、作れない。<br>
+なぜなら、まず、全て異なる $3$ 個を選んだ場合、できるのは <code>11</code> である。<br>
+そして、同じものを $2$ つ使った場合にできる文字列はその $2$ つ使った文字列そのものである。<br>
+よって、どうやっても <code>00</code> になることはない。<br>
+したがって、$2$ 文字の場合に <code>00</code> を作れる必要十分条件は、それが最初からあることである。</p>
+<p>では、次に $3$ 文字の文字列で考えてみる。<br>
+この場合、まず「任意の $2$ ヶ所について、同時に $0$ にする方法がある」が必要条件である。<br>
+つまり、「任意の $2$ ヶ所について、同時に $0$ になっている文字列が $S$ の中にある」が必要条件。<br>
+そして、これは十分条件でもある。</p>
+<p>位置 $i$ から $i+1$ までが <code>00</code> になっている文字列がある。<br>
+位置 $i+1$ から $i+2$ までが <code>00</code> になっている文字列がある。<br>
+そして、位置 $i$ と $i+2$ が両方 <code>0</code> になっている文字列がある。<br>
+これら $3$ つで合成を行うと、位置 $i$ から $i+2$ までが <code>000</code> になっている文字列ができる。</p>
+<p>位置 $i$ から $i+2$ までが <code>000</code> になっている文字列がある。<br>
+位置 $i+1$ から $i+3$ までが <code>000</code> になっている文字列がある。<br>
+そして、位置 $i$ と $i+3$ が両方 <code>0</code> になっている文字列がある。<br>
+これら $3$ つで合成を行うと、位置 $i$ から $i+3$ までが <code>0000</code> になっている文字列ができる。</p>
+<p>同様の操作により連続する <code>0</code> の個数を伸ばしていけば、最終的に全体が <code>0</code> の文字列ができる。<br>
+したがって、「任意の $2$ ヶ所について、同時に $0$ になっている文字列が $S$ の中にある」が必要十分条件。</p>
+<p>目標は <code>000...00</code> であるとした仮定を外しても同様。<br>
+したがって、「任意の $2$ ヶ所について、それらが目標と一致する文字列が $S$ の中にある」が必要十分条件。<br>
+よって、事前に $i,j$ の組 $\frac{M(M-1)}{2}$ 個それぞれ、<code>00</code> <code>01</code> <code>10</code> <code>11</code> の組が存在するか確認しておけばよい。</p>
+<p>ただし、$M=1$ の場合だけは、この議論を適用できない。<br>
+この場合は新しい文字列がどうせ作れないため、「そのものが存在するか」を愚直処理する。</p>
+<p>$M \geq 2$ の場合の計算量は $O((N+Q)M^2)$ である。</p>
+<h2>入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 3
+m: 3
+q: 2
+s: {000, 011, 101}</code></pre>
+<p>まず、各 $2$ 位置の組について、その位置の文字の組が <code>s</code> のどこかに存在するか調べる。</p>
+<p>位置 $0,1$ については、それぞれの文字列から <code>00</code> <code>01</code> <code>10</code> が得られる。<br>
+位置 $0,2$ については、<code>00</code> <code>01</code> <code>11</code> が得られる。<br>
+位置 $1,2$ については、<code>00</code> <code>11</code> <code>01</code> が得られる。</p>
+<p>最初のクエリは <code>000</code> である。<br>
+各位置の組で必要になるのは全て <code>00</code> であり、いずれも <code>s</code> の中に存在する。<br>
+よって、<code>Yes</code> を出力する。</p>
+<p>次のクエリは <code>001</code> である。<br>
+必要な文字の組は、位置 $0,1$ では <code>00</code>、位置 $0,2$ では <code>01</code>、位置 $1,2$ では <code>01</code> である。<br>
+これらはいずれも <code>s</code> の中に存在する。<br>
+よって、<code>Yes</code> を出力する。</p>
+<h2>注意点</h2>
+<p>$M=1$ の場合は、$2$ 位置の組を用いた判定ができない。<br>
+この場合は、「そのものが存在するか」を直接確認する。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/corner-case.html">コーナーケース</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
