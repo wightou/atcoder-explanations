@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC227 C - Follow the Letters</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ARC227 C - Follow the Letters</h1>
+      <p class="explanation-title-ja">文字を追え</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc227/tasks/arc227_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc227/submissions/78535435" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>この問題のポイントは、どんな指示を出そうが人の追い抜きが発生しないこと。<br>
+ということは、島 $1$ の人が島 $N$ の人に後ろから追い付けば、それは $1$ つの島に全員集合している。<br>
+よって、これが可能であるような $S$ の条件を考えてみる。</p>
+<p>島 $N$ の人がなるべく進まない方が嬉しいので、この人が $1$ しか進まないように指示を出すことにする。<br>
+「$N$ 回の指示で島 $N$ からの人がちょうど $1$ 周したとき、他の誰かがちょうど $1$ 周」していたら不可能。<br>
+そうでない場合、$1$ 周ごとに島 $1$ からの人は $N+1$ 個以上進むので、$N-1$ 周以内に追い付く。</p>
+<p>では、「$N$ 回の指示で島 $N$ からの人がちょうど $1$ 周したとき、他の誰かがちょうど $1$ 周」の発生条件は。<br>
+それは、その人の次の島の文字が常に $N$ からの人と同じである場合。<br>
+つまり、$S$ に周期性がある場合である。<br>
+この場合は、$1$ 周期分を同様の方法で $1$ つの島に集合させることまではできる。<br>
+しかし、ちょうど $1$ 周期差の位置にいる人同士は必ず同じマス数進むため、合流は不可能。</p>
+<p>よって、以下のように解けばよい。</p>
+<p>まず、文字列の最短周期を割り出す。<br>
+$1$ 文字から順に、「その文字数差の位置が全て同じ文字の組になっているか」を確認する。<br>
+初めて全て同じ文字の組になっていた文字数が周期長である。<br>
+最終的に $N$ 文字は絶対に判定を通るため、この探索は必ず終了する。<br>
+$N$ を周期長で割った商が周期の反復回数であり、それが $1$ つめに答えるべき $K$ である。 </p>
+<p>次に、合流までの操作列を作る。<br>
+これは、まず $S$ のうち $1$ 周期分だけ取り出し、$N$ の値もそれに揃える。<br>
+島 $N$ にいる人 $F$ と、島 $1$ にいる人 $B$ を用意する。<br>
+$F$ が $1$ マスずつしか進まないように指示を出し、両者の移動をシミュレーションする。<br>
+$F$ と $B$ が同じマスに来るまで繰り返すと、$N(N-1)$ 回以内に操作が終わる。<br>
+こうしてできた文字列の長さが $2$ つめに答える値で、文字列そのものが $3$ つめに答えるもの。</p>
+<p>計算量は $O(N^2)$ である。</p>
+<h2>具体例での動作</h2>
+<p>次の例を考える。</p>
+<pre><code>n: 12
+s: axabxbaxabxb</code></pre>
+<p>まず、文字列の最短周期を調べる。</p>
+<p>$l=1$ では、位置 $0$ と $1$ の文字が <code>a</code> と <code>x</code> で異なるため、周期ではない。</p>
+<p>$l=2$ では、位置 $1$ と $3$ の文字が <code>x</code> と <code>b</code> で異なるため、周期ではない。</p>
+<p>$l=3$ では、位置 $0$ と $3$ の文字が <code>a</code> と <code>b</code> で異なるため、周期ではない。</p>
+<p>$l=4$ は $12$ の約数ではないため、候補にならない。</p>
+<p>$l=5$ も $12$ の約数ではないため、候補にならない。</p>
+<p>$l=6$ では、$6$ 文字差の位置同士が全て同じ文字になっている。</p>
+<p>よって、最短周期は <code>axabxb</code> の $6$ 文字である。<br>
+周期の反復回数は $12/6=2$ なので、$K=2$ となる。</p>
+<p>以後は $1$ 周期分だけを取り出し、次の状態で操作列を構築する。</p>
+<pre><code>n: 6
+s: axabxb</code></pre>
+<p><code>0-indexed</code> で、最前を行く <code>f</code> を $5$、最後尾を行く <code>b</code> を $0$ とする。</p>
+<p>まず <code>f</code> を $1$ 進めて $6$ とする。<br>
+位置 $6\bmod6=0$ の文字は <code>a</code> なので、最初の操作では <code>a</code> を選ぶ。<br>
+<code>b</code> は位置 $0$ から次に <code>a</code> が現れる位置 $2$ まで進む。</p>
+<pre><code>f: 6
+b: 2
+result2: a</code></pre>
+<p>次に <code>f</code> を $1$ 進めて $7$ とする。<br>
+位置 $7\bmod6=1$ の文字は <code>x</code> なので、次の操作では <code>x</code> を選ぶ。<br>
+<code>b</code> は位置 $2$ から次に <code>x</code> が現れる位置 $4$ まで進む。</p>
+<pre><code>f: 7
+b: 4
+result2: ax</code></pre>
+<p>次に <code>f</code> を $1$ 進めて $8$ とする。<br>
+位置 $8\bmod6=2$ の文字は <code>a</code> なので、次の操作では <code>a</code> を選ぶ。<br>
+<code>b</code> は位置 $4$ から次に <code>a</code> が現れる位置 $6$ まで進む。</p>
+<pre><code>f: 8
+b: 6
+result2: axa</code></pre>
+<p>次に <code>f</code> を $1$ 進めて $9$ とする。<br>
+位置 $9\bmod6=3$ の文字は <code>b</code> なので、次の操作では <code>b</code> を選ぶ。<br>
+<code>b</code> は位置 $6$ から次に <code>b</code> が現れる位置 $9$ まで進む。</p>
+<pre><code>f: 9
+b: 9
+result2: axab</code></pre>
+<p><code>f</code> と <code>b</code> が同じ位置になった。<br>
+人同士の追い抜きは発生しないため、この時点で $1$ 周期分の人が同じ島に集合している。</p>
+<p>よって、$K=2$、操作回数 $4$、操作列 <code>axab</code> を出力すればよい。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+<a class="tag" href="../tags/periodicity.html">周期性</a>
+<a class="tag" href="../tags/simulation.html">シミュレーション</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
