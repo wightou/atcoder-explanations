@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TDPC J - ボール</title>
+<title>TDPC K - ターゲット</title>
 <link rel="stylesheet" href="../style.css">
 <script>
 window.MathJax = {
@@ -29,82 +29,34 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <div class="explanation-heading">
-      <h1>TDPC J - ボール</h1>
+      <h1>TDPC K - ターゲット</h1>
       
     </div>
-    <div class="auto-links"><a href="https://atcoder.jp/contests/tdpc/tasks/tdpc_ball" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/tdpc/submissions/78569767" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/tdpc/tasks/tdpc_target" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/tdpc/submissions/78577488" target="_blank" rel="noopener noreferrer">解答例</a></div>
     <h2>考え方</h2>
 <p>ABCでいうと、E問題級。</p>
-<p>bitDPによる期待値DP。<br>
-初期条件で的が歯抜けになっているが、位置が最大 $16$ しかないので、普通に bitDP しても間に合う。</p>
-<p>各状態に対して、各位置を狙った場合の期待値の中の最小値を採用すればよい。<br>
-各位置を狙った場合の期待値は、自己遷移を含む期待値の式を立てれば求められる。</p>
-<p>近隣 $3$ つのうち的がある位置の個数を $C$ とする。<br>
-それらの的に当たった後の期待値の合計を $S$ とする。<br>
-今の状態から、いずれかの的に当たるまではこの位置を狙い続ける場合の期待値を $E$ とする。</p>
-<p>的に当たる確率は $C/3$。<br>
-的がない位置に飛んだ場合は状態が変わらず、その確率は $(3-C)/3$ である。<br>
-よって、次の式が成り立つ。</p>
-<p>$$<br>
-E<br>
-=<br>
-1<br>
-+<br>
-\frac{S}{3}<br>
-+<br>
-\frac{3-C}{3}E<br>
-$$</p>
-<p>これを整理すると、</p>
-<p>$$<br>
-\frac{C}{3}E<br>
-=<br>
-1+\frac{S}{3}<br>
-$$</p>
-<p>なので、</p>
-<p>$$<br>
-E<br>
-=<br>
-\frac{3+S}{C}<br>
-$$</p>
-<p>となる。</p>
-<p>あとは、前述のとおり、各位置を狙った場合の期待値の最小値を採用すればよい。<br>
-ただし、近隣 $3$ つに的がない場合は、$0$ 除算が発生する前にスキップ処理すること。</p>
-<p>最後に、$x$ を見て初期状態に対応する情報を答えればよい。</p>
-<p>考慮する位置の個数を $M$ とすると、計算量は $O(2^M M)$ である。</p>
+<p>同時に採用できる円は、円の左端と右端で大小関係が逆転しているものである。<br>
+つまり、左端が大きい順にソートして、右端の最長増加部分列の長さを求めれば答え。</p>
+<p>ただし、入力には左端や右端が同じであるものが含まれるため、これらを適切に処理しなければならない。<br>
+左端が同じ場合、最初のソートのタイブレークで右端が大きい順になるようにすればよい。<br>
+右端については、最長増加部分列を求めるときに、一致するものは採用しないようにすればよい。</p>
+<p>計算量は $O(N\log N)$ である。</p>
 <h2>入力例1での動作</h2>
 <p>入力を受け取る。</p>
-<pre><code>n: 2
-x: {0, 2}</code></pre>
-<p>考慮する位置は $0,1,2$ の $3$ つなので、<code>m = 3</code> となる。<br>
-各位置に的が残っているかどうかを $3$ ビットで表す。</p>
-<p>的がない状態では、残りの投球回数は $0$ なので <code>dp[0] = 0</code> となる。</p>
-<p>位置 $0$ の的だけが残っている状態を考える。<br>
-位置 $1$ を狙うと、位置 $0$ に飛ぶ確率は $1/3$ である。<br>
-位置 $1,2$ に飛んだ場合は状態が変化しない。</p>
-<p>このとき、$C=1$、$S=0$ なので、</p>
-<p>$$<br>
-dp[1]<br>
-=<br>
-\frac{3+0}{1}<br>
-=<br>
-3<br>
-$$</p>
-<p>となる。</p>
-<p>同様に、位置 $2$ の的だけが残っている状態でも <code>dp[4] = 3</code> となる。</p>
-<p>初期状態では位置 $0,2$ に的があるので、ビット表現は <code>101</code> となる。<br>
-位置 $1$ を狙うと、どちらかの的に当たる確率は $2/3$ である。</p>
-<p>このとき、$C=2$。<br>
-どちらかの的に当たった後の期待値は、それぞれ $3$ である。<br>
-よって、$S=3+3=6$ となる。</p>
-<p>したがって、</p>
-<p>$$<br>
-dp[5]<br>
-=<br>
-\frac{3+6}{2}<br>
-=<br>
-4.5<br>
-$$</p>
-<p>となるので、答えは $4.5$。</p>
+<pre><code>n: 3
+x: {1, 0, 3}
+r: {1, 3, 2}</code></pre>
+<p>各円について、左端を $x-r$、右端を $x+r$ とする。</p>
+<pre><code>円1: (0, 2)
+円2: (-3, 3)
+円3: (1, 5)</code></pre>
+<p>左端が大きい順にソートする。</p>
+<pre><code>(1, 5), (0, 2), (-3, 3)</code></pre>
+<p>右端だけを取り出すと、次の数列になる。</p>
+<pre><code>vec: {5, 2, 3}</code></pre>
+<p>この数列の最長増加部分列の長さは $2$ である。<br>
+例えば、$2,3$ を採用できる。</p>
+<p>したがって、作れるターゲットの最大サイズは $2$ となる。</p>
 <h2>注意点</h2>
 <p>特になし。</p>
 <h2>別解</h2>
@@ -115,9 +67,7 @@ $$</p>
     <section class="side-card">
       <h2>タグ</h2>
       <div class="tags">
-        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
-<a class="tag" href="../tags/bit-dp.html">bitDP</a>
-<a class="tag" href="../tags/expected-value.html">期待値</a>
+        <a class="tag" href="../tags/lis.html">最長増加部分列</a>
       </div>
       <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
