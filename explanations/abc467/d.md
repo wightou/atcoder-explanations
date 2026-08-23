@@ -59,8 +59,6 @@ $\overrightarrow{PQ}=(-1,1)$、$\overrightarrow{RS}=(2,2)$ である。
 result: "Yes"
 ```
 
-`result` を出力する。
-
 $2$ つめのテストケースを受け取る。
 
 ```
@@ -81,8 +79,6 @@ $\overrightarrow{PQ}=(-2,0)$、$\overrightarrow{RS}=(0,-2)$ である。
 ```
 result: "Yes"
 ```
-
-`result` を出力する。
 
 $3$ つめのテストケースを受け取る。
 
@@ -112,9 +108,7 @@ $\overrightarrow{PQ}=(-1,1)$、$\overrightarrow{RS}=(-1,1)$ である。
 result: "No"
 ```
 
-`result` を出力する。
-
-以上より、順に `"Yes"`、`"Yes"`、`"No"` と出力すればよい。
+以上より、$3$ つのテストケースの答えは順に `"Yes"`、`"Yes"`、`"No"` である。
 
 ## 注意点
 

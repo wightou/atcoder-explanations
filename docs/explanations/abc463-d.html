@@ -54,66 +54,56 @@ r: {12, 7, 9, 13, 18, 20}</code></pre>
 達成できる値の下限 <code>inside</code> を $0$、達成できない値の上限 <code>outside</code> を $20-2 = 18$ で初期化する。</p>
 <pre><code>inside: 0
 outside: 18</code></pre>
-<p>まず、$x=9$ を達成できるか確認する。<br>
-右端が最も小さい布 <code>(7,2)</code> を選ぶ。<br>
-次に選ぶ布は、左端が $7+9=16$ 以上である必要がある。</p>
-<pre><code>vec: {(7,2), (9,5), (12,1), (13,9), (18,10), (20,15)}
-x: 9
-border: 16
-counter: 1</code></pre>
-<p>左端が $16$ 以上である布は残っていないので、$1$ 枚しか選べない。<br>
-$k=3$ 枚以上選べないので、$x=9$ は達成できない。<br>
-<code>outside</code> を $9$ に更新する。</p>
-<pre><code>inside: 0
-outside: 9</code></pre>
-<p>次に、$x=4$ を達成できるか確認する。<br>
-右端が最も小さい布 <code>(7,2)</code> を選ぶ。<br>
-次に選ぶ布は、左端が $7+4=11$ 以上である必要がある。</p>
-<pre><code>vec: {(7,2), (9,5), (12,1), (13,9), (18,10), (20,15)}
-x: 4
-border: 11
-counter: 1</code></pre>
-<p>布 <code>(20,15)</code> を選べる。<br>
-これで $2$ 枚選べたが、$k=3$ 枚に足りていないので、$x=4$ は達成できない。<br>
-<code>outside</code> を $4$ に更新する。</p>
-<pre><code>inside: 0
-outside: 4</code></pre>
-<p>次に、$x=2$ を達成できるか確認する。<br>
-右端が最も小さい布 <code>(7,2)</code> を選ぶ。<br>
-次に選ぶ布は、左端が $7+2=9$ 以上である必要がある。</p>
-<pre><code>vec: {(7,2), (9,5), (12,1), (13,9), (18,10), (20,15)}
-x: 2
-border: 9
-counter: 1</code></pre>
-<p>布 <code>(13,9)</code> を選べる。<br>
-次に選ぶ布は、左端が $13+2=15$ 以上である必要がある。</p>
-<pre><code>border: 15
-counter: 2</code></pre>
-<p>布 <code>(20,15)</code> を選べる。<br>
-これで $3$ 枚選べたので、$x=2$ は達成できる。<br>
-<code>inside</code> を $2$ に更新する。</p>
-<pre><code>border: 22
-counter: 3
-inside: 2
-outside: 4</code></pre>
-<p>次に、$x=3$ を達成できるか確認する。<br>
-右端が最も小さい布 <code>(7,2)</code> を選ぶ。<br>
-次に選ぶ布は、左端が $7+3=10$ 以上である必要がある。</p>
-<pre><code>vec: {(7,2), (9,5), (12,1), (13,9), (18,10), (20,15)}
-x: 3
-border: 10
-counter: 1</code></pre>
-<p>布 <code>(18,10)</code> を選べる。<br>
-次に選ぶ布は、左端が $18+3=21$ 以上である必要がある。</p>
-<pre><code>border: 21
-counter: 2</code></pre>
-<p>左端が $21$ 以上である布は残っていないので、$2$ 枚しか選べない。<br>
-$k=3$ 枚以上選べないので、$x=3$ は達成できない。</p>
-<pre><code>inside: 2
-outside: 3</code></pre>
+<p>各 $x$ について、右端が小さい布から貪欲に選ぶ。<br>
+$1$ 枚選んだ後は、その布の右端に $x$ を足した値を <code>border</code> とする。<br>
+そして、左端が <code>border</code> 以上である最初の布を次に選ぶ。</p>
+<p>二分探索中の処理は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$x$</th>
+<th>貪欲に選ばれる布</th>
+<th><code>border</code> の推移</th>
+<th class="table-align-right" style="text-align: right;">枚数</th>
+<th>判定</th>
+<th>更新後 <code>(inside, outside)</code></th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">9</td>
+<td><code>(7,2)</code></td>
+<td>$16$</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td>x</td>
+<td><code>(0, 9)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">4</td>
+<td><code>(7,2), (20,15)</code></td>
+<td>$11 \to 24$</td>
+<td class="table-align-right" style="text-align: right;">2</td>
+<td>x</td>
+<td><code>(0, 4)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">2</td>
+<td><code>(7,2), (13,9), (20,15)</code></td>
+<td>$9 \to 15 \to 22$</td>
+<td class="table-align-right" style="text-align: right;">3</td>
+<td>o</td>
+<td><code>(2, 4)</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">3</td>
+<td><code>(7,2), (18,10)</code></td>
+<td>$10 \to 21$</td>
+<td class="table-align-right" style="text-align: right;">2</td>
+<td>x</td>
+<td><code>(2, 3)</code></td>
+</tr>
+</tbody>
+</table></div>
 <p><code>inside</code> と <code>outside</code> の差が $1$ になったので、二分探索を終了する。<br>
-達成できる最大のスコアは $2$ である。</p>
-<p>よって、<code>2</code> を出力する。</p>
+達成できる最大のスコアは <code>inside</code> の $2$ である。</p>
 <h2>注意点</h2>
 <p>特になし。</p>
 <h2>別解</h2>

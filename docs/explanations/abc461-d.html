@@ -70,42 +70,68 @@ s {&quot;1001&quot;,
 vec[3]: &quot;0, 2, 4, 5, 7&quot;
 diff  : &quot;0, 1, 3, 4, 5&quot;,</code></pre>
 <p>尺取法を行う。<br>
-ただし、左側は <code>diff[r]-k</code>「未満」で動く <code>l1</code> と、 <code>diff[r]-k</code>「以下」で動く <code>l2</code> を用意する。<br>
-<code>r</code> が $0$ とすると、<code>diff[r]</code> は $0$ で、$0-k = -3$。<br>
-<code>l1</code> は $0$ まで、<code>l2</code> は $0$ まで進み、その差は $0$。<br>
-よって結果に $0$ を加算。</p>
-<pre><code>diff  : &quot;0, 1, 3, 4, 5&quot;,
-r : 0
-l1: 0
-l2: 0</code></pre>
-<p><code>r</code> が $1$ とすると、<code>diff[r]</code> は $1$ で、$1-k = -2$。<br>
-<code>l1</code> は $0$ まで、<code>l2</code> は $0$ まで進み、その差は $0$。<br>
-よって結果に $0$ を加算。</p>
-<pre><code>diff  : &quot;0, 1, 3, 4, 5&quot;,
-r : 1
-l1: 0
-l2: 0</code></pre>
-<p><code>r</code> が $2$ とすると、<code>diff[r]</code> は $3$ で、$3-k = 0$。<br>
-<code>l1</code> は $0$ まで、<code>l2</code> は $1$ まで進み、その差は $1$。<br>
-よって結果に $1$ を加算。</p>
-<pre><code>diff  : &quot;0, 1, 3, 4, 5&quot;,
-r : 2
-l1: 0
-l2: 1</code></pre>
-<p><code>r</code> が $3$ とすると、<code>diff[r]</code> は $4$ で、$4-k = 1$。<br>
-<code>l1</code> は $1$ まで、<code>l2</code> は $2$ まで進み、その差は $1$。<br>
-よって結果に $1$ を加算。</p>
-<pre><code>diff  : &quot;0, 1, 3, 4, 5&quot;,
-r : 3
-l1: 1
-l2: 2</code></pre>
-<p><code>r</code> が $4$ とすると、<code>diff[r]</code> は $5$ で、$5-k = 2$。<br>
-<code>l1</code> は $2$ まで、<code>l2</code> は $2$ まで進み、その差は $0$。<br>
-よって結果に $0$ を加算。</p>
-<pre><code>diff  : &quot;0, 1, 3, 4, 5&quot;,
-r : 4
-l1: 2
-l2: 2</code></pre>
+<code>l1</code> は <code>diff[l1] &lt; diff[r]-k</code> である要素を飛ばした直後を表す。<br>
+<code>l2</code> は <code>diff[l2] &lt;= diff[r]-k</code> である要素を飛ばした直後を表す。<br>
+したがって、<code>l2-l1</code> が <code>diff[r]-diff[l]=k</code> となる左端 <code>l</code> の個数である。</p>
+<p>各 <code>r</code> でのポインタの動きは次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;"><code>r</code></th>
+<th class="table-align-right" style="text-align: right;"><code>diff[r]</code></th>
+<th class="table-align-right" style="text-align: right;"><code>diff[r]-k</code></th>
+<th class="table-align-right" style="text-align: right;"><code>l1</code></th>
+<th class="table-align-right" style="text-align: right;"><code>l2</code></th>
+<th class="table-align-right" style="text-align: right;"><code>l2-l1</code></th>
+<th class="table-align-right" style="text-align: right;">この <code>r</code> での加算</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">-3</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-right" style="text-align: right;">-2</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">2</td>
+<td class="table-align-right" style="text-align: right;">3</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">3</td>
+<td class="table-align-right" style="text-align: right;">4</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-right" style="text-align: right;">2</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+<td class="table-align-right" style="text-align: right;">1</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">4</td>
+<td class="table-align-right" style="text-align: right;">5</td>
+<td class="table-align-right" style="text-align: right;">2</td>
+<td class="table-align-right" style="text-align: right;">2</td>
+<td class="table-align-right" style="text-align: right;">2</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table></div>
 <p><code>vec[1]</code> と <code>vec[3]</code> を選んだ場合、結果は $2$ だけ加算された。<br>
 全ての $2$ 行の組の選び方について同じことを行うと、答えは $8$ となる。</p>
 <h2>注意点</h2>
