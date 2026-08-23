@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC472 C - On a Diet</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC472 C - On a Diet</h1>
+      <p class="explanation-title-ja">ダイエット</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc472/tasks/abc472_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc472/submissions/78642916" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>まず、愚直に考える。<br>
+毎日、直前 $M-1$ 日の摂取カロリー合計を求め、それに今日の分を足して $K$ を超えるか判定する。<br>
+超えるなら食べない、超えないなら食べる、という処理をすればよい。<br>
+これで、$O(NM)$ でなら解けるが、大きい入力だと <code>TLE</code> してしまう。</p>
+<p>そこで、sliding window法で高速化する。<br>
+最初のうちは、毎日の判定後に今日の摂取カロリーを加えれば、次の日の判定基準となる。<br>
+$M+1$ 日目から先は、それに加えて判定前にちょうど $M$ 日前の摂取カロリーを引く。<br>
+こうすると判定基準の「直前 $M-1$ 日の摂取カロリー合計」が足し算と引き算 $1$ 回ずつで求まり、高速。<br>
+全体で計算量は $O(N)$ となる。</p>
+<p>食べなかったという情報の持ち方は様々ある。<br>
+食べなかった時には <code>A</code> を $0$ に書き換えて $0$ カロリー食べたことにしてしまうのが、分岐が減って楽。</p>
+<h2>入力例1での動作</h2>
+<p>$N=5$, $M=3$, $K=83$ で、$A=(48,73,59,90,21)$ である。<br>
+<code>sum</code> は、今日の判定直前に「直前 $M-1$ 日で実際に食べたおやつのカロリー合計」を表す。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">日</th>
+<th class="table-align-right" style="text-align: right;">判定前の <code>sum</code></th>
+<th class="table-align-right" style="text-align: right;">今日を食べると</th>
+<th>判定</th>
+<th class="table-align-right" style="text-align: right;">判定後の <code>sum</code></th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0+48=48$</td>
+<td>$83$ 以下なので食べる</td>
+<td class="table-align-right" style="text-align: right;">$48$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$48$</td>
+<td class="table-align-right" style="text-align: right;">$48+73=121$</td>
+<td>$83$ を超えるので食べず、$A_2=0$ にする</td>
+<td class="table-align-right" style="text-align: right;">$48$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$48$</td>
+<td class="table-align-right" style="text-align: right;">$48+59=107$</td>
+<td>$83$ を超えるので食べず、$A_3=0$ にする</td>
+<td class="table-align-right" style="text-align: right;">$48$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$48-48=0$</td>
+<td class="table-align-right" style="text-align: right;">$0+90=90$</td>
+<td>$83$ を超えるので食べず、$A_4=0$ にする</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$0-0=0$</td>
+<td class="table-align-right" style="text-align: right;">$0+21=21$</td>
+<td>$83$ 以下なので食べる</td>
+<td class="table-align-right" style="text-align: right;">$21$</td>
+</tr>
+</tbody>
+</table></div>
+<p>処理後の <code>A</code> は $(48,0,0,0,21)$ となる。<br>
+正の値なら <code>Yes</code>、$0$ なら <code>No</code> と出力するので、順に <code>Yes</code>, <code>No</code>, <code>No</code>, <code>No</code>, <code>Yes</code> となる。</p>
+<h2>注意点</h2>
+<p>$K$ と、直前の日々で食べたおやつのカロリー合計は、<code>int</code> 型からはみ出る場合がある。<br>
+<code>long long</code> 型を用いること。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/sliding-window.html">sliding window法</a>
+<a class="tag" href="../tags/simulation.html">シミュレーション</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

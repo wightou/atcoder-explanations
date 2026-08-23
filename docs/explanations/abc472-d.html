@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC472 D - Bomber Mad</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC472 D - Bomber Mad</h1>
+      <p class="explanation-title-ja">爆破狂</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc472/tasks/abc472_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc472/submissions/78642925" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>やや特殊な迷路問題。<br>
+とはいえやることは単純で、以下を順に実行すればよい。</p>
+<ul>
+<li>全てのマスを見て、爆弾が $1$ つも存在しない安全な行と列を列挙する</li>
+<li>全てのマスを見て、行も列も安全なら、そこを安全マスとして記録する</li>
+<li>安全マス全てを始点とする多始点幅優先探索で、各マスから最寄りの安全マスまでの距離を求める</li>
+<li>全てのマスを見て、最寄りの安全マスまでの距離が $K$ 以下であるマスの数を愚直に数える</li>
+</ul>
+<p>安全マスを求めるのに、毎回縦横のマスをチェックすると $O(HW(H+W))$ かかってしまう。<br>
+$1$ つめと $2$ つめを別作業にして計算量を $O(HW)$ にするのがポイント。<br>
+そこさえ気づければ、あとは実装力勝負。</p>
+<p>全体の計算量は $O(HW)$ である。</p>
+<h2>入力例3での動作</h2>
+<p>入力のグリッドは次の通りで、$K=2$ である。</p>
+<pre><code>..#....
+..#....
+.......
+...#...
+...#...</code></pre>
+<p>爆弾が存在しない行は $3$ 行目だけである。<br>
+爆弾が存在しない列は $1,2,5,6,7$ 列目なので、安全マスは<br>
+$(3,1),(3,2),(3,5),(3,6),(3,7)$ の $5$ マスとなる。</p>
+<p>この $5$ マスを全て距離 $0$ として多始点幅優先探索を行う。<br>
+各マスから最寄りの安全マスまでの距離は次のようになる。<code>#</code> は爆弾マスである。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th class="table-align-right" style="text-align: right;">$1$ 列</th>
+<th class="table-align-right" style="text-align: right;">$2$ 列</th>
+<th class="table-align-center" style="text-align: center;">$3$ 列</th>
+<th class="table-align-right" style="text-align: right;">$4$ 列</th>
+<th class="table-align-right" style="text-align: right;">$5$ 列</th>
+<th class="table-align-right" style="text-align: right;">$6$ 列</th>
+<th class="table-align-right" style="text-align: right;">$7$ 列</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$1$ 行</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;"><code>#</code></td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<td>$2$ 行</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;"><code>#</code></td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td>$3$ 行</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-center" style="text-align: center;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<td>$4$ 行</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;">$2$</td>
+<td class="table-align-right" style="text-align: right;"><code>#</code></td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td>$5$ 行</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;">$3$</td>
+<td class="table-align-right" style="text-align: right;"><code>#</code></td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+</tbody>
+</table></div>
+<p>空マスは全部で $31$ マスあり、このうち距離が $2$ 以下なのは $(1,4)$ と $(5,3)$ 以外の全てである。<br>
+したがって、条件を満たすマスは $29$ マスである。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/bfs.html">幅優先探索</a>
+<a class="tag" href="../tags/adjacency-list.html">隣接リスト</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC472 E - Odd Cycle</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC472 E - Odd Cycle</h1>
+      <p class="explanation-title-ja">奇数長閉路</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc472/tasks/abc472_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc472/submissions/78642931" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <h2>考え方</h2>
+<p>「奇数長の閉路が存在するか？」は「二部グラフとして破綻しているか」と同値。<br>
+よって、判定だけなら何らかの二部グラフ判定方法を実行すればよい。<br>
+しかし、今回の問題ではその閉路を $1$ つ答えなければならず、判定方法によってはそちらが困難になる。</p>
+<p>そこで、幅優先探索と最近共通祖先の考え方を用いる。</p>
+<p>まず、幅優先探索を用いて、グラフ上に根付き木を作る。<br>
+つまり、ある頂点を基準に、各頂点からその頂点へ向かう最短路を考える。<br>
+そして、「基準点までに経由する辺の数」「最短路で次に行くべき頂点」を記録しておく。</p>
+<p>さて、根付き木の距離情報が偶数である頂点を白、奇数である頂点を黒で塗ると考える。<br>
+元々のグラフに奇数長の閉路があった場合、パリティの都合でどこかで同じ色同士が辺で結ばれている。<br>
+もちろん、その辺は根付き木には採用されなかった辺ということになるのだが。</p>
+<p>そして、ここで、幅優先探索で作った根付き木の性質が意味を持つ。<br>
+幅優先探索では、元々のグラフの全ての辺は、必ず結ぶ頂点の距離情報の差が $1$ 以下となっている。<br>
+ということは、同じ色同士が辺で結ばれているところは、全く同じ距離の点同士を結んでいることになる。</p>
+<p>さて、それを $X_1$ と $Y_1$ としよう。<br>
+それらから最短路で基準点に $1$ つずつ移動した点を $X_2$ と $Y_2$ とする。<br>
+以下同様に、$X_k$ と $Y_k$ と名付けていくと、どこかで最近共通祖先 $Z$ で両者が一致する。<br>
+（根付き木上で同じ深さからスタートしているため、通常の最近共通祖先の高度なアルゴリズムは不要）</p>
+<p>このとき、$Z-X_1$ 間と $Z-Y_1$ 間には同じ長さの経路が存在する。<br>
+そして、 $X_1-Y_1$ 間には長さ $1$ の経路が存在する。<br>
+したがって、これら $3$ つの経路をぐるりと回れば奇数長閉路の一例ができることになる。</p>
+<p>計算量は、$O(N+M)$ である。</p>
+<h2>具体例での動作</h2>
+<p>次の $1$ テストケースを考える。</p>
+<pre><code>1
+7 7
+1 2
+2 3
+2 6
+3 4
+4 5
+5 6
+5 7</code></pre>
+<p><img src="abc472/e.png" alt="実際のグラフ"></p>
+<p>頂点 $1$ を根として幅優先探索すると、距離と親は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">頂点</th>
+<th class="table-align-right" style="text-align: right;">距離</th>
+<th class="table-align-right" style="text-align: right;">親</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">なし</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+</tbody>
+</table></div>
+<p>入力された辺を順に調べると、辺 $(4,5)$ の両端はどちらも距離 $3$ である。<br>
+同じ距離の頂点同士を結んでいる辺として、これを用いて閉路を構築する。</p>
+<p>$X_1=4$, $Y_1=5$ とする。<br>
+両方から親を同時にたどると、</p>
+<ul>
+<li>$4,5$ から $3,6$ へ進む</li>
+<li>$3,6$ から $2,2$ へ進み、頂点 $2$ で一致する</li>
+</ul>
+<p>ので、最近共通祖先は頂点 $2$ である。</p>
+<p>コードでは $4$ 側を答えの前側、$5$ 側を後ろ側へ追加していくため、頂点列は $2,3,4,5,6$ となる。</p>
+<h2>注意点</h2>
+<p>特になし。</p>
+<h2>別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/bfs.html">幅優先探索</a>
+<a class="tag" href="../tags/adjacency-list.html">隣接リスト</a>
+<a class="tag" href="../tags/rooted-tree.html">根付き木</a>
+<a class="tag" href="../tags/bipartite-graph.html">二部グラフ</a>
+<a class="tag" href="../tags/parity.html">パリティ</a>
+<a class="tag" href="../tags/lca.html">最近共通祖先</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
