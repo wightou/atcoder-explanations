@@ -85,9 +85,14 @@ C++20以降なら、<code>ssize(s)</code> で直接に符号付きで長さを�
 <p><code>s&lt;t</code> で、辞書順で <code>s</code> が <code>t</code> より前かどうかを判定する。<br>
 すなわち、以下のように判定する。</p>
 <ul>
-<li>前から順に、初めて同じ位置に異なる文字があるところを探す</li>
-<li>その異なった場所で <code>s</code> の方が前であるかを判定する。</li>
-<p>  - 前であるとは、ASCIIコードが小さいか、文字列がもう終了していること</p>
+<li>前から順に、初めて同じ位置に異なる文字があるところを探す
+</li>
+<li>その異なった場所で <code>s</code> の方が前であるかを判定する。
+<ul>
+<li>前であるとは、ASCIIコードが小さいか、文字列がもう終了していること
+</li>
+</ul>
+</li>
 </ul>
 <p>逆向きの <code>&gt;</code> も使える。<br>
 <code>&lt;=</code> や <code>&gt;=</code> も使える。</p>
@@ -133,8 +138,10 @@ $5$ 文字くらいなら直接書いた方が早いが、$100$ 文字並べる�
 短くする場合は後ろを削除し、長くする場合は後ろを指定文字で埋める。<br>
 例えば <code>s</code> の中身が <code>&quot;abcde&quot;</code> である場合、以下のようになる。</p>
 <ul>
-<li><code>s.resize(3)</code> なら <code>&quot;abc&quot;</code> になる</li>
-<li><code>s.resize(8,&#x27;x&#x27;)</code> なら <code>&quot;abcdexxx&quot;</code> になる</li>
+<li><code>s.resize(3)</code> なら <code>&quot;abc&quot;</code> になる
+</li>
+<li><code>s.resize(8,&#x27;x&#x27;)</code> なら <code>&quot;abcdexxx&quot;</code> になる
+</li>
 </ul>
 <h4>交換 <code>.swap(別の文字列変数)</code></h4>
 <p><code>s.swap(t);</code> で、<code>s</code> と <code>t</code> の中身が入れ替わる。<br>

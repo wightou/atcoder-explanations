@@ -193,6 +193,9 @@ related:
   - 対応色: `red`, `coral`, `orange`, `amber`, `yellow`, `olive`, `lime`, `green`, `emerald`, `teal`, `cyan`, `blue`, `navy`, `indigo`, `violet`, `purple`, `magenta`, `rose`, `pink`, `brown`, `gray`, `black`
   - 未対応の色名は変換されず、`{色名}` がそのまま表示されます。
   - 色だけに説明を依存させず、必要なら本文で色の意味も説明します。
+- Markdown の箇条書きは複数階層に対応しています。
+  - `- parent` の下に `  - child` のように2スペース以上インデントすると子階層として扱います。
+  - 表示記号は1階層目が黒丸、2階層目が白丸、3階層目以降が四角です。
 - Markdown画像記法に対応しています。
   - 例: `explanations/abc463/e.md` から同じディレクトリの `e1.png` を使う場合、本文に `![説明](e1.png)` と書きます。
   - 生成時に `docs/explanations/abc463/e1.png` へコピーし、HTML側の参照パスを自動補正します。

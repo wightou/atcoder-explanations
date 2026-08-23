@@ -39,29 +39,43 @@ window.MathJax = {
 そのため、現在の勝利数が $W-2$ 以下の選手は優勝できない。</p>
 <p>そこで、選手を次の $3$ 種類に分類する。</p>
 <ul>
-<li><code>t</code>: 現在の勝利数が $W$ の選手</li>
-<li><code>s</code>: 現在の勝利数が $W-1$ の選手</li>
-<li><code>o</code>: 現在の勝利数が $W-2$ 以下の選手</li>
+<li><code>t</code>: 現在の勝利数が $W$ の選手
+</li>
+<li><code>s</code>: 現在の勝利数が $W-1$ の選手
+</li>
+<li><code>o</code>: 現在の勝利数が $W-2$ 以下の選手
+</li>
 </ul>
 <p><code>o</code> の選手自身は既に優勝の可能性が存在しない。</p>
 <p>最後の試合を、出場する選手の種類の組によって分類する。</p>
 <ul>
-<li><code>tt</code>: <code>t</code> 同士の試合</li>
-<li><code>ts</code>: <code>t</code> と <code>s</code> の試合</li>
-<li><code>ss</code>: <code>s</code> 同士の試合</li>
-<li><code>to</code>: <code>t</code> と <code>o</code> の試合</li>
-<li><code>so</code>: <code>s</code> と <code>o</code> の試合</li>
+<li><code>tt</code>: <code>t</code> 同士の試合
+</li>
+<li><code>ts</code>: <code>t</code> と <code>s</code> の試合
+</li>
+<li><code>ss</code>: <code>s</code> 同士の試合
+</li>
+<li><code>to</code>: <code>t</code> と <code>o</code> の試合
+</li>
+<li><code>so</code>: <code>s</code> と <code>o</code> の試合
+</li>
 </ul>
 <p><code>o</code> 同士の試合は、誰が勝っても優勝争いに関係しないので処理の必要はない。</p>
 <p>それぞれの種類の試合に出ている選手は、同じ立場なら同じ優勝確率になる。<br>
 そのため、次の $6$ 種類の優勝確率をそれぞれ計算し、出力は後でまとめて生成すればよい。</p>
 <ul>
-<li><code>ptt</code>: <code>tt</code> の選手</li>
-<li><code>pts</code>: <code>ts</code> の <code>t</code> 側の選手</li>
-<li><code>pst</code>: <code>ts</code> の <code>s</code> 側の選手</li>
-<li><code>pss</code>: <code>ss</code> の選手</li>
-<li><code>pto</code>: <code>to</code> の <code>t</code> 側の選手</li>
-<li><code>pso</code>: <code>so</code> の <code>s</code> 側の選手</li>
+<li><code>ptt</code>: <code>tt</code> の選手
+</li>
+<li><code>pts</code>: <code>ts</code> の <code>t</code> 側の選手
+</li>
+<li><code>pst</code>: <code>ts</code> の <code>s</code> 側の選手
+</li>
+<li><code>pss</code>: <code>ss</code> の選手
+</li>
+<li><code>pto</code>: <code>to</code> の <code>t</code> 側の選手
+</li>
+<li><code>pso</code>: <code>so</code> の <code>s</code> 側の選手
+</li>
 </ul>
 <p>まず、<code>tt</code>、<code>ts</code>、<code>ss</code>、<code>to</code>、<code>so</code> の個数を数える。<br>
 同時に、各選手が上の $6$ 種類のどれに属するかを、どこかに記録しておく。</p>

@@ -849,11 +849,60 @@ def render_markdown_table(table_lines: list[str]) -> str:
     return "\n".join(out)
 
 
-def fallback_markdown_to_html(md: str) -> str:
+def normalize_unordered_list_indentation(md: str) -> str:
+    """箇条書きのインデント幅を階層として解釈し、4スペース単位へ正規化する。
+
+    `  - child` と `    - child` のどちらも、直前の浅い項目より1段深い
+    箇条書きとして扱う。コードブロック内は変更しない。
+    """
     lines = md.splitlines()
     out: list[str] = []
+    indent_stack: list[int] = []
+    in_code = False
+
+    for line in lines:
+        if line.startswith("```"):
+            in_code = not in_code
+            indent_stack = []
+            out.append(line)
+            continue
+
+        if in_code:
+            out.append(line)
+            continue
+
+        match = re.match(r"^(?P<indent>[ \t]*)-(?P<space>\s+)(?P<body>.*)$", line)
+        if match is None:
+            if line.strip():
+                indent_stack = []
+            out.append(line)
+            continue
+
+        indent = len(match.group("indent").expandtabs(4))
+        if not indent_stack:
+            indent_stack = [indent]
+        elif indent > indent_stack[-1]:
+            indent_stack.append(indent)
+        elif indent < indent_stack[-1]:
+            while len(indent_stack) > 1 and indent < indent_stack[-1]:
+                indent_stack.pop()
+            if indent != indent_stack[-1]:
+                if indent > indent_stack[-1]:
+                    indent_stack.append(indent)
+                else:
+                    indent_stack = [indent]
+
+        depth = len(indent_stack) - 1
+        out.append(" " * (4 * depth) + "- " + match.group("body"))
+
+    return "\n".join(out)
+
+
+def fallback_markdown_to_html(md: str) -> str:
+    lines = normalize_unordered_list_indentation(md).splitlines()
+    out: list[str] = []
     para: list[str] = []
-    in_ul = False
+    list_depth = -1
     in_code = False
     code_lines: list[str] = []
     i = 0
@@ -865,10 +914,16 @@ def fallback_markdown_to_html(md: str) -> str:
             para = []
 
     def close_ul() -> None:
-        nonlocal in_ul
-        if in_ul:
+        nonlocal list_depth
+        if list_depth < 0:
+            return
+        out.append("</li>")
+        while list_depth > 0:
             out.append("</ul>")
-            in_ul = False
+            out.append("</li>")
+            list_depth -= 1
+        out.append("</ul>")
+        list_depth = -1
 
     while i < len(lines):
         line = lines[i]
@@ -921,12 +976,32 @@ def fallback_markdown_to_html(md: str) -> str:
             i += 1
             continue
 
-        if line.startswith("- "):
+        list_item = re.match(r"^(?P<indent> *)(?:-)\s+(?P<body>.*)$", line)
+        if list_item:
             flush_para()
-            if not in_ul:
+            depth = len(list_item.group("indent")) // 4
+            body = render_inline(list_item.group("body").strip())
+
+            if list_depth < 0:
                 out.append("<ul>")
-                in_ul = True
-            out.append("<li>" + render_inline(line[2:].strip()) + "</li>")
+                list_depth = 0
+                out.append("<li>" + body)
+            elif depth > list_depth:
+                while list_depth < depth:
+                    out.append("<ul>")
+                    list_depth += 1
+                out.append("<li>" + body)
+            elif depth == list_depth:
+                out.append("</li>")
+                out.append("<li>" + body)
+            else:
+                out.append("</li>")
+                while list_depth > depth:
+                    out.append("</ul>")
+                    out.append("</li>")
+                    list_depth -= 1
+                out.append("<li>" + body)
+
             i += 1
             continue
 
@@ -993,6 +1068,7 @@ def wrap_markdown_tables_html(html: str) -> str:
 
 def markdown_to_html(body_md: str) -> str:
     body_md = remove_duplicate_top_h1(body_md)
+    body_md = normalize_unordered_list_indentation(body_md)
     if markdown_lib is not None:
         html = markdown_lib.markdown(
             body_md,
@@ -2463,6 +2539,19 @@ a:hover {
 
 .markdown-body h3 {
   margin-top: 24px;
+}
+
+/* 本文の箇条書きは階層ごとに記号を変える。 */
+.markdown-body ul {
+  list-style-type: disc;
+}
+
+.markdown-body ul ul {
+  list-style-type: circle;
+}
+
+.markdown-body ul ul ul {
+  list-style-type: square;
 }
 
 .markdown-body code {

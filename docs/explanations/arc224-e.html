@@ -45,10 +45,14 @@ window.MathJax = {
 <p>また、<code>&quot;ABC&quot;</code> を消せるのに <code>&quot;AB&quot;</code> だけや <code>&quot;A&quot;</code> だけ削除するのも、特に優位性はない。<br>
 よって、非常に単純な以下のような貪欲で解ける。</p>
 <ul>
-<li>文字列を後ろから $1$ 文字ずつ見ていく</li>
-<li><code>&#x27;A&#x27;</code> があったら、それを削除</li>
-<li><code>&#x27;A&#x27;</code> 削除時、その後ろに <code>&#x27;B&#x27;</code> があったらそれも削除</li>
-<li><code>&#x27;B&#x27;</code> 削除時、その後ろに <code>&#x27;C&#x27;</code> があったらそれも削除</li>
+<li>文字列を後ろから $1$ 文字ずつ見ていく
+</li>
+<li><code>&#x27;A&#x27;</code> があったら、それを削除
+</li>
+<li><code>&#x27;A&#x27;</code> 削除時、その後ろに <code>&#x27;B&#x27;</code> があったらそれも削除
+</li>
+<li><code>&#x27;B&#x27;</code> 削除時、その後ろに <code>&#x27;C&#x27;</code> があったらそれも削除
+</li>
 </ul>
 <p>最終的に残った文字列の長さが答えで、計算量は $O\left(\sum N\right)$。</p>
 <h2>入力例1での動作</h2>

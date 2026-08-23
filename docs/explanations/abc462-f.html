@@ -39,8 +39,10 @@ window.MathJax = {
 <code>dp[i][j]</code> を「$i+2$ 文字目までに <code>&quot;ABC&quot;</code> を $j$ 個作る最小コスト」とする。<br>
 <code>dp[i][j]</code> の値は以下の $2$ つの値の小さい方である。（ただし後者はテーブルからはみ出ない場合に限る）</p>
 <ul>
-<li>$i+2$ 文字目を使わない場合のコスト、つまり <code>dp[i-1][j]</code></li>
-<li>$i+2$ 文字目を使う場合のコスト、つまり <code>dp[i-3][j-1]+そこに&quot;ABC&quot;を作るコスト</code></li>
+<li>$i+2$ 文字目を使わない場合のコスト、つまり <code>dp[i-1][j]</code>
+</li>
+<li>$i+2$ 文字目を使う場合のコスト、つまり <code>dp[i-3][j-1]+そこに&quot;ABC&quot;を作るコスト</code>
+</li>
 </ul>
 <p>それとは別に、元々の文字列に <code>&quot;ABC&quot;</code> が何個あったかも計上しておく。<br>
 最後の文字までで、$K$ 個追加した個数を作る最小コストが答え。<br>

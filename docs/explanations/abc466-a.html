@@ -43,14 +43,28 @@ window.MathJax = {
 $1$ つでも「損しません」があれば、答えは <code>&quot;No&quot;</code>。</p>
 <p>すべての選択肢がある条件を満たすかどうかの判定は、以下の手順で行う。</p>
 <ul>
-<li>まず、<code>bool</code> 型の変数を用意し、<code>true</code> で初期化する</li>
-<p>  - 本問では、代わりに <code>string</code> を用意して <code>&quot;Yes&quot;</code> で初期化する方がわかりやすい</p>
-<li>for ループで、ありえる可能性すべてを見るループを書く</li>
-<li>その中で、条件に反しているかどうかの if 文を書く</li>
-<p>  - 本問では、$-1$ 以下という条件に反しているか、つまり $0$ 以上かどうかを括弧内に書く</p>
-<li>条件に反していたら、用意した <code>bool</code> 型の変数を <code>false</code> に書き換える</li>
-<p>  - <code>string</code> 型を使った場合は <code>&quot;No&quot;</code> に書き換える<br>
-  - 条件に反していなかった場合は何もしない</p>
+<li>まず、<code>bool</code> 型の変数を用意し、<code>true</code> で初期化する
+<ul>
+<li>本問では、代わりに <code>string</code> を用意して <code>&quot;Yes&quot;</code> で初期化する方がわかりやすい
+</li>
+</ul>
+</li>
+<li>for ループで、ありえる可能性すべてを見るループを書く
+</li>
+<li>その中で、条件に反しているかどうかの if 文を書く
+<ul>
+<li>本問では、$-1$ 以下という条件に反しているか、つまり $0$ 以上かどうかを括弧内に書く
+</li>
+</ul>
+</li>
+<li>条件に反していたら、用意した <code>bool</code> 型の変数を <code>false</code> に書き換える
+<ul>
+<li><code>string</code> 型を使った場合は <code>&quot;No&quot;</code> に書き換える
+</li>
+<li>条件に反していなかった場合は何もしない
+</li>
+</ul>
+</li>
 </ul>
 <p>全部見終わった後で、<code>bool</code> 型変数の中身が <code>true</code> だったら <code>&quot;Yes&quot;</code>、そうでなければ <code>&quot;No&quot;</code> を出力。<br>
 最初から <code>string</code> 型変数を使った場合にはそのまま出力すればよい。</p>

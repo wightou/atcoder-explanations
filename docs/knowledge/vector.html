@@ -96,9 +96,14 @@ vector vec(5,-1);</code></pre>
 <p><code>vec&lt;v</code> で、辞書順で <code>vec</code> が <code>v</code> より前かどうかを判定する。<br>
 すなわち、以下のように判定する。</p>
 <ul>
-<li>前から順に、初めて同じ位置に異なる要素があるところを探す</li>
-<li>その異なった場所で <code>s</code> の方が前であるかを判定する。</li>
-<p>  - 前であるとは、値が小さいか、配列がもう終了していること</p>
+<li>前から順に、初めて同じ位置に異なる要素があるところを探す
+</li>
+<li>その異なった場所で <code>s</code> の方が前であるかを判定する。
+<ul>
+<li>前であるとは、値が小さいか、配列がもう終了していること
+</li>
+</ul>
+</li>
 </ul>
 <p>逆向きの <code>&gt;</code> も使える。<br>
 <code>&lt;=</code> や <code>&gt;=</code> も使える。</p>
@@ -146,8 +151,10 @@ $5$ 個くらいなら直接書いてもよいが、$100$ 個並べる場合な�
 短くする場合は後ろを削除し、長くする場合は後ろを指定要素で埋める。<br>
 例えば <code>vec</code> の中身が <code>{1,2,3}</code> である場合、以下のようになる。</p>
 <ul>
-<li><code>vec.resize(2)</code> なら <code>{1,2}</code> になる</li>
-<li><code>vec.resize(5,-1)</code> なら <code>{1,2,3,-1,-1}</code> になる</li>
+<li><code>vec.resize(2)</code> なら <code>{1,2}</code> になる
+</li>
+<li><code>vec.resize(5,-1)</code> なら <code>{1,2,3,-1,-1}</code> になる
+</li>
 </ul>
 <h4>交換 <code>.swap(別の配列)</code></h4>
 <p><code>vec.swap(v);</code> で、<code>vec</code> と <code>v</code> の中身が入れ替わる。<br>
@@ -178,9 +185,12 @@ for (int&amp; i : a) {
 <p>配列が逆順の方が都合がよい場合などに。</p>
 <p>また、配列の前にたくさん挿入したい場合に、以下の方法が使える。</p>
 <ul>
-<li>まず逆順にする</li>
-<li>逆順に末尾に追加する</li>
-<li>もう一度逆順にする</li>
+<li>まず逆順にする
+</li>
+<li>逆順に末尾に追加する
+</li>
+<li>もう一度逆順にする
+</li>
 </ul>
 <h3>中身を小さい順に並べる</h3>
 <pre><code>sort(vec.begin(),vec.end());</code></pre>

@@ -35,8 +35,12 @@ window.MathJax = {
 <p>ABCでは主にE問題以降で登場する。</p>
 <h2>典型問題例</h2>
 <ul>
-<li><a href="https://atcoder.jp/contests/dp/tasks/dp_f" target="_blank" rel="noopener noreferrer">Educational DP Contest F - LCS</a></li>
-<p>  - $2$ つの文字列の最長共通部分列そのものを求める基本問題。</p>
+<li><a href="https://atcoder.jp/contests/dp/tasks/dp_f" target="_blank" rel="noopener noreferrer">Educational DP Contest F - LCS</a>
+<ul>
+<li>$2$ つの文字列の最長共通部分列そのものを求める基本問題。
+</li>
+</ul>
+</li>
 </ul>
 <h2>コード例</h2>
 <h3>最長共通部分列を求める通常の方法</h3>
@@ -139,9 +143,12 @@ $$</p>
 <p>実際の最長共通部分列を復元する場合は、DPテーブルの右下からバックトレースする。<br>
 現在見ている要素が <code>A[i-1]</code> と <code>B[j-1]</code> のとき、次のように移動する。</p>
 <ul>
-<li><code>A[i-1]</code> と <code>B[j-1]</code> が同じなら、その値を記録して左上へ進む。</li>
-<li>異なるなら、上と左のうち、DPテーブルの値が現在地と等しい方へ進む。</li>
-<li>上と左の値がどちらも現在地と等しいなら、どちらへ進んでもよい。</li>
+<li><code>A[i-1]</code> と <code>B[j-1]</code> が同じなら、その値を記録して左上へ進む。
+</li>
+<li>異なるなら、上と左のうち、DPテーブルの値が現在地と等しい方へ進む。
+</li>
+<li>上と左の値がどちらも現在地と等しいなら、どちらへ進んでもよい。
+</li>
 </ul>
 <p>これを $i=0$ または $j=0$ になるまで繰り返すと、最長共通部分列が後ろから順に得られる。<br>
 最後に反転すればよい。</p>
@@ -186,8 +193,10 @@ $$</p>
 <p>DPテーブルには $(N+1)(M+1)$ 個の状態があり、各状態を $O(1)$ で更新する。<br>
 復元のための移動回数は最大で $N+M$ 回である。</p>
 <ul>
-<li>時間計算量：$O(NM)$</li>
-<li>空間計算量：$O(NM)$</li>
+<li>時間計算量：$O(NM)$
+</li>
+<li>空間計算量：$O(NM)$
+</li>
 </ul>
 <h3>最長増加部分列へ帰着する方法</h3>
 <p>最長共通部分列を、最長増加部分列のアルゴリズムへ帰着して求める方法もある。</p>

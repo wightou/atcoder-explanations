@@ -209,6 +209,19 @@ a:hover {
   margin-top: 24px;
 }
 
+/* 本文の箇条書きは階層ごとに記号を変える。 */
+.markdown-body ul {
+  list-style-type: disc;
+}
+
+.markdown-body ul ul {
+  list-style-type: circle;
+}
+
+.markdown-body ul ul ul {
+  list-style-type: square;
+}
+
 .markdown-body code {
   background: rgba(47,128,237,.10);
   padding: .2em .4em;

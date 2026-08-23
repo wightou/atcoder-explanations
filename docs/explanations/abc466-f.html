@@ -41,8 +41,10 @@ window.MathJax = {
 すると、このカタマリを <code>A[i]</code> で割った余りも、類似の形式複数個で表現できる。<br>
 具体的には、「$0$ 以上 $k$ 未満の値が $l$ 個ずつある」データを $a$ で割る場合は、以下。</p>
 <ul>
-<li>「$0$ 以上 $a$ 未満の値が $\lfloor k/a \rfloor \times l$ 個ずつある」</li>
-<li>「$0$ 以上 $k \bmod a$ 未満の値が $l$ 個ずつある」</li>
+<li>「$0$ 以上 $a$ 未満の値が $\lfloor k/a \rfloor \times l$ 個ずつある」
+</li>
+<li>「$0$ 以上 $k \bmod a$ 未満の値が $l$ 個ずつある」
+</li>
 </ul>
 <p>あとはこれを、同じ範囲のものは可能な限りデータをまとめていく工夫をすればよい。<br>
 範囲が <code>A[i]</code> を超えるものの抽出は、<code>priority_queue</code> などを用いればよい。</p>
