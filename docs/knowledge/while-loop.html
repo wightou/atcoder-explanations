@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>whileループ</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -20,7 +30,83 @@
   <article class="markdown-body">
     <h1>whileループ</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>変数の中身次第でコードを何回も実行する。<br>
+同じような処理を何度も繰り返したい場合に。<br>
+主に何回繰り返すことになるかわからない場合に使う。</p>
+<h2>基本的な書き方</h2>
+<pre><code>while (条件式) {
+  繰り返し実行したいコード
+}</code></pre>
+<h3>whileループの動作</h3>
+<p>if文は条件を満たしてコードを実行した後は下に進む。<br>
+例えば、以下の場合。</p>
+<pre><code>int n = 1;
+if (n&lt;10) {
+  n *= 2;
+}</code></pre>
+<p><code>n</code> が <code>1</code> から <code>2</code> になった後、そのまま下へ進む。</p>
+<p>whileループは条件を満たしてコードを実行した後は判定に戻る。<br>
+例えば、以下の場合。</p>
+<pre><code>int n = 1;
+while (n&lt;10) {
+  n *= 2;
+}</code></pre>
+<p><code>n</code> が <code>1</code> から <code>2</code> になった後、もう一度 <code>n&lt;10</code> かどうかを判定する。<br>
+<code>2</code> は <code>10</code> より小さいので、もう一度実行されて <code>n</code> が <code>4</code> となり、また <code>n&lt;10</code> かどうかを判定する。<br>
+<code>4</code> は <code>10</code> より小さいので、もう一度実行されて <code>n</code> が <code>8</code> となり、また <code>n&lt;10</code> かどうかを判定する。<br>
+<code>8</code> は <code>10</code> より小さいので、もう一度実行されて <code>n</code> が <code>16</code> となり、また <code>n&lt;10</code> かどうかを判定する。<br>
+<code>16</code> は <code>10</code> より小さくないので、ループを終了し、下へ進む。</p>
+<h3>条件式</h3>
+<p>詳しくは「<a href="if-statement.html">if分岐</a>」の記事参照。</p>
+<h2>よく使う処理</h2>
+<h3>中断処理 <code>break;</code></h3>
+<p>ループを無理矢理終了させる。</p>
+<pre><code>while (i&gt;0) {
+  // 何かのコード
+  if (j==0) break;  // ここから
+  // 何かのコード  // ↓
+}                   // ↓
+// 何かのコード     // ここに飛ぶ</code></pre>
+<p>if文の中に書いた場合でも、ちゃんとループを抜ける。<br>
+二重ループの中に書いた場合は、内側のループのみ抜ける。</p>
+<p>二重ループを両方一気に抜けたい場合は、何かフラグを用意して利用する。<br>
+内側のループを抜けた直後に「フラグが立っていたら <code>break;</code>」を書く。</p>
+<pre><code>while (i&gt;0) {
+  bool flag = false;  // ←これを用意しておいて
+  while (j&gt;0) {
+    // 何かの処理
+    if (k==0) {
+      flag = true;    // ←全部脱出するフラグを立てる
+      break;          // ←これで内側を脱出
+    }
+  }
+  if (flag) break;    // ←これで外側も脱出
+}</code></pre>
+<h3>継続処理 <code>continue;</code></h3>
+<p>ループを無理矢理次に行く。</p>
+<pre><code>while (i&lt;0) {           // ここに飛ぶ
+  // 何かのコード       // ↑
+  if (j==0) continue;   // ここから
+  // 何かのコード
+}
+// 何かのコード</code></pre>
+<p><code>break;</code> とは異なり、その回だけを終了してもう $1$ 回条件の判定からやり直す。</p>
+<h2>注意点</h2>
+<p>if文の注意点が全てそのまま当てはまる。<br>
+詳しくは「<a href="if-statement.html">if分岐</a>」の記事参照。</p>
+<h3>無限ループを起こさないように注意</h3>
+<p>判定条件が満たされ続ける限り、$100$ 回でも $10000$ 回でも $5000$ 兆回でも繰り返される。<br>
+A問題やB問題で実行に長時間かかっている場合、これをやらかした可能性が高い。<br>
+判定に使われている何かが毎回変わるか、どこかで <code>break;</code> するかで終了を保証できるコードを書くこと。</p>
+<h2>関連アルゴリズム</h2>
+<h3><a href="bool.html">bool型</a></h3>
+<p>whileループの条件式は、最終的に <code>true</code> か <code>false</code> として判定される。<br>
+<code>!</code>、<code>&amp;&amp;</code>、<code>||</code> など <code>bool</code> 型の論理演算も扱う必要がある場合がある。</p>
+<h3><a href="if-statement.html">if分岐</a></h3>
+<p>whileループと似ているが、条件に合えば $1$ 回だけ実行し、そのまま次へ進む。</p>
+<h3><a href="for-loop.html">forループ</a></h3>
+<p>最もよくあるwhileループの使い方を、より書きやすくしたもの。<br>
+ループ回数がはっきりしている場合はforループの方が書きやすい。</p>
   </article>
 
   <aside class="sidebar">
@@ -33,7 +119,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li class="muted">なし</li>
+        <li><a href="../knowledge/if-statement.html">if分岐</a></li><li><a href="../knowledge/for-loop.html">forループ</a></li><li><a href="../knowledge/bool.html">bool型</a></li>
       </ul>
     </section>
 

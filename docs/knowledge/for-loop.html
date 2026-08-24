@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>forループ</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -20,7 +30,89 @@
   <article class="markdown-body">
     <h1>forループ</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>変数の中身次第でコードを何回も実行する。<br>
+同じような処理を何度も繰り返したい場合に。<br>
+主に何回繰り返すことになるかわかっている場合に使う。</p>
+<h2>基本的な書き方</h2>
+<pre><code>for (初期化; 条件式; 更新) {
+  繰り返し実行したいコード
+}</code></pre>
+<p>特に、同じことを $10$ 回繰り返してほしい場合は、以下のように書く。</p>
+<pre><code>for (int i=0; i&lt;10; i++) {
+  繰り返し実行したいコード
+}</code></pre>
+<p>変数 <code>i</code> は、適切にかぶらない名前のものに変えること。</p>
+<h3>forループの動作</h3>
+<p>whileループで同じ処理を $10$ 回してほしい場合、以下のように書く。</p>
+<pre><code>int i = 0;
+while (i&lt;10) {
+  // 何かのコード
+  i++;
+}</code></pre>
+<p>しかし、最初の <code>i</code> の宣言と初期化や、更新の <code>i++</code> を書き忘れがち。<br>
+そこで、それと同じものを以下のようにまとめて書けるようにしたものと理解するとわかりやすい。</p>
+<pre><code>for (int i=0; i&lt;10; i++) {
+  // 何かのコード
+}</code></pre>
+<p>この「指定回数繰り返す」という書き方は頻出なので、絶対に書けるようにしておくこと。</p>
+<p>この場合、以下の順に動作する。</p>
+<ul>
+<li>まず、<code>i</code> という変数を用意し、<code>0</code> で初期化する
+</li>
+<li><code>i&lt;10</code> であるか判定する
+</li>
+<li><code>true</code> なので中身を実行する
+</li>
+<li><code>i++</code> して、<code>i</code> が <code>1</code> になる
+</li>
+<li><code>i&lt;10</code> であるか判定する
+</li>
+<li><code>true</code> なので中身を実行する
+</li>
+<li><code>i++</code> して、<code>i</code> が <code>2</code> になる
+</li>
+<li><code>i&lt;10</code> であるか判定する
+</li>
+<li><code>true</code> なので中身を実行する
+</li>
+<li>（中略）
+</li>
+<li><code>i++</code> して、<code>i</code> が <code>9</code> になる
+</li>
+<li><code>i&lt;10</code> であるか判定する
+</li>
+<li><code>true</code> なので中身を実行する
+</li>
+<li><code>i++</code> して、<code>i</code> が <code>10</code> になる
+</li>
+<li><code>i&lt;10</code> であるか判定する
+</li>
+<li><code>false</code> なのでループを終了する
+</li>
+</ul>
+<p>結果、中身が $10$ 回実行されている。<br>
+中身で <code>i</code> を見るコードを書くことで、実行内容を少しずつ変えることもできる。</p>
+<h3>条件式</h3>
+<p>詳しくは「<a href="if-statement.html">if分岐</a>」の記事参照。</p>
+<h2>よく使う処理</h2>
+<p><code>break;</code> と <code>continue;</code> は、whileループと同様に使える。<br>
+詳しくは「<a href="while-loop.html">whileループ</a>」の記事参照。</p>
+<h2>注意点</h2>
+<p>if文の注意点が全てそのまま当てはまる。<br>
+詳しくは「<a href="if-statement.html">if分岐</a>」の記事参照。</p>
+<p>whileループの注意点も参照。<br>
+詳しくは「<a href="while-loop.html">whileループ</a>」の記事参照。</p>
+<h2>関連アルゴリズム</h2>
+<h3><a href="bool.html">bool型</a></h3>
+<p>forループの条件式は、最終的に <code>true</code> か <code>false</code> として判定される。<br>
+<code>!</code>、<code>&amp;&amp;</code>、<code>||</code> など <code>bool</code> 型の論理演算も扱う必要がある場合がある。</p>
+<h3><a href="if-statement.html">if分岐</a></h3>
+<p>forループの条件式には、if文と同じ条件式を使う。</p>
+<h3><a href="while-loop.html">whileループ</a></h3>
+<p>ループの基礎。<br>
+ループ回数がはっきりしていない場合はwhileループの方が書きやすい。</p>
+<h3><a href="range-for.html">範囲for文</a></h3>
+<p><code>vector</code> などの中身を順に全部見るforループを、より書きやすくしたもの。</p>
   </article>
 
   <aside class="sidebar">
@@ -33,7 +125,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li class="muted">なし</li>
+        <li><a href="../knowledge/if-statement.html">if分岐</a></li><li><a href="../knowledge/while-loop.html">whileループ</a></li><li><a href="../knowledge/bool.html">bool型</a></li><li><a href="../knowledge/range-for.html">範囲for文</a></li>
       </ul>
     </section>
 
