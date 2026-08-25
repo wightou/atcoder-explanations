@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">寿司</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_j" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77903301" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-3">入力例3での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>ABCでいうと、E問題級。</p>
 <p>期待値の計算に慣れていれば、発想自体はそこまで難しくない。</p>
 <p>次のようにおく。</p>
@@ -67,7 +68,7 @@ $$</p>
 <p>あとは、これで動的計画法するだけではあるのだが、表が三次元なうえに表の幅が一定でないので注意。<br>
 サイズを大きめに取るという解決策もあるが、練習としてはピッタリサイズで作りたいところである。</p>
 <p>計算量は $O(N^3)$。</p>
-<h2>入力例3での動作</h2>
+<h2 id="section-3">入力例3での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 2
 a: {1, 2}</code></pre>
@@ -109,7 +110,7 @@ $2$ 枚とも寿司が $1$ 個ある皿であり、寿司を $1$ 個食べると
 <pre><code>dp[0][1][1] = (2 + dp[0][1][0] * 1 + dp[0][0][2] * 1) / 2
             = 4.5</code></pre>
 <p><code>dp[0][1][1]</code> の $4.5$ が答え。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>寿司が $1$ つ減った時の参照先に注意。</p>
 <p>寿司が $3$ 個乗っている皿が選ばれたときに、参照する先は「$3$ 個の皿が $1$ つ減ったデータ」ではない。<br>
 $3$ 個の皿から寿司を $1$ つ食べるということは、$2$ 個の皿が新しくできるということ。<br>
@@ -117,7 +118,7 @@ $3$ 個の皿から寿司を $1$ つ食べるということは、$2$ 個の皿�
 <p>寿司が $2$ 個乗っている皿が選ばれたときも同様。</p>
 <p>その影響で、$2$ 個の皿や $1$ 個の皿の枚数が初期値より増える可能性がある。<br>
 DP テーブルの広さにも注意が必要。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

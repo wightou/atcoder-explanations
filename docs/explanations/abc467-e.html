@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">隣接和（難）</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc467/tasks/abc467_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc467/submissions/77654714" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>C問題の、$M$ の範囲拡大版。</p>
 <p>各数に何回操作を行うかは $0,1,\dots M-1$ の $M$ 通りだけ考えればよい。<br>
 $M$ 回以上行うのは $M$ で割った余りに影響がないまま無意味に操作回数を増やしているだけである。<br>
@@ -65,7 +66,7 @@ $D_1=0$ のときの解の偶数番目の数、奇数番目の数をわけてソ
 逆を $K$ ずつ増やしたときに $M$ 以上になる数は、二分探索かツーポインタ法でわかる。</p>
 <p>これで、どれかが $0$ になる全 $N$ パターンを調査しても間に合うようになる。<br>
 計算量はソート部分が支配的で、$O(N \log N)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 m: 10
@@ -112,11 +113,11 @@ even: {0, 7}</code></pre>
 <pre><code>dec: 7</code></pre>
 <p><code>result</code> から実際に <code>dec</code> を引けば答え。</p>
 <pre><code>result: 5</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。<br>
 $D_i$ を求める部分も、$10^9$ 級の数を $3$ つ以上加減算するので注意。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

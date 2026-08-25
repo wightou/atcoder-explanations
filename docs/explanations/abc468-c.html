@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">PとQの間</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc468/tasks/abc468_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc468/submissions/77868255" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc468/submissions/77868259" target="_blank" rel="noopener noreferrer">別解</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>$N$ 個の数の順列は、$N!$ 通りある。<br>
 $P$ と $Q$ それぞれより辞書順で前にある順列の個数を求めてしまえば、それらの差 $-1$ で答えとなる。</p>
 <p>さて、ある順列が何番目になるかは、高校数学の典型問題。<br>
@@ -45,7 +46,7 @@ $-1$ は、$P$ そのものの分である。</p>
 計算結果と $0$ との大きい方を答えとして出力する。</p>
 <p>計算量は、その桁に使える数の個数の管理方法次第。<br>
 ここを愚直にやれば $O(N^2)$、Fenwick木（E問題級）で高速化すれば $O(N \log N)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 p: {1, 3, 2}
@@ -65,9 +66,9 @@ q: {3, 1, 2}</code></pre>
 <p>よって、$Q$ より辞書順で小さい順列は $4$ 個である。</p>
 <pre><code>calc(q): 4</code></pre>
 <p>したがって、$P$ と $Q$ の間にある順列の個数は $4-1-1=2$ である。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>順列全探索で解くこともできる。<br>
 スタートを昇順ではなく $P$ そのものに設定し、毎回カウンタを $1$ 増やしていく。<br>
 $P$ と $Q$ が一致したら、<code>break</code> で脱出。</p>

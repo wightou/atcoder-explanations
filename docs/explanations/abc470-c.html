@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">増減XOR</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc470/tasks/abc470_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc470/submissions/78235631" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>まず、実際に $A$ を用意したとして、愚直解を考えてみる。<br>
 クエリ $1$ は、その値を $1$ 増やして、全体の <code>XOR</code> を計算する。<br>
 クエリ $2$ は、$A$ 全体を見て、正のものは $1$ ずつ減らして、全体の <code>XOR</code> を計算する。<br>
@@ -50,7 +51,7 @@ window.MathJax = {
 ということは、どこか別のデータに「今正の値になってる位置一覧」を用意すればよい。<br>
 減少させる回数が増加させる回数を超えることはないので、延べ回数で最大 $Q$ 回で減少処理を行える。</p>
 <p>今正の値になってる位置一覧に <code>set</code> を利用した場合、計算量は $O(N+Q\log N)$ である。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。<br>
 配列 <code>a</code> をすべて <code>0</code>、XOR の値 <code>result</code> を $0$、正の値の位置の集合 <code>st</code> を空集合で初期化する。</p>
 <pre><code>n: 2
@@ -90,11 +91,11 @@ st: {1}</code></pre>
 result: 0
 st: {}</code></pre>
 <p>各クエリの答えは順に $1,2,3,1,0$ である。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p><code>set</code> の値を走査しながら $0$ になったら消す処理の書き方に注意。<br>
 範囲 for 文は、走っている最中にデータサイズを変えると壊れる。<br>
 よって、削除したいものを別管理しておき、範囲 for 文が終わってから削除を実行する必要がある。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

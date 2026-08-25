@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">ルーク配置</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc466/tasks/abc466_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc466/submissions/77418389" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>コマの置き方のルールにより、各行・各列最大 $1$ つしかコマを置けない。<br>
 よって、各行「何列目にコマがあるか、またはどこにもないか」でコマ配置は十分表せる。</p>
 <p>しかしこれでは問題がある。<br>
@@ -50,7 +51,7 @@ window.MathJax = {
 </li>
 </ul>
 <p>$1$ 回の処理が $O(1)$ なので、事前処理も含めて全体の計算量は $O(N+M)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 m: 6
@@ -98,9 +99,9 @@ vec_c: {-1, -1, 3, 1}</code></pre>
 vec_c: {-1, -1, 3, 1}</code></pre>
 <p>最後に、<code>vec_r</code> のうち、<code>-1</code> でない要素の個数を数える。</p>
 <pre><code>result: 2</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

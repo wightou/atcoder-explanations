@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">正直な木こり</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc461/tasks/abc461_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc461/submissions/76604370" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p><code>0-indexed</code> と <code>1-indexed</code> が入り混じると面倒なので、最初に全て <code>0-indexed</code> に統一するとよい。</p>
 <p>女神視点で、各斧について、本当の所有者が名乗りを上げているかをチェックしていく。</p>
 <p><code>i</code> 番の斧の所有者は、<code>b[i]</code> 番の人である。<br>
@@ -50,7 +51,7 @@ window.MathJax = {
 </ul>
 <p>配列の中から値を探すことを何度も繰り返す場合、最初に逆写像を用意すると高速化できる。<br>
 今後のために覚えておきたい。 </p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取り、全て <code>0-indexed</code> にしておく。</p>
 <pre><code>n: 3
 a: {2, 0, 1}
@@ -68,9 +69,9 @@ b: {1, 2, 0}</code></pre>
 この部分は逆写像として正しいので、答え用変数には何もしない。</p>
 <p>最終的な答え用変数の中身が答え。</p>
 <pre><code>result: &quot;Yes&quot;</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>木こり視点でチェックしてもよい。<br>
 その場合、<code>b[a[i]]</code> が <code>i</code> であるか確認することになる。</p>
   </article>

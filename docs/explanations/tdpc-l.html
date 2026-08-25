@@ -33,7 +33,8 @@ window.MathJax = {
       
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/tdpc/tasks/tdpc_cat" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/tdpc/submissions/78577494" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>ABCでいうと、難しめD問題級。</p>
 <p>わりと普通の動的計画法を、少し高速化するだけ。</p>
 <p>DPテーブルとして、末尾の猫から左 $1$ 以内にいる猫の最小番号ごとの最大スコアの半分をもつ。<br>
@@ -48,7 +49,7 @@ window.MathJax = {
 </ul>
 <p>これらは両方とも累積的に処理できるため、猫 $1$ 匹の追加は $O(N)$ でできる。<br>
 よって、全体での計算量は $O(N^2)$ となる。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 f:
@@ -82,9 +83,9 @@ f:
 <pre><code>dp: {-5, -8, 2}</code></pre>
 <p>最大値は $2$。<br>
 DP テーブルではスコアの半分を持っているので、$2$ 倍した $4$ が答え。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

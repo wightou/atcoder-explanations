@@ -33,7 +33,8 @@ window.MathJax = {
       
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/tdpc/tasks/tdpc_knapsack" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/tdpc/submissions/78363057" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>特殊なナップサック問題。<br>
 基本的なナップサック問題については、「<a href="../knowledge/knapsack-problem.html">ナップサック問題</a>」の記事参照。</p>
 <p>今回の特殊な点は、色数が指定数以下でなくてはならない点。<br>
@@ -46,7 +47,7 @@ window.MathJax = {
 これを、色数 $1$ 以下から色数 $2$ 以下へ、色数 $0$ 以下から色数 $1$ 以下へも行う。</p>
 <p>これを全ての色について処理すれば、答えが出る。</p>
 <p>計算量は $O(NKW)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。<br>
 以下では、重量制限を <code>m</code>、色数制限を <code>k</code> とする。</p>
 <pre><code>n: 4
@@ -186,9 +187,9 @@ c: {1, 2, 3, 4}</code></pre>
 </table></div>
 <p>色 $4$ の荷物は重さが $10$ なので、重量制限 $5$ の範囲では追加できず、DP テーブルは変化しない。</p>
 <p>最終的に <code>dp[2][5] = 50</code> となるので、答えは $50$。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

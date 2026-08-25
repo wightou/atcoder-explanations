@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">Kで割れる交換</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/arc223/tasks/arc223_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc223/submissions/77113847" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>数列を、以下のようにグループにわける。</p>
 <ul>
 <li>$k$ で割った余りが $0$ であるものが連続する部分
@@ -61,7 +62,7 @@ window.MathJax = {
 最終的には、$i$ であるものの順番は保持、 $k-i$ であるものの順番も保持した任意の順列にできる。<br>
 つまり、$i$ であるものの位置の選び方を選べばよく、二項係数として求まる。</p>
 <p>前述のとおり、グループごとの値を全てかけあわせて $998244353$ で割った余りが答え。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>$2$ つ目のテストケースのみ考える。</p>
 <p>入力を受け取る。</p>
 <pre><code>n: 6
@@ -91,10 +92,10 @@ $4$ で割った余りが異なるもの同士は入れ替えられるが、同�
 この範囲内を任意の順に並べられる。<br>
 よって見分けがつかないものを含む順列で考えて、$\dfrac{1!}{1!} = 1$ 通り。 </p>
 <p>これらをすべてかけて $3 \times 2 \times 1 = 6$ を $998244353$ で割った余りが答え。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 順列数や二項係数を何度も使うため、階乗と階乗の逆元を前計算しておく。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

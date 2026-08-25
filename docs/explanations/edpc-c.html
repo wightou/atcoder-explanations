@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">夏休み</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77327654" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>$N$（最大 $10$ 万）回の選択があり、初日は $3$ 択、残りの日は $2$ 択。<br>
 愚直に全ルート試すのは明らかに無理。</p>
 <p>ということで、まずは愚直解を十分書き出せる例で様子を見て、計算を省けそうなところを探す。<br>
@@ -151,7 +152,7 @@ DPスタート部分は、$1$ 日目だけデータをそのまま入れる。<b
 </li>
 </ul>
 <p>ただし、これをやるために、全日分のDP表か、どこから遷移したかの情報を保存しておく必要はある。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 a: {10, 20, 30}
@@ -185,9 +186,9 @@ $3$ 日目に C をする場合、$2$ 日目は A または B。<br>
 よって、<code>max(dp[0], dp[1])+c[2]</code> $= \max(90,120)+90 = 210$。</p>
 <pre><code>dp: {150, 180, 210}</code></pre>
 <p>最終日には何をやってもいいので、<code>dp</code> の最大値 $210$ が答え。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

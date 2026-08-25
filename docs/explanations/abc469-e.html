@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">プロ試験資格</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc469/tasks/abc469_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc469/submissions/78058427" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc469/submissions/78066463" target="_blank" rel="noopener noreferrer">別解</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>ある時点からある時点までの勝率の表現を言い換える。<br>
 $0$ 試合時点を含めた各タイミングでの（これまでの試合数、勝利数）を二次元プロットする。<br>
 $2$ 点を選んだ時に、それらから以下の情報が得られる。</p>
@@ -73,7 +74,7 @@ $2$ 点を選んだ時に、それらから以下の情報が得られる。</p>
 しかし、その例外は、点列がまっすぐ $x$ 軸方向へ進んだ直後にしか発生しない。<br>
 よって、答えとなるべき最大値を見落とすことはない。</p>
 <p>全ての点が定数回しか扱われないため、計算量は $O(N)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 10
 k: 4
@@ -154,10 +155,10 @@ $$</p>
 $$</p>
 <p>この値も $2/3$ より小さいので、<code>result</code> は更新しない。<br>
 すべての <code>r</code> を調べ終えたとき、最大の傾きは $2/3=0.666666\dots$ であり、これが答えである。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>外積や傾きの比較に用いる積は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>勝率を固定したとき、その勝率以上を達成できる区間が存在するかは判定可能。<br>
 そして、その判定結果には単調性があるので、答えを二分探索できる。</p>
 <p>$(試合数,勝利数-目標勝率\times 試合数)$ を二次元でプロットすることを考える。<br>

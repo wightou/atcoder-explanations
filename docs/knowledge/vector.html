@@ -29,7 +29,8 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>vector</h1>
-    <h2>概要</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-d924c9c5a7">宣言と初期化</a><ul><li><a href="#section-98bc3412c3">宣言だけする場合</a></li><li><a href="#section-a4715134e3">要素数だけ指定する場合</a></li><li><a href="#section-34e64bb30b">代入で初期化する場合</a></li><li><a href="#section-7c635fc2b0">（コピー）コンストラクタで初期化する場合</a></li><li><a href="#section-1e04d5cc8e">型を推論に任せる</a></li></ul></li><li><a href="#section-2e750b0e4e">可能な演算</a><ul><li><a href="#section-76592af73c">基本的なもの</a><ul><li><a href="#section-i-at-i-i">$i$ 番目を参照 .at(i) または [i]</a></li><li><a href="#section-size">長さの取得 .size()</a></li><li><a href="#section-1eb5bebcc5">代入 =</a></li><li><a href="#section-empty">空判定 .empty()</a></li><li><a href="#section-966bdfbf31">一致判定 ==</a></li><li><a href="#section-5ac0927fa3">辞書順判定 &lt;</a></li><li><a href="#section-vector-b">コンストラクタ vector(要素数,中身)（B問題相当）</a></li><li><a href="#section-reserve-c">メモリ確保 .reserve(要素数)（C問題相当）</a></li></ul></li><li><a href="#section-b">配列編集系（全体的にB問題相当）</a><ul><li><a href="#section-begin">先頭イテレータ取得 .begin()</a></li><li><a href="#section-end">末尾イテレータ取得 .end()</a></li><li><a href="#section-rbegin">先頭逆イテレータ取得 .rbegin()</a></li><li><a href="#section-rend">末尾逆イテレータ取得 .rend()</a></li><li><a href="#section-front">先頭参照 .front()</a></li><li><a href="#section-back">末尾参照 .back()</a></li><li><a href="#section-emplace-back">末尾挿入 .emplace_back(要素)</a></li><li><a href="#section-pop-back">末尾削除 .pop_back()</a></li><li><a href="#section-insert-insert">途中挿入 .insert(イテレータ,要素) または .insert(イテレータ,イテレータ,イテレータ)</a></li><li><a href="#section-erase-erase">途中削除 .erase(イテレータ) または .erase(イテレータ,イテレータ)</a></li><li><a href="#section-clear">全削除 .clear()</a></li><li><a href="#section-resize">サイズ変更 .resize(要素数,要素)</a></li><li><a href="#section-swap">交換 .swap(別の配列)</a></li></ul></li><li><a href="#section-b-2">検索系（全体的にB問題相当）</a><ul><li><a href="#section-find">配列検索 find(イテレータ,イテレータ,要素)</a></li><li><a href="#section-count">該当要素数カウント count(イテレータ,イテレータ,要素)</a></li></ul></li></ul></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-239cb5ccfd">配列を標準入力から受け取る</a></li><li><a href="#section-1215f6a103">中身を逆順に並べなおす</a></li><li><a href="#section-5c133e8c00">中身を小さい順に並べる</a></li><li><a href="#section-1">$1$ 要素ずつ何か処理する</a></li><li><a href="#section-1-2-b">$1$ 要素ずつ何か処理する、その2（B問題相当）</a></li><li><a href="#section-b-3">順に増える内容で初期化する（B問題相当）</a></li><li><a href="#section-b-4">全部合計する（B問題相当）</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-c">処理速度に注意（C問題相当）</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <h2 id="section-7a52d716ff">概要</h2>
 <p>動的配列。<br>
 変数を一列にずらっと並べたようなデータ構造。<br>
 多数の、または不特定個数のデータを扱う上で最も基本となる。</p>
@@ -37,34 +38,34 @@ window.MathJax = {
 その場合、配列はそのホワイトボードを大量に連結したものと考えられる。</p>
 <p>動的とは、その連結する個数を後から増やしたり減らしたりできるものという意味である。</p>
 <p><code>string</code> 型と扱いが似ている（というか、<code>string</code> 型が <code>vector</code> に似ている）。</p>
-<h2>宣言と初期化</h2>
-<h3>宣言だけする場合</h3>
+<h2 id="section-d924c9c5a7">宣言と初期化</h2>
+<h3 id="section-98bc3412c3">宣言だけする場合</h3>
 <pre><code>vector&lt;int&gt; vec;     // int型用の、要素数0のvectorができる
 vector&lt;double&gt; vec;  // double型用の、要素数0のvectorができる
 vector&lt;string&gt; vec;  // string型用の、要素数0のvectorができる</code></pre>
-<h3>要素数だけ指定する場合</h3>
+<h3 id="section-a4715134e3">要素数だけ指定する場合</h3>
 <pre><code>vector&lt;int&gt; vec(10);           // int型用の、要素数10のvectorができる
 vector&lt;long long&gt; vec(10000);  // long long型用の、要素数10000のvectorができる
 vector&lt;double&gt; vec(n);         // double型用の、要素数nのvectorができる</code></pre>
-<h3>代入で初期化する場合</h3>
+<h3 id="section-34e64bb30b">代入で初期化する場合</h3>
 <pre><code>vector&lt;int&gt; vec = {1,2,3};       // 固定値で初期化
 vector&lt;int&gt; vec = vector(5,-1);  // 要素数と中身で初期化、この場合は5個の-1となる
 vector&lt;int&gt; vec = v;             // 他の配列で初期化</code></pre>
-<h3>（コピー）コンストラクタで初期化する場合</h3>
+<h3 id="section-7c635fc2b0">（コピー）コンストラクタで初期化する場合</h3>
 <pre><code>vector&lt;int&gt; vec{1,2,3};                    // 固定値で初期化
 vector&lt;int&gt; vec(5,-1);                     // 要素数と中身で初期化、この場合は5個の-1となる
 vector&lt;int&gt; vec(v);                        // 他の配列で初期化
 vector&lt;int&gt; vec(v.begin()+1,v.end()-3);    // イテレータで初期化（vectorから）
 vector&lt;int&gt; vec(que.begin(),que.end());    // イテレータで初期化（dequeから）
 vector&lt;int&gt; vec(s.begin(),s.end());        // イテレータで初期化（setから）</code></pre>
-<h3>型を推論に任せる</h3>
+<h3 id="section-1e04d5cc8e">型を推論に任せる</h3>
 <p>初期化もする場合、型が明らかな場合は <code>&lt;&gt;</code> 部分を略してもよい。<br>
 ただし、<code>string</code> 型の場合は、推論が難しいようなので明示的に書いた方がよい。</p>
 <pre><code>vector vec = {1,2,3};
 vector vec(5,-1);</code></pre>
-<h2>可能な演算</h2>
-<h3>基本的なもの</h3>
-<h4>$i$ 番目を参照 <code>.at(i)</code> または <code>[i]</code></h4>
+<h2 id="section-2e750b0e4e">可能な演算</h2>
+<h3 id="section-76592af73c">基本的なもの</h3>
+<h4 id="section-i-at-i-i">$i$ 番目を参照 <code>.at(i)</code> または <code>[i]</code></h4>
 <p>例えば、</p>
 <pre><code>vec.at(3)</code></pre>
 <p>と書けば、「<code>vec</code> という配列の $3$ 番目」という中身と同じ型の変数であるかのように扱える。<br>
@@ -76,23 +77,23 @@ vector vec(5,-1);</code></pre>
 前者はエラーしてくれるのでバグの修正がしやすいが、コードがちょっと見にくい。<br>
 後者はちょっとコードが見やすいが、範囲外アクセスが未定義動作になるのでバグの修正が大変。<br>
 急いでバグ修正する必要がある競プロでは <code>.at(i)</code> を使う方が無難。</p>
-<h4>長さの取得 <code>.size()</code></h4>
+<h4 id="section-size">長さの取得 <code>.size()</code></h4>
 <pre><code>vec.size()</code></pre>
 <p>で配列 <code>vec</code> の長さを <code>size_t</code> 型で取得できる。<br>
 <code>size_t</code> 型は扱いの注意点も多いので、取得したら <code>int</code> 型変数に一度代入してしまうのも $1$ つの手。</p>
-<h4>代入 <code>=</code></h4>
+<h4 id="section-1eb5bebcc5">代入 <code>=</code></h4>
 <p><code>vec=v;</code> で、配列 <code>vec</code> の中身を <code>v</code> に書き換える。<br>
 要素数の変更も行ってくれる。<br>
 数学とは違い、左右を逆にして <code>v=vec;</code> と書くと意味が変わるので注意。</p>
-<h4>空判定 <code>.empty()</code></h4>
+<h4 id="section-empty">空判定 <code>.empty()</code></h4>
 <p><code>vec.empty()</code> で、<code>vec</code> が空っぽかどうかを <code>bool</code> 型で返す。<br>
 結果自体は <code>vec.size()==0</code> と書くのと変わらない。<br>
 一応、<code>.empty()</code> の方が高速らしいが、誤差レベルなので書きやすさ優先で選んでよい。</p>
-<h4>一致判定 <code>==</code></h4>
+<h4 id="section-966bdfbf31">一致判定 <code>==</code></h4>
 <p><code>vec==v</code> で、配列が一致するか判定する。<br>
 すなわち、長さが同じで、各位置の要素もすべて一致するか判定する。<br>
 <code>!=</code> も使える。</p>
-<h4>辞書順判定 <code>&lt;</code></h4>
+<h4 id="section-5ac0927fa3">辞書順判定 <code>&lt;</code></h4>
 <p><code>vec&lt;v</code> で、辞書順で <code>vec</code> が <code>v</code> より前かどうかを判定する。<br>
 すなわち、以下のように判定する。</p>
 <ul>
@@ -107,46 +108,46 @@ vector vec(5,-1);</code></pre>
 </ul>
 <p>逆向きの <code>&gt;</code> も使える。<br>
 <code>&lt;=</code> や <code>&gt;=</code> も使える。</p>
-<h4>コンストラクタ <code>vector(要素数,中身)</code>（B問題相当）</h4>
+<h4 id="section-vector-b">コンストラクタ <code>vector(要素数,中身)</code>（B問題相当）</h4>
 <p><code>vector&lt;int&gt;(5,-1)</code> と書くと、<code>-1</code> を $5$ 個並べた配列 <code>{-1,-1,-1,-1,-1}</code> を意味する。<br>
 $5$ 個くらいなら直接書いてもよいが、$100$ 個並べる場合などにはコンストラクタで書いた方が便利。</p>
-<h4>メモリ確保 <code>.reserve(要素数)</code>（C問題相当）</h4>
+<h4 id="section-reserve-c">メモリ確保 <code>.reserve(要素数)</code>（C問題相当）</h4>
 <p><code>vec.reserve(100000)</code> と書くと、$100000$ 要素分のメモリを確保する。<br>
 確保できない場合は、今のうちに $100000$ 要素確保できるところにデータをお引越ししてくれる。<br>
 後で要素をどんどん追加して長くなっていく場合に、可能性のある最大要素数以上に確保しておくとよい。</p>
 <p>別にこれをやらなくても、よしなに引越ししてくれるため、必須ではない。<br>
 とはいえ、長い文字列の引越しが発生したせいでTLEしたら悲しい。</p>
-<h3>配列編集系（全体的にB問題相当）</h3>
-<h4>先頭イテレータ取得 <code>.begin()</code></h4>
+<h3 id="section-b">配列編集系（全体的にB問題相当）</h3>
+<h4 id="section-begin">先頭イテレータ取得 <code>.begin()</code></h4>
 <p>先頭を指すイテレータを取得する。</p>
-<h4>末尾イテレータ取得 <code>.end()</code></h4>
+<h4 id="section-end">末尾イテレータ取得 <code>.end()</code></h4>
 <p>末尾要素の次を指すイテレータを取得する。</p>
-<h4>先頭逆イテレータ取得 <code>.rbegin()</code></h4>
+<h4 id="section-rbegin">先頭逆イテレータ取得 <code>.rbegin()</code></h4>
 <p>逆順での先頭、つまり末尾要素を指す逆イテレータを取得する。</p>
-<h4>末尾逆イテレータ取得 <code>.rend()</code></h4>
+<h4 id="section-rend">末尾逆イテレータ取得 <code>.rend()</code></h4>
 <p>逆順での末尾の次、つまり先頭要素の $1$ つ前を指す逆イテレータを取得する。</p>
-<h4>先頭参照 <code>.front()</code></h4>
+<h4 id="section-front">先頭参照 <code>.front()</code></h4>
 <p><code>vec.front()</code> で先頭の要素を参照する。<br>
 ……普通に <code>vec.at(0)</code> でいい気も。</p>
-<h4>末尾参照 <code>.back()</code></h4>
+<h4 id="section-back">末尾参照 <code>.back()</code></h4>
 <p><code>vec.back()</code> で末尾の要素を参照する。<br>
 配列の長さが途中で変化するような場合には便利。</p>
-<h4>末尾挿入 <code>.emplace_back(要素)</code></h4>
+<h4 id="section-emplace-back">末尾挿入 <code>.emplace_back(要素)</code></h4>
 <p><code>vec.emplace_back(3);</code> なら <code>vec</code> の最後に <code>3</code> を追加する。<br>
 また、<code>string</code> 型のように <code>.push_back()</code> も使えるが、何もメリットはない。</p>
-<h4>末尾削除 <code>.pop_back()</code></h4>
+<h4 id="section-pop-back">末尾削除 <code>.pop_back()</code></h4>
 <p><code>vec.pop_back();</code> で、<code>vec</code> の最後の $1$ 要素を削除する。</p>
-<h4>途中挿入 <code>.insert(イテレータ,要素)</code> または <code>.insert(イテレータ,イテレータ,イテレータ)</code></h4>
+<h4 id="section-insert-insert">途中挿入 <code>.insert(イテレータ,要素)</code> または <code>.insert(イテレータ,イテレータ,イテレータ)</code></h4>
 <p><code>vec.insert(itr,10);</code> で、<code>itr</code> の位置に <code>10</code> を挿入する。<br>
 <code>vec.insert(itr,{10,11,12});</code> と要素リストを作ってまとめて挿入もできる。<br>
 <code>vec.insert(itr1,itr2,itr3);</code> で、<code>itr1</code> の位置に <code>itr2</code> 以上 <code>itr3</code> 未満の要素を挿入する。<br>
 <code>itr2</code> と <code>itr3</code> は <code>vec</code> とは別の <code>vector</code> のイテレータでもよい。</p>
-<h4>途中削除 <code>.erase(イテレータ)</code> または <code>.erase(イテレータ,イテレータ)</code></h4>
+<h4 id="section-erase-erase">途中削除 <code>.erase(イテレータ)</code> または <code>.erase(イテレータ,イテレータ)</code></h4>
 <p><code>vec.erase(itr);</code> なら、<code>itr</code> の位置の要素を削除する。<br>
 <code>vec.erase(itr1,itr2);</code> とすると、<code>itr1</code> 以上 <code>itr2</code> 未満の要素を削除する。</p>
-<h4>全削除 <code>.clear()</code></h4>
+<h4 id="section-clear">全削除 <code>.clear()</code></h4>
 <p><code>vec.clear();</code> で <code>vec</code> を空配列にする。</p>
-<h4>サイズ変更 <code>.resize(要素数,要素)</code></h4>
+<h4 id="section-resize">サイズ変更 <code>.resize(要素数,要素)</code></h4>
 <p>配列の長さを変更する。<br>
 短くする場合は後ろを削除し、長くする場合は後ろを指定要素で埋める。<br>
 例えば <code>vec</code> の中身が <code>{1,2,3}</code> である場合、以下のようになる。</p>
@@ -156,19 +157,19 @@ $5$ 個くらいなら直接書いてもよいが、$100$ 個並べる場合な�
 <li><code>vec.resize(5,-1)</code> なら <code>{1,2,3,-1,-1}</code> になる
 </li>
 </ul>
-<h4>交換 <code>.swap(別の配列)</code></h4>
+<h4 id="section-swap">交換 <code>.swap(別の配列)</code></h4>
 <p><code>vec.swap(v);</code> で、<code>vec</code> と <code>v</code> の中身が入れ替わる。<br>
 <code>swap(vec,v);</code> でも同じ。<br>
 実は中身ではなくデータに紐づく配列名などの情報の方を入れ替えるので、中身が長くても一瞬で終わる。</p>
-<h3>検索系（全体的にB問題相当）</h3>
-<h4>配列検索 <code>find(イテレータ,イテレータ,要素)</code></h4>
+<h3 id="section-b-2">検索系（全体的にB問題相当）</h3>
+<h4 id="section-find">配列検索 <code>find(イテレータ,イテレータ,要素)</code></h4>
 <p><code>find(vec.begin(),vec.end(),3)</code> と書けば、<code>vec.begin()</code> 以降で初めて <code>3</code> がある場所を検索する。<br>
 返り値はイテレータで、第 $2$ 引数のところまでに存在しなかった場合は第 $2$ 引数をそのまま返す。<br>
 <code>string</code> 型と書き方も返り値も全く違うので注意。</p>
-<h4>該当要素数カウント <code>count(イテレータ,イテレータ,要素)</code></h4>
+<h4 id="section-count">該当要素数カウント <code>count(イテレータ,イテレータ,要素)</code></h4>
 <p><code>count(vec.begin(),vec.end(),3)</code> と書けば、<code>vec</code> 内に <code>3</code> が何個あるかを数える。</p>
-<h2>よく使う処理</h2>
-<h3>配列を標準入力から受け取る</h3>
+<h2 id="section-4fb896d16b">よく使う処理</h2>
+<h3 id="section-239cb5ccfd">配列を標準入力から受け取る</h3>
 <p><code>string</code> 型とは異なり、一度に <code>cin</code> で中身を受け取ることはできない。</p>
 <pre><code>vector&lt;int&gt; a(n);
 for (int i=0; i&lt;n; i++) {
@@ -180,7 +181,7 @@ for (int&amp; i : a) {
   cin &gt;&gt; i;
 }</code></pre>
 <p>というように、forループを用いて $1$ つずつ受け取る。</p>
-<h3>中身を逆順に並べなおす</h3>
+<h3 id="section-1215f6a103">中身を逆順に並べなおす</h3>
 <pre><code>reverse(vec.begin(),vec.end());</code></pre>
 <p>配列が逆順の方が都合がよい場合などに。</p>
 <p>また、配列の前にたくさん挿入したい場合に、以下の方法が使える。</p>
@@ -192,12 +193,12 @@ for (int&amp; i : a) {
 <li>もう一度逆順にする
 </li>
 </ul>
-<h3>中身を小さい順に並べる</h3>
+<h3 id="section-5c133e8c00">中身を小さい順に並べる</h3>
 <pre><code>sort(vec.begin(),vec.end());</code></pre>
 <p>数列の並び順はもはや壊れてもよいので、中身を全部小さい順に並べてほしい場合に。</p>
 <pre><code>sort(vec.rbegin(),vec.rend());</code></pre>
 <p>なら、逆順に並ぶ。</p>
-<h3>$1$ 要素ずつ何か処理する</h3>
+<h3 id="section-1">$1$ 要素ずつ何か処理する</h3>
 <p><code>.at(i)</code> で $1$ 要素ずつ見ていく。<br>
 長さ $n$ が与えられている場合。</p>
 <pre><code>for (int i=0; i&lt;n; i++) {
@@ -208,38 +209,38 @@ for (int&amp; i : a) {
 <pre><code>for (size_t i=0; i&lt;vec.size(); i++) {
   // 中身の要素 vec.at(i) に対してしたいことを書く
 }</code></pre>
-<h3>$1$ 要素ずつ何か処理する、その2（B問題相当）</h3>
+<h3 id="section-1-2-b">$1$ 要素ずつ何か処理する、その2（B問題相当）</h3>
 <p>範囲for文で $1$ 要素ずつ取り出すことができる。</p>
 <pre><code>for (int i : vec) {
   // 中身の要素 i に対してしたいことを書く
 }</code></pre>
 <p>中身の書き換えまでしたい場合は <code>int&amp;</code> として参照渡しをする。</p>
-<h3>順に増える内容で初期化する（B問題相当）</h3>
+<h3 id="section-b-3">順に増える内容で初期化する（B問題相当）</h3>
 <p><code>iota</code> 関数を使う。</p>
 <pre><code>vector&lt;int&gt; vec(n);
 iota(vec.begin(),vec.end(),0);</code></pre>
 <p>とすれば、<code>0</code> から <code>n-1</code> まで順に入った数列を用意できる。<br>
 第 $3$ 引数を <code>1</code> にすれば、<code>1</code> から <code>n</code> まで順に入った数列を用意できる。<br>
 forループで自分で書くのと、あまり手間が変わっていない気も。</p>
-<h3>全部合計する（B問題相当）</h3>
+<h3 id="section-b-4">全部合計する（B問題相当）</h3>
 <p><code>accumulate</code> 関数を使う。</p>
 <pre><code>accumulate(vec.begin(),vec.end(),0)</code></pre>
 <p>で、第 $3$ 引数に <code>vec</code> の全ての数を前から順に <code>+</code> した値を返してくれる。<br>
 <code>int</code> 型からあふれそうな場合は、第 $3$ 引数を <code>0LL</code> にすると <code>long long</code> 型で計算してくれる。<br>
 これも、forループで自分で書くのと、あまり手間が変わっていない気も。</p>
-<h2>注意点</h2>
-<h3>処理速度に注意（C問題相当）</h3>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<h3 id="section-c">処理速度に注意（C問題相当）</h3>
 <p>長さ $n$ の <code>vector</code> は、プログラム上 $1$ 行で書いても当然中身は $n$ 個ある。<br>
 中身を $1$ 要素ずつ見ていく系の処理や、先頭や途中の要素が増減する処理は、$O(n)$ かかる。<br>
 コードの見た目で処理時間を見積もると、わりと痛い目を見るので注意。</p>
-<h2>関連アルゴリズム</h2>
-<h3><a href="string.html">string型</a></h3>
+<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h3 id="section-string"><a href="string.html">string型</a></h3>
 <p>文字や要素を一列に並べて保持し、添字アクセスや末尾への追加・削除などができる点で似ている。</p>
-<h3><a href="size-t.html">size_t型</a></h3>
+<h3 id="section-size-t"><a href="size-t.html">size_t型</a></h3>
 <p><code>.size()</code> の返り値には、<code>size_t</code> 型が使われる。</p>
-<h3><a href="iterator.html">イテレータ</a></h3>
+<h3 id="section-f7b5896267"><a href="iterator.html">イテレータ</a></h3>
 <p><code>.begin()</code> や <code>.end()</code> でイテレータを取得し、範囲の指定や要素の挿入・削除などに用いる。</p>
-<h3><a href="multidimensional-vector.html">多次元vector</a></h3>
+<h3 id="section-vector"><a href="multidimensional-vector.html">多次元vector</a></h3>
 <p><code>vector</code> の要素をさらに <code>vector</code> にすることで、多次元配列として扱える。</p>
   </article>
 

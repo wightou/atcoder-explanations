@@ -33,7 +33,8 @@ window.MathJax = {
       
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/tdpc/tasks/tdpc_iwi" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/tdpc/submissions/78363309" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-2">入力例2での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>ABCで言うと、難しめD問題級。<br>
 または、ARCのA問題級。<br>
 この問題を作った人は $O(|s|^3)$ の動的計画法を意図していたのかもしれない。<br>
@@ -61,7 +62,7 @@ window.MathJax = {
 よって、<code>&#x27;w&#x27;</code> の個数と、<code>&#x27;i&#x27;</code> の個数の半分との、小さい方がそのブロックの答えである。</p>
 <p>実装は、方針に応じて文字列の先頭や末尾に <code>&quot;ww&quot;</code> を番兵としておくとやりやすい。</p>
 <p>計算量は $O(|s|)$。</p>
-<h2>入力例2での動作</h2>
+<h2 id="section-2">入力例2での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>s: iwiwwwiiiwiwiwiiwii</code></pre>
 <p>番兵として末尾に <code>ww</code> を追加する。</p>
@@ -77,9 +78,9 @@ $4$ 文字目の <code>&#x27;w&#x27;</code> を差し引くと、このブロッ
 $20$ 文字目の <code>&#x27;w&#x27;</code> を差し引くと、このブロックの <code>&#x27;i&#x27;</code> は $9$ 個、<code>&#x27;w&#x27;</code> は $4$ 個となる。<br>
 よって、このブロックから削除できる <code>&quot;iwi&quot;</code> の最大個数は、$\min(4,\lfloor 9/2\rfloor)=4$ である。</p>
 <p>したがって、削除できる <code>iwi</code> の最大個数は $1+4=5$ となる。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">全ペアへの苦悩</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/arc224/tasks/arc224_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc224/submissions/77447861" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>ある数に着目し、各カードにその数が書いてあれば <code>1</code>、書いていなければ <code>0</code> を対応させる。<br>
 すると、書き込みパターンは $N$ 桁の二進数で表現できる。<br>
 条件の、片方のみが書かれているカードが存在というのは、この二進数が異なることに他ならない。</p>
@@ -42,7 +43,7 @@ $0$ から $2^N-1$ までの書き込みパターンの中で、<code>1</code> �
 <code>1</code> の個数が $i$ 個である書き込みパターンの個数は、二項係数 ${}_N\mathrm{C}_i$ として求められる。</p>
 <p>$0$ から $2^N-1$ までを全部使い切っても足りない場合は、不可能なので $-1$ を出力。</p>
 <p>同じ桁数のものをまとめて処理すれば高速であるが、愚直にやっても $O\left(\sum K\right)$ なので十分間に合う。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>$1$ つ目のテストケースのみ考える。</p>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
@@ -68,10 +69,10 @@ $$</p>
 <p><code>1</code> は $1$ 桁なので、<code>result</code> に $2\times 1=2$ を加える。<br>
 <code>result=5</code>, <code>k=0</code> となる。</p>
 <p>すべての値への割り当てが終わったので、答えは $5$ である。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

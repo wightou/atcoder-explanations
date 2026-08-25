@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">グーゴル交換</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc470/tasks/abc470_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc470/submissions/78235670" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>$10^{100}$ は、好きな回数交換できるという意味と考えてよさそう、という前提でまず考える。</p>
 <p>各文字の位置をグラフの頂点と考えて、交換可能なところを辺で結ぶ。<br>
 すると、各連結成分内では、十分な回数があれば好きな配置に交換できる。<br>
@@ -44,7 +45,7 @@ window.MathJax = {
 どの連結成分内も全て異なる文字で構成されている場合、偶数回目に作れるのは積のうち半分だけとなる。</p>
 <p>計算量は $O((N+M)\alpha(N))$ である。<br>
 ただし、$\alpha(N)$ はアッカーマン関数の逆関数。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。<br>
 辺の両端を <code>0-indexed</code> に直すと、次のようになる。</p>
 <pre><code>n: 5
@@ -70,11 +71,11 @@ a, b:
 <p>また、同じ連結成分に <code>i</code> が $2$ 個あるので、<code>flag</code> は <code>true</code> になる。<br>
 そのため、最後の $2$ で割る処理は行わない。</p>
 <p><code>result</code> の値である $6$ が答えである。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 何か足し算や掛け算をするたびに結果を <code>% 998244353</code> し、割り算は $998244353-2$ 乗したものを掛ける。<br>
 累乗計算を何度も行うため、繰り返し二乗法のアルゴリズムも用意しておくこと。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

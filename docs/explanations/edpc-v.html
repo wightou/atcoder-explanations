@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">部分木</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_v" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77959971" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-72979a3b3c">動作例</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>ABCでいうと、F問題級。</p>
 <p>いわゆる全方位木DPの問題だが、この問題は普通の木DPっぽい思考で解ける。</p>
 <p>まず、適当な頂点を根として選び、根付き木にしておく。<br>
@@ -65,7 +66,7 @@ window.MathJax = {
 すると、後からちゃんと計算するときに、そこに <code>black_leaf[i]</code> をかけて $+1$ するだけでよくなる。</p>
 <p>これで <code>black_root[i]</code> と <code>black_leaf[i]</code> が求まったので、各頂点ごと積を取れば答え。</p>
 <p>計算量は $O(N)$。</p>
-<h2>動作例</h2>
+<h2 id="section-72979a3b3c">動作例</h2>
 <p>ここでは、説明用に次の独自入力例で考える。</p>
 <pre><code>5 100
 1 2
@@ -165,10 +166,10 @@ right: {10, 2, 1}</code></pre>
 6
 7
 7</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは <code>m</code> で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 今回は法が $10^9+7$ 固定ではなく、入力で与えられる <code>m</code> である点に注意する。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>根付きにしないまま、各辺に「そこから先の部分木を、根を黒くして塗る方法」を持たせる実装もある。<br>
 深さ優先探索的に求めていくことになるが、「自身以外の積を求める」部分がかなり複雑になる。</p>
   </article>

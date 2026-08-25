@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">順序反転</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc465/tasks/abc465_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc465/submissions/77219802" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>一見、<code>reverse()</code> を多用して解けそうに見える。<br>
 しかし、<code>reverse()</code> は $O(N)$ かかる関数であり、$S$ の中身が <code>&#x27;o&#x27;</code> だらけだと全体で $O(N^2)$ かかる。<br>
 $N$ が最大 $500000$ まで対応しなければならないので、これでは間に合わずTLE。<br>
@@ -64,7 +65,7 @@ $N$ が最大 $500000$ まで対応しなければならないので、これで
 <p>これなら、毎回反転があっても $O(N)$ で処理が終わる。<br>
 値を（実際の）前からも後ろからも追加するので、データ構造は <code>deque</code> の出番。</p>
 <p>あとは、最後に自分がひっくり返ったまま終わった場合は、最後だけ本当に反転させれば答え。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 5
 s: &quot;ooxoo&quot;</code></pre>
@@ -99,9 +100,9 @@ reversed: true</code></pre>
 reversed: false</code></pre>
 <p>最後に、<code>reversed</code> は <code>false</code> なので、<code>que</code> を反転しない。</p>
 <p>よって、最終的な並びは <code>5 2 1 3 4</code> となり、これが答えである。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

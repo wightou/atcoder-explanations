@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">昇順ラベル</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/arc224/tasks/arc224_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc224/submissions/77447859" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>小さい数が大量にあると、隣接の中に $1$ 小さい値が複数あって条件に反する危険が大きい。<br>
 ということで、頂点 $1$ の値を $0$ を決めた後で、以下をループして貪欲に埋めていけばよい。</p>
 <ul>
@@ -55,13 +56,13 @@ $Z$ についても同様。</p>
 すなわち、そのような状況は絶対に発生しない。</p>
 <p>ということで、冒頭に述べた貪欲法で構成していけばよい。<br>
 そして、実のところ、これはただの深さ優先探索であり、計算量は $O\left(\sum (N+M)\right)$ である。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>ただの深さ優先探索なので省略。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>再帰による深さ優先探索では、言語によっては再帰が深くなりすぎてエラーする場合がある。<br>
 その場合は、<code>stack</code> を用いる方の実装にする必要がある。</p>
 <p>C++では、この程度では何も問題ないようである。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

@@ -29,7 +29,8 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>long long型</h1>
-    <h2>概要</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-d924c9c5a7">宣言と初期化</a><ul><li><a href="#section-98bc3412c3">宣言だけする場合</a></li><li><a href="#section-1a3dfac5c0">初期化もする場合</a></li></ul></li><li><a href="#section-2e750b0e4e">可能な演算</a></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-e09fa73d89">文字列化</a></li><li><a href="#section-int">int 型の積が一時的に範囲を超える場合</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <h2 id="section-7a52d716ff">概要</h2>
 <p><code>int</code> 型より大きな数を扱える整数型。</p>
 <p><code>long long</code> 型は $64$ ビットの整数型（AtCoder環境の場合）。<br>
 符号用の $1$ ビットと、値の大きさ用の $63$ ビットを使う。<br>
@@ -37,41 +38,41 @@ window.MathJax = {
 およそ $\pm 9 \times 10^{18}$ くらいまでは大丈夫で、それを超えると危ないと認識するとよい。</p>
 <p>整数リテラルの後ろに <code>LL</code> を付けると、<code>long long</code> 型になる。</p>
 <pre><code>1LL</code></pre>
-<h2>宣言と初期化</h2>
-<h3>宣言だけする場合</h3>
+<h2 id="section-d924c9c5a7">宣言と初期化</h2>
+<h3 id="section-98bc3412c3">宣言だけする場合</h3>
 <pre><code>long long a;</code></pre>
-<h3>初期化もする場合</h3>
+<h3 id="section-1a3dfac5c0">初期化もする場合</h3>
 <pre><code>long long a = 0LL;  // 固定値で初期化。0 とだけ書いても変換されるので問題ない
 long long b = a;    // 他の整数型や double 型の変数で初期化</code></pre>
-<h2>可能な演算</h2>
+<h2 id="section-2e750b0e4e">可能な演算</h2>
 <p><code>long long</code> 型では、<code>int</code> 型とほぼ同じ演算ができる。</p>
 <p>詳しくは「<a href="int.html">int型</a>」の記事参照。</p>
-<h2>よく使う処理</h2>
+<h2 id="section-4fb896d16b">よく使う処理</h2>
 <p><code>long long</code> 型でも、<code>int</code> 型とほぼ同じ処理ができる。</p>
 <p>詳しくは「<a href="int.html">int型</a>」の記事参照。</p>
-<h3>文字列化</h3>
+<h3 id="section-e09fa73d89">文字列化</h3>
 <p><code>long long</code> 型の数 <code>a</code> を <code>string</code> 型に変換したい場合、以下のようにする。</p>
 <pre><code>to_string(a)</code></pre>
 <p>逆に、<code>string</code> 型の文字列 <code>s</code> を <code>long long</code> 型にしたい場合、以下のようにする。</p>
 <pre><code>stoll(s)</code></pre>
 <p>ただし、変換後の値が <code>long long</code> 型に収まるかどうかを確認すること。</p>
-<h3><code>int</code> 型の積が一時的に範囲を超える場合</h3>
+<h3 id="section-int"><code>int</code> 型の積が一時的に範囲を超える場合</h3>
 <p>例えば、$10^6$ 程度の <code>int</code> 型の数 <code>a</code> と <code>b</code> を掛け、$10^7$ 程度の数 <code>c</code> で割った余りを求める場合を考える。</p>
 <pre><code>(a*b)%c</code></pre>
 <p>このように書くと、掛け算の時点では <code>int</code> 型として計算される。<br>
 <code>a*b</code> が <code>int</code> 型の範囲を超えるため、最後の結果も正しくならない。</p>
 <pre><code>(1LL*a*b)%c</code></pre>
 <p>このように <code>1LL</code> を掛けると、<code>long long</code> 型として計算されるため、途中のオーバーフローを防げる。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p><code>int</code> 型と同様に、桁あふれや負数の除算などに注意する。</p>
 <p>詳しくは「<a href="int.html">int型</a>」の記事参照。</p>
 <p><code>long long</code> 型でも桁あふれしそうな場合は、別の計算方法を考えた方がよいことが多い。<br>
 さらに大きな桁数を扱う型を持ち出すのは大変だし、たいていの場合その方法は想定解ではない。</p>
-<h2>関連アルゴリズム</h2>
-<h3><a href="int.html">int型</a></h3>
+<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h3 id="section-int-2"><a href="int.html">int型</a></h3>
 <p><code>long long</code> 型より小さい整数を扱う、最も代表的な整数型。<br>
 可能な演算やよく使う処理は、<code>long long</code> 型とほぼ同じ。</p>
-<h3><a href="string.html">string型</a></h3>
+<h3 id="section-string"><a href="string.html">string型</a></h3>
 <p>文字列を扱う型。<br>
 <code>to_string</code> で <code>long long</code> 型から変換でき、<code>stoll</code> で <code>long long</code> 型へ変換できる。</p>
   </article>

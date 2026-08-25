@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">各瞬間のノッポ</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc463/tasks/abc463_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc463/submissions/76862467" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>時系列にそって何かが起こる話なので、イベントソートで考えたいところ。<br>
 しかし、高橋くんが入室なら扱いやすいが、退出すなわちデータの削除は大変。<br>
 そこで、時間軸を反転し、逆再生で解いていくことを考える。</p>
@@ -44,7 +45,7 @@ window.MathJax = {
 <p>これなら高橋くんの（データ的な意味で）退出が発生しないので、最高身長を変数 $1$ つで持てば十分。<br>
 クエリを処理するごとに本来のクエリ番号のところに結果を書き込んでいけばよい。<br>
 計算量は、ソートがボトルネックで $O(N \log N + Q \log Q)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 4
 h: {31, 26, 3, 15}
@@ -88,9 +89,9 @@ result: {0, 26, 15, 15}</code></pre>
 id: 4
 mx: 31
 result: {31, 26, 15, 15}</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

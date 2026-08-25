@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">近い点のペア</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc466/tasks/abc466_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc466/submissions/77418225" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-n-5">N=5での動作例</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>まず、問題で言及されていないが、座標は当然整数とは限らないことに注意したい。</p>
 <p>さて、インタラクティブ問題ということで身構えそうになるが、実はそこまで特殊なことはない。<br>
 普通に長さ $N$ の数列を渡されたと思って、そこから同様の問題を解くにはどうするか。<br>
@@ -48,7 +49,7 @@ window.MathJax = {
 つまり、両方のインデックスが最大 $N$ 回ずつ進む間の確認回数は $2N$ 回以下である。</p>
 <p>インタラクティブ問題は、動作テストが難しい。<br>
 一度、普通の <code>vector</code> でテストをしながら尺取法を書き、最後に問い合わせ部分を書き換えるとよい。</p>
-<h2>N=5での動作例</h2>
+<h2 id="section-n-5">N=5での動作例</h2>
 <p>点 $1$ から点 $5$ までの座標が、次のようになっている場合を考える。<br>
 これらの座標自体は、プログラムには入力されない。</p>
 <pre><code>点1: 0
@@ -99,13 +100,13 @@ r: 5
 result: 4</code></pre>
 <p>最後に、<code>! 4</code> と出力すればよい。</p>
 <p>実際に行った問い合わせは $7$ 回であり、上限の $2N=10$ 回以下である。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>うっかり、<code>&quot;? 3 3&quot;</code> のような質問を投げないこと。<br>
 これは不正な質問である。<br>
 尺取法でこのような質問が生まれる場面は存在するので、問い合わせを投げずに <code>&quot;Yes&quot;</code> と判断する。</p>
 <p>問い合わせを出力するたびに、標準出力を flush する必要がある。<br>
 出力後の改行に <code>endl</code> を用いることで改行ついでに flush される。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">二進文字列中央値</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/arc227/tasks/arc227_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc227/submissions/78530827" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>目標文字列 $1$ つを作れる必要十分条件について考える。</p>
 <p>まず、問題を簡略化して、目標は <code>000...00</code> であると仮定してよい。<br>
 目標文字列に <code>1</code> が含まれている場合、全文字列のその位置の <code>0</code> <code>1</code> を入れ替えればよい。<br>
@@ -65,7 +66,7 @@ $S$ 側も含めて全て入れ替えを行うならば、問題としては同�
 <p>ただし、$M=1$ の場合だけは、この議論を適用できない。<br>
 この場合は新しい文字列がどうせ作れないため、「そのものが存在するか」を愚直処理する。</p>
 <p>$M \geq 2$ の場合の計算量は $O((N+Q)M^2)$ である。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 m: 3
@@ -82,10 +83,10 @@ s: {000, 011, 101}</code></pre>
 必要な文字の組は、位置 $0,1$ では <code>00</code>、位置 $0,2$ では <code>01</code>、位置 $1,2$ では <code>01</code> である。<br>
 これらはいずれも <code>s</code> の中に存在する。<br>
 よって、<code>Yes</code> を出力する。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>$M=1$ の場合は、$2$ 位置の組を用いた判定ができない。<br>
 この場合は、「そのものが存在するか」を直接確認する。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

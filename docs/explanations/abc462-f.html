@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">もっとABC</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc462/tasks/abc462_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc462/submissions/76685511" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>$S$ の長さを $N$ として、まずは $O(N^2)$ でもいい場合の解法を考える。</p>
 <p>動的計画法で求める。<br>
 <code>dp[i][j]</code> を「$i+2$ 文字目までに <code>&quot;ABC&quot;</code> を $j$ 個作る最小コスト」とする。<br>
@@ -67,7 +68,7 @@ $K+2$ ブロックなのは、追加で作った個数が $0$ から $K$ 個ま�
 つまり、新たに <code>&quot;ABC&quot;</code> を作るかどうかの処理をしたのち、全データを $1$ ブロック分前に移動すればよい。<br>
 ブロック数の余剰は、このとき $K$ 回のデータが一時的に $K+1$ 回相当のブロックにはみ出るためのケア。</p>
 <p>最後の文字まで処理が終わったら、全文字使って $K$ 回追加で作るコストを答えればよい。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>$1$ つめのテストケースのみ。</p>
 <p>入力を受け取る。</p>
 <pre><code>s: &quot;ATCABC&quot;
@@ -94,9 +95,9 @@ k: 1</code></pre>
 <pre><code>dp: {0, 0, 0, |0, 1, 1, |1, INF, INF} </code></pre>
 <pre><code>dp: {0, 1, 1, |1, INF, INF, |INF, INF, INF} </code></pre>
 <p>（<code>0-indexed</code> で）$k$ 番目のブロックの先頭の値が答え。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

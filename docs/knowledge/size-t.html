@@ -29,7 +29,8 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>size_t型</h1>
-    <h2>概要</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-d924c9c5a7">宣言と初期化</a><ul><li><a href="#section-98bc3412c3">宣言だけする場合</a></li><li><a href="#section-1a3dfac5c0">初期化もする場合</a></li></ul></li><li><a href="#section-2e750b0e4e">可能な演算</a></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-vector-string">vector や string 型の中身を全てループ</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-18-446-744-073-709-551-615">$18{,}446{,}744{,}073{,}709{,}551{,}615$ 番目へのアクセスが発生した場合</a></li><li><a href="#section-2dd31cc70c">逆順ループをする場合のループ条件に注意</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <h2 id="section-7a52d716ff">概要</h2>
 <p><code>vector</code> や <code>string</code> 型などの添え字やデータサイズを扱うときに使う整数型。<br>
 <code>.size()</code> を取得するたびに <code>int</code> 型変数へ代入してから使うなら、知らなくても問題ない。</p>
 <p><code>size_t</code> 型は符号なしの整数型。<br>
@@ -38,18 +39,18 @@ window.MathJax = {
 <p>$64$ ビットの場合、扱える値の範囲は $0$ から $18{,}446{,}744{,}073{,}709{,}551{,}615$ まで。<br>
 これより大きいサイズのデータを扱うことはないので、上限超えは心配しなくてよい。<br>
 むしろ、意図せず $0$ より小さい数を扱ってしまう不具合が出やすいので注意。</p>
-<h2>宣言と初期化</h2>
-<h3>宣言だけする場合</h3>
+<h2 id="section-d924c9c5a7">宣言と初期化</h2>
+<h3 id="section-98bc3412c3">宣言だけする場合</h3>
 <pre><code>size_t a;</code></pre>
-<h3>初期化もする場合</h3>
+<h3 id="section-1a3dfac5c0">初期化もする場合</h3>
 <pre><code>size_t a = 0;  // 固定値で初期化
 size_t b = a;  // 他の整数型や double 型の変数で初期化</code></pre>
-<h2>可能な演算</h2>
+<h2 id="section-2e750b0e4e">可能な演算</h2>
 <p><code>size_t</code> 型では、<code>int</code> 型とほぼ同じ演算ができる。</p>
 <p>詳しくは「<a href="int.html">int型</a>」の記事参照。</p>
 <p>ただし、符号なし整数型なので、小さい方から大きい方を引くと正しい結果にならない点に注意。</p>
-<h2>よく使う処理</h2>
-<h3><code>vector</code> や <code>string</code> 型の中身を全てループ</h3>
+<h2 id="section-4fb896d16b">よく使う処理</h2>
+<h3 id="section-vector-string"><code>vector</code> や <code>string</code> 型の中身を全てループ</h3>
 <p>大きさが変数で与えられていない場合、ループを普通に書くと、以下のようにしたくなる。</p>
 <pre><code>for (int i=0; i&lt;vec.size(); i++)</code></pre>
 <p>ところが、<code>.size()</code> の返り値は <code>size_t</code> 型なので、<br>
@@ -60,8 +61,8 @@ size_t b = a;  // 他の整数型や double 型の変数で初期化</code></pre
 ループ前に <code>.size()</code> の値を <code>int</code> 型変数へ入れて使用してもよい。</p>
 <p>C++20以降であれば、<code>ssize()</code> 関数を利用して、以下のように書いて <code>size_t</code> 型を避けてもよい。</p>
 <pre><code>for (int i=0; i&lt;ssize(vec); i++)</code></pre>
-<h2>注意点</h2>
-<h3>$18{,}446{,}744{,}073{,}709{,}551{,}615$ 番目へのアクセスが発生した場合</h3>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<h3 id="section-18-446-744-073-709-551-615">$18{,}446{,}744{,}073{,}709{,}551{,}615$ 番目へのアクセスが発生した場合</h3>
 <p><code>vector</code> や <code>string</code> 型の中の要素へアクセスするとき、<br>
 添え字 <code>i</code> は <code>size_t</code> 型として扱われる。</p>
 <p>想定外の挙動によって <code>i</code> が <code>-1</code> だった場合、<br>
@@ -70,7 +71,7 @@ $18{,}446{,}744{,}073{,}709{,}551{,}615$ として扱われる。</p>
 <p>配列の範囲外アクセスのエラーメッセージで、<br>
 $18{,}446{,}744{,}073{,}709{,}551{,}615$ を見かけたら、<br>
 <code>-1</code> 番目へアクセスしようとした可能性が高いことを覚えておくとよい。</p>
-<h3>逆順ループをする場合のループ条件に注意</h3>
+<h3 id="section-2dd31cc70c">逆順ループをする場合のループ条件に注意</h3>
 <p>問題の内容次第では、以下のような逆順ループを書きたい場合がある。</p>
 <pre><code>for (int i=n-1; i&gt;=0; i--)</code></pre>
 <p><code>int</code> 型であれば問題ないが、<code>i</code> が <code>size_t</code> 型の場合、<br>
@@ -78,13 +79,13 @@ $18{,}446{,}744{,}073{,}709{,}551{,}615$ を見かけたら、<br>
 ループが継続してしまう。</p>
 <pre><code>for (size_t i=a.size()-1; i&lt;a.size(); i--)</code></pre>
 <p>のように書くと防げる。</p>
-<h2>関連アルゴリズム</h2>
-<h3><a href="int.html">int型</a></h3>
+<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h3 id="section-int"><a href="int.html">int型</a></h3>
 <p>最も代表的な符号付き整数型。<br>
 <code>.size()</code> の値を <code>int</code> 型へ代入してから扱う方法もある。</p>
-<h3><a href="vector.html">vector</a></h3>
+<h3 id="section-vector"><a href="vector.html">vector</a></h3>
 <p>要素数や添え字を扱うときに、<code>size_t</code> 型が使われる。</p>
-<h3><a href="string.html">string型</a></h3>
+<h3 id="section-string"><a href="string.html">string型</a></h3>
 <p>文字数や添え字を扱うときに、<code>size_t</code> 型が使われる。</p>
   </article>
 

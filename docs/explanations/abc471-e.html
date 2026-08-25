@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">和の二乗和</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc471/tasks/abc471_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc471/submissions/78511223" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>各回スコアの式を展開すると、全て $A_i\times A_j$ という形になる。<br>
 全取り出し方の合計は、それぞれの係数がどうなるか考えることで処理すればよい。</p>
 <p>まず、$i$ と $j$ が等しい項 $A_i^2$ について。<br>
@@ -50,7 +51,7 @@ $i$ と $j$ を入れ替えたものもまとめて扱うことにして、$i&lt
 $1$ 乗和の $2$ 乗から $2$ 乗和を引くと、全ての異なる要素の積の $2$ 倍となる。<br>
 $2$ 倍は既にされているので、${}_{N-2}\mathrm{C}_{K-2}$ だけかけることになる。</p>
 <p>これによって高速化ができ、全体の計算量は $O(N+\log \mathrm{MOD})$ となる。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>$N=3$, $K=2$ で、</p>
 <pre><code>A = [1, 10, 100]</code></pre>
 <p>である。</p>
@@ -59,13 +60,13 @@ $2$ 倍は既にされているので、${}_{N-2}\mathrm{C}_{K-2}$ だけかけ�
 また、${}_{N-2}\mathrm{C}_{K-2}={}_{1}\mathrm{C}_{0}=1$ なので、この部分から $2220$ を加える。</p>
 <p>$i$ と $j$ が等しい項については、${}_{N-1}\mathrm{C}_{K-1}={}_{2}\mathrm{C}_{1}=2$ なので、$10101\times2=20202$ を加える。</p>
 <p>よって、$2220+20202=22422$ となる。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>$A_i^2$ は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
 <p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 何か足し算や掛け算をするたびに結果を <code>% 998244353</code> し、割り算は $998244353-2$ 乗したものを掛ける。<br>
 二項係数の計算で逆元を求めるため、繰り返し二乗法のアルゴリズムも用意しておくこと。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

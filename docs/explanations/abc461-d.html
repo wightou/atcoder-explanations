@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">和=Kはいくつ</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc461/tasks/abc461_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc461/submissions/76604386" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc461/submissions/76604388" target="_blank" rel="noopener noreferrer">別解</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>愚直にやるのは簡単なコードで実現できる。<br>
 つまり、範囲の上下左右の端を決め、その範囲内の総和を求めるループをすればよい。<br>
 しかし、それでは $O(H^3W^3)$ かかってTLE。<br>
@@ -50,7 +51,7 @@ $O(HW)$ の事前処理をしておけば、任意の範囲の矩形和が $4$ �
 これは単調増加列になっているはずなので、「値がちょうど $K$ である組がいくつあるか？」は簡単。<br>
 尺取り法で「差が $K$ 以下の範囲」「差が $K$ 未満の範囲」を両方持てば、その差が「差が $K$ の範囲」。</p>
 <p>ということで、左右を決めるループが $O(W)$ になったので、全体で $O(H^2W)$ となり、計算が間に合う。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>h: 3
 w: 4
@@ -134,10 +135,10 @@ diff  : &quot;0, 1, 3, 4, 5&quot;,</code></pre>
 </table></div>
 <p><code>vec[1]</code> と <code>vec[3]</code> を選んだ場合、結果は $2$ だけ加算された。<br>
 全ての $2$ 行の組の選び方について同じことを行うと、答えは $8$ となる。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>最大グリッドを全部 $0$ で埋めて $K=0$ とすると、答えは、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>四重ループで処理するには $157$ 億回のループが必要で、間に合わない。<br>
 ……と解法に記載したが、実はC++なら間に合わないこともない。</p>
 <p>AtCoderのサーバーのCPUは並列処理が可能らしい。<br>

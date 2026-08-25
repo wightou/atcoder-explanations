@@ -29,7 +29,8 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>入出力</h1>
-    <h2>概要</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-369acefbdf">コード例</a><ul><li><a href="#section-cedc6e4b3a">整数型の入出力</a></li><li><a href="#section-10d8b6c824">小数型の入出力</a></li><li><a href="#section-5711c55272">文字型の入出力</a></li><li><a href="#section-a75ad46f15">文字列型の入出力</a></li><li><a href="#section-08102104a4">動的配列の入出力</a></li><li><a href="#section-d968a4c142">二次元配列の入出力</a></li></ul></li><li><a href="#section-aec54ceb12">使い方の応用</a><ul><li><a href="#section-22543acc9a">入出力を高速化する</a></li><li><a href="#section-d1195cfb15">いくつもまとめて受け取る</a></li><li><a href="#section-vector">vectorを並列で受け取る</a></li><li><a href="#section-20d0f05549">桁数を揃えて整数を出力する</a></li><li><a href="#section-cerr">デバッグ出力：cerr</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-cin">cinする個数や順序を間違えないようにする</a></li><li><a href="#section-eb86ca28ea">解答の最後に改行する</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
+    <h2 id="section-7a52d716ff">概要</h2>
 <p>競技プログラミングでは、標準入力から値を受け取り、計算した結果を標準出力に出す必要がある。</p>
 <p>標準入力は、コマンドラインに打ち込んだ文字などの、外部からプログラムに指示を与える方法の $1$ つ。<br>
 競技プログラミングでは、問題の入力がこの標準入力から与えられる。<br>
@@ -41,8 +42,8 @@ window.MathJax = {
 <p>標準エラー出力 <code>cerr</code> というものもあり、応用の項目で解説する。</p>
 <p>正式にはそれぞれ <code>std::cin</code>、<code>std::cout</code>、<code>std::cerr</code> である。<br>
 ただし、通常はコード冒頭に <code>using namespace std;</code> を書いておけば、<code>cin</code>、<code>cout</code>、<code>cerr</code> だけで書ける。</p>
-<h2>コード例</h2>
-<h3>整数型の入出力</h3>
+<h2 id="section-369acefbdf">コード例</h2>
+<h3 id="section-cedc6e4b3a">整数型の入出力</h3>
 <p><code>int</code> 型の場合。<br>
 <code>long long</code> 型も同様。</p>
 <p><code>cout</code> の後ろの <code> &lt;&lt; endl</code> は改行を意味する。<br>
@@ -51,7 +52,7 @@ window.MathJax = {
 cin &gt;&gt; x;
 
 cout &lt;&lt; x &lt;&lt; endl;</code></pre>
-<h3>小数型の入出力</h3>
+<h3 id="section-10d8b6c824">小数型の入出力</h3>
 <p><code>double</code> 型の場合。</p>
 <p>下の例の場合、小数点以下 $12$ 桁まで出力。<br>
 <code>fixed</code> を付けなければ、全体で有効数字 $12$ 桁まで出力する。</p>
@@ -61,19 +62,19 @@ cout &lt;&lt; x &lt;&lt; endl;</code></pre>
 cin &gt;&gt; d;
 
 cout &lt;&lt; fixed &lt;&lt; setprecision(12) &lt;&lt; d &lt;&lt; endl;</code></pre>
-<h3>文字型の入出力</h3>
+<h3 id="section-5711c55272">文字型の入出力</h3>
 <p><code>char</code> 型の場合。</p>
 <pre><code>char c;
 cin &gt;&gt; c;
 
 cout &lt;&lt; c &lt;&lt; endl;</code></pre>
-<h3>文字列型の入出力</h3>
+<h3 id="section-a75ad46f15">文字列型の入出力</h3>
 <p><code>string</code> 型の場合。</p>
 <pre><code>string s;
 cin &gt;&gt; s;
 
 cout &lt;&lt; s &lt;&lt; endl;</code></pre>
-<h3>動的配列の入出力</h3>
+<h3 id="section-08102104a4">動的配列の入出力</h3>
 <p>$N$ 要素の <code>vector&lt;int&gt;</code> の場合。</p>
 <p>要素数を受け取るところから含めての入力。</p>
 <pre><code>int n;
@@ -98,7 +99,7 @@ for (int i=0; i&lt;n; i++) {
   }
 }
 cout &lt;&lt; endl;</code></pre>
-<h3>二次元配列の入出力</h3>
+<h3 id="section-d968a4c142">二次元配列の入出力</h3>
 <p>大きさ $H \times W$ の <code>vector&lt;vector&lt;int&gt;&gt;</code> の場合。</p>
 <pre><code>int h, w;
 cin &gt;&gt; h &gt;&gt; w;
@@ -118,8 +119,8 @@ for (int i=0; i&lt;h; i++) {
   }
   cout &lt;&lt; endl;
 }</code></pre>
-<h2>使い方の応用</h2>
-<h3>入出力を高速化する</h3>
+<h2 id="section-aec54ceb12">使い方の応用</h2>
+<h3 id="section-22543acc9a">入出力を高速化する</h3>
 <p><code>endl</code> のところを <code>&#x27;\n&#x27;</code> にすると、動作が高速になる。<br>
 これは、<code>endl</code> が実際には改行した上でちゃんと画面に出すという処理だからである。<br>
 <code>&#x27;\n&#x27;</code> は改行だけする（出力予定データに入れるだけで、あとでまとめて出す）ので余計な処理がない。</p>
@@ -130,7 +131,7 @@ for (int i=0; i&lt;h; i++) {
 <code>main()</code> の先頭に以下を記述することでその機能をオフにできるが、そこまで効果が大きいわけでもない。</p>
 <pre><code>ios::sync_with_stdio(false);
 cin.tie(nullptr);</code></pre>
-<h3>いくつもまとめて受け取る</h3>
+<h3 id="section-d1195cfb15">いくつもまとめて受け取る</h3>
 <p><code>cin</code> や <code>cout</code> は、いくつもまとめて入出力できる。<br>
 例えば、<code>int</code> 型 $2$ つと <code>string</code> 型 $1$ つの場合。</p>
 <pre><code>int x, y;
@@ -138,7 +139,7 @@ string s;
 cin &gt;&gt; x &gt;&gt; y &gt;&gt; s;
 
 cout &lt;&lt; x &lt;&lt; &quot; &quot; &lt;&lt; y &lt;&lt; endl &lt;&lt; s &lt;&lt; endl;</code></pre>
-<h3>vectorを並列で受け取る</h3>
+<h3 id="section-vector">vectorを並列で受け取る</h3>
 <p>$N$ 要素の <code>vector&lt;int&gt;</code> を $2$ つ使い、その配列 $2$ つの入力が</p>
 <pre><code>A[1] B[1]
 A[2] B[2]
@@ -151,21 +152,21 @@ vector&lt;int&gt; a(n), b(n);
 for (int i=0; i&lt;n; i++) {
   cin &gt;&gt; a.at(i) &gt;&gt; b.at(i);
 }</code></pre>
-<h3>桁数を揃えて整数を出力する</h3>
+<h3 id="section-20d0f05549">桁数を揃えて整数を出力する</h3>
 <pre><code>cout &lt;&lt; setfill(&#x27;0&#x27;) &lt;&lt; right &lt;&lt; setw(4) &lt;&lt; x;</code></pre>
 <p>順に「足りない桁は <code>0</code> で埋める」「本体は右詰め」「$4$ 桁で」という指定。<br>
 時計形式で表示する方法は以下。</p>
 <pre><code>cout &lt;&lt; setfill(&#x27;0&#x27;) &lt;&lt; right &lt;&lt; setw(2) &lt;&lt; h &lt;&lt; &quot;:&quot;;
 cout &lt;&lt; setfill(&#x27;0&#x27;) &lt;&lt; right &lt;&lt; setw(2) &lt;&lt; m &lt;&lt; endl;</code></pre>
-<h3>デバッグ出力：cerr</h3>
+<h3 id="section-cerr">デバッグ出力：cerr</h3>
 <p><code>cerr</code> は、<code>cout</code> とほぼ同じものと考えてよい。<br>
 本来はエラーメッセージ出力用なのだが、競プロの場合には別の活用方法がある。</p>
 <p>解答は <code>cout</code> による出力のみで判定され、<code>cerr</code> による出力は解答の一部とは見なされない。<br>
 そのため、途中で確認用に変数の中身を表示させるコードは <code>cerr</code> で書くとよい。<br>
 それを残したまま提出しても基本的に <code>AC</code> 判定を出すことができる。<br>
 とはいえ、あまりに大量に <code>cerr</code> させると、その処理の時間のせいで <code>TLE</code> するリスクはある。</p>
-<h2>注意点</h2>
-<h3>cinする個数や順序を間違えないようにする</h3>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<h3 id="section-cin">cinする個数や順序を間違えないようにする</h3>
 <p><code>cin</code> が実行されると、まず受け取り待ち状態になる。<br>
 入力が $2$ つしかないのに $3$ 回 <code>cin</code> すると、$3$ 回目の入力待ちで停止状態になってしまう。<br>
 もしくは、入力の読み取りに失敗し、変数に意図しない何かが入ったまま実行されてしまう。<br>
@@ -174,13 +175,13 @@ cout &lt;&lt; setfill(&#x27;0&#x27;) &lt;&lt; right &lt;&lt; setw(2) &lt;&lt; m 
 <pre><code>cin &gt;&gt; a &gt;&gt; b &gt;&gt; n;</code></pre>
 <p>のようにすると、中身がぐちゃぐちゃになってしまう。<br>
 問題をよく読んで、与えられる順番通りに受け取ること。</p>
-<h3>解答の最後に改行する</h3>
+<h3 id="section-eb86ca28ea">解答の最後に改行する</h3>
 <p>問題によっては、最後の改行がないと <code>WA</code> 判定になる場合がある（APG4Bなど）。</p>
-<h2>関連知識</h2>
-<h3>テスト</h3>
+<h2 id="section-2773da9bff">関連知識</h2>
+<h3 id="section-63b560db88">テスト</h3>
 <p><code>cerr</code> は、提出前に変数の中身や処理の途中経過を確認するために使える。<br>
 大量に出しすぎると実行時間に影響するため、必要な情報だけを出すこと。</p>
-<h3>string型</h3>
+<h3 id="section-string">string型</h3>
 <p><code>cin &gt;&gt; s</code> では、空白または改行までの文字列を受け取る。<br>
 空白を含む行全体を受け取りたい場合は、別の方法が必要になる。</p>
   </article>

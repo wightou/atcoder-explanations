@@ -29,12 +29,13 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>素因数分解</h1>
-    <h2>概要</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-1">アルゴリズム内容1</a></li><li><a href="#section-2">アルゴリズム内容2</a></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <h2 id="section-7a52d716ff">概要</h2>
 <p>与えられた数を素数の積に分解するアルゴリズム。<br>
 毎回 $O(\sqrt{n})$ かかるものと、前処理に $O(n\log\log n)$ かかるがその後は毎回 $O(\log n)$ ですむものがある。</p>
 <p>最大 $10^{12}$ くらいの数を分解する必要があるが、$1$ 回だけでいい場合は前者を用いる。<br>
 最大 $10^7$ くらいでいいが、大量に分解を実行する必要がある場合は後者を用いる。</p>
-<h2>アルゴリズム内容1</h2>
+<h2 id="section-1">アルゴリズム内容1</h2>
 <p>素数判定と同じ要領で $2$ から小さい順に割っていく。<br>
 割りきれる場合、それが何回割れるか確認し、出力に詰める。<br>
 その際、一度調べた素数については二度と調べないので、本当に割ってしまうとよい。<br>
@@ -58,7 +59,7 @@ $O(\sqrt{n})$ で済むが、計算結果の使いまわしが効かないので
   if (n&gt;1) primes.emplace_back(n,1);
   return primes;
 }</code></pre>
-<h2>アルゴリズム内容2</h2>
+<h2 id="section-2">アルゴリズム内容2</h2>
 <p>エラトステネスの篩により $n$ 以下の全ての数の最小素因数を求めるアルゴリズムを利用する。<br>
 （「<a href="sieve-of-eratosthenes.html">エラトステネスの篩</a>」の記事参照。）</p>
 <p>その結果を利用すれば次に割れる素数は何か、それで何回割れるかもすぐわかる。<br>
@@ -96,10 +97,10 @@ vector&lt;pair&lt;int,int&gt;&gt; prime_factorization(int n) {
 // main関数内
 make_s_primes(n);</code></pre>
 <p>main関数内で、上限を指定して最小素因数一覧を構築する必要があることに注意。</p>
-<h2>関連アルゴリズム</h2>
-<h3><a href="primality-test.html">素数判定</a></h3>
+<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h3 id="section-86bdfb8985"><a href="primality-test.html">素数判定</a></h3>
 <p>素数かどうか判定するだけで、分解はしないやつ。</p>
-<h3><a href="sieve-of-eratosthenes.html">エラトステネスの篩</a></h3>
+<h3 id="section-7766d9fc19"><a href="sieve-of-eratosthenes.html">エラトステネスの篩</a></h3>
 <p>$n$ 未満の全ての素数を洗い出すアルゴリズム。<br>
 分解したい個数が多いなら、あちらを使った方が全体としては速い場合もある。</p>
   </article>

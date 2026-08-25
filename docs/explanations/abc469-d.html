@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">二大選手</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc469/tasks/abc469_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc469/submissions/78064928" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>まず、条件を満たす可能性がある組は $N(N-1)/2$ 通りありそうに見える。<br>
 しかし、実は最初の $1$ 試合に出ているどちらかが含まれていなければ条件を満たさない。<br>
 その $1$ つだけで、候補は $2N-3$ 通りにまで減る。<br>
@@ -47,7 +48,7 @@ $1$ 試合ずつ見て、注目している人がいない試合だったら、<
 <p>同様に最初の $1$ 試合の $2$ 人目にも注目して考える。</p>
 <p>あとは、最初の $2$ 人の組を重複カウントしないように気を付けて全組数を数えればよい。</p>
 <p>計算量は $O((M+N)\log N)$ である。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力される各決勝進出者の組は、次のようになる。</p>
 <pre><code>a, b:
 (1, 2)
@@ -85,9 +86,9 @@ $1$ 試合ずつ見て、注目している人がいない試合だったら、<
 組 <code>(2, 3)</code> を <code>result</code> に追加する。</p>
 <pre><code>result: {(2, 3)}</code></pre>
 <p><code>result</code> の要素数は $1$ であり、これが答えである。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

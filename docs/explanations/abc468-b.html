@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">廊下の監視</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc468/tasks/abc468_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc468/submissions/77882932" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>問題の指示通りに、$1$ マスずつ監視下にあるかどうかを調べるだけ。<br>
 二重ループの外側のループで候補として各マスを用意し、内側のループでその候補を調べる。</p>
 <p>候補を調べるには、自分から左右 $D$ マス以内に <code>G</code> がないことを確認すればよい。<br>
@@ -46,7 +47,7 @@ window.MathJax = {
 <pre><code>for (int j=max(0,i-d); j&lt;m&amp;&amp;j&lt;=i+d; j++) {
   if (s.at(j)==&#x27;G&#x27;) flag = false;
 }</code></pre>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>m: 7
 d: 1
@@ -76,9 +77,9 @@ s: &quot;.G...GG&quot;</code></pre>
 <code>s[5]</code> と <code>s[6]</code> に <code>G</code> があるので、<code>s[6]</code> は監視されている。<br>
 <code>result</code> は変更しない。</p>
 <p>すべての位置を調べ終えたとき、<code>result=1</code> となり、これが答えである。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

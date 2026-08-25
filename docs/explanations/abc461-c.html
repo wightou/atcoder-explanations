@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">バラエティ</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc461/tasks/abc461_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc461/submissions/76604378" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>基本的には貪欲に価値が高いものを選んでいけばよい。<br>
 ただし、色を最低でも $M$ 種類選ばなければいけない点に工夫が必要となる。</p>
 <p>まず、手作業か何かでやるなら、以下のように考えることができる。<br>
@@ -55,7 +56,7 @@ window.MathJax = {
 </li>
 </ul>
 <p>採用した宝石が $K$ 個になった時点で打ち切って、採用した価値の合計を答えればよい。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。<br>
 $C$ と $V$ は、価値 $V$ を前に出して、降順の <code>priority_queue</code> に入れておく。</p>
 <pre><code>n: 5
@@ -96,10 +97,10 @@ color_set: {1, 3}
 allowed: 0
 counter: 3
 result: 110</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>宝石の価値をいくつも加算すると、<code>int</code> 型からはみ出る。<br>
 結果用変数には <code>long long</code> 型を用いること。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

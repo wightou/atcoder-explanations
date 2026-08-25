@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">XからYへ</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc465/tasks/abc465_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc465/submissions/77219806" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>数式をちゃんと言語化できれば非常に単純な問題。</p>
 <p>$\lfloor x/K \rfloor$ は、$K$ で割って切り捨て。<br>
 これが仮に $K=10$ だったら、普通に一の位を消す操作になる。<br>
@@ -51,7 +52,7 @@ $X$ と $Y$ で、先頭からの数字列が何桁共通しているかを調�
 $X$ の不一致部分を全部削除して、$Y$ の不一致部分を全部追加する、その操作数の和が答え。</p>
 <p>では、$K$ が $10$ 以外の数だったらどうするのか？<br>
 答えは単純で、$K$ 進法で扱えばいいだけである。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>$1$ つめのテストケースのみ。</p>
 <p>入力を受け取る。</p>
 <pre><code>x: 11
@@ -69,12 +70,12 @@ $9 = 1\times 3^2 + 0\times 3^1 + 0\times 3^0$ なので、正順に直した後�
 <p>あとは、<code>x_vec</code> の不一致部分を削除し、<code>y_vec</code> の不一致部分を追加する回数を数える。<br>
 <code>x_vec</code> の長さは $3$、<code>y_vec</code> の長さも $3$ なので、答えは $3+3-2\times 2=2$ である。</p>
 <pre><code>result: 2</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>$X$、$Y$、$K$ は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
 <p>また、<code>0</code> を $K$ 進法変換したとき、数字列を空として扱う。<br>
 これにより、<code>0</code> から正の整数へ移る場合の回数を正しく数えられる。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

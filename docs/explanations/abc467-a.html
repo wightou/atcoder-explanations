@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">肥満</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc467/tasks/abc467_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc467/submissions/77654066" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>入力は整数が $2$ つなので、<code>int</code> 型の変数を $2$ つ用意し、<code>cin</code> で入力を受け取る。</p>
 <p>さて、問題の単位を適切に変換すると、$W \div \left( \dfrac{H}{100} \right)^2 \geq 25$ であるか判定すればよい。<br>
 しかしここに $1$ つ罠がある。<br>
@@ -43,7 +44,7 @@ window.MathJax = {
 <p>そこで、分数の割り算を逆数の掛け算に変えて分母を払った $10000W \geq 25H^2$ で判定を行う。<br>
 これを if 文の判定に書き、出力する文字列を決定する。</p>
 <p>if 文の中で直接 <code>cout</code> してもいいし、事前に出力用文字列を用意してもよい。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>h: 180
 w: 60</code></pre>
@@ -53,9 +54,9 @@ w: 60</code></pre>
 <p>$600000$ は $810000$ 以上ではないので、<code>result</code> は変更しない。</p>
 <pre><code>result: &quot;No&quot;</code></pre>
 <p>最後に、<code>result</code> を出力すればよい。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">カエル 2</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77327500" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/dp/submissions/77327525" target="_blank" rel="noopener noreferrer">配る方式</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>前問と考え方自体はほぼ同じ。<br>
 「$2$ 通りのうち小さい方」が「最大 $K$ 通りの中での最小」に変更となるだけ。<br>
 問題は、もらう DP でも配る DP でも、実装方法を少し考えないといけない点。</p>
@@ -46,7 +47,7 @@ window.MathJax = {
 <p>いずれにせよ二重ループになるし、範囲外アクセスの慎重な対応が必要で、実装はちょっと大変。</p>
 <p>解答に実際の経路まで必要になった場合、バックトレースでまた for ループをブン回すのは大変。<br>
 もらう DP で書いて、どこからのルートが採用されたのかもメモしておきたい。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 5
 k: 3
@@ -83,9 +84,9 @@ dp: {0, 20, 30, 40, INF}</code></pre>
 <pre><code>h : {10, 30, 40, 50, 20}
 dp: {0, 20, 30, 40, 30}</code></pre>
 <p>最後の足場の値、つまり <code>dp</code> の最後尾の値が答え。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
   </article>
 
   <aside class="sidebar">

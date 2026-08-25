@@ -29,12 +29,13 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>累積和</h1>
-    <h2>概要</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a></li><li><a href="#section-369acefbdf">コード例</a></li><li><a href="#section-aec54ceb12">使い方の応用</a><ul><li><a href="#section-1c810e0d8b">逆演算が存在する他の演算でも使える</a></li><li><a href="#section-73eef71080">逆演算が存在しない演算でも部分的に使える</a></li><li><a href="#section-1ef66239a4">たくさんの範囲で、条件を満たすものの個数を数える</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-5aea1b31bf">オーバーフローに注意</a></li><li><a href="#section-41e60914da">配列の中身は後から変えられない</a></li><li><a href="#section-3b94fade93">区間データが大きい場合には使えない</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <h2 id="section-7a52d716ff">概要</h2>
 <p>配列上の「ここからここまでの合計はいくつ？」に高速に答えるためのアルゴリズム。<br>
 ただし、途中で配列の中身は変えることはできない。</p>
 <p>$N$ 個のデータに対し $Q$ 回和を計算する場合、通常の方法でやれば計算回数が $O(NQ)$ になる。<br>
 しかし、このアルゴリズムを用いれば、$O(N+Q)$ で済む。</p>
-<h2>アルゴリズム内容</h2>
+<h2 id="section-f78ac06c8c">アルゴリズム内容</h2>
 <p>配列 <code>A</code> に対し、「そこより左」または「そこまで」の和を作っておく。<br>
 例えば、<code>{3,1,4,1,5,9,2,6}</code> という配列に対し、以下のように別の配列を作る。</p>
 <div class="markdown-table-scroll"><table>
@@ -128,7 +129,7 @@ window.MathJax = {
 <li>「まで」型の方は、 $0$ 番目からの和を取りたい場合に $-1$ 番目が存在しないケアが必要
 </li>
 </ul>
-<h2>コード例</h2>
+<h2 id="section-369acefbdf">コード例</h2>
 <p>累積和の作り方は、いくつかの方法がある。<br>
 一番使いやすい、「より左」型の累積和の作り方。</p>
 <pre><code>vector&lt;int&gt; sum(n+1,0);
@@ -169,8 +170,8 @@ partial_sum(a.begin(),a.end(),sum.begin());</code></pre>
 </tbody>
 </table></div>
 <p>※ 「まで」型の場合、$l=0$ のときは分岐処理で <code>sum.at(l-1)</code> を引かないようにする。</p>
-<h2>使い方の応用</h2>
-<h3>逆演算が存在する他の演算でも使える</h3>
+<h2 id="section-aec54ceb12">使い方の応用</h2>
+<h3 id="section-1c810e0d8b">逆演算が存在する他の演算でも使える</h3>
 <p>和だけでなく、逆の演算が存在すれば、なんでも同様の処理ができる。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
@@ -201,7 +202,7 @@ partial_sum(a.begin(),a.end(),sum.begin());</code></pre>
 </tr>
 </tbody>
 </table></div>
-<h3>逆演算が存在しない演算でも部分的に使える</h3>
+<h3 id="section-73eef71080">逆演算が存在しない演算でも部分的に使える</h3>
 <p>逆の演算が存在しない場合も、部分的には同様の処理ができる。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
@@ -231,12 +232,12 @@ partial_sum(a.begin(),a.end(),sum.begin());</code></pre>
 <p>逆演算が存在しない場合は、開始地点の自由な指定はできないが、端からのデータは使用できる。<br>
 例えば、自身以外の最大値を求める場合は、左右それぞれからの累積最大値を用いることができる。<br>
 $i$ 番目以外の最大値を知りたければ、左から $i-1$ 番目までと右から $i+1$ 番目までの大きい方を求める。</p>
-<h3>たくさんの範囲で、条件を満たすものの個数を数える</h3>
+<h3 id="section-1ef66239a4">たくさんの範囲で、条件を満たすものの個数を数える</h3>
 <p>ある条件（毎回同じ）を満たす個数が、配列内の指定区間にいくつあるかを求めるのにも利用できる。<br>
 具体的には、条件を満たすところは <code>1</code>、そうでないところは <code>0</code> にした配列を用意し、その累積和を作る。<br>
 区間和がそのまま、範囲内で条件を満たす個数となる。</p>
-<h2>注意点</h2>
-<h3>オーバーフローに注意</h3>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<h3 id="section-5aea1b31bf">オーバーフローに注意</h3>
 <p>たくさんの値の和を取るので、オーバーフローしやすい。<br>
 最大サイズですべて最大値だった場合に最後の値がいくつになるか、事前に確認することが必要。</p>
 <p>何も考えずに整数は全部 <code>long long</code> 型にすれば事故が起こりにくくすることはできる。<br>
@@ -245,37 +246,37 @@ $i$ 番目以外の最大値を知りたければ、左から $i-1$ 番目まで
 <p>また、<code>partial_sum</code> はもとの配列と同じ型で和を取っていく。<br>
 <code>A</code> を <code>vector&lt;int&gt;</code> で作ると、<code>sum</code> だけ <code>vector&lt;long long&gt;</code> にしてもオーバーフロー対策にならない。<br>
 この場合は <code>A</code> 自体を <code>vector&lt;long long&gt;</code> にしなければならない。</p>
-<h3>配列の中身は後から変えられない</h3>
+<h3 id="section-41e60914da">配列の中身は後から変えられない</h3>
 <p>中身に変更がある場合、$1$ つ変更するたびに累積和が全て作り直しになる。<br>
 変わるたびに作り直して間に合うならいいが、ダメな場合はFenwick木やsegment木を用いる。</p>
-<h3>区間データが大きい場合には使えない</h3>
+<h3 id="section-3b94fade93">区間データが大きい場合には使えない</h3>
 <p>また、数値の種類数のように $1$ 箇所ごとのデータを詳細に持って大きくなってしまう場合は使えない。<br>
 sliding window法や尺取法、その他問題に対応できるアルゴリズムを用いること。</p>
-<h2>関連アルゴリズム</h2>
-<h3><a href="sliding-window.html">sliding window法</a></h3>
+<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h3 id="section-sliding-window"><a href="sliding-window.html">sliding window法</a></h3>
 <p>長さ固定の区間を順に調べる処理を扱える。<br>
 種類数のように現在の状態を扱うデータが大きくなりがちなものに対しても使える場合がある。<br>
 一方で、後から改めて任意区間の処理を求められても何も答えられないのが難点。</p>
-<h3><a href="shakutori-method.html">尺取法</a></h3>
+<h3 id="section-830285f615"><a href="shakutori-method.html">尺取法</a></h3>
 <p>累積和と同じく、条件を満たす区間を探したり個数を数えたりするアルゴリズム。<br>
 累積和と二分探索の $2$ つが協力して $O(N\log N)$ でやることを、尺取法は $1$ つで $O(N)$ で処理できる。<br>
 sliding window法の長さ可変バージョンであり、累積和と比較した長所短所もほぼ同じ。</p>
-<h3><a href="fenwick-tree.html">Fenwick木</a></h3>
+<h3 id="section-fenwick"><a href="fenwick-tree.html">Fenwick木</a></h3>
 <p>累積和の上位互換。<br>
 同じように任意の区間の和がすぐにわかるようになっているが、途中での値の更新もできる。</p>
-<h3><a href="segment-tree.html">segment木</a></h3>
+<h3 id="section-segment"><a href="segment-tree.html">segment木</a></h3>
 <p>Fenwick木のさらに上位互換。<br>
 やはり、任意の区間の和がすぐにわかるようになっているが、途中での値の更新もできる。<br>
 逆演算を利用しないので、累積最大値なども任意区間で求められる。</p>
-<h3><a href="lazy-segment-tree.html">lazy segment木</a></h3>
+<h3 id="section-lazy-segment"><a href="lazy-segment-tree.html">lazy segment木</a></h3>
 <p>segment木のさらに上位互換。<br>
 区間にまとめて代入とか、そういうことまでできるようになっている。</p>
-<h3><a href="difference-array.html">階差数列</a></h3>
+<h3 id="section-9a23d157c3"><a href="difference-array.html">階差数列</a></h3>
 <p>累積和の逆。<br>
 階差数列の方をうまく処理し、累積和の方に真にほしいデータが出現するようにする。</p>
-<h3><a href="two-dimensional-cumulative-sum.html">二次元累積和</a></h3>
+<h3 id="section-44a1562c2b"><a href="two-dimensional-cumulative-sum.html">二次元累積和</a></h3>
 <p>累積和、二次元配列バージョン。</p>
-<h3><a href="dynamic-programming.html">動的計画法</a></h3>
+<h3 id="section-70b556581e"><a href="dynamic-programming.html">動的計画法</a></h3>
 <p>あまり意識することはないが、実は累積和は動的計画法の一種である。</p>
   </article>
 

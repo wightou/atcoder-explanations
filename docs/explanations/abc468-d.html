@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">準回文</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc468/tasks/abc468_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc468/submissions/77868264" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>可能性がある $L,R$ の組は、最大で $N(N+1)/2$ 個。<br>
 つまり、$1$ つの候補を $O(1)$ で調べられるなら、全探索で間に合う。</p>
 <p>例えば、「$3$ 文字目から $9$ 文字目は準回文か？」という問いには、以下で答えられる。</p>
@@ -47,7 +48,7 @@ window.MathJax = {
 </ul>
 <p>つまり、普通の回文判定と同じようにしながら、不一致 $1$ 回までならセーフという感じでやればよいだけ。<br>
 計算量は $O(N^2)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>s: &quot;ababa&quot;
 n: 5</code></pre>
@@ -104,9 +105,9 @@ n: 5</code></pre>
 <code>b</code> と <code>a</code> で異なるので、部分文字列 <code>&quot;ba&quot;</code> を数える。</p>
 <pre><code>result: 13</code></pre>
 <p>$i=4$ のときは、右側の添字 <code>i+j+d</code> が最初から $n$ 以上になるため、調べる部分文字列はない。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">最大値更新</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc468/tasks/abc468_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc468/submissions/77868274" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>最初の数は、$x$ と $y$ のどちらの更新に使っても話が全く同じである。<br>
 よって、最初に操作 $1$ を行い $x$ を更新したと仮定して話をする。</p>
 <p>$x$ より大きい数が初めて来たときを考える。<br>
@@ -61,7 +62,7 @@ window.MathJax = {
 </li>
 </ul>
 <p>計算量は最長増加部分列の処理部分が支配的で、普通の方法なら $O(N \log N)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 5
 p: {4, 3, 1, 2, 5}
@@ -77,11 +78,11 @@ result: 2</code></pre>
 例えば、<code>1, 2, 6</code> を選べる。<br>
 末尾に追加した <code>6</code> の分を除いた $2$ を <code>result</code> に加える。</p>
 <pre><code>result: 4</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>好きな単調増加列を $2$ つ取ることはできない。<br>
 例えば、 <code>5 3 4 1 2</code> の答えは $4$ ではなく $3$ である。<br>
 先頭の $5$ に対して、「使わない」という選択は許されていない。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

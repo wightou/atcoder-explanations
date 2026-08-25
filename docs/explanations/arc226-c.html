@@ -33,19 +33,20 @@ window.MathJax = {
       <p class="explanation-title-ja">正方形詰め込み</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/arc226/tasks/arc226_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc226/submissions/78264496" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-mathrm-i-h-w">$(\mathrm{i})$ $H$ と $W$ がともに偶数の場合</a></li><li><a href="#section-mathrm-ii-h-w">$(\mathrm{ii})$ $H$ は偶数で、$W$ が奇数の場合</a></li><li><a href="#section-mathrm-iii-h-w">$(\mathrm{iii})$ $H$ は奇数で、$W$ が偶数の場合</a></li><li><a href="#section-mathrm-iv-h-w-4-1">$(\mathrm{iv})$ $H=W$ の正方形で、それを $4$ で割った余りが $1$ である場合</a></li><li><a href="#section-mathrm-v-h-w-4-1">$(\mathrm{v})$ $H,W$ が異なる奇数で、小さい方を $4$ で割った余りが $1$ である場合</a></li><li><a href="#section-mathrm-vi-h-w-4-3">$(\mathrm{vi})$ $H,W$ が異なる奇数で、小さい方を $4$ で割った余りが $3$ である場合</a></li><li><a href="#section-5af6083ed6">まとめ</a></li></ul></li><li><a href="#section-72986c8568">具体例での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>場合分けをして考える。</p>
-<h3>$(\mathrm{i})$ $H$ と $W$ がともに偶数の場合</h3>
+<h3 id="section-mathrm-i-h-w">$(\mathrm{i})$ $H$ と $W$ がともに偶数の場合</h3>
 <p>この場合、左上詰めで $2 \times 2$ の小正方形を並べれば、全体を埋め尽くすことができる。<br>
 これは明らかに最大値であるので、それを答えればよい。</p>
-<h3>$(\mathrm{ii})$ $H$ は偶数で、$W$ が奇数の場合</h3>
+<h3 id="section-mathrm-ii-h-w">$(\mathrm{ii})$ $H$ は偶数で、$W$ が奇数の場合</h3>
 <p>マスの選び方の規則からして、各行各列から選べるマスは偶数個である。<br>
 つまり、この場合、各行 $W-1$ 個しか黒く塗ることはできない。</p>
 <p>したがって、黒く塗れる個数は、高々 $H(W-1)$ 個である。<br>
 これは、左上詰めで $2 \times 2$ の小正方形を並べれば、達成可能である。</p>
-<h3>$(\mathrm{iii})$ $H$ は奇数で、$W$ が偶数の場合</h3>
+<h3 id="section-mathrm-iii-h-w">$(\mathrm{iii})$ $H$ は奇数で、$W$ が偶数の場合</h3>
 <p>$(\mathrm{ii})$ の $H$ と $W$ が入れ替わっただけなので、同じ議論でよい。</p>
-<h3>$(\mathrm{iv})$ $H=W$ の正方形で、それを $4$ で割った余りが $1$ である場合</h3>
+<h3 id="section-mathrm-iv-h-w-4-1">$(\mathrm{iv})$ $H=W$ の正方形で、それを $4$ で割った余りが $1$ である場合</h3>
 <p>これは、各行各列から少なくとも $1$ つ余りが出る。<br>
 それを行や列が重複しないように取ったとしても、黒く塗れる個数は高々 $H(H-1)$ 個。<br>
 そして、これは実現できる。</p>
@@ -58,7 +59,7 @@ window.MathJax = {
 よって、ここに同心正方形を $(H-1)/4$ 個追加でとることができる。</p>
 <p>以上で、正方形を $(H-1)^2/16\times 4+(H-1)/4 = H(H-1)/4$ 個取れた。<br>
 黒マスの個数は $H(H-1)$ 個となっており、これが最大値である。</p>
-<h3>$(\mathrm{v})$ $H,W$ が異なる奇数で、小さい方を $4$ で割った余りが $1$ である場合</h3>
+<h3 id="section-mathrm-v-h-w-4-1">$(\mathrm{v})$ $H,W$ が異なる奇数で、小さい方を $4$ で割った余りが $1$ である場合</h3>
 <p>$H&gt;W$ の場合を考える。<br>
 各行の黒マス数の考察により、黒く塗れる個数は高々 $H(W-1)$ 個。<br>
 そして、これは実現できる。</p>
@@ -68,7 +69,7 @@ window.MathJax = {
 追加で塗られる黒マスの個数は $(H-W)(W-1)$ 個となる。</p>
 <p>両方を合わせて黒マスの個数は $H(W-1)$ 個となり、これが最大値である。</p>
 <p>$H&lt;W$ の場合も同様。</p>
-<h3>$(\mathrm{vi})$ $H,W$ が異なる奇数で、小さい方を $4$ で割った余りが $3$ である場合</h3>
+<h3 id="section-mathrm-vi-h-w-4-3">$(\mathrm{vi})$ $H,W$ が異なる奇数で、小さい方を $4$ で割った余りが $3$ である場合</h3>
 <p>$H&gt;W$ の場合を考える。<br>
 各行の黒マス数の考察により、黒く塗れる個数は高々 $H(W-1)$ 個。<br>
 しかし、黒マスの個数は $4$ の倍数でなくてはならない。<br>
@@ -81,7 +82,7 @@ $H(W-1)$ は $4$ で割った余りが $2$ であるため、高々 $H(W-1)-2$ �
 <p>両方を合わせて黒マスは $(W-2)(W-3)+(H-1)(W-1)-(W-3)^2 = H(W-1)-2$ 個。<br>
 これが最大値である。</p>
 <p>$H&lt;W$ の場合も同様。</p>
-<h3>まとめ</h3>
+<h3 id="section-5af6083ed6">まとめ</h3>
 <p>以上の考察により、コードは $2$ 種類あれば全パターンに対応できる。</p>
 <p>まず、少なくとも片方が偶数の場合。<br>
 これは、左上詰めで $2 \times 2$ の小正方形を並べればよい。</p>
@@ -91,7 +92,7 @@ $H(W-1)$ は $4$ で割った余りが $2$ であるため、高々 $H(W-1)-2$ �
 そして、残りの領域は右下詰めで $2 \times 2$ の小正方形を並べればよい。</p>
 <p>各テストケースの計算量は $O(HW)$。<br>
 全テストケースでは $O\left(\sum HW\right)$。</p>
-<h2>具体例での動作</h2>
+<h2 id="section-72986c8568">具体例での動作</h2>
 <p>ここでは、$H = 11$, $W = 13$ のテストケースを考える。<br>
 これらはともに奇数なので、両方が奇数の場合の処理を行う。</p>
 <p>まず、$4$ で割って $1$ 余る最大内包正方形の辺の長さを求めると、$9$ である。</p>
@@ -304,9 +305,9 @@ $9 \times 9$ の中心から、対角線に沿って偶数マス行ったとこ�
 10 8 1
 10 10 1
 10 12 1</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

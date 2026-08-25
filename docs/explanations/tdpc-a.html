@@ -33,7 +33,8 @@ window.MathJax = {
       
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/tdpc/tasks/tdpc_contest" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/tdpc/submissions/78342155" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>ABCでいうと、D問題級。<br>
 典型的な部分和問題である。</p>
 <p><code>dp[j]</code> を、総和を $j$ にできるかどうかとする。<br>
@@ -41,7 +42,7 @@ window.MathJax = {
 <p>ただし、同じ数を $2$ 回以上使わないようにするため、<code>dp</code> は大きい方から更新する。<br>
 詳しくは「<a href="../knowledge/dynamic-programming.html">動的計画法</a>」「<a href="../knowledge/knapsack-problem.html">ナップサック問題</a>」の記事参照。</p>
 <p>計算量は $O(N\sum p_i)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 p: {2, 3, 5}</code></pre>
@@ -124,9 +125,9 @@ p: {2, 3, 5}</code></pre>
 </tbody>
 </table></div>
 <p>最終的に <code>dp</code> が <code>true</code> である総得点は $7$ 個あるので、答えは $7$。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

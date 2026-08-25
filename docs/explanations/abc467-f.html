@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">メール最適化</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc467/tasks/abc467_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc467/submissions/77655607" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>まず、クエリを無視して、最初のデータでの最善の値を考える。<br>
 これは単純な貪欲法でよく、$B$ の値が大きいものから順にメールを書いて送ればよい。<br>
 全てのメールのうち、「そのメールを書き終わる時刻+返信にかかる時間」の最大値が答え。</p>
@@ -51,7 +52,7 @@ $B$ の大きさが変わらないのだから、セグ木の $1$ ヶ所を書�
 そうすれば、segment木上の順序変えが実現できる。</p>
 <p>以上でこの問題が解け、あとはここから先の実装を頑張るだけ。<br>
 計算量は、$O((N+Q)\log (N+Q))$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <p>クエリ内の宛先番号は、入力時に $1$ ずつ減らして <code>0-indexed</code> に直す。</p>
 <pre><code>n: 3
@@ -310,10 +311,10 @@ pos[2]: 4</code></pre>
 </table></div>
 <p><code>all_prod()</code> の <code>second</code> である $13$ が答え。</p>
 <pre><code>result: {16, 16, 13}</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは、<code>int</code> 型からはみ出る。<br>
 segment木で管理する値と答えには、<code>long long</code> 型を用いること。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">矩形塗り替え</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc464/tasks/abc464_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc464/submissions/77039507" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc464/submissions/77079134" target="_blank" rel="noopener noreferrer">別解</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>愚直に解くのは非常に簡単だが、計算量が $O(HWQ)$ かかってしまう。<br>
 大量に上書きした後で、さらに別のもので同じ範囲を上書きするのは、どう考えても無駄。</p>
 <p>結局のところ、各マス最後に塗られた時刻がわかれば、出力の再現はあとで $O(HW)$ で簡単にできる。<br>
@@ -42,7 +43,7 @@ window.MathJax = {
 ということは、全ての書き換えでとりあえず右下だけ記録しておき、まとめて累積最大値を取ればよい。<br>
 右下から左上方向に二次元累積最大値を取ることで、$(i以上,j以上)$ という範囲の最大値が $(i,j)$ に残る。</p>
 <p>これで、計算量が $O(HW+Q)$ で全てのマスの文字がわかる。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。  <br>
 <code>r</code> と <code>c</code> は <code>0-indexed</code> に直しておく。</p>
 <pre><code>h: 2
@@ -79,9 +80,9 @@ x: {&#x27;B&#x27;, &#x27;C&#x27;, &#x27;D&#x27;}</code></pre>
 マス $(1,2)$ は、<code>vec[1][2]</code> が <code>-1</code> なので、<code>A</code> のままでよい。</p>
 <pre><code>result: {&quot;DCC&quot;,
          &quot;DBA&quot;}</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>左上もクエリ入力される場合の解き方でもよい。</p>
 <p>まず、$2W$ 以上の長さの配列を用意する。<br>
 中身は <code>priority_queue&lt;pair&lt;int,int&gt;&gt;</code> で、降順に取り出せるようにする。<br>

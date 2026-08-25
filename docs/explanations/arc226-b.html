@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">二進袋詰め</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/arc226/tasks/arc226_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc226/submissions/78265133" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>最小重量ピッタリのサイズを持つ袋を用意したとして、その袋のサイズを分割して考える。<br>
 全ての荷物は重さが $2$ の累乗なので、袋のサイズを $2$ の累乗ごとに分割して考えてよい。</p>
 <p>例えばサイズが $13$ の袋が $3$ つある場合は、サイズ $8,4,1$ の袋が $3$ つずつあると考えてよい。<br>
@@ -65,7 +66,7 @@ window.MathJax = {
 </ul>
 <p>各テストケースの計算量は $O(M)$。<br>
 全テストケースでは $O\left(\sum M\right)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力例1の $1$ つ目のテストケースのみ考える。</p>
 <p>入力を受け取る。</p>
 <pre><code>n: 2
@@ -101,10 +102,10 @@ bag: 4</code></pre>
 <p>ループの都合上、この後で、重さ $1$ 用の袋を重さ $0.5$ 用の袋 $2$ 枚にする処理が走る。<br>
 しかし、結果を入れる変数はもう触らないので、無視してよい。</p>
 <p>よって、答えは $6$。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えや <code>bag</code> は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

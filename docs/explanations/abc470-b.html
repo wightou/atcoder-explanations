@@ -33,13 +33,14 @@ window.MathJax = {
       <p class="explanation-title-ja">単色</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc470/tasks/abc470_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc470/submissions/78235624" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>色を変えるボールの個数を最小にしたい。<br>
 それはつまり、色を変えなくていいボールの個数を最大にすればよい。</p>
 <p>どの色が何個あるかカウンティングを行って、最大値を探す。<br>
 すると、それが色を変えなくていいボールの最大値となる。<br>
 よって、それを全ボール数から引けば答えとなる。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 4
 a: {3, 1, 2, 1}</code></pre>
@@ -48,9 +49,9 @@ a: {3, 1, 2, 1}</code></pre>
 <pre><code>counters: {-, 2, 1, 1, 0}</code></pre>
 <p>最も多い色は色 $1$ で、その個数は $2$ 個である。<br>
 この $2$ 個以外のボールの色を変えればよいので、答えは $4-2=2$ となる。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">ランダム強盗</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc464/tasks/abc464_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc464/submissions/77039510" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-3">入力例3での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>まず、$N \leq 20$ の場合の $O(2^N)$ 解法を考える。</p>
 <p>例として、金庫が $3$ 個で、中身が $2$ と $3$ と $4$、目標金額が $7$ である場合を考える。<br>
 金庫を開ける順序は $6$ 通りあり、以下の寄与を合計して、期待値は $25/3$ となる。</p>
@@ -259,7 +260,7 @@ $N \leq 40$ の場合には $O(2^N)$ では間に合わず、$O(N 2^{N/2})$ く�
 これは $l$ と $r$ を均等に分けたら $O(N 2^{N/2})$。<br>
 他にこれより計算量が膨らむところはないので、全体の計算量も $O(N 2^{N/2})$。<br>
 これで $N \leq 40$ の場合にも解ける。</p>
-<h2>入力例3での動作</h2>
+<h2 id="section-3">入力例3での動作</h2>
 <p>入力例 $1$ があまり動作説明に適さないので、入力例 $3$ で例を示す。</p>
 <p>入力を受け取る。</p>
 <pre><code>n: 11
@@ -452,7 +453,7 @@ id: 10</code></pre>
 <p>したがって、この場合に結果に加算する値は、剰余類環上では $10978 * 674571184 * 855638017$ である。</p>
 <p>同様の処理を、前半から取る個数 <code>i</code> と後半から取る個数 <code>j</code> のすべての組み合わせについて行う。<br>
 最後に、結果が負になっていれば $998244353$ を足してから出力する。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p><code>A_i</code>、<code>X</code>、部分集合の合計値は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
 <p><code>sum1</code> は部分集合和の総和を持つため、そのまま加算すると <code>long long</code> 型からもはみ出る。<br>
@@ -461,7 +462,7 @@ id: 10</code></pre>
 何か足し算や掛け算をするたびに結果を <code>% 998244353</code> する。<br>
 割り算は通常 $998244353-2$ 乗したものを掛けるが、それでは計算量が増えてしまう。<br>
 階乗の事前計算で逆数も求めておき、繰り返し二乗法を毎回しなくて済むように高速化しておくこと。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

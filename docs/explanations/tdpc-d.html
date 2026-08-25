@@ -33,7 +33,8 @@ window.MathJax = {
       
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/tdpc/tasks/tdpc_dice" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/tdpc/submissions/78344978" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>ABCでいうと、易しめのE問題級。</p>
 <p>出た目の積が $D$ の倍数というのを、出た目の積と $D$ の最大公約数が $D$ そのものになると言い換える。<br>
 「今の積と $D$ の最大公約数がいくつになっている確率がいくつか」を DP テーブルに持てばよい。<br>
@@ -46,7 +47,7 @@ window.MathJax = {
 <p>素因数を $2,3,5$ しか持たない $D$ の約数の個数を $M$ とすると、計算量は $O(NM\log M)$。<br>
 これが最も多いのは $D=2^{19}\times 3^{14}\times 5^8=979552051200000000$ のときの $M=2700$。<br>
 よって、十分間に合う。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 2
 d: 6</code></pre>
@@ -106,9 +107,9 @@ $1$ 回目の各結果から同様に最大公約数へ配る DP をすると、
 </table></div>
 <p>最大公約数が $6$ であることと、出目の積が $6$ の倍数であることは同値である。<br>
 したがって、$\frac{15}{36}=0.416666\ldots$ が答え。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

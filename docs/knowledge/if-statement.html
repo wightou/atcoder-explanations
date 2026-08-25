@@ -29,17 +29,18 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>if分岐</h1>
-    <h2>概要</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-a9dc03ed89">基本的な書き方</a><ul><li><a href="#section-ccd3aeb8c0">コードを実行したりしなかったりする</a></li><li><a href="#section-2">$2$ つのコードのどちらを実行するか選ぶ</a></li><li><a href="#section-3">$3$ つ以上のコードのどれを実行するか選ぶ</a></li></ul></li><li><a href="#section-e02fca5408">条件式</a><ul><li><a href="#section-a-b">等しい a==b</a></li><li><a href="#section-a-b-2">等しくない a!=b</a></li><li><a href="#section-a-b-3">より小さい a&lt;b</a></li><li><a href="#section-a-b-4">以下 a&lt;=b</a></li><li><a href="#section-a-b-5">より大きい a&gt;b</a></li><li><a href="#section-a-b-6">以上 a&gt;=b</a></li></ul></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-a-b-7">a と b の間の数という判定</a></li><li><a href="#section-b">そうじゃなければ、という条件（B問題相当）</a></li><li><a href="#section-2-2">$2$ つの条件をどちらもチェックしたい場合</a></li><li><a href="#section-22c9bebff6">多数（不定個）の条件を全てチェックしたい場合</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-71be5b247d">等しいと書くつもりで誤って = と書かないこと</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <h2 id="section-7a52d716ff">概要</h2>
 <p>変数の中身次第で特定のコードを実行したりしなかったりする。<br>
 あるいは、複数のコードのどれを実行するか選ぶ。</p>
-<h2>基本的な書き方</h2>
-<h3>コードを実行したりしなかったりする</h3>
+<h2 id="section-a9dc03ed89">基本的な書き方</h2>
+<h3 id="section-ccd3aeb8c0">コードを実行したりしなかったりする</h3>
 <pre><code>if (条件式) {
   その場合に実行したいコード
 }</code></pre>
 <p>実行したいコードが $1$ 行しかない場合は、以下でもよい。</p>
 <pre><code>if (条件式) その場合に実行したいコード</code></pre>
-<h3>$2$ つのコードのどちらを実行するか選ぶ</h3>
+<h3 id="section-2">$2$ つのコードのどちらを実行するか選ぶ</h3>
 <pre><code>if (条件式) {
   その場合に実行したいコード
 } else {
@@ -48,7 +49,7 @@ window.MathJax = {
 <p>実行したいコードが $1$ 行しかない場合は、以下でもよい。</p>
 <pre><code>if (条件式) その場合に実行したいコード
 else そうじゃない場合に実行したいコード</code></pre>
-<h3>$3$ つ以上のコードのどれを実行するか選ぶ</h3>
+<h3 id="section-3">$3$ つ以上のコードのどれを実行するか選ぶ</h3>
 <pre><code>if (条件1) {
   条件1を満たす場合に実行したいコード
 } else if (条件2) {
@@ -58,8 +59,8 @@ else そうじゃない場合に実行したいコード</code></pre>
 }</code></pre>
 <p><code>else if</code> のところを増やしていけば、$4$ 択や $5$ 択、それ以上も可能。<br>
 実行したいコードが $1$ 行しかない場合については同様。</p>
-<h2>条件式</h2>
-<h3>等しい <code>a==b</code></h3>
+<h2 id="section-e02fca5408">条件式</h2>
+<h3 id="section-a-b">等しい <code>a==b</code></h3>
 <p>整数型の場合は、数値が等しければ <code>true</code>。<br>
 <code>double</code> 型の場合は、数値が等しければ <code>true</code> ……だが、あまり信用ならない。<br>
 詳細は「<a href="double.html">double型</a>」の記事参照。<br>
@@ -67,9 +68,9 @@ else そうじゃない場合に実行したいコード</code></pre>
 <code>string</code> 型の場合は、完全に同じ文字列であれば <code>true</code>。<br>
 <code>pair</code>、<code>tuple</code>、<code>vector</code> の場合は、個数と順番まで含め完全に同じ内容であれば <code>true</code>。<br>
 <code>set</code> の場合は、完全に同じ内容であれば <code>true</code>。</p>
-<h3>等しくない <code>a!=b</code></h3>
+<h3 id="section-a-b-2">等しくない <code>a!=b</code></h3>
 <p><code>a==b</code> が <code>false</code> になるなら <code>true</code>。</p>
-<h3>より小さい <code>a&lt;b</code></h3>
+<h3 id="section-a-b-3">より小さい <code>a&lt;b</code></h3>
 <p>整数型の場合は、数値が <code>a</code> の方が小さければ <code>true</code>。<br>
 <code>double</code> 型の場合は、数値が <code>a</code> の方が小さければ <code>true</code> ……だが、あまり信用ならない。<br>
 詳細は「<a href="double.html">double型</a>」の記事参照。<br>
@@ -78,14 +79,14 @@ else そうじゃない場合に実行したいコード</code></pre>
 そこのASCIIコードが <code>a</code> の方が小さければ、または <code>a</code> の方だけもう文字が尽きていれば <code>true</code>。<br>
 <code>pair</code>、<code>tuple</code>、<code>vector</code> の場合も前から順に見て最初に内容の異なるところを探す。<br>
 そこが <code>a</code> の方が小さければ、または <code>a</code> の方だけもう内容が尽きていれば <code>true</code>。</p>
-<h3>以下 <code>a&lt;=b</code></h3>
+<h3 id="section-a-b-4">以下 <code>a&lt;=b</code></h3>
 <p><code>a&lt;b</code> か <code>a==b</code> が成り立てば <code>true</code>。</p>
-<h3>より大きい <code>a&gt;b</code></h3>
+<h3 id="section-a-b-5">より大きい <code>a&gt;b</code></h3>
 <p><code>b&lt;a</code> が成り立てば <code>true</code>。</p>
-<h3>以上 <code>a&gt;=b</code></h3>
+<h3 id="section-a-b-6">以上 <code>a&gt;=b</code></h3>
 <p><code>a&gt;b</code> か <code>a==b</code> が成り立てば <code>true</code>。</p>
-<h2>よく使う処理</h2>
-<h3><code>a</code> と <code>b</code> の間の数という判定</h3>
+<h2 id="section-4fb896d16b">よく使う処理</h2>
+<h3 id="section-a-b-7"><code>a</code> と <code>b</code> の間の数という判定</h3>
 <p>真面目に書くと、</p>
 <pre><code>if ((a&lt;x&amp;&amp;x&lt;b)||(b&lt;x&amp;&amp;x&lt;a))</code></pre>
 <p>とすることになり、やや煩雑。</p>
@@ -94,7 +95,7 @@ else そうじゃない場合に実行したいコード</code></pre>
 <pre><code>if ((x-a)*(x-b)&lt;0)</code></pre>
 <p>あるいは、以下のようにも書ける。</p>
 <pre><code>if (min(a,b)&lt;x&amp;&amp;x&lt;max(a,b))</code></pre>
-<h3>そうじゃなければ、という条件（B問題相当）</h3>
+<h3 id="section-b">そうじゃなければ、という条件（B問題相当）</h3>
 <pre><code>if (!条件) {
   そうじゃない場合に実行したいコード
 }</code></pre>
@@ -102,7 +103,7 @@ else そうじゃない場合に実行したいコード</code></pre>
 <p>単純な条件なら逆の意味の記号があるので必要ない。<br>
 しかし、例えば「<code>queue</code> が空じゃなかったら」という条件を、以下のように書くなら必要。</p>
 <pre><code>if (!que.empty())</code></pre>
-<h3>$2$ つの条件をどちらもチェックしたい場合</h3>
+<h3 id="section-2-2">$2$ つの条件をどちらもチェックしたい場合</h3>
 <p>$2$ つの条件が両方成り立つなら実行、という場合は以下のように書く。</p>
 <pre><code>if (条件1&amp;&amp;条件2)</code></pre>
 <p>$2$ つの条件が片方だけでも成り立つなら実行、という場合は以下のように書く。</p>
@@ -121,11 +122,11 @@ $3$ つや $4$ つでも、個数が定まっているなら同様に書ける�
 <p>同様に、以下において条件1が <code>true</code> だった場合、条件2は確認せずに全体を <code>true</code> として処理する。<br>
 これもやはり条件2でのエラーを防ぐことができる。</p>
 <pre><code>if (条件1||条件2)</code></pre>
-<h3>多数（不定個）の条件を全てチェックしたい場合</h3>
+<h3 id="section-22c9bebff6">多数（不定個）の条件を全てチェックしたい場合</h3>
 <p><code>bool</code> 型変数を用意して（または類する何らかの変数を用意して）forループで確認する。<br>
 詳細は「<a href="bool.html">bool型</a>」の記事参照。</p>
-<h2>注意点</h2>
-<h3>等しいと書くつもりで誤って <code>=</code> と書かないこと</h3>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<h3 id="section-71be5b247d">等しいと書くつもりで誤って <code>=</code> と書かないこと</h3>
 <p>もし以下のように書いた場合、意図と違う挙動をする。</p>
 <pre><code>if (x=0)</code></pre>
 <p>これは、条件部分に <code>bool</code> 型以外が入っていた場合でも、それぞれ <code>true</code> 扱いや <code>false</code> 扱いされるため。<br>
@@ -133,11 +134,11 @@ $3$ つや $4$ つでも、個数が定まっているなら同様に書ける�
 結果、元々の $x$ の中身が $0$ であっても <code>false</code> になる。</p>
 <p>バグの発見が非常にしにくいので注意。<br>
 謎の <code>WA</code> が出た場合はとりあえずif文の中身を一通り確認してみる、くらいに警戒が必要。</p>
-<h2>関連アルゴリズム</h2>
-<h3><a href="bool.html">bool型</a></h3>
+<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h3 id="section-bool"><a href="bool.html">bool型</a></h3>
 <p>if文の条件式は、最終的に <code>true</code> か <code>false</code> として判定される。<br>
 <code>!</code>、<code>&amp;&amp;</code>、<code>||</code> など <code>bool</code> 型の論理演算も扱う必要がある場合がある。</p>
-<h3><a href="while-loop.html">whileループ</a></h3>
+<h3 id="section-while"><a href="while-loop.html">whileループ</a></h3>
 <p>if分岐と似ているが、条件に合う限り何度でも繰り返して実行する。</p>
   </article>
 

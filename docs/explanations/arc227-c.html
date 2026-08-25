@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">文字を追え</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/arc227/tasks/arc227_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc227/submissions/78535435" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-72986c8568">具体例での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>この問題のポイントは、どんな指示を出そうが人の追い抜きが発生しないこと。<br>
 ということは、島 $1$ の人が島 $N$ の人に後ろから追い付けば、それは $1$ つの島に全員集合している。<br>
 よって、これが可能であるような $S$ の条件を考えてみる。</p>
@@ -58,7 +59,7 @@ $F$ が $1$ マスずつしか進まないように指示を出し、両者の�
 $F$ と $B$ が同じマスに来るまで繰り返すと、$N(N-1)$ 回以内に操作が終わる。<br>
 こうしてできた文字列の長さが $2$ つめに答える値で、文字列そのものが $3$ つめに答えるもの。</p>
 <p>計算量は $O(N^2)$ である。</p>
-<h2>具体例での動作</h2>
+<h2 id="section-72986c8568">具体例での動作</h2>
 <p>次の例を考える。</p>
 <pre><code>n: 12
 s: axabxbaxabxb</code></pre>
@@ -102,9 +103,9 @@ result2: axab</code></pre>
 <p><code>f</code> と <code>b</code> が同じ位置になった。<br>
 人同士の追い抜きは発生しないため、この時点で $1$ 周期分の人が同じ島に集合している。</p>
 <p>よって、$K=2$、操作回数 $4$、操作列 <code>axab</code> を出力すればよい。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

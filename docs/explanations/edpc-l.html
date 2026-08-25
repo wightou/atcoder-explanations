@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">両端取り</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_l" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77904772" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>ABCでいうと、E問題級。</p>
 <p>値というよりは範囲を広げていく動的計画法、通称区間 DP。<br>
 といっても、そこまで特殊な考えなわけではない。<br>
@@ -47,7 +48,7 @@ window.MathJax = {
 <p>終了パターンがある程度限られることもあり、バックトレースで考えることになる。</p>
 <p>あとは、これをコードにすればよい。</p>
 <p>計算量は $O(N^2)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 4
 a: {10, 80, 90, 30}</code></pre>
@@ -151,10 +152,10 @@ dp[0][1] -&gt; dp[0][2] -&gt; dp[0][3]</code></pre>
 </table></div>
 <p>右上の $10$ が答えである。<br>
 左下部分はメモリが無駄になるので、実務だったらちょっと考えないといけないが、競プロなら関係ない。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは、<code>int</code> 型からはみ出る。<br>
 DP テーブルを含め、<code>long long</code> 型を用いること。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

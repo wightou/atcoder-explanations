@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">神経衰弱</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc470/tasks/abc470_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc470/submissions/78237700" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>実は、大きいカードを狙って引く方法は存在しない。<br>
 よって、各カードのペアを成立させられる確率は、すべて同一である。<br>
 したがって、ペアにできる組数の期待値を出せれば、それにカードの値の平均値をかければ答えとなる。</p>
@@ -60,7 +61,7 @@ $1$ 枚目も $2$ 枚目も未知のカードだった場合。<br>
 全体を埋めたら、<code>dp[L][N][0]</code> の値がペア数の期待値。</p>
 <p>最後に、忘れずにカードの値の平均値をかけたら答え。</p>
 <p>計算量は $O(LN^2)$ である。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 l: 2
@@ -78,9 +79,9 @@ dp[2][3]: {29/15, 43/15, 3, 3}</code></pre>
 <p>よって、獲得できるペア数の期待値は <code>dp[2][3][0]</code> $=\frac{29}{15}$ である。</p>
 <p>カードに書かれた値の合計は、$1+2+3=6$ なので、平均は $6\div 3=2$。<br>
 したがって、答えは $\frac{29}{15}\times 2=\frac{58}{15}=3.866666\dots$</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

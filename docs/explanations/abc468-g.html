@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">制約付き順列</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc468/tasks/abc468_g" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc468/submissions/77868280" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>まず、入力の先頭が <code>&#x27;x&#x27;</code> だった場合。<br>
 これは、$1$ だけ見たときに $1$ の順列として連続していないと言っている。<br>
 そんなものがあるわけないので、答えは $0$。</p>
@@ -83,7 +84,7 @@ window.MathJax = {
 <p>これで <code>&#x27;o&#x27;</code> が先頭と末尾だけという入力に対する答えが全て求まった。<br>
 よって、あとは前述の通りのただの掛け算となる。<br>
 計算量は、DP部分が支配的で $O(N^2)$ となる。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 s: &quot;oxo&quot;</code></pre>
@@ -117,12 +118,12 @@ $0,1,2$ の並べ方は全部で $3!=6$ 通りなので、まず次のように�
 よって、この区間に対応する並べ方の個数 <code>dp[2][2]=2</code> を <code>result</code> に掛ける。</p>
 <pre><code>result: 2
 counter: 0</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>階乗や DP の掛け算の途中結果は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
 <p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 何か足し算や掛け算をするたびに結果を <code>% 998244353</code> する。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

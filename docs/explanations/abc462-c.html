@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">非被覆点</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc462/tasks/abc462_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc462/submissions/76685473" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>まず、愚直に解くと、各点 $i$ に対して他の $N-1$ 個の位置全てを確認しなくてはならない。<br>
 すると、計算量が $O(N^2)$ となり、$N = 3 \times 10^5$ ではTLEする。<br>
 よって、これを高速化する。</p>
@@ -43,7 +44,7 @@ window.MathJax = {
 <p>すると、問題の長方形条件は、自分より前に自分より $Y$ が小さい点が存在しないことと言い換えられる。<br>
 （$Y$ も順列なので同じ値が複数回来ることはなく、「以下」でも「未満」でもよい）<br>
 この書き換えにより、他の点を全部調べなくても今までの最小値との比較で済み、$O(N)$ で解ける。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 (x,y): {(2,1), (1,3), (3,2)}</code></pre>
@@ -65,9 +66,9 @@ result: 2</code></pre>
 mn : 1
 result: 2</code></pre>
 <p>カウンターの値が答え。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

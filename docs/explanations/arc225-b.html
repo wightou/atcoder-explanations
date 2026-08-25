@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">独立ニム</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/arc225/tasks/arc225_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc225/submissions/77683757" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>Nim と名前についているが、ゲーム性は Nim と全く関係ない。</p>
 <p>まず、小さい方から実験していく。<br>
 特に全部 $1$ の場合を考えてみる。</p>
@@ -71,7 +72,7 @@ $2$ と $2$ のときだけ、これは続きを調べると勝ちになる。</
 これらにより、長さ $2$ 以外のものが $1$ つでも存在すれば、長さ $2$ がたくさんあるだけの状態にできる。</p>
 <p>以上により、$1$ の連続数を数えて、$2$ 連続以外のところが $1$ つでもあれば Alice の勝ち。<br>
 全て $2$ 連続（$1$ つもない場合を含む）の場合は Bob の勝ちである。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力例1の全テストケースを順に考える。</p>
 <p>1つ目のテストケースを受け取る。</p>
 <pre><code>n: 5
@@ -88,9 +89,9 @@ $2$ 以外の数がないので <code>Bob</code> の勝ちである。</p>
 a: 1 1 1 0 1 1 1 1 0 1 1 1 1 1</code></pre>
 <p>先頭から、それぞれ $1$ が何個続くか調べると、$3,4,5$ である。<br>
 最初の $3$ の時点で、$2$ 以外の数が見つかったので <code>Alice</code> の勝ちである。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

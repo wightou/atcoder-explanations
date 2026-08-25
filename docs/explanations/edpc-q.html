@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">花</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_q" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77959884" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>左から順に、その花を最後に残す場合の最大値を求めていけばよい。<br>
 その値は、自分より前にある自分より低い花の中での最大値+自分の価値とすればよい。<br>
 $O(N^2)$ でよいのであれば、これで簡単。</p>
@@ -42,7 +43,7 @@ $O(N^2)$ でよいのであれば、これで簡単。</p>
 すると、「高さが自身未満の中で最大値」を $O(\log N)$ で取得できる。<br>
 これで全体計算量は $O(N\log N)$ となる。</p>
 <p>最後の答えは、任意の花を最後に残した場合の最大値であり、つまりsegment木の全体処理した値である。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取り、高さを <code>0-indexed</code> に直す。</p>
 <pre><code>n: 4
 h: {2, 0, 3, 1}
@@ -63,10 +64,10 @@ a: {10, 20, 30, 40}</code></pre>
 高さ <code>1</code> より低い花で終わる最大価値は $20$ なので、<code>seg[1]</code> を $60$ にする。</p>
 <pre><code>seg: {20, 60, 10, 50}</code></pre>
 <p>全体の最大値 $60$ が答えである。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

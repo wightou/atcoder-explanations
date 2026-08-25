@@ -209,6 +209,47 @@ a:hover {
   margin-top: 24px;
 }
 
+/* 問題解説・知識記事の本文見出しから自動生成する目次。 */
+.page-toc {
+  margin: 22px 0 30px;
+  padding: 16px 20px;
+  background: #f8fbff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.page-toc-title {
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 1.08rem;
+}
+
+.page-toc ul {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  padding-left: 1.5em;
+}
+
+.page-toc > ul {
+  margin-bottom: 0;
+}
+
+.page-toc a {
+  text-decoration: none;
+}
+
+.page-toc a:hover {
+  text-decoration: underline;
+}
+
+.markdown-body h2[id],
+.markdown-body h3[id],
+.markdown-body h4[id],
+.markdown-body h5[id],
+.markdown-body h6[id] {
+  scroll-margin-top: 16px;
+}
+
 /* 本文の箇条書きは階層ごとに記号を変える。 */
 .markdown-body ul {
   list-style-type: disc;

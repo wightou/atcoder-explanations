@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">コイン</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_i" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77902729" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>ABCでいうと、D問題級。</p>
 <p>「表が半分より多い確率」だけを継承してもしょうがないので、「表が $j$ 枚出る確率」を全部継承する。</p>
 <p>コインが $0$ 枚のときは「$0$ 枚の確率は $1$、それ以外は $0$」で初期化する。<br>
@@ -49,7 +50,7 @@ window.MathJax = {
 <p>最終的に $n$ 枚での確率を全部出したら、半分より多く表が出る範囲を合計すればいい。<br>
 もしくは、<code>dp[(N+1)/2]</code> を「半分以上」をまとめたものに対応させてもよい。</p>
 <p>計算量は $O(N^2)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 p: {0.30, 0.60, 0.80}</code></pre>
@@ -67,9 +68,9 @@ p: {0.30, 0.60, 0.80}</code></pre>
 表が出る確率は $0.80$、裏が出る確率は $0.20$ である。</p>
 <pre><code>dp: {0.056, 0.332, 0.612}</code></pre>
 <p><code>dp[2]</code> の $0.612$ が答え。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

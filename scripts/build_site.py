@@ -1082,6 +1082,111 @@ def markdown_to_html(body_md: str) -> str:
     return wrap_markdown_tables_html(html)
 
 
+def add_heading_anchors_and_build_toc(html: str) -> tuple[str, str]:
+    """本文中の h2〜h6 に固有IDを付け、全見出しから目次HTMLを作る。
+
+    ページタイトルは本文HTMLの外側で生成しているため対象外。
+    見出しレベルが飛んだ場合も、直前のより浅い見出しを親として扱う。
+    """
+    heading_pattern = re.compile(
+        r"<h(?P<level>[2-6])(?P<attrs>[^>]*)>(?P<body>.*?)</h(?P=level)>",
+        flags=re.I | re.S,
+    )
+    id_pattern = re.compile(
+        r"\s+id\s*=\s*(?:\"(?P<double>[^\"]*)\"|'(?P<single>[^']*)'|(?P<bare>[^\s>]+))",
+        flags=re.I,
+    )
+    tag_pattern = re.compile(r"<[^>]+>")
+
+    headings: list[dict[str, object]] = []
+    id_counts: dict[str, int] = defaultdict(int)
+    used_ids: set[str] = set()
+
+    def make_anchor_id(text: str) -> str:
+        plain = re.sub(r"\s+", " ", unescape(text)).strip()
+        base = ascii_slug(plain)
+        if base:
+            base = f"section-{base}"
+        else:
+            base = f"section-{short_hash(plain or 'heading', 10)}"
+        while True:
+            id_counts[base] += 1
+            candidate = base if id_counts[base] == 1 else f"{base}-{id_counts[base]}"
+            if candidate not in used_ids:
+                return candidate
+
+    def replace_heading(match: re.Match[str]) -> str:
+        level = int(match.group("level"))
+        attrs = match.group("attrs")
+        body = match.group("body")
+        plain_text = unescape(tag_pattern.sub("", body)).strip()
+
+        existing_id_match = id_pattern.search(attrs)
+        existing_id = ""
+        if existing_id_match is not None:
+            existing_id = next(
+                (value for value in (
+                    existing_id_match.group("double"),
+                    existing_id_match.group("single"),
+                    existing_id_match.group("bare"),
+                ) if value is not None),
+                "",
+            )
+            existing_id = unescape(existing_id).strip()
+
+        if existing_id and existing_id not in used_ids:
+            anchor_id = existing_id
+            rendered_attrs = attrs
+        else:
+            anchor_id = make_anchor_id(plain_text)
+            rendered_attrs = id_pattern.sub("", attrs)
+            rendered_attrs += f' id="{escape(anchor_id, quote=True)}"'
+
+        used_ids.add(anchor_id)
+        headings.append({"level": level, "text": plain_text, "id": anchor_id, "children": []})
+        return f'<h{level}{rendered_attrs}>{body}</h{level}>'
+
+    html_with_anchors = heading_pattern.sub(replace_heading, html)
+    if not headings:
+        return html_with_anchors, ""
+
+    roots: list[dict[str, object]] = []
+    stack: list[dict[str, object]] = []
+    for heading in headings:
+        level = int(heading["level"])
+        while stack and int(stack[-1]["level"]) >= level:
+            stack.pop()
+        if stack:
+            children = stack[-1]["children"]
+            assert isinstance(children, list)
+            children.append(heading)
+        else:
+            roots.append(heading)
+        stack.append(heading)
+
+    def render_nodes(nodes: list[dict[str, object]]) -> str:
+        items: list[str] = []
+        for node in nodes:
+            children = node["children"]
+            assert isinstance(children, list)
+            node_text = re.sub(r"\s+", "", str(node["text"]))
+            suppress_children = node_text in {"関連知識", "関連アルゴリズム"}
+            child_html = render_nodes(children) if children and not suppress_children else ""
+            items.append(
+                f'<li><a href="#{escape(str(node["id"]), quote=True)}">{escape(str(node["text"]))}</a>'
+                f'{child_html}</li>'
+            )
+        return "<ul>" + "".join(items) + "</ul>"
+
+    toc_html = (
+        '<nav class="page-toc" aria-label="目次">'
+        '<div class="page-toc-title">目次</div>'
+        f'{render_nodes(roots)}'
+        '</nav>'
+    )
+    return html_with_anchors, toc_html
+
+
 def markdown_to_plain_text(body_md: str) -> str:
     text = re.sub(r"```.*?```", " ", body_md, flags=re.S)
     text = re.sub(r"`([^`]*)`", r"\1", text)
@@ -1934,6 +2039,7 @@ def render_explanation_page(
         title_map=knowledge_title_map,
         href_prefix="../knowledge/",
     )
+    linked_body_html, toc_html = add_heading_anchors_and_build_toc(linked_body_html)
 
     body = f"""
 {site_header_compact(prefix="../")}
@@ -1944,6 +2050,7 @@ def render_explanation_page(
       {f'<p class="explanation-title-ja">{escape(page.problem_title_ja)}</p>' if page.problem_title_ja else ''}
     </div>
     {auto_links}
+    {toc_html}
     {linked_body_html}
   </article>
 
@@ -2040,12 +2147,14 @@ def render_knowledge_page(
         title_map=knowledge_title_map,
         href_prefix="",
     )
+    linked_body_html, toc_html = add_heading_anchors_and_build_toc(linked_body_html)
 
     body = f"""
 {site_header_compact(prefix="../")}
 <main class="page-layout">
   <article class="markdown-body">
     <h1>{escape(page.title)}</h1>
+    {toc_html}
     {linked_body_html}
   </article>
 
@@ -2539,6 +2648,47 @@ a:hover {
 
 .markdown-body h3 {
   margin-top: 24px;
+}
+
+/* 問題解説・知識記事の本文見出しから自動生成する目次。 */
+.page-toc {
+  margin: 22px 0 30px;
+  padding: 16px 20px;
+  background: #f8fbff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.page-toc-title {
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 1.08rem;
+}
+
+.page-toc ul {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  padding-left: 1.5em;
+}
+
+.page-toc > ul {
+  margin-bottom: 0;
+}
+
+.page-toc a {
+  text-decoration: none;
+}
+
+.page-toc a:hover {
+  text-decoration: underline;
+}
+
+.markdown-body h2[id],
+.markdown-body h3[id],
+.markdown-body h4[id],
+.markdown-body h5[id],
+.markdown-body h6[id] {
+  scroll-margin-top: 16px;
 }
 
 /* 本文の箇条書きは階層ごとに記号を変える。 */

@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">共犯</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc462/tasks/abc462_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc462/submissions/76685485" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc462/submissions/76685492" target="_blank" rel="noopener noreferrer">別解</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>時刻と犯人 $2$ 人組のパターン数を求める問題。<br>
 「$2$ 人組を選んで、その $2$ 人での犯行数を求める」という方針では $O(N^2)$ かかるのでTLE。</p>
 <p>ということで、時刻ごとに考えることになる。<br>
@@ -44,7 +45,7 @@ window.MathJax = {
 「<code>vector</code> の指定範囲に定数加算」を繰り返す場合、階差数列を作ってから累積和で復元する方法が有効。<br>
 $1$ 人ごとに <code>vector</code> を広く見る必要がなくなり、$O(N+T_{max})$ で完了する。</p>
 <p>これが済んだら、時刻ごとに ${}_{加担可能人数}\mathrm{C}_2$ を求めて、その総和を答えればよい。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 d: 2
@@ -506,10 +507,10 @@ d: 2
 </tbody>
 </table></div>
 <pre><code>result: 4</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>$N$ の値が大きいと、${}_N\mathrm{C}_2$ が大きくなり、<code>int</code> 型からはみ出る。<br>
 結果用変数には <code>long long</code> 型を用いること。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>シミュレーションをして答えることもできる。<br>
 その場合、以下で解ける。</p>
 <ul>

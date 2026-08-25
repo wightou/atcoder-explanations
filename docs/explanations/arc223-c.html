@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">ペア距離の総乗</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/arc223/tasks/arc223_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc223/submissions/77113877" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p><code>A</code> の順番は、積の値に影響を与えない。<br>
 よって、<code>A</code> をソートすることで、絶対値記号を外して $A_j-A_i$ の積と考えてよい。</p>
 <p>まず、$N$ で割った余りが等しい $2$ つの数があれば、積の中に $0$ が含まれるので答えは $0$。<br>
@@ -55,7 +56,7 @@ window.MathJax = {
 愚直にやれば $O(N^2)$ になるが、Fenwick木などを用いることで $O(N\log N)$ で処理できる。</p>
 <p>以上を実装すればよい。<br>
 うまく実装すれば、$N=2$ のときや合成数のときも奇素数の場合のコードに任せて問題なくなる。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>$3$ つ目のテストケースのみ考える。</p>
 <p>入力を受け取る。  <br>
 <code>a</code> はソートしておく。</p>
@@ -95,10 +96,10 @@ $55 \% 5 = 0$ である。  <br>
 余り $0$ が出たことを記録する。</p>
 <p>以上より、仮の結果は $-2$ である。  <br>
 $5$ で割った余りとして正の値に直すと、答えは $3$ である。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>$N$ が素数の場合は、法 $N$ の剰余類環で計算する。<br>
 符号も含めて管理する必要がある。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

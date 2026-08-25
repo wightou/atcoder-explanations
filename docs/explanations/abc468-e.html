@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">平均の総和</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc468/tasks/abc468_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc468/submissions/77868271" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-2">入力例2での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>全ての区間について、「その区間の合計/個数」を合計すればよい。<br>
 個数が同じものでまとめて処理することを考える。</p>
 <p>長さ $1$ の区間は全部で $N$ 個あり、各数が $1$ 回ずつ足される。<br>
@@ -50,7 +51,7 @@ window.MathJax = {
 <p>この計算は、累積和を持っておけば、各 $k$ について $O(1)$ で済む。<br>
 こうして求めた長さ $k$ の区間の総和を $k$ で割った余りを足しこんでいけば答えが得られる。<br>
 計算量は $O(N)$。</p>
-<h2>入力例2での動作</h2>
+<h2 id="section-2">入力例2での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 6
 a: {1, 2, 3, 4, 5, 6}</code></pre>
@@ -144,13 +145,13 @@ $$</p>
 $7/2$ の mod $998244353$ での値は $499122180$ である。</p>
 <pre><code>result: 499122250</code></pre>
 <p>mod $998244353$ での値は $499122250$（本来の分数値は $147/2$）となる。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>累積和や掛け算の途中結果は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
 <p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 何か足し算や掛け算をするたびに結果を <code>% 998244353</code> し、割り算は $998244353-2$ 乗したものを掛ける。<br>
 累乗計算を何度も行うため、繰り返し二乗法のアルゴリズムも用意しておくこと。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

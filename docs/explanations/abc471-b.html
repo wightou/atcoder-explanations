@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">アンケート集計</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc471/tasks/abc471_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc471/submissions/78494136" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>指示通り、同内容の回答数をカウンティングすればよい。<br>
 問題は $2$ 点。</p>
 <p>$1$ つは、回答の大文字小文字を区別せずに数えなければならないこと。<br>
@@ -43,7 +44,7 @@ $1$ 文字ずつ見て、<code>isupper(c)</code> で大文字かどうか判定�
 カウンティングでよく行う、$i$ があったら配列の $i$ 番目を $1$ 増やす方法が使えない。<br>
 これは <code>map</code> を使うことで解決する。<br>
 その後最大回答数を調べるときには、範囲for文を用いればよい。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>回答を順に小文字化すると、次のようになる。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
@@ -107,9 +108,9 @@ $1$ 文字ずつ見て、<code>isupper(c)</code> で大文字かどうか判定�
 </tbody>
 </table></div>
 <p>このなかの最大値は $3$ なので、答えは $3$ である。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

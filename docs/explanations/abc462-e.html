@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">交互コスト</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc462/tasks/abc462_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc462/submissions/76727375" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>考察問題。<br>
 出力が経路でないとはいえ、実質的に経路作成をする構築問題でもある。</p>
 <p>以下、$X$ 座標を増やす行為を <code>右</code>、減らす行為を <code>左</code> と表記する。<br>
@@ -94,7 +95,7 @@ $(0,0)$ から $(X,0)$ までに $X$ 軸上の点の中に通らない点があ�
 これで $(0,0)$ から $(X,0)$ まで最小コストでたどり着くことができる。</p>
 <p>以上から、「可能な限り斜め移動した後で横移動」という経路を貪欲に選んでコストを計算すればよい。<br>
 同じ操作はまとめて計算することで、テストケースあたり $O(1)$ で答えられる。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>$5$ つめのテストケースのみ。</p>
 <p>入力を受け取る。</p>
 <pre><code>a: 31
@@ -115,10 +116,10 @@ result: 1080</code></pre>
 奇数→偶数は $7$ 回あり、$\min(9,3 \times 31) = 9$ ずつコストがかかる<br>
 よって、$27 \times 7 + 9 \times 7 = 252$ をコストに加算する。</p>
 <pre><code>result: 1332</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>コストの値が大きいと、総和はあっさり <code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

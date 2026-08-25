@@ -33,14 +33,15 @@ window.MathJax = {
       <p class="explanation-title-ja">逆写像と交換</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc470/tasks/abc470_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc470/submissions/78235646" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>クエリ2が逆写像をつくることを要求している。<br>
 しかし、これを何度も繰り返すなら、何度も作り直すより、常に本体と逆写像を両方持っておくのが早い。<br>
 C++なら、<code>swap()</code> を使えば $O(1)$ で配列の交換ができ、クエリ $2$ はそれでよい。</p>
 <p>あとはクエリ $1$。<br>
 これも、元配列の $x$ と $y$ を入れ替えるなら、逆配列の対応するところも同時に入れ替えるだけ。</p>
 <p>計算量は $O(N+Q)$ である。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。<br>
 <code>p[0]</code> と <code>inv[0]</code> はダミーとし、<code>p</code>, <code>inv</code> を <code>1-indexed</code> で扱う。</p>
 <pre><code>p:   {-, 2, 1, 3, 5, 4}
@@ -66,9 +67,9 @@ inv: {-, 4, 5, 2, 1, 3}</code></pre>
 inv: {-, 4, 3, 5, 1, 2}</code></pre>
 <p>最終的な <code>p</code> は次のようになり、これが答えである。</p>
 <pre><code>4 5 2 1 3</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

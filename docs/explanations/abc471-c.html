@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">クッキーと貪欲</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc471/tasks/abc471_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc471/submissions/78494138" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc471/submissions/78494146" target="_blank" rel="noopener noreferrer">別解</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>タイトルにある通り、貪欲法でよい。<br>
 つまり、以下の $2$ つのうち近い方を常に取ればよい。</p>
 <ul>
@@ -78,7 +79,7 @@ deque や priority_queue を $2$ つ用いて食べたクッキーのデータ�
 </ul>
 <p>最終的に <code>l</code> が $-1$ で <code>r</code> が $N$ になったら、クッキーを全部食べたのでおしまい。</p>
 <p>計算量はソート部分が支配的で $O(N\log N)$。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力された配列をソートすると、</p>
 <pre><code>a = [-11, -4, -1, 2]</code></pre>
 <p>となる。</p>
@@ -161,10 +162,10 @@ $3$ 回目は右側を食べるので、<code>r</code> を $3$ から $4$ に増
 $4$ 回目は右側にクッキーが残っていないので左側を食べ、<code>l</code> を $0$ から $-1$ に減らす。</p>
 <p>最後に $l=-1$, $r=4=N$ となり、全てのクッキーを回収した。<br>
 移動距離の合計は $23$ であり、これが答えである。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>移動距離の合計は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>番兵として、非常に遠いクッキーを左右に置いて、残り $2$ つになるまで続ける方法もある。<br>
 この場合、片方がなくなっている可能性を考慮しなくていい分、どちらを食べに行くかの判定が楽になる。</p>
 <p>ただし、クッキーが存在する範囲の端から端への移動を妨害しないようにしなければならない。<br>

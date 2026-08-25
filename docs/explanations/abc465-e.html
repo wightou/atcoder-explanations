@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">数字サーカス</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc465/tasks/abc465_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc465/submissions/77225605" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>超巨大な数以下の整数のうち条件を満たす数の個数を考える問題。<br>
 しかも、条件が各桁の数でどうのこうのというものとなれば、いわゆる桁DPの出番。</p>
 <p>一般にはよく全部を並列処理するようなコードが紹介されるが、ここでは理解しやすい方法で解く。</p>
@@ -74,7 +75,7 @@ $N$ が最大 $500$ 桁なので、$500 \times 2^{10} \times 3 = 1536000$ 個の
 よって、最初に $N$ に $1$ を加えておき、$N+1$ 未満で数えるとよい。<br>
 $999$ のような、$1$ 足すことで桁数が変わる入力に注意すること。<br>
 調査対象が $501$ 桁になるので上で述べた計算量に若干修正が必要だが、それでも十分間に合う。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。<br>
 文字列として受け取った $N$ の値は、ここでは $s$ としている。</p>
 <pre><code>s: &quot;45&quot;</code></pre>
@@ -141,12 +142,12 @@ bit_d: 16 (二進法で0000010000)</code></pre>
 <p>そして、桁数が $s$ より少ないもの、つまり $1$ 桁の数を数える。<br>
 $1$ 桁の数のうち、条件を満たすものは $6$、$9$ の $2$ 個である。</p>
 <pre><code>result: 19</code></pre>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 何か足し算をするたびに結果を <code>% 998244353</code> する。</p>
 <p>$N$ は <code>int</code> 型や <code>long long</code> 型からはみ出る。<br>
 文字列として扱うこと。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

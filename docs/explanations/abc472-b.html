@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">棒を折る</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc472/tasks/abc472_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc472/submissions/78642909" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>全ての場所で実際に折ってみればよい。<br>
 各折り方、左側と右側でそれぞれ長さを合計し、差の絶対値をとる。<br>
 それの最小値記録を答えればよい。</p>
@@ -42,7 +43,7 @@ window.MathJax = {
 その後、左にある部分から順に $1$ つずつ、右側合計から引いて左側合計に足していく。<br>
 こうすると、二重ループを避けることができる上に、処理も高速になる。</p>
 <p>まあ、処理の高速化の方は、やったところでC問題以降でないと特に恩恵はないのだが……。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>棒の各部分の長さは $5,2,3,8$ である。<br>
 最初は全て右側にあるものとして、<code>left=0</code>, <code>right=18</code> とする。</p>
 <p>左から $1$ つずつ移動すると、次のようになる。</p>
@@ -83,9 +84,9 @@ window.MathJax = {
 このとき左側の合計は $18$、右側の合計は $0$ となる。<br>
 これは切れ込みで折った状態ではないが、差は $18$ なので最小値記録は更新されない。<br>
 したがって、答えは <code>2</code> である。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

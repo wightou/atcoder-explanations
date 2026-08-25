@@ -33,7 +33,8 @@ window.MathJax = {
       <p class="explanation-title-ja">同心円</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc467/tasks/abc467_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc467/submissions/77654287" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <h2>考え方</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
 <p>$P$ と $Q$ を両方通る円の中心は、必ず線分 $PQ$ の垂直二等分線上にある。<br>
 $R$ と $S$ についても同様。<br>
 よって、$PQ \nparallel RS$ であれば、垂直二等分線の交点を中心にすればよく、答えは <code>&quot;Yes&quot;</code>。</p>
@@ -43,7 +44,7 @@ $R$ と $S$ についても同様。<br>
 したがって、$PR=QS$ かつ $PS=QR$ であるなら答えは <code>&quot;Yes&quot;</code>。</p>
 <p>まとめると、$PQ \nparallel RS$ または $(PR=QS$ かつ $PS=QR)$ なら <code>&quot;Yes&quot;</code> で、それ以外は <code>&quot;No&quot;</code>。</p>
 <p>平行かどうかはベクトルの外積で判定でき、点と点の距離もベクトルの絶対値の $2$ 乗を用いればよい。</p>
-<h2>入力例1での動作</h2>
+<h2 id="section-1">入力例1での動作</h2>
 <p>テストケース数を受け取る。</p>
 <pre><code>q: 3</code></pre>
 <p>$1$ つめのテストケースを受け取る。</p>
@@ -81,10 +82,10 @@ s: (1, 1)</code></pre>
 <p>この $2$ つは等しくないので、<code>result</code> を <code>&quot;No&quot;</code> にする。</p>
 <pre><code>result: &quot;No&quot;</code></pre>
 <p>以上より、$3$ つのテストケースの答えは順に <code>&quot;Yes&quot;</code>、<code>&quot;Yes&quot;</code>、<code>&quot;No&quot;</code> である。</p>
-<h2>注意点</h2>
+<h2 id="section-4d0fb049a3">注意点</h2>
 <p>座標の差の二乗和や外積は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
-<h2>別解</h2>
+<h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
 

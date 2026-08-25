@@ -29,11 +29,12 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>最長共通部分列</h1>
-    <h2>概要</h2>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-793d267b14">典型問題例</a></li><li><a href="#section-369acefbdf">コード例</a><ul><li><a href="#section-6e5790e1d4">最長共通部分列を求める通常の方法</a></li><li><a href="#section-ab3b65a2d0">最長増加部分列へ帰着する方法</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-9d97c1c603">部分列は連続していなくてもよい</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <h2 id="section-7a52d716ff">概要</h2>
 <p>$2$ つの数列または文字列に共通する部分列を作るとき、その長さを最大化する問題。<br>
 動的計画法を用いて解ける。</p>
 <p>ABCでは主にE問題以降で登場する。</p>
-<h2>典型問題例</h2>
+<h2 id="section-793d267b14">典型問題例</h2>
 <ul>
 <li><a href="https://atcoder.jp/contests/dp/tasks/dp_f" target="_blank" rel="noopener noreferrer">Educational DP Contest F - LCS</a>
 <ul>
@@ -42,8 +43,8 @@ window.MathJax = {
 </ul>
 </li>
 </ul>
-<h2>コード例</h2>
-<h3>最長共通部分列を求める通常の方法</h3>
+<h2 id="section-369acefbdf">コード例</h2>
+<h3 id="section-6e5790e1d4">最長共通部分列を求める通常の方法</h3>
 <p>例えば、次の $2$ つの数列があったとする。</p>
 <pre><code>A = {1, 2, 3, 4, 5}
 B = {1, 4, 3, 5, 2}</code></pre>
@@ -198,7 +199,7 @@ $$</p>
 <li>空間計算量：$O(NM)$
 </li>
 </ul>
-<h3>最長増加部分列へ帰着する方法</h3>
+<h3 id="section-ab3b65a2d0">最長増加部分列へ帰着する方法</h3>
 <p>最長共通部分列を、最長増加部分列のアルゴリズムへ帰着して求める方法もある。</p>
 <p>例えば、次の $2$ つの数列の最長共通部分列を考える。</p>
 <pre><code>A = {1, 3, 3, 2, 1}
@@ -237,18 +238,18 @@ B = {1, 2, 3, 1, 2}</code></pre>
 特に双方が同じ要素からなる順列の場合は、$O(N\log N)$ で求められる。</p>
 <p>一方、全ての要素が同じ場合、<code>vec</code> の要素数は $NM$ 個になる。<br>
 この場合、最長増加部分列の計算に $O(NM\log(NM))$ かかるため、通常の動的計画法より遅くなる。</p>
-<h2>注意点</h2>
-<h3>部分列は連続していなくてもよい</h3>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<h3 id="section-9d97c1c603">部分列は連続していなくてもよい</h3>
 <p>部分列は、元の順序を保って要素を選んだ列であり、選んだ要素が元の数列内で連続している必要はない。<br>
 連続する部分だけを選ぶ最長共通部分文字列とは別の問題である。</p>
-<h2>関連アルゴリズム</h2>
-<h3><a href="dynamic-programming.html">動的計画法</a></h3>
+<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h3 id="section-70b556581e"><a href="dynamic-programming.html">動的計画法</a></h3>
 <p>少し小さい問題の答えを利用して、より大きい問題を順に解くアルゴリズム。<br>
 最長共通部分列では、$2$ つの列の先頭から使う要素数を状態として持つ。</p>
-<h3><a href="backtrace.html">バックトレース</a></h3>
+<h3 id="section-d3a5c42e21"><a href="backtrace.html">バックトレース</a></h3>
 <p>終了状態から逆向きにたどり、具体的な選び方などを復元する方法。<br>
 最長共通部分列そのものを復元するために使う。</p>
-<h3><a href="lis.html">最長増加部分列</a></h3>
+<h3 id="section-3064642ac6"><a href="lis.html">最長増加部分列</a></h3>
 <p>数列の一部を元の順序を保ったまま選び、狭義単調増加する部分列の長さを最大化する問題。<br>
 値が一致する位置を並べた数列の最長増加部分列を求めることで、最長共通部分列を求められる。</p>
   </article>
