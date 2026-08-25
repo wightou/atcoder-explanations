@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>素数判定</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -20,7 +30,41 @@
   <article class="markdown-body">
     <h1>素数判定</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>与えられた数が素数かどうか判定するアルゴリズム。<br>
+試し割り法。</p>
+<h2>アルゴリズム内容</h2>
+<p>素数とは、正の約数が $1$ と自分自身しかないような $2$ 以上の整数のこと。<br>
+つまり、$n$ が素数かどうか判定するには、$2$ から $n-1$ までどれでも割り切れないことを確認すればよい。<br>
+だが、この方法、実は少し工夫ができる。</p>
+<p>例えば $299$ が素数かどうか判定する場合。<br>
+$299$ は $23$ で割り切れるのだが、実は $299/23=13$ である。<br>
+ということは、$13$ を見つけることができるなら $23$ を試す必要がない。<br>
+よって、平方して $299$ を超えてしまう $18$ 以上を調べなくてもかまわない。<br>
+つまり、$2$ から $298$ までではなく、$2$ から $17$ まで割り切れなければ素数と判断してしまってよい。</p>
+<p>これにより、$O(n)$ ではなく $O(\sqrt{n})$ で素数かどうかを判定できる。<br>
+もちろん、B問題のように計算量を気にしなくてもいい場合は、$n-1$ まで割ってみてもいい。</p>
+<p>C++での実際の参考コードは以下。</p>
+<pre><code>bool is_prime (long long n) {
+  if (n&lt;2) return false;
+  if (n%2==0&amp;&amp;n&gt;2) return false;
+  for (long long i=3; i*i&lt;=n; i+=2) {
+    if (n%i==0) return false;
+  }
+  return true;
+}</code></pre>
+<h2>注意点</h2>
+<h3>多数の判定には不向き。</h3>
+<p>この方法は、$1$ つめの判定結果が $2$ つめの判定に何も役立たない。<br>
+そのため、判定したい個数が多いとそれに比例して時間がかかる。<br>
+その場合は「<a href="sieve-of-eratosthenes.html">エラトステネスの篩</a>」の記事参照。（D問題レベル）</p>
+<p>また、合わせ技で「$\sqrt{n}$ 以下の素数をエラトステネスの篩で探して試し割りをする」ということもできる。<br>
+ほどほどの個数だとこれが一番速い場合もある。</p>
+<h2>関連アルゴリズム</h2>
+<h3><a href="sieve-of-eratosthenes.html">エラトステネスの篩</a></h3>
+<p>$n$ 未満の全ての素数を洗い出すアルゴリズム。<br>
+判定したい個数が多いなら、あちらを使った方が全体としては速い場合もある。</p>
+<h3><a href="prime-factorization.html">素因数分解</a></h3>
+<p>どんな素因数が含まれているかまで調べるやつ。</p>
   </article>
 
   <aside class="sidebar">
@@ -33,7 +77,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li class="muted">なし</li>
+        <li><a href="../knowledge/sieve-of-eratosthenes.html">エラトステネスの篩</a></li><li><a href="../knowledge/prime-factorization.html">素因数分解</a></li>
       </ul>
     </section>
 

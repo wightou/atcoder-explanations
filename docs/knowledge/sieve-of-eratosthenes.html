@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>エラトステネスの篩</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -20,7 +30,85 @@
   <article class="markdown-body">
     <h1>エラトステネスの篩</h1>
     <h2>概要</h2>
-<p>今後記述予定。</p>
+<p>$n$ 以下の素数を全て高速で列挙するアルゴリズム。<br>
+通常の方法でやれば計算回数が $O(n\sqrt{n})$ になるところ、$O(n\log\log n)$ で済む。</p>
+<h2>アルゴリズム内容</h2>
+<p>$n=20$ の場合、以下のようにする。</p>
+<ul>
+<li>$0$ と $1$ は素数でないので消しておく
+</li>
+<li>$2\times2=4$ 以上の $2$ の倍数を消す
+</li>
+<li>$3\times3=9$ 以上の $3$ の倍数を消す
+</li>
+<li>$4$ は合成数なので何もしない
+</li>
+<li>$5$ は $5\times5$ が $20$ を超えるので終了する
+</li>
+</ul>
+<p>残っているものが $20$ 以下の全素数である。</p>
+<p>具体的なコードは、</p>
+<ul>
+<li>$n+1$ 要素の <code>bool</code> 型の <code>vector</code> を用意し、<code>true</code> で初期化
+</li>
+<li>$0$ と $1$ は素数でないので <code>false</code> にする
+</li>
+<li>$2$ 以上 $\sqrt{n}$ 以下の全ての素数 $i$ について、$i^2$ 以上 $n$ 以下の $i$ の倍数を全部消すループをする
+</li>
+</ul>
+<p>を書けばいい。<br>
+<code>true</code> のまま残っているものが素数。</p>
+<p>C++での実際の参考コードは以下。<br>
+これは $n$ 以下の素数を求めるコードである。</p>
+<pre><code>vector&lt;bool&gt; eratosthenes (int n) {
+  assert(n&gt;=0);
+  vector&lt;bool&gt; flags(n+1,true);
+  flags[0] = false;
+  if (n&gt;0) flags[1] = false;
+  for (int i=2; i*i&lt;=n; i++) {
+    if (!flags[i]) continue;
+    for (int j=i*i; j&lt;=n; j+=i) {
+      flags[j] = false;
+    }
+  }
+  return flags;
+}</code></pre>
+<h2>応用</h2>
+<p>同様の方法で、$n$ 以下の全ての数の最小素因数を求めることができる。<br>
+上書きしないことと、素数のところを埋めるために $n$ まできっちり回す必要があることに注意。</p>
+<p>C++での実際の参考コードは以下。</p>
+<pre><code>vector&lt;int&gt; s_primes;
+void make_s_primes (int n) {
+  assert(n&gt;=0);
+  s_primes.assign(n+1,-1);
+  bool flag = true;
+  for (int i=2; i&lt;=n; i++) {
+    if (s_primes[i]!=-1) continue;
+    s_primes[i] = i;
+    if (!flag) continue;
+    for (int j=i*i; j&lt;=n; j+=i) {
+      if (s_primes[j]==-1) s_primes[j] = i;
+    }
+    if (i*i&gt;n) flag = false;
+  }
+}</code></pre>
+<h2>注意点</h2>
+<h3>$\sqrt{n}$ 以下という判定は整数型で行うこと</h3>
+<p><code>sqrt()</code> の計算は重いし、<code>double</code> 型の判定は信用ならない。<br>
+<code>i*i&lt;=n</code> の形で判定すること。</p>
+<h3>false化ループは素数のときだけ回すこと</h3>
+<p>$i$ が合成数のときは忘れずスキップすること。<br>
+合成数の場合もループすると、答えは出るが無駄が多く $O(n\log n)$ になってしまう。</p>
+<h2>関連アルゴリズム</h2>
+<h3><a href="primality-test.html">素数判定</a></h3>
+<p>通常の素数判定を用いて $n$ 以下の数 $m$ 個を判定するのに $O(m\sqrt{n})$ かかる。<br>
+つまり、$m$ が $\sqrt{n}\log\log n$ より小さいなら、通常の方法の方が速い。</p>
+<h3><a href="segmented-sieve.html">区間篩</a></h3>
+<p>$a$ 以上 $b$ 以下の素数を全て高速で列挙する。<br>
+$O(b\log\log b)$ でも十分なら普通にエラトステネスの篩をすればいい。<br>
+しかし、$b$ が $10^{12}$ くらいで $b-a$ がそんなに大きくない場合だと区間篩をしなければ間に合わない。</p>
+<h3><a href="prime-factorization.html">素因数分解</a></h3>
+<p>どんな素因数が含まれているかまで調べるやつ。</p>
   </article>
 
   <aside class="sidebar">
@@ -33,7 +121,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li class="muted">なし</li>
+        <li><a href="../knowledge/primality-test.html">素数判定</a></li><li><a href="../knowledge/segmented-sieve.html">区間篩</a></li><li><a href="../knowledge/prime-factorization.html">素因数分解</a></li>
       </ul>
     </section>
 
