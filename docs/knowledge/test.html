@@ -136,19 +136,19 @@ window.MathJax = {
 そのため、制約外入力に対するエラー処理は、基本的には書かなくてよい。</p>
 <p>ただし、境界値を考えるときに、制約の下限・上限を意識することは重要である。</p>
 <h2 id="section-2773da9bff">関連知識</h2>
-<h3 id="section-ec6399d678">エラー</h3>
+<h3 id="section-ec6399d678"><a href="error.html">エラー</a></h3>
 <p>テストで出力や挙動がおかしい場合、エラーの種類を切り分けて原因を探す。<br>
 コンパイルエラー、実行時エラー、論理エラーで確認する場所が変わる。</p>
-<h3 id="section-8cd4700332">コーナーケース</h3>
+<h3 id="section-8cd4700332"><a href="corner-case.html">コーナーケース</a></h3>
 <p>特殊な入力だけ別処理が必要な問題では、コーナーケースのテストが重要になる。<br>
 ほとんど <code>AC</code> して一部だけ <code>WA</code> になる場合は、コーナーケースを疑う。</p>
-<h3 id="section-e332e674af">入出力</h3>
+<h3 id="section-e332e674af"><a href="input-output.html">入出力</a></h3>
 <p>入力の個数や順番がずれていると、サンプルテストや自作テストで想定と違う結果になる。<br>
 まずは入力形式と出力形式が問題文に合っているか確認する。</p>
-<h3 id="section-if">if分岐</h3>
+<h3 id="section-if"><a href="if-statement.html">if分岐</a></h3>
 <p>場合分けのテストでは、if文の各分岐を通る入力を用意する。<br>
 不等号、<code>&amp;&amp;</code>、<code>||</code> の条件ミスは、境界値テストや場合分けのテストで見つけやすい。</p>
-<h3 id="section-0a7c22be32">計算量の見積もり</h3>
+<h3 id="section-0a7c22be32"><a href="complexity-analysis.html">計算量の見積もり</a></h3>
 <p>ストレステストでは、大きな入力を処理させて、計算量の見積もりが正しいかを確認する。<br>
 ただし、本当に間に合うかは、まず理論上の計算量で判断する。</p>
   </article>

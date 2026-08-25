@@ -340,25 +340,25 @@ what(): std::bad_alloc</code></pre>
 <p>オーバーフロー、コーナーケース、添字のずれ、小数誤差などは、サンプルでは表に出ないことがある。<br>
 自分で境界値や極端な入力を試すこと。</p>
 <h2 id="section-2773da9bff">関連知識</h2>
-<h3 id="section-cpp">C++のコードの書き方</h3>
+<h3 id="section-cpp"><a href="cpp-code-style.html">C++のコードの書き方</a></h3>
 <p>セミコロン、括弧、コメント、全角文字など、コードの基本的な書き方は、エラーの原因と直結する。</p>
-<h3 id="section-e332e674af">入出力</h3>
+<h3 id="section-e332e674af"><a href="input-output.html">入出力</a></h3>
 <p>入力の個数や順番がずれると、後続の処理が想定通りに動かず、論理エラーの原因になる。</p>
-<h3 id="section-63b560db88">テスト</h3>
+<h3 id="section-63b560db88"><a href="test.html">テスト</a></h3>
 <p>論理エラーは、テストを用いて原因を探す。<br>
 小さい入力、境界値、コーナーケース、ランダムテストを使い分ける。</p>
-<h3 id="section-8cd4700332">コーナーケース</h3>
+<h3 id="section-8cd4700332"><a href="corner-case.html">コーナーケース</a></h3>
 <p>特殊な入力だけ別処理が必要な問題では、コーナーケースの見落としで <code>WA</code> になることがある。</p>
-<h3 id="section-int">int型</h3>
+<h3 id="section-int"><a href="int.html">int型</a></h3>
 <p><code>int</code> 型は、およそ $21$ 億程度までしか扱えない。<br>
 オーバーフローの原因になりやすい。</p>
-<h3 id="section-long-long">long long型</h3>
+<h3 id="section-long-long"><a href="long-long.html">long long型</a></h3>
 <p><code>long long</code> 型を使うと、<code>int</code> 型より大きな整数を扱える。<br>
 ただし、<code>long long</code> 型でもはみ出る場合がある。</p>
-<h3 id="section-double">double型</h3>
+<h3 id="section-double"><a href="double.html">double型</a></h3>
 <p>小数は丸め誤差が発生する。<br>
 等値判定や整数への変換には注意が必要。</p>
-<h3 id="section-vector">vector</h3>
+<h3 id="section-vector"><a href="vector.html">vector</a></h3>
 <p><code>vector</code> の範囲外アクセスは、実行時エラーや論理エラーの原因になる。</p>
   </article>
 

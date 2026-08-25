@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>動的計画法</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a></li><li><a href="#section-369acefbdf">コード例</a></li><li><a href="#section-aec54ceb12">使い方の応用</a><ul><li><a href="#section-dp-dp">もらうDPと配るDP</a></li><li><a href="#section-8eedef6f8e">解の復元</a></li><li><a href="#section-dp">インラインDP</a></li><li><a href="#section-bitdp">bitDP</a></li><li><a href="#section-dp-2">区間DP</a></li><li><a href="#section-dp-3">桁DP</a></li><li><a href="#section-dp-4">木DP</a></li><li><a href="#section-dp-5">全方位木DP</a></li><li><a href="#section-dag-dp">DAG上のDP</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-72dfad7aed">表のサイズに注意</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a></li><li><a href="#section-369acefbdf">コード例</a></li><li><a href="#section-aec54ceb12">使い方の応用</a><ul><li><a href="#section-dp-dp">もらうDPと配るDP</a></li><li><a href="#section-8eedef6f8e">解の復元</a></li><li><a href="#section-dp">インラインDP</a></li><li><a href="#section-bitdp">bitDP</a></li><li><a href="#section-dp-2">区間DP</a></li><li><a href="#section-dp-3">桁DP</a></li><li><a href="#section-dp-4">木DP</a></li><li><a href="#section-dp-5">全方位木DP</a></li><li><a href="#section-dag-dp">DAG上のDP</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-72dfad7aed">表のサイズに注意</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>再帰的な問題を高速に解くアルゴリズム。<br>
 つまり「少し小さい問題の答えがわかっていれば簡単」というタイプの問題を解く方法。</p>
@@ -564,7 +564,7 @@ i 番目の荷物は重さが w[i]、価値が v[i] である。
 <p>動的計画法ですらない解法も多い。<br>
 「今回のこの制約では動的計画法を使うのか」というところから判断しにくい。<br>
 それが、このアルゴリズムの真の難しさである。</p>
-<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h2 id="section-2773da9bff">関連知識</h2>
 <h3 id="section-ac00502ac2"><a href="memoized-recursion.html">メモ化再帰</a></h3>
 <p>役に立つ場面は動的計画法とほぼ同じ。<br>
 再帰的な問題をボトムアップで解くのが動的計画法、トップダウンで解くのがメモ化再帰である。<br>

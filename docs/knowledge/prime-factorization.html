@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>素因数分解</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-1">アルゴリズム内容1</a></li><li><a href="#section-2">アルゴリズム内容2</a></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-1">アルゴリズム内容1</a></li><li><a href="#section-2">アルゴリズム内容2</a></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>与えられた数を素数の積に分解するアルゴリズム。<br>
 毎回 $O(\sqrt{n})$ かかるものと、前処理に $O(n\log\log n)$ かかるがその後は毎回 $O(\log n)$ ですむものがある。</p>
@@ -97,7 +97,7 @@ vector&lt;pair&lt;int,int&gt;&gt; prime_factorization(int n) {
 // main関数内
 make_s_primes(n);</code></pre>
 <p>main関数内で、上限を指定して最小素因数一覧を構築する必要があることに注意。</p>
-<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h2 id="section-2773da9bff">関連知識</h2>
 <h3 id="section-86bdfb8985"><a href="primality-test.html">素数判定</a></h3>
 <p>素数かどうか判定するだけで、分解はしないやつ。</p>
 <h3 id="section-7766d9fc19"><a href="sieve-of-eratosthenes.html">エラトステネスの篩</a></h3>

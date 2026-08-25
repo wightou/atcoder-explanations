@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>whileループ</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-a9dc03ed89">基本的な書き方</a><ul><li><a href="#section-while">whileループの動作</a></li><li><a href="#section-e02fca5408">条件式</a></li></ul></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-break">中断処理 break;</a></li><li><a href="#section-continue">継続処理 continue;</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-ce9e936c6b">無限ループを起こさないように注意</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-a9dc03ed89">基本的な書き方</a><ul><li><a href="#section-while">whileループの動作</a></li><li><a href="#section-e02fca5408">条件式</a></li></ul></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-break">中断処理 break;</a></li><li><a href="#section-continue">継続処理 continue;</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-ce9e936c6b">無限ループを起こさないように注意</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>変数の中身次第でコードを何回も実行する。<br>
 同じような処理を何度も繰り返したい場合に。<br>
@@ -99,7 +99,7 @@ while (n&lt;10) {
 <p>判定条件が満たされ続ける限り、$100$ 回でも $10000$ 回でも $5000$ 兆回でも繰り返される。<br>
 A問題やB問題で実行に長時間かかっている場合、これをやらかした可能性が高い。<br>
 判定に使われている何かが毎回変わるか、どこかで <code>break;</code> するかで終了を保証できるコードを書くこと。</p>
-<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h2 id="section-2773da9bff">関連知識</h2>
 <h3 id="section-bool"><a href="bool.html">bool型</a></h3>
 <p>whileループの条件式は、最終的に <code>true</code> か <code>false</code> として判定される。<br>
 <code>!</code>、<code>&amp;&amp;</code>、<code>||</code> など <code>bool</code> 型の論理演算も扱う必要がある場合がある。</p>

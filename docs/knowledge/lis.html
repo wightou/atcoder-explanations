@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>最長増加部分列</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-793d267b14">典型問題例</a></li><li><a href="#section-369acefbdf">コード例</a><ul><li><a href="#section-e">最長増加部分列を求める（E問題レベル）</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-vec">vec 自体が最長増加部分列とは限らない</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-793d267b14">典型問題例</a></li><li><a href="#section-369acefbdf">コード例</a><ul><li><a href="#section-e">最長増加部分列を求める（E問題レベル）</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-vec">vec 自体が最長増加部分列とは限らない</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>数列の一部を、元の順序を保ったまま選んで狭義単調増加列を作るとき、その長さを最大化する問題。<br>
 動的計画法と二分探索を組み合わせて解ける。</p>
@@ -350,7 +350,7 @@ vec[k] = 長さ k+1 の増加部分列の末尾として可能な最小値</code
 <p>上の例では、最終的な <code>vec</code> は <code>{1, 2, 5}</code> となる。<br>
 しかし、元の数列では $2$ が $5$ より後ろにあるため、<code>{1, 2, 5}</code> は $A$ の部分列ではない。<br>
 実際の最長増加部分列が必要な場合は、<code>len</code> を用いて復元する。</p>
-<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h2 id="section-2773da9bff">関連知識</h2>
 <h3 id="section-70b556581e"><a href="dynamic-programming.html">動的計画法</a></h3>
 <p>少し小さい問題の答えを利用して、より大きい問題を順に解くアルゴリズム。<br>
 最長増加部分列では、各長さの増加部分列について、末尾の最小値を順に更新する。</p>

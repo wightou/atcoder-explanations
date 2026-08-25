@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>ナップサック問題</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-793d267b14">典型問題例</a></li><li><a href="#section-369acefbdf">コード例</a><ul><li><a href="#section-0-1-n-20-c">$0/1$ ナップサック問題、$N$ が最大 $20$ くらい（C問題レベル）</a></li><li><a href="#section-0-1-n-40-f">$0/1$ ナップサック問題、$N$ が最大 $40$ くらい（F問題レベル）</a></li><li><a href="#section-0-1-w-w-d">$0/1$ ナップサック問題、$W$ が小さめ、重さ合計は $W$ ちょうど指定（D問題レベル）</a></li><li><a href="#section-0-1-w-w-d-2">$0/1$ ナップサック問題、$W$ が小さめ、重さ合計は $W$ 以下指定（D問題レベル）</a></li><li><a href="#section-0-1-sum-v-i-w-d">$0/1$ ナップサック問題、$\sum v[i]$ が小さめ、重さ合計は $W$ 以下指定（D問題レベル）</a></li><li><a href="#section-d">部分和問題（D問題レベル）</a></li><li><a href="#section-d-2">完全ナップサック問題（D問題レベル）</a></li><li><a href="#section-e">個数制限付きナップサック問題（E問題レベル）</a></li><li><a href="#section-c">分数ナップサック問題（C問題レベル）</a></li><li><a href="#section-d-3">グループナップサック問題（D問題レベル）</a></li><li><a href="#section-e-2">重さ以外の制限がある場合（E問題レベル）</a></li><li><a href="#section-g">何も制限がない場合（G問題以上レベル）</a></li><li><a href="#section-ahc-0-1">AHCでの $0/1$ ナップサック問題</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-5aea1b31bf">オーバーフローに注意</a></li><li><a href="#section-957377d570">到達不能状態を区別する</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-793d267b14">典型問題例</a></li><li><a href="#section-369acefbdf">コード例</a><ul><li><a href="#section-0-1-n-20-c">$0/1$ ナップサック問題、$N$ が最大 $20$ くらい（C問題レベル）</a></li><li><a href="#section-0-1-n-40-f">$0/1$ ナップサック問題、$N$ が最大 $40$ くらい（F問題レベル）</a></li><li><a href="#section-0-1-w-w-d">$0/1$ ナップサック問題、$W$ が小さめ、重さ合計は $W$ ちょうど指定（D問題レベル）</a></li><li><a href="#section-0-1-w-w-d-2">$0/1$ ナップサック問題、$W$ が小さめ、重さ合計は $W$ 以下指定（D問題レベル）</a></li><li><a href="#section-0-1-sum-v-i-w-d">$0/1$ ナップサック問題、$\sum v[i]$ が小さめ、重さ合計は $W$ 以下指定（D問題レベル）</a></li><li><a href="#section-d">部分和問題（D問題レベル）</a></li><li><a href="#section-d-2">完全ナップサック問題（D問題レベル）</a></li><li><a href="#section-e">個数制限付きナップサック問題（E問題レベル）</a></li><li><a href="#section-c">分数ナップサック問題（C問題レベル）</a></li><li><a href="#section-d-3">グループナップサック問題（D問題レベル）</a></li><li><a href="#section-e-2">重さ以外の制限がある場合（E問題レベル）</a></li><li><a href="#section-g">何も制限がない場合（G問題以上レベル）</a></li><li><a href="#section-ahc-0-1">AHCでの $0/1$ ナップサック問題</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-5aea1b31bf">オーバーフローに注意</a></li><li><a href="#section-957377d570">到達不能状態を区別する</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>次のような問題を、ナップサック問題という。<br>
 ABCのC問題レベル（簡単なもの）～G問題以上レベル（難しいもの）。</p>
@@ -806,7 +806,7 @@ $$</p>
 しかし、合計をちょうど固定する場合や最小値を求める場合は、未到達状態を <code>-INF</code> や <code>INF</code> で区別する。</p>
 <p><code>INF</code> に値を足すとオーバーフローする場合がある。<br>
 <code>INF</code> を $2$ 倍してもオーバーフローしない程度にして、足し算後に <code>INF</code> 以上の値は <code>INF</code> に戻すなどする。</p>
-<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h2 id="section-2773da9bff">関連知識</h2>
 <h3 id="section-70b556581e"><a href="dynamic-programming.html">動的計画法</a></h3>
 <p>品物数多めのナップサック問題の基本解法。<br>
 品物を順に増やしながら、重さや価値ごとの最適値を引き継ぐ。</p>

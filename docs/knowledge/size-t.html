@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>size_t型</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-d924c9c5a7">宣言と初期化</a><ul><li><a href="#section-98bc3412c3">宣言だけする場合</a></li><li><a href="#section-1a3dfac5c0">初期化もする場合</a></li></ul></li><li><a href="#section-2e750b0e4e">可能な演算</a></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-vector-string">vector や string 型の中身を全てループ</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-18-446-744-073-709-551-615">$18{,}446{,}744{,}073{,}709{,}551{,}615$ 番目へのアクセスが発生した場合</a></li><li><a href="#section-2dd31cc70c">逆順ループをする場合のループ条件に注意</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-d924c9c5a7">宣言と初期化</a><ul><li><a href="#section-98bc3412c3">宣言だけする場合</a></li><li><a href="#section-1a3dfac5c0">初期化もする場合</a></li></ul></li><li><a href="#section-2e750b0e4e">可能な演算</a></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-vector-string">vector や string 型の中身を全てループ</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-18-446-744-073-709-551-615">$18{,}446{,}744{,}073{,}709{,}551{,}615$ 番目へのアクセスが発生した場合</a></li><li><a href="#section-2dd31cc70c">逆順ループをする場合のループ条件に注意</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p><code>vector</code> や <code>string</code> 型などの添え字やデータサイズを扱うときに使う整数型。<br>
 <code>.size()</code> を取得するたびに <code>int</code> 型変数へ代入してから使うなら、知らなくても問題ない。</p>
@@ -79,7 +79,7 @@ $18{,}446{,}744{,}073{,}709{,}551{,}615$ を見かけたら、<br>
 ループが継続してしまう。</p>
 <pre><code>for (size_t i=a.size()-1; i&lt;a.size(); i--)</code></pre>
 <p>のように書くと防げる。</p>
-<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h2 id="section-2773da9bff">関連知識</h2>
 <h3 id="section-int"><a href="int.html">int型</a></h3>
 <p>最も代表的な符号付き整数型。<br>
 <code>.size()</code> の値を <code>int</code> 型へ代入してから扱う方法もある。</p>

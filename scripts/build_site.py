@@ -288,7 +288,7 @@ def link_knowledge_references_in_html(
     """問題解説・知識記事本文の限定された参照表現だけを内部リンクへ変換する。
 
     対象は次の2種類だけ。
-    - `## 関連アルゴリズム` 節内の、知識記事 title と完全一致する `###` 見出し
+    - `## 関連知識` 節内の、知識記事 title と完全一致する `###` 見出し
     - 本文中で `「XXX」の記事参照。` または `「XXX」「YYY」...の記事参照。` の形になっていて、
       各記事名が title と一致する箇所
 
@@ -306,7 +306,7 @@ def link_knowledge_references_in_html(
         return target
 
     section_pattern = re.compile(
-        r'(?P<head><h2\b[^>]*>\s*関連アルゴリズム\s*</h2>)(?P<body>.*?)(?=(?:<h2\b)|\Z)',
+        r'(?P<head><h2\b[^>]*>\s*関連知識\s*</h2>)(?P<body>.*?)(?=(?:<h2\b)|\Z)',
         flags=re.S,
     )
     heading_pattern = re.compile(
@@ -1170,7 +1170,7 @@ def add_heading_anchors_and_build_toc(html: str) -> tuple[str, str]:
             children = node["children"]
             assert isinstance(children, list)
             node_text = re.sub(r"\s+", "", str(node["text"]))
-            suppress_children = node_text in {"関連知識", "関連アルゴリズム"}
+            suppress_children = node_text == "関連知識"
             child_html = render_nodes(children) if children and not suppress_children else ""
             items.append(
                 f'<li><a href="#{escape(str(node["id"]), quote=True)}">{escape(str(node["text"]))}</a>'

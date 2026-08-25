@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>累積和</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a></li><li><a href="#section-369acefbdf">コード例</a></li><li><a href="#section-aec54ceb12">使い方の応用</a><ul><li><a href="#section-1c810e0d8b">逆演算が存在する他の演算でも使える</a></li><li><a href="#section-73eef71080">逆演算が存在しない演算でも部分的に使える</a></li><li><a href="#section-1ef66239a4">たくさんの範囲で、条件を満たすものの個数を数える</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-5aea1b31bf">オーバーフローに注意</a></li><li><a href="#section-41e60914da">配列の中身は後から変えられない</a></li><li><a href="#section-3b94fade93">区間データが大きい場合には使えない</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a></li><li><a href="#section-369acefbdf">コード例</a></li><li><a href="#section-aec54ceb12">使い方の応用</a><ul><li><a href="#section-1c810e0d8b">逆演算が存在する他の演算でも使える</a></li><li><a href="#section-73eef71080">逆演算が存在しない演算でも部分的に使える</a></li><li><a href="#section-1ef66239a4">たくさんの範囲で、条件を満たすものの個数を数える</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-5aea1b31bf">オーバーフローに注意</a></li><li><a href="#section-41e60914da">配列の中身は後から変えられない</a></li><li><a href="#section-3b94fade93">区間データが大きい場合には使えない</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>配列上の「ここからここまでの合計はいくつ？」に高速に答えるためのアルゴリズム。<br>
 ただし、途中で配列の中身は変えることはできない。</p>
@@ -252,7 +252,7 @@ $i$ 番目以外の最大値を知りたければ、左から $i-1$ 番目まで
 <h3 id="section-3b94fade93">区間データが大きい場合には使えない</h3>
 <p>また、数値の種類数のように $1$ 箇所ごとのデータを詳細に持って大きくなってしまう場合は使えない。<br>
 sliding window法や尺取法、その他問題に対応できるアルゴリズムを用いること。</p>
-<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h2 id="section-2773da9bff">関連知識</h2>
 <h3 id="section-sliding-window"><a href="sliding-window.html">sliding window法</a></h3>
 <p>長さ固定の区間を順に調べる処理を扱える。<br>
 種類数のように現在の状態を扱うデータが大きくなりがちなものに対しても使える場合がある。<br>

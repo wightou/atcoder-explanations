@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>double型</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-d924c9c5a7">宣言と初期化</a><ul><li><a href="#section-98bc3412c3">宣言だけする場合</a></li><li><a href="#section-1a3dfac5c0">初期化もする場合</a></li></ul></li><li><a href="#section-2e750b0e4e">可能な演算</a><ul><li><a href="#section-1eb5bebcc5">代入 =</a></li><li><a href="#section-3b5179616a">加算 +</a></li><li><a href="#section-3d336f3b28">減算 -</a></li><li><a href="#section-f2fb8ef773">乗算 *</a></li><li><a href="#section-6778fbf6db">除算 /</a></li><li><a href="#section-8df7830bf6">各種複合代入演算子</a></li></ul></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-3e048db974">固定小数表示で出力する</a></li><li><a href="#section-518abd0731">整数型の割り算を小数部分まで行う</a></li><li><a href="#section-a1d8cd758e">整数への切り下げ、切り上げ、四捨五入</a></li><li><a href="#section-b3f5c302e0">小数点以下を残した切り下げ、切り上げ、四捨五入</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-double">double 型の == 判定を信用してはいけない</a></li><li><a href="#section-54ecb48d41">切り下げ時に誤差が発生することがある</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-d924c9c5a7">宣言と初期化</a><ul><li><a href="#section-98bc3412c3">宣言だけする場合</a></li><li><a href="#section-1a3dfac5c0">初期化もする場合</a></li></ul></li><li><a href="#section-2e750b0e4e">可能な演算</a><ul><li><a href="#section-1eb5bebcc5">代入 =</a></li><li><a href="#section-3b5179616a">加算 +</a></li><li><a href="#section-3d336f3b28">減算 -</a></li><li><a href="#section-f2fb8ef773">乗算 *</a></li><li><a href="#section-6778fbf6db">除算 /</a></li><li><a href="#section-8df7830bf6">各種複合代入演算子</a></li></ul></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-3e048db974">固定小数表示で出力する</a></li><li><a href="#section-518abd0731">整数型の割り算を小数部分まで行う</a></li><li><a href="#section-a1d8cd758e">整数への切り下げ、切り上げ、四捨五入</a></li><li><a href="#section-b3f5c302e0">小数点以下を残した切り下げ、切り上げ、四捨五入</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-double">double 型の == 判定を信用してはいけない</a></li><li><a href="#section-54ecb48d41">切り下げ時に誤差が発生することがある</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>小数を扱う浮動小数点型。</p>
 <p><code>double</code> 型は $64$ ビットの浮動小数点型（AtCoder環境の場合）。<br>
@@ -105,7 +105,7 @@ else cout &lt;&lt; &quot;No&quot; &lt;&lt; endl;</code></pre>
 ただし、<code>a</code> の値の大きさによって、事故も起こる。<br>
 足す値が小さすぎると影響がなかったり、大きすぎると <code>2.98</code> が <code>3.01</code> になったり、など。<br>
 適切な値を決めるのは難しいので注意。</p>
-<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h2 id="section-2773da9bff">関連知識</h2>
 <h3 id="section-int"><a href="int.html">int型</a></h3>
 <p>最も代表的な整数型。<br>
 <code>double</code> 型との演算では結果が <code>double</code> 型になり、<code>double</code> 型から代入すると小数部分が捨てられる。</p>

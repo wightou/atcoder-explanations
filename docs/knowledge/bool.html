@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>bool型</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-d924c9c5a7">宣言と初期化</a><ul><li><a href="#section-98bc3412c3">宣言だけする場合</a></li><li><a href="#section-1a3dfac5c0">初期化もする場合</a></li></ul></li><li><a href="#section-2e750b0e4e">可能な演算</a><ul><li><a href="#section-1eb5bebcc5">代入 =</a></li><li><a href="#section-759102aa5f">かつ &amp;&amp;</a></li><li><a href="#section-f055512888">または ||</a></li><li><a href="#section-35b1d92b27">反転 !</a></li><li><a href="#section-66c925ae92">ビット演算系</a></li></ul></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-if">if分岐のときに大量の条件をループで扱う処理</a><ul><li><a href="#section-true-1-false">全部 true なら実行したい／$1$ つでも false なら実行したい</a></li><li><a href="#section-1-true-false">$1$ つでも true なら実行したい／全部 false なら実行したい</a></li></ul></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-9ddadd3238">「かつ」と「または」の優先順位</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-d924c9c5a7">宣言と初期化</a><ul><li><a href="#section-98bc3412c3">宣言だけする場合</a></li><li><a href="#section-1a3dfac5c0">初期化もする場合</a></li></ul></li><li><a href="#section-2e750b0e4e">可能な演算</a><ul><li><a href="#section-1eb5bebcc5">代入 =</a></li><li><a href="#section-759102aa5f">かつ &amp;&amp;</a></li><li><a href="#section-f055512888">または ||</a></li><li><a href="#section-35b1d92b27">反転 !</a></li><li><a href="#section-66c925ae92">ビット演算系</a></li></ul></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-if">if分岐のときに大量の条件をループで扱う処理</a><ul><li><a href="#section-true-1-false">全部 true なら実行したい／$1$ つでも false なら実行したい</a></li><li><a href="#section-1-true-false">$1$ つでも true なら実行したい／全部 false なら実行したい</a></li></ul></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-9ddadd3238">「かつ」と「または」の優先順位</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>$1$ bitで <code>true</code> と <code>false</code> のみ入れられる型。<br>
 if分岐などの条件に長々と書きたくないときに、<code>bool</code> 型変数に一度書き込んだりする。<br>
@@ -83,7 +83,7 @@ if (flag) 実行したい処理</code></pre>
 <h3 id="section-9ddadd3238">「かつ」と「または」の優先順位</h3>
 <p><code>a||b&amp;&amp;c</code> と書いた場合、<code>&amp;&amp;</code> の方が優先順位が高いので、<code>a||(b&amp;&amp;c)</code> と解釈される。<br>
 ……が、ややこしいので、括弧をつけて書くように心がけたい。</p>
-<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h2 id="section-2773da9bff">関連知識</h2>
 <h3 id="section-if-2"><a href="if-statement.html">if分岐</a></h3>
 <p>条件が <code>true</code> か <code>false</code> かによって、処理を分岐させる。</p>
   </article>

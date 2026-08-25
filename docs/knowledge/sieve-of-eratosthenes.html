@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>エラトステネスの篩</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a></li><li><a href="#section-7bf5d8804a">応用</a></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-sqrt-n">$\sqrt{n}$ 以下という判定は整数型で行うこと</a></li><li><a href="#section-false">false化ループは素数のときだけ回すこと</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a></li><li><a href="#section-7bf5d8804a">応用</a></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-sqrt-n">$\sqrt{n}$ 以下という判定は整数型で行うこと</a></li><li><a href="#section-false">false化ループは素数のときだけ回すこと</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>$n$ 以下の素数を全て高速で列挙するアルゴリズム。<br>
 通常の方法でやれば計算回数が $O(n\sqrt{n})$ になるところ、$O(n\log\log n)$ で済む。</p>
@@ -100,7 +100,7 @@ void make_s_primes (int n) {
 <h3 id="section-false">false化ループは素数のときだけ回すこと</h3>
 <p>$i$ が合成数のときは忘れずスキップすること。<br>
 合成数の場合もループすると、答えは出るが無駄が多く $O(n\log n)$ になってしまう。</p>
-<h2 id="section-e7e819296c">関連アルゴリズム</h2>
+<h2 id="section-2773da9bff">関連知識</h2>
 <h3 id="section-86bdfb8985"><a href="primality-test.html">素数判定</a></h3>
 <p>通常の素数判定を用いて $n$ 以下の数 $m$ 個を判定するのに $O(m\sqrt{n})$ かかる。<br>
 つまり、$m$ が $\sqrt{n}\log\log n$ より小さいなら、通常の方法の方が速い。</p>
