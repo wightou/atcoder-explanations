@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">近い点のペア</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc466/tasks/abc466_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc466/submissions/77418225" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-n-5">N=5での動作例</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-72986c8568">具体例での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>まず、問題で言及されていないが、座標は当然整数とは限らないことに注意したい。</p>
 <p>さて、インタラクティブ問題ということで身構えそうになるが、実はそこまで特殊なことはない。<br>
@@ -49,8 +49,8 @@ window.MathJax = {
 つまり、両方のインデックスが最大 $N$ 回ずつ進む間の確認回数は $2N$ 回以下である。</p>
 <p>インタラクティブ問題は、動作テストが難しい。<br>
 一度、普通の <code>vector</code> でテストをしながら尺取法を書き、最後に問い合わせ部分を書き換えるとよい。</p>
-<h2 id="section-n-5">N=5での動作例</h2>
-<p>点 $1$ から点 $5$ までの座標が、次のようになっている場合を考える。<br>
+<h2 id="section-72986c8568">具体例での動作</h2>
+<p>$N=5$ で、点 $1$ から点 $5$ までの座標が、次のようになっている場合を考える。<br>
 これらの座標自体は、プログラムには入力されない。</p>
 <pre><code>点1: 0
 点2: 0.4

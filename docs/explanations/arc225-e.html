@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">遠隔交換（難）</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/arc225/tasks/arc225_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc225/submissions/77686840" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-3-5-4-1-2">$\{3,5,4,1,2\}$ での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-72986c8568">具体例での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>以下、<code>0-indexed</code> で考える。</p>
 <p>また、D問題でも使った文字列対応を考える。<br>
@@ -82,7 +82,7 @@ $1$ つずつの <code>&#x27;R&#x27;</code> に順番に注目し、それの移
 これは、Fenwick木で現在地に $+1$、目的地に $-1$ しながら区間和を求めて処理していく。<br>
 <code>&#x27;L&#x27;</code> については左から、<code>&#x27;R&#x27;</code> については右から、これを行うことで合計交錯数が求まる。</p>
 <p>Fenwick 木への加算と区間和の取得はそれぞれ $O(\log N)$ なので、全体の計算量は $O(N\log N)$ となる。</p>
-<h2 id="section-3-5-4-1-2">$\{3,5,4,1,2\}$ での動作</h2>
+<h2 id="section-72986c8568">具体例での動作</h2>
 <p>$N$ の値として $5$、順列 $P$ として $\{3,5,4,1,2\}$ を受け取った場合で例を示す。</p>
 <p>まず、<code>0-indexed</code> にして、$\{2,4,3,0,1\}$ としておく。</p>
 <p>前半として、Fenwick木 <code>fl</code> を用意して、左へ移動したいものを左から順に見ていく。</p>
