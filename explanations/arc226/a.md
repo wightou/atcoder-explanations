@@ -6,7 +6,7 @@ problem_title_ja: "会議の分担"
 problem_url: https://atcoder.jp/contests/arc226/tasks/arc226_a
 submission_url: https://atcoder.jp/contests/arc226/submissions/78264483
 tags:
-  - イベントソート
+  - シミュレーション
   - 剰余類環
 tag_note: 簡単なレベルの内容は省略。
 ---

@@ -7,7 +7,7 @@ problem_url: https://atcoder.jp/contests/dp/tasks/dp_g
 submission_url: https://atcoder.jp/contests/dp/submissions/77899629
 tags:
   - 動的計画法
-  - トポロジカルソート
+  - DAG上のDP
   - 隣接リスト
 tag_note: 簡単なレベルの内容は省略。
 ---

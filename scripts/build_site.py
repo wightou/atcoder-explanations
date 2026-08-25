@@ -3279,7 +3279,10 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
         knowledge_tag_map[k.title].append(k)
         # aliases / absorbs は、問題解説側で実際にタグとして使われている場合だけ
         # タグページを作る。検索用 alias だけで空のタグページが増えるのを防ぐ。
-        for key in [*k.aliases, *k.absorbs]:
+        # aliases / absorbs 間や title との重複は除外し、同じ知識記事を二重登録しない。
+        for key in k.tag_keys:
+            if key == k.title:
+                continue
             if key in explanation_tag_names:
                 knowledge_tag_map[key].append(k)
 

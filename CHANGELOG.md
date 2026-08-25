@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v87
+
+- タグページの知識解説一覧で、同じ語が知識記事の `aliases` と `absorbs` の両方に含まれる場合などに、同じ知識記事が重複表示される問題を修正。
+- `title` / `aliases` / `absorbs` の重複を除去したうえで、従来どおり問題解説で実際に使われているタグだけを対応付ける。
+
 ## v86
 
 - `knowledge_spec.md` と `README_for_GPT.md` の見出し名を `関連知識` に統一。
