@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ツーポインタ法</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -19,9 +29,238 @@
 <main class="page-layout">
   <article class="markdown-body">
     <h1>ツーポインタ法</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-96fbf12df0">単調性が必要</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+<p>配列上のインデックスを $2$ つ持ち、それを並行して動かすことで処理を高速化する方法。<br>
+sliding window法や尺取法の基礎となる。</p>
+<p>片方が長さ $N$ の配列、片方が長さ $M$ の配列上を動く場合、素直にやると $O(MN)$ かかる。<br>
+しかし、都合のいい条件を満たす場合に、ツーポインタ法を用いれば $O(M+N)$ で済む。</p>
+<h2 id="section-f78ac06c8c">アルゴリズム内容</h2>
+<p>例えば、以下の $2$ つの単調非減少数列があるとする。</p>
+<pre><code>A: 1 2 4 4 7
+B: 3 4 7 8</code></pre>
+<p>$A$ と $B$ から $1$ つずつ値を選んで和が $10$ 以下になる組の数を求めよう。</p>
+<p>まず、素直に全探索すると、要素数の積である $20$ 通り調べることになる。<br>
+そして、以下の表の青い部分の個数である $13$ 個が答えとなる。 </p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>$B\backslash A$</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$7$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$3$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$4$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$5$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$7$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$7$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$10$</td>
+</tr>
+<tr>
+<td>$4$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$5$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$6$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$8$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$8$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$11$</td>
+</tr>
+<tr>
+<td>$7$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$8$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$9$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$11$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$11$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$14$</td>
+</tr>
+<tr>
+<td>$8$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$9$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$10$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$12$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$12$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$15$</td>
+</tr>
+</tbody>
+</table></div>
+<p>しかし、実はこれの青マスの数を調べるには、最悪でも $8$ ヶ所調べればよい。<br>
+というのも、$A$ と $B$ が単調非減少であるために、この表には以下の規則が存在する。</p>
+<ul>
+<li>あるマスが青なら、その左と上も必ず青である
+</li>
+<li>あるマスが赤なら、その右と下も必ず赤である
+</li>
+</ul>
+<p>よって、以下のように移動するだけで、青と赤の境界が完全にわかるのである。</p>
+<ul>
+<li>左下マスから出発する
+</li>
+<li>今いるマスが青なら、右に進む
+</li>
+<li>今いるマスが赤なら、上に進む
+</li>
+<li>上か右にはみ出したら終了
+</li>
+</ul>
+<p>そして、青から右に進むとき、自身を含めて上に何個マスがあるかを加算していけばよい。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>$B\backslash A$</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$7$</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$3$</td>
+<td class="table-align-right" style="text-align: right;">?</td>
+<td class="table-align-right" style="text-align: right;">?</td>
+<td class="table-align-right" style="text-align: right;">?</td>
+<td class="table-align-right" style="text-align: right;">?</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$10$</td>
+</tr>
+<tr>
+<td>$4$</td>
+<td class="table-align-right" style="text-align: right;">?</td>
+<td class="table-align-right" style="text-align: right;">?</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$8$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$8$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$11$</td>
+</tr>
+<tr>
+<td>$7$</td>
+<td class="table-align-right" style="text-align: right;">?</td>
+<td class="table-align-right" style="text-align: right;">?</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$11$</td>
+<td class="table-align-right" style="text-align: right;">?</td>
+<td class="table-align-right" style="text-align: right;">?</td>
+</tr>
+<tr>
+<td>$8$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$9$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$10$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$12$</td>
+<td class="table-align-right" style="text-align: right;">?</td>
+<td class="table-align-right" style="text-align: right;">?</td>
+</tr>
+</tbody>
+</table></div>
+<p>実際の値の変化を表にすると以下のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;"><code>i</code></th>
+<th class="table-align-right" style="text-align: right;"><code>j</code></th>
+<th class="table-align-right" style="text-align: right;">$A_i$</th>
+<th class="table-align-right" style="text-align: right;">$B_j$</th>
+<th class="table-align-right" style="text-align: right;">和</th>
+<th class="table-align-right" style="text-align: right;">組数総計</th>
+<th>処理</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td>$B_0$ から $B_3$ までの $4$ 個を加え、右に進む</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$10$</td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td>$B_0$ から $B_3$ までの $4$ 個を加え、右に進む</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$12$</td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td>$10$ を超えたので上に進む</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$11$</td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td>$10$ を超えたので上に進む</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$8$</td>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td>$B_0$ から $B_1$ までの $2$ 個を加え、右に進む</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$8$</td>
+<td class="table-align-right" style="text-align: right;">$12$</td>
+<td>$B_0$ から $B_1$ までの $2$ 個を加え、右に進む</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$11$</td>
+<td class="table-align-right" style="text-align: right;">$12$</td>
+<td>$10$ を超えたので上に進む</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-bg-blue table-align-right" style="background-color: #dbeafe; text-align: right;">$10$</td>
+<td class="table-align-right" style="text-align: right;">$13$</td>
+<td>$B_0$ の $1$ 個を加え、右に進む</td>
+</tr>
+</tbody>
+</table></div>
+<p>実装例は以下。<br>
+$i$ は最大 $M$ 回、$j$ は最大 $N$ 回しか動かない。<br>
+そのため、全体の計算量は $O(M+N)$ となる。</p>
+<pre><code>int m = a.size();
+int n = b.size();
+long long sum = 0;
+
+for (int i=0, j=n-1; i&lt;m; i++) {
+  while (j&gt;=0&amp;&amp;a[i]+b[j]&gt;10) j--;
+  sum += j+1;
+}</code></pre>
+<p>単調性の向き次第では、左上から出発して右下へ向かう場合もある。<br>
+また、インデックスを同時に $3$ つ走らせるスリーポインタ法などになることもある。</p>
+<p>縦横それぞれ単調性があれば和以外でも使え、応用の幅はかなり広い。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<h3 id="section-96fbf12df0">単調性が必要</h3>
+<p>ツーポインタ法で $O(M+N)$ にできるのは、各インデックスを一方向にだけ動かせばよい場合である。<br>
+このような単調性がない場合は、そのままツーポインタ法を使うことはできない。</p>
+<h2 id="section-2773da9bff">関連知識</h2>
+<h3 id="section-830285f615"><a href="shakutori-method.html">尺取法</a></h3>
+<p>$2$ つのポインタを動かす方法の一種。<br>
+主に同じ数列上の連続区間の左右端を動かし、条件を満たす可変長の区間を調べる。</p>
+<h3 id="section-sliding-window"><a href="sliding-window.html">sliding window法</a></h3>
+<p>$2$ つのポインタを動かす方法の一種。<br>
+同じ数列上の固定長の連続区間について、左右端を同時に進めながら調べる。</p>
   </article>
 
   <aside class="sidebar">
@@ -34,7 +273,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li><a href="../knowledge/sort.html">ソート</a></li><li><a href="../knowledge/sliding-window.html">sliding window法</a></li><li><a href="../knowledge/shakutori-method.html">尺取法</a></li><li><a href="../knowledge/complexity-analysis.html">計算量の見積もり</a></li>
+        <li><a href="../knowledge/sliding-window.html">sliding window法</a></li><li><a href="../knowledge/shakutori-method.html">尺取法</a></li>
       </ul>
     </section>
 
