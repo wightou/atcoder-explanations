@@ -24,3 +24,16 @@ https://wightou.github.io/atcoder-explanations/
 ├── site_config.toml
 └── README.md
 ```
+
+## 利用について
+
+解説および解答例としてリンクされている提出コード等については、自身の学習を目的として利用する場合に限り、配信での利用やAIへの読み込みを行ってもかまいません。
+
+## 外部リンク
+
+- [AtCoder](https://atcoder.jp/home)
+- [AtCoder Problems](https://kenkoooo.com/atcoder/)
+- [AtCoder NoviSteps](https://atcoder-novisteps.vercel.app/)
+- [Aizu Online Judge](https://judge.u-aizu.ac.jp/onlinejudge/)
+- [Project Euler](https://projecteuler.net/)
+- [だいくすとら氏によるグラフ描画ツール](https://graph-editor.daikusutora3.workers.dev/)

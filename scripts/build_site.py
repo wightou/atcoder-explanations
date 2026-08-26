@@ -35,6 +35,7 @@ EXTERNAL_LINKS = [
     ("AtCoder NoviSteps", "https://atcoder-novisteps.vercel.app/"),
     ("Aizu Online Judge", "https://judge.u-aizu.ac.jp/onlinejudge/"),
     ("Project Euler", "https://projecteuler.net/"),
+    ("だいくすとら氏によるグラフ描画ツール", "https://graph-editor.daikusutora3.workers.dev/"),
 ]
 
 DEFAULT_CONTEST_VIEWS = [
