@@ -7,7 +7,7 @@ problem_url: https://atcoder.jp/contests/abc469/tasks/abc469_f
 submission_url: https://atcoder.jp/contests/abc469/submissions/78057140
 tags:
   - 最大公約数
-  - 約数列挙
+  - 約数と倍数
   - UnionFind木
   - 最小全域木
 tag_note: B問題以下レベルの内容は省略。

@@ -10,7 +10,7 @@ alternative_submission_urls:
     url: https://atcoder.jp/contests/abc461/submissions/76604397
 tags:
   - 動的計画法
-  - 約数列挙
+  - 約数と倍数
   - 階乗
   - 剰余類環
 tag_note: B問題以下レベルの内容は省略。

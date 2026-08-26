@@ -80,6 +80,7 @@ STUBS: list[KnowledgeStub] = [
     k("corner-case", "コーナーケース", "難易度問わず", "基本"),
     k("divide-and-conquer", "分割統治法", "難易度問わず", "高速化系"),
     k("number-theory", "整数論", "難易度問わず", "その他数学系"),
+    k("divisors-and-multiples", "約数と倍数", "A問題相当", "その他数学系", absorbs=["倍数判定", "約数列挙", "約数の個数", "約数の総和", "トーシェント関数"]),
     k("trigonometric-ratio", "三角比", "難易度問わず", "幾何学系"),
     k("geometric-vector", "ベクトル（幾何学）", "難易度問わず", "幾何学系"),
     k("distance", "距離", "難易度問わず", "幾何学系", absorbs=["マンハッタン距離", "ユークリッド距離", "チェビシェフ距離", "座標回転"]),
@@ -101,7 +102,6 @@ STUBS: list[KnowledgeStub] = [
     k("arithmetic-operations", "四則演算", "A問題相当", "その他数学系", absorbs=["剰余"]),
     k("maximum-minimum", "最大値・最小値", "A問題相当", "その他数学系", absorbs=["max関数", "min関数"]),
     k("odd-even", "偶奇判定", "A問題相当", "その他数学系"),
-    k("multiple-check", "倍数判定", "A問題相当", "その他数学系"),
     k("counting", "数え上げ", "A問題相当", "その他数学系", absorbs=["数え上げ（基本）"]),
 
     # B問題相当
@@ -141,7 +141,6 @@ STUBS: list[KnowledgeStub] = [
     k("inclusion-exclusion", "包除原理", "C問題相当", "その他数学系"),
     k("complement", "補集合", "C問題相当", "その他数学系"),
     k("primality-test", "素数判定", "C問題相当", "その他数学系"),
-    k("divisor-enumeration", "約数列挙", "C問題相当", "その他数学系"),
     k("gcd", "最大公約数", "C問題相当", "その他数学系"),
     k("lcm", "最小公倍数", "C問題相当", "その他数学系"),
     k("factorial", "階乗", "C問題相当", "その他数学系", aliases=["factorial"], related=["順列組み合わせ"]),

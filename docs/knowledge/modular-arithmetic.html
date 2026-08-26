@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>剰余類環</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-ff50a71096">引き算が入る場合、負の数に気を付ける。</a></li><li><a href="#section-9f70c407ff">掛け算が入る場合、桁あふれに気を付ける。</a></li><li><a href="#section-8452582621">割り算はそのままではできない。</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a><ul><li><a href="#section-f503acf0e6">繰り返し二乗法</a></li></ul></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-ff50a71096">引き算が入る場合、負の数に気を付ける。</a></li><li><a href="#section-9f70c407ff">掛け算が入る場合、桁あふれに気を付ける。</a></li><li><a href="#section-8452582621">割り算はそのままではできない。</a></li></ul></li><li><a href="#section-e7e819296c">関連アルゴリズム</a><ul><li><a href="#section-f503acf0e6">繰り返し二乗法</a></li><li><a href="#section-338c701f91">約数と倍数</a></li></ul></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>答えが非常に大きくなるので、ある数で割った余りだけ答える問題に使う知識。</p>
 <h2 id="section-f78ac06c8c">アルゴリズム内容</h2>
@@ -78,6 +78,8 @@ $4\times4$ の答えは本来 $16$ であるが、$5$ の差を $3$ つ分無視
 <h2 id="section-e7e819296c">関連アルゴリズム</h2>
 <h3 id="section-f503acf0e6">繰り返し二乗法</h3>
 <p>素数を法とする剰余類環で割り算を行う場合などに、大きな累乗を高速に計算する。</p>
+<h3 id="section-338c701f91">約数と倍数</h3>
+<p>互いに素やトーシェント関数など、剰余類環と関係の深い整数の性質を扱う。</p>
   </article>
 
   <aside class="sidebar">
@@ -90,7 +92,7 @@ $4\times4$ の答えは本来 $16$ であるが、$5$ の差を $3$ つ分無視
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li><a href="../knowledge/binary-exponentiation.html">繰り返し二乗法</a></li>
+        <li><a href="../knowledge/divisors-and-multiples.html">約数と倍数</a></li><li><a href="../knowledge/binary-exponentiation.html">繰り返し二乗法</a></li>
       </ul>
     </section>
 
