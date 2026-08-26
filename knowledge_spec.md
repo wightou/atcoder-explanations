@@ -254,7 +254,7 @@ absorbs:
 vector（reverse関数を含む）
 ソート（sort関数、自力ソートを含む）
 二分探索（lower_bound関数、upper_bound関数、解の二分探索を含む）
-木（木の探索、木の直径を含む）
+木構造（木、木の探索、木の直径を含む）
 Nim（Grundy数やゲーム理論の基本を含む）
 ```
 

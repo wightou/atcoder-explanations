@@ -174,7 +174,7 @@ STUBS: list[KnowledgeStub] = [
     k("interval-scheduling-problem", "区間スケジューリング問題", "C問題相当", "典型問題集", aliases=["interval scheduling"], related=["貪欲法", "ソート"]),
     k("shortest-path-problem", "最短経路問題", "D問題相当", "典型問題集", aliases=["迷路の最短経路", "shortest path"], related=["幅優先探索", "Dijkstra法", "Warshall-Floyd法"]),
     k("connected-components-count", "連結成分数", "C問題相当", "典型問題集", aliases=["連結成分の個数"], related=["幅優先探索", "深さ優先探索", "隣接リスト"]),
-    k("tree-dp", "木DP", "D問題相当", "高速化系", related=["動的計画法", "木"]),
+    k("tree-dp", "木DP", "D問題相当", "高速化系", related=["動的計画法", "木構造"]),
     k("bit-dp", "bitDP", "D問題相当", "高速化系", related=["動的計画法", "bit全探索"]),
     k("interval-dp", "区間DP", "D問題相当", "高速化系", related=["動的計画法"]),
     k("digit-dp", "桁DP", "E問題相当", "高速化系", related=["動的計画法"]),
@@ -182,7 +182,7 @@ STUBS: list[KnowledgeStub] = [
     k("graph-theory-basics", "グラフ理論の基礎", "D問題相当", "グラフ理論系", aliases=["グラフ理論の基礎（知識としてのみ）"]),
     k("union-find", "UnionFind木", "D問題相当", "変数とデータ構造", aliases=["DSU", "Disjoint Set Union"]),
     k("rooted-tree", "根付き木", "D問題相当", "グラフ理論系"),
-    k("tree", "木", "D問題相当", "グラフ理論系", absorbs=["木の探索", "木の直径"]),
+    k("tree", "木構造", "D問題相当", "グラフ理論系", aliases=["木"], absorbs=["木の探索", "木の直径"]),
     k("binary-lifting", "頂点倍加", "D問題相当", "グラフ理論系", aliases=["ダブリング on tree"]),
     k("bipartite-graph", "二部グラフ", "D問題相当", "グラフ理論系"),
     k("zero-one-bfs", "01最良優先探索", "D問題相当", "グラフ理論系", aliases=["0-1 BFS"]),
@@ -215,7 +215,7 @@ STUBS: list[KnowledgeStub] = [
 
     # F問題相当
     k("lazy-segment-tree", "lazy segment木", "F問題相当", "変数とデータ構造", aliases=["遅延セグメント木"]),
-    k("lca", "最近共通祖先", "F問題相当", "典型問題集", aliases=["LCA"], related=["木", "頂点倍加"]),
+    k("lca", "最近共通祖先", "F問題相当", "典型問題集", aliases=["LCA"], related=["木構造", "頂点倍加"]),
     k("coordinate-compression", "座標圧縮", "F問題相当", "高速化系"),
     k("trie", "Trie木", "F問題相当", "文字列系"),
     k("aho-corasick", "Aho-Corasick法", "F問題相当", "文字列系", related=["Trie木"]),

@@ -7,6 +7,7 @@ submission_url: https://atcoder.jp/contests/tdpc/submissions/78569767
 tags:
   - 動的計画法
   - bitDP
+  - 確率
   - 期待値
 tag_note: 簡単なレベルの内容は省略。
 ---

@@ -7,6 +7,8 @@ problem_url: https://atcoder.jp/contests/abc468/tasks/abc468_f
 submission_url: https://atcoder.jp/contests/abc468/submissions/77868274
 tags:
   - 貪欲法
+  - 動的計画法
+  - 二分探索
   - 最長増加部分列
   - 考察問題
 tag_note: B問題以下レベルの内容は省略。

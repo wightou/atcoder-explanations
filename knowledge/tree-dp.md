@@ -9,7 +9,7 @@ aliases: []
 absorbs: []
 related:
   - 動的計画法
-  - 木
+  - 木構造
 ---
 
 ## 概要

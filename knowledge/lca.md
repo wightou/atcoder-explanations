@@ -9,7 +9,7 @@ aliases:
   - LCA
 absorbs: []
 related:
-  - 木
+  - 木構造
   - 頂点倍加
 ---
 

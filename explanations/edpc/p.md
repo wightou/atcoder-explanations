@@ -7,6 +7,7 @@ problem_url: https://atcoder.jp/contests/dp/tasks/dp_p
 submission_url: https://atcoder.jp/contests/dp/submissions/77959859
 tags:
   - 動的計画法
+  - 木構造
   - 木DP
   - 根付き木
   - DAG上のDP

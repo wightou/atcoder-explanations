@@ -9,6 +9,7 @@ alternative_submission_urls:
   - label: 別解
     url: https://atcoder.jp/contests/abc461/submissions/76604388
 tags:
+  - 累積和
   - 二次元累積和
   - 尺取法
 tag_note: B問題以下レベルの内容は省略。

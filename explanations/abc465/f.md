@@ -6,6 +6,7 @@ problem_title_ja: "タソサソスイ？"
 problem_url: https://atcoder.jp/contests/abc465/tasks/abc465_f
 submission_url: https://atcoder.jp/contests/abc465/submissions/77273845
 tags:
+  - 累積和
   - 二次元累積和
   - 包除原理
 tag_note: B問題以下レベルの内容は省略。

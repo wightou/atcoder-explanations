@@ -10,6 +10,7 @@ alternative_submission_urls:
     url: https://atcoder.jp/contests/abc464/submissions/77079134
 tags:
   - 考察問題
+  - 累積和
   - 二次元累積和
 tag_note: B問題以下レベルの内容は省略。
 ---

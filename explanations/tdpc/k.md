@@ -5,6 +5,8 @@ problem_title: "ターゲット"
 problem_url: https://atcoder.jp/contests/tdpc/tasks/tdpc_target
 submission_url: https://atcoder.jp/contests/tdpc/submissions/78577488
 tags:
+  - 動的計画法
+  - 二分探索
   - 最長増加部分列
 tag_note: 簡単なレベルの内容は省略。
 ---
