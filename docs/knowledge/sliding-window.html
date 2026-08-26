@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>sliding window法</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -19,9 +29,216 @@
 <main class="page-layout">
   <article class="markdown-body">
     <h1>sliding window法</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-0967d08a28">可変長にはできない。</a></li><li><a href="#section-a88ec2cba6">ループの終了条件に注意。</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+<p>要素数 $n$ のデータのうち連続する $m$ 個のデータについて、和、積、xor、最大値などを調べる方法。<br>
+条件を満たす区間があるか調べたり、それぞれの区間で得られる値の最大値や最小値を求めたりする。</p>
+<p>毎回 $m$ 個全てを計算し直すと $O(mn)$ かかる。<br>
+区間への追加や削除の処理が $O(1)$ なら、sliding window法を使うことで $O(m+n)$ で済む。</p>
+<h2 id="section-f78ac06c8c">アルゴリズム内容</h2>
+<p>例えば、以下の $10$ 個のデータから、連続する $5$ 個の和の最大値を探す場合を考える。</p>
+<pre><code>3 1 4 1 5 9 2 6 5 3</code></pre>
+<p>最初の $5$ 個の和は $3+1+4+1+5=14$ である。<br>
+次の区間へ移るときは、区間から外れる $3$ を引き、新しく入る $9$ を足せばよい。<br>
+そのため、$14-3+9=20$ と求められる。</p>
+<p>同様に繰り返すと、以下のようになる。<br>
+黄色の部分が現在見ている区間である。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th class="table-align-right" style="text-align: right;">$0$</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$5$</th>
+<th class="table-align-right" style="text-align: right;">$6$</th>
+<th class="table-align-right" style="text-align: right;">$7$</th>
+<th class="table-align-right" style="text-align: right;">$8$</th>
+<th class="table-align-right" style="text-align: right;">$9$</th>
+<th>計算方法</th>
+<th class="table-align-right" style="text-align: right;">現在の和</th>
+<th class="table-align-right" style="text-align: right;">暫定最大値</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>データ</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$3$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$4$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td>$3+1+4+1+5=14$</td>
+<td class="table-align-right" style="text-align: right;">$14$</td>
+<td class="table-align-right" style="text-align: right;">$14$</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$4$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td>$14-3+9=20$</td>
+<td class="table-align-right" style="text-align: right;">$20$</td>
+<td class="table-align-right" style="text-align: right;">$20$</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$4$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$9$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td>$20-1+2=21$</td>
+<td class="table-align-right" style="text-align: right;">$21$</td>
+<td class="table-align-right" style="text-align: right;">$21$</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$9$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$2$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td>$21-4+6=23$</td>
+<td class="table-align-right" style="text-align: right;">$23$</td>
+<td class="table-align-right" style="text-align: right;">$23$</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$9$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$2$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$6$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td>$23-1+5=27$</td>
+<td class="table-align-right" style="text-align: right;">$27$</td>
+<td class="table-align-right" style="text-align: right;">$27$</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$9$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$2$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$6$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$3$</td>
+<td>$27-5+3=25$</td>
+<td class="table-align-right" style="text-align: right;">$25$</td>
+<td class="table-align-right" style="text-align: right;">$27$</td>
+</tr>
+</tbody>
+</table></div>
+<p>通常であれば、各区間について $5$ 個の和を最初から計算する必要がある。<br>
+しかし、この方法なら $5$ 個の和を素直に計算するのは最初だけ。<br>
+$2$ 番目以降は、区間から外れる値を引き、新しく入る値を足すだけで次の区間の和が求められる。<br>
+連続するデータの個数 $m$ が大きくても、区間を $1$ つずらす処理量は変わらない。</p>
+<p>総和以外にも適用できる演算がある。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>演算</th>
+<th>追加</th>
+<th>削除</th>
+<th>補足</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>総和</td>
+<td><code>+</code></td>
+<td><code>-</code></td>
+<td></td>
+</tr>
+<tr>
+<td>$0$ を含まない総乗</td>
+<td><code>*</code></td>
+<td><code>/</code></td>
+<td></td>
+</tr>
+<tr>
+<td>xor</td>
+<td><code>^</code></td>
+<td><code>^</code></td>
+<td></td>
+</tr>
+<tr>
+<td>最小値</td>
+<td><code>.emplace()</code></td>
+<td><code>.erase()</code></td>
+<td><code>multiset</code> で管理し、<code>*s.begin()</code> で取得する。</td>
+</tr>
+<tr>
+<td>最大値</td>
+<td><code>.emplace()</code></td>
+<td><code>.erase()</code></td>
+<td><code>multiset</code> で管理し、<code>*s.rbegin()</code> で取得する。</td>
+</tr>
+<tr>
+<td>種類数</td>
+<td><code>++</code></td>
+<td><code>--</code>、<code>.erase()</code></td>
+<td><code>map</code> で値ごとの個数を管理、$0$ 個になれば消す。</td>
+</tr>
+</tbody>
+</table></div>
+<p>種類数は <code>map</code> の <code>ssize(m)</code> または <code>m.size()</code> で取得できる。</p>
+<p><code>multiset</code> から重複する値を $1$ 個だけ消す場合は、値ではなくイテレータを指定して <code>.erase()</code> すること。<br>
+なお、最大値最小値に関しては <code>deque</code> を用いる別アルゴリズムの方が簡単かもしれない。</p>
+<p>追加・削除自体に $O(1)$ より時間がかかる場合は、全体の計算量もその分増える。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<h3 id="section-0967d08a28">可変長にはできない。</h3>
+<p>実装のわかりやすさがメリットであり、柔軟な対応力はあまりない。<br>
+区間の長さを可変にしたい場合は、尺取法などを用いる。</p>
+<h3 id="section-a88ec2cba6">ループの終了条件に注意。</h3>
+<p>$10$ 個のデータのうち連続する $5$ 個を処理する場合、対象となる区間は $6$ 個ある。<br>
+$n$ 個のデータの連続する $m$ 個を処理する場合、最後の区間は $n-m$ 番目から始まる。<br>
+最後の区間を処理し忘れないこと。</p>
+<h2 id="section-2773da9bff">関連知識</h2>
+<h3 id="section-3d954ac85b"><a href="two-pointer-method.html">ツーポインタ法</a></h3>
+<p>$2$ つの位置を動かしながらデータを調べる点が共通する。<br>
+sliding window法では、固定長の区間の左右を同時に進めていく。</p>
+<h3 id="section-830285f615"><a href="shakutori-method.html">尺取法</a></h3>
+<p>範囲の左右を両方動かしながら区間を調べる点が類似する。<br>
+sliding window法は区間長が固定なので実装が簡単で、尺取法は区間長を可変にできる。</p>
+<h3 id="section-46b39aa175"><a href="cumulative-sum.html">累積和</a></h3>
+<p>一定区間の演算結果を求める点が類似する。<br>
+sliding window法のメリットは対応する演算の種類が多いこと。<br>
+累積和のメリットは後から好きな区間の情報を好きなだけ取れること。</p>
+<h3 id="section-fenwick"><a href="fenwick-tree.html">Fenwick木</a></h3>
+<p>累積和の上位互換。</p>
+<h3 id="section-segment"><a href="segment-tree.html">segment木</a></h3>
+<p>Fenwick木の上位互換。</p>
+<h3 id="section-4264c4ed00"><a href="difference-update.html">差分更新</a></h3>
+<p>sliding window法は、範囲の変更を差分更新として扱うことで高速化している。</p>
   </article>
 
   <aside class="sidebar">
@@ -34,7 +251,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li><a href="../knowledge/two-pointer-method.html">ツーポインタ法</a></li><li><a href="../knowledge/shakutori-method.html">尺取法</a></li>
+        <li><a href="../knowledge/two-pointer-method.html">ツーポインタ法</a></li><li><a href="../knowledge/shakutori-method.html">尺取法</a></li><li><a href="../knowledge/cumulative-sum.html">累積和</a></li>
       </ul>
     </section>
 

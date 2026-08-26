@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>尺取法</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -19,9 +29,335 @@
 <main class="page-layout">
   <article class="markdown-body">
     <h1>尺取法</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a><ul><li><a href="#section-88156c3698">二重ループで書く方法</a></li><li><a href="#section-while-if">whileループの中でif文を使う方法</a></li><li><a href="#section-queue-for">queueを使ってforループで書く方法</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-467b0d8bf1">右側主導で書いた方が楽。</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+<p>要素数 $n$ のデータのうち、連続する何個かのデータについて和、積、種類数などを調べるアルゴリズム。<br>
+条件を満たす区間がいくつあるか数えたり、条件を満たす最長区間や最短区間を求めたりする。</p>
+<p>通常は全ての区間を調べると $O(n^2)$ かかる。<br>
+区間に要素を追加する処理と削除する処理が $O(1)$ なら、尺取法を使うことで $O(n)$ で済む。</p>
+<h2 id="section-f78ac06c8c">アルゴリズム内容</h2>
+<p>例えば、以下の数列について、和が $10$ 以下になる連続部分列の個数を求める場合を考える。</p>
+<pre><code>3 1 4 1 5 9 2</code></pre>
+<p>左端を <code>left</code>、右端の $1$ つ外側を <code>right</code> とする。<br>
+現在の区間を <code>[left,right)</code> として管理する。</p>
+<p>右端を進めて区間を広げ、和が $10$ を超えた場合だけ左端を進めて区間を狭める。<br>
+和が $10$ 以下になった時点で、右端が同じで条件を満たす区間は <code>right-left</code> 個ある。</p>
+<p>処理は以下のように進む。<br>
+黄色の部分が現在の区間 <code>[left,right)</code> である。<br>
+赤色の部分は、その行で更新された区間数総計である。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th class="table-align-right" style="text-align: right;">$0$</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$5$</th>
+<th class="table-align-right" style="text-align: right;">$6$</th>
+<th class="table-align-right" style="text-align: right;">現在の和</th>
+<th class="table-align-right" style="text-align: right;">区間数総計</th>
+<th>処理</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td>長さ $0$ を加える</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$1$</td>
+<td>長さ $1$ を加える</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$3$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$3$</td>
+<td>長さ $2$ を加える</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$3$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$6$</td>
+<td>長さ $3$ を加える</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$3$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$4$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$10$</td>
+<td>長さ $4$ を加える</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$3$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$4$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$14$</td>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td>$10$ を超えたので左端を進める</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$4$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$11$</td>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td>$10$ を超えたので左端を進める</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$4$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$13$</td>
+<td>長さ $3$ を加える</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$4$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$19$</td>
+<td class="table-align-right" style="text-align: right;">$13$</td>
+<td>$10$ を超えたので左端を進める</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$15$</td>
+<td class="table-align-right" style="text-align: right;">$13$</td>
+<td>$10$ を超えたので左端を進める</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$5$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$14$</td>
+<td class="table-align-right" style="text-align: right;">$13$</td>
+<td>$10$ を超えたので左端を進める</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$14$</td>
+<td>長さ $1$ を加える</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$9$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$11$</td>
+<td class="table-align-right" style="text-align: right;">$14$</td>
+<td>$10$ を超えたので左端を進める</td>
+</tr>
+<tr>
+<td>データ</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$15$</td>
+<td>長さ $1$ を加える</td>
+</tr>
+</tbody>
+</table></div>
+<p>右端がこれ以上進めないので終了し、答えは $15$ 個となる。</p>
+<p>総和以外にも適用できる演算がある。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>演算</th>
+<th>追加</th>
+<th>削除</th>
+<th>補足</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>正数の総和</td>
+<td><code>+</code></td>
+<td><code>-</code></td>
+<td></td>
+</tr>
+<tr>
+<td>正数の総乗</td>
+<td><code>*</code></td>
+<td><code>/</code></td>
+<td></td>
+</tr>
+<tr>
+<td>種類数</td>
+<td><code>++</code></td>
+<td><code>--</code>、<code>.erase()</code></td>
+<td><code>map</code> で値ごとの個数を管理し、$0$ 個になった値を消す。</td>
+</tr>
+</tbody>
+</table></div>
+<p>種類数は <code>map</code> の <code>ssize(m)</code> または <code>m.size()</code> で取得できる。</p>
+<p>範囲を広げたときに値が減らないような演算であれば何でも使える。<br>
+また、条件を満たす区間の個数以外にも、条件を満たす最長区間なども求められる。</p>
+<p>実装方法は大きく $3$ つある。<br>
+以下はいずれも上の例に対応する。<br>
+また、「範囲が空の場合は形式的には条件を満たす」という前提で書いている。<br>
+今回は、形式的には和が $0$ であり、$10$ 以下という条件を満たしている。</p>
+<h3 id="section-88156c3698">二重ループで書く方法</h3>
+<pre><code>int limit = 10;
+int sum = 0;
+long long interval_num = 0;
+
+for (int left=0, right=0; right&lt;n; ) {
+  sum += a[right];
+  right++;
+  while (sum&gt;limit) {
+    sum -= a[left];
+    left++;
+  }
+  interval_num += right-left;
+}</code></pre>
+<p>右側カウンタは開区間として扱っている。<br>
+つまり、現在の区間は <code>left&lt;=i&amp;&amp;i&lt;right</code> となる。</p>
+<p>二重ループなので一見 $O(n^2)$ に見えるが、<code>left</code> と <code>right</code> はどちらも高々 $n$ 回しか進まない。<br>
+したがって、区間への追加・削除が $O(1)$ なら全体で $O(n)$ である。</p>
+<h3 id="section-while-if">whileループの中でif文を使う方法</h3>
+<pre><code>int limit = 10;
+int sum = 0;
+long long interval_num = 0;
+
+int left = 0;
+int right = 0;
+while (true) {
+  if (sum&gt;limit) {
+    sum -= a[left];
+    left++;
+  } else {
+    interval_num += right-left;
+    if (right==n) break;
+    sum += a[right];
+    right++;
+  }
+}</code></pre>
+<p>こちらも右側カウンタは開区間として扱っている。</p>
+<h3 id="section-queue-for">queueを使ってforループで書く方法</h3>
+<pre><code>int limit = 10;
+int sum = 0;
+long long interval_num = 0;
+
+queue&lt;int&gt; que;
+for (int i : a) {
+  que.emplace(i);
+  sum += i;
+  while (sum&gt;limit) {
+    sum -= que.front();
+    que.pop();
+  }
+  interval_num += que.size();
+}</code></pre>
+<p>こちらは右端を閉区間として考える形になる。<br>
+ただし、コード中に右側カウンタ自体は登場しない。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<h3 id="section-467b0d8bf1">右側主導で書いた方が楽。</h3>
+<p>尺取法は、左端を $1$ つずつ進めながら、右端をwhileループで伸ばす形でも書ける。<br>
+しかし、その場合は右端が範囲外へ進まないようにする条件がややこしくなりやすい。<br>
+右端を主導して進める形の方が、単純なコードで書きやすい。</p>
+<h2 id="section-2773da9bff">関連知識</h2>
+<h3 id="section-3d954ac85b"><a href="two-pointer-method.html">ツーポインタ法</a></h3>
+<p>$2$ つの位置を単調に動かしながら調べる点が共通する。<br>
+尺取法では、主に連続区間の左右の端を動かして、条件を満たす区間を管理する。</p>
+<h3 id="section-sliding-window"><a href="sliding-window.html">sliding window法</a></h3>
+<p>範囲の左右を両方動かしながら区間を調べる点が類似する。<br>
+尺取法は区間の長さを可変にでき、sliding window法は区間長が固定なので実装が簡単である。</p>
+<h3 id="section-46b39aa175"><a href="cumulative-sum.html">累積和</a></h3>
+<p>一定区間の演算結果を求める点が類似する。<br>
+尺取法のメリットは対応する演算の種類が多いこと。<br>
+累積和のメリットは後から好きな区間の情報を好きなだけ取れること。</p>
+<p>累積和と二分探索を組み合わせると、尺取法とほぼ同じことができる場合が多い。<br>
+しかし、種類数のように範囲の削減が単純な処理で済まないものは、累積和では対応できない。<br>
+また、計算量は $O(n\log n)$ となり、尺取法の $O(n)$ よりわずかに遅い。</p>
+<h3 id="section-fenwick"><a href="fenwick-tree.html">Fenwick木</a></h3>
+<p>累積和の上位互換。</p>
+<h3 id="section-segment"><a href="segment-tree.html">segment木</a></h3>
+<p>Fenwick木の上位互換。</p>
   </article>
 
   <aside class="sidebar">
@@ -34,7 +370,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li><a href="../knowledge/sliding-window.html">sliding window法</a></li><li><a href="../knowledge/two-pointer-method.html">ツーポインタ法</a></li>
+        <li><a href="../knowledge/sliding-window.html">sliding window法</a></li><li><a href="../knowledge/two-pointer-method.html">ツーポインタ法</a></li><li><a href="../knowledge/cumulative-sum.html">累積和</a></li>
       </ul>
     </section>
 
