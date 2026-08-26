@@ -34,19 +34,156 @@ window.MathJax = {
 <p>$n$ 以下の素数を全て高速で列挙するアルゴリズム。<br>
 通常の方法でやれば計算回数が $O(n\sqrt{n})$ になるところ、$O(n\log\log n)$ で済む。</p>
 <h2 id="section-f78ac06c8c">アルゴリズム内容</h2>
-<p>$n=20$ の場合、以下のようにする。</p>
-<ul>
-<li>$0$ と $1$ は素数でないので消しておく
-</li>
-<li>$2\times2=4$ 以上の $2$ の倍数を消す
-</li>
-<li>$3\times3=9$ 以上の $3$ の倍数を消す
-</li>
-<li>$4$ は合成数なので何もしない
-</li>
-<li>$5$ は $5\times5$ が $20$ を超えるので終了する
-</li>
-</ul>
+<p>$n=20$ の場合、以下のようにする。<br>
+灰色の部分が消した数である。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$0$</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$5$</th>
+<th class="table-align-right" style="text-align: right;">$6$</th>
+<th class="table-align-right" style="text-align: right;">$7$</th>
+<th class="table-align-right" style="text-align: right;">$8$</th>
+<th class="table-align-right" style="text-align: right;">$9$</th>
+<th class="table-align-right" style="text-align: right;">$10$</th>
+<th class="table-align-right" style="text-align: right;">$11$</th>
+<th class="table-align-right" style="text-align: right;">$12$</th>
+<th class="table-align-right" style="text-align: right;">$13$</th>
+<th class="table-align-right" style="text-align: right;">$14$</th>
+<th class="table-align-right" style="text-align: right;">$15$</th>
+<th class="table-align-right" style="text-align: right;">$16$</th>
+<th class="table-align-right" style="text-align: right;">$17$</th>
+<th class="table-align-right" style="text-align: right;">$18$</th>
+<th class="table-align-right" style="text-align: right;">$19$</th>
+<th class="table-align-right" style="text-align: right;">$20$</th>
+<th>処理</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$0$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td class="table-align-right" style="text-align: right;">$11$</td>
+<td class="table-align-right" style="text-align: right;">$12$</td>
+<td class="table-align-right" style="text-align: right;">$13$</td>
+<td class="table-align-right" style="text-align: right;">$14$</td>
+<td class="table-align-right" style="text-align: right;">$15$</td>
+<td class="table-align-right" style="text-align: right;">$16$</td>
+<td class="table-align-right" style="text-align: right;">$17$</td>
+<td class="table-align-right" style="text-align: right;">$18$</td>
+<td class="table-align-right" style="text-align: right;">$19$</td>
+<td class="table-align-right" style="text-align: right;">$20$</td>
+<td>$0$ と $1$ は素数でないので消しておく</td>
+</tr>
+<tr>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$0$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$8$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$10$</td>
+<td class="table-align-right" style="text-align: right;">$11$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$12$</td>
+<td class="table-align-right" style="text-align: right;">$13$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$14$</td>
+<td class="table-align-right" style="text-align: right;">$15$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$16$</td>
+<td class="table-align-right" style="text-align: right;">$17$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$18$</td>
+<td class="table-align-right" style="text-align: right;">$19$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$20$</td>
+<td>$2\times2=4$ 以上の $2$ の倍数を消す</td>
+</tr>
+<tr>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$0$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$8$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$9$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$10$</td>
+<td class="table-align-right" style="text-align: right;">$11$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$12$</td>
+<td class="table-align-right" style="text-align: right;">$13$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$14$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$15$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$16$</td>
+<td class="table-align-right" style="text-align: right;">$17$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$18$</td>
+<td class="table-align-right" style="text-align: right;">$19$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$20$</td>
+<td>$3\times3=9$ 以上の $3$ の倍数を消す</td>
+</tr>
+<tr>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$0$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$8$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$9$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$10$</td>
+<td class="table-align-right" style="text-align: right;">$11$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$12$</td>
+<td class="table-align-right" style="text-align: right;">$13$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$14$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$15$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$16$</td>
+<td class="table-align-right" style="text-align: right;">$17$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$18$</td>
+<td class="table-align-right" style="text-align: right;">$19$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$20$</td>
+<td>$4$ は合成数なので何もしない</td>
+</tr>
+<tr>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$0$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$8$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$9$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$10$</td>
+<td class="table-align-right" style="text-align: right;">$11$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$12$</td>
+<td class="table-align-right" style="text-align: right;">$13$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$14$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$15$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$16$</td>
+<td class="table-align-right" style="text-align: right;">$17$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$18$</td>
+<td class="table-align-right" style="text-align: right;">$19$</td>
+<td class="table-bg-gray table-align-right" style="background-color: #e2e8f0; text-align: right;">$20$</td>
+<td>$5$ は $5\times5$ が $20$ を超えるので終了する</td>
+</tr>
+</tbody>
+</table></div>
 <p>残っているものが $20$ 以下の全素数である。</p>
 <p>具体的なコードは、</p>
 <ul>
