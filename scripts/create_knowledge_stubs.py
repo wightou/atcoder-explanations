@@ -230,8 +230,9 @@ STUBS: list[KnowledgeStub] = [
     # G問題以上相当
     k("branch-and-bound", "分枝限定法", "G問題以上相当", "高速化系", aliases=["branch and bound", "Branch and Bound"], related=["全探索", "深さ優先探索", "貪欲法"]),
     k("catalan-number", "カタラン数", "G問題以上相当", "その他数学系", aliases=["Catalan number", "Catalan numbers", "Catalan数"], absorbs=["一般化カタラン数"], related=["順列組み合わせ", "二項係数"]),
-    k("maximum-flow", "最大フロー", "G問題以上相当", "グラフ理論系"),
-    k("minimum-cut", "最小カット", "G問題以上相当", "グラフ理論系"),
+    k("maximum-flow", "最大フロー", "G問題以上相当", "グラフ理論系", absorbs=["最小カット"]),
+    k("project-selection-problem", "プロジェクト選択問題", "G問題以上相当", "典型問題集", aliases=["燃やす埋める問題"], related=["最大フロー"]),
+    k("maximum-closure-problem", "最大閉包問題", "G問題以上相当", "典型問題集", related=["プロジェクト選択問題", "最大フロー"]),
     k("bipartite-matching", "二部マッチング", "G問題以上相当", "グラフ理論系"),
     k("minimum-cost-flow", "最小費用流", "G問題以上相当", "グラフ理論系"),
     k("fps-convolution", "形式的冪級数、畳み込み", "G問題以上相当", "その他数学系", aliases=["FPS", "convolution", "NTT"], absorbs=["NTT"]),
