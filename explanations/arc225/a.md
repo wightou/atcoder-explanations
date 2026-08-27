@@ -51,7 +51,7 @@ x:
 各要素を $2$ 倍し、$5$ で割った余りを `result[i][j]` とする。
 色ごとの変換は次のようになる。
 
-<!-- table-row-header: false -->
+<!-- table-row-header: true -->
 | `x[i][j]` | `result[i][j]` |
 |---:|---:|
 | 1 | 2 |
