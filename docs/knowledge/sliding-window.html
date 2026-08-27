@@ -45,7 +45,6 @@ window.MathJax = {
 黄色の部分が現在見ている区間である。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th></th>
 <th class="table-align-right" style="text-align: right;">$0$</th>
 <th class="table-align-right" style="text-align: right;">$1$</th>
 <th class="table-align-right" style="text-align: right;">$2$</th>
@@ -62,7 +61,6 @@ window.MathJax = {
 </tr></thead>
 <tbody>
 <tr>
-<td>データ</td>
 <td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$3$</td>
 <td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
 <td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$4$</td>
@@ -78,7 +76,6 @@ window.MathJax = {
 <td class="table-align-right" style="text-align: right;">$14$</td>
 </tr>
 <tr>
-<td>データ</td>
 <td class="table-align-right" style="text-align: right;">$3$</td>
 <td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$1$</td>
 <td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$4$</td>
@@ -94,7 +91,6 @@ window.MathJax = {
 <td class="table-align-right" style="text-align: right;">$20$</td>
 </tr>
 <tr>
-<td>データ</td>
 <td class="table-align-right" style="text-align: right;">$3$</td>
 <td class="table-align-right" style="text-align: right;">$1$</td>
 <td class="table-bg-yellow table-align-right" style="background-color: #fef9c3; text-align: right;">$4$</td>
@@ -110,7 +106,6 @@ window.MathJax = {
 <td class="table-align-right" style="text-align: right;">$21$</td>
 </tr>
 <tr>
-<td>データ</td>
 <td class="table-align-right" style="text-align: right;">$3$</td>
 <td class="table-align-right" style="text-align: right;">$1$</td>
 <td class="table-align-right" style="text-align: right;">$4$</td>
@@ -126,7 +121,6 @@ window.MathJax = {
 <td class="table-align-right" style="text-align: right;">$23$</td>
 </tr>
 <tr>
-<td>データ</td>
 <td class="table-align-right" style="text-align: right;">$3$</td>
 <td class="table-align-right" style="text-align: right;">$1$</td>
 <td class="table-align-right" style="text-align: right;">$4$</td>
@@ -142,7 +136,6 @@ window.MathJax = {
 <td class="table-align-right" style="text-align: right;">$27$</td>
 </tr>
 <tr>
-<td>データ</td>
 <td class="table-align-right" style="text-align: right;">$3$</td>
 <td class="table-align-right" style="text-align: right;">$1$</td>
 <td class="table-align-right" style="text-align: right;">$4$</td>
@@ -173,37 +166,37 @@ $2$ 番目以降は、区間から外れる値を引き、新しく入る値を�
 </tr></thead>
 <tbody>
 <tr>
-<td>総和</td>
+<th scope="row">総和</th>
 <td><code>+</code></td>
 <td><code>-</code></td>
 <td></td>
 </tr>
 <tr>
-<td>$0$ を含まない総乗</td>
+<th scope="row">$0$ を含まない総乗</th>
 <td><code>*</code></td>
 <td><code>/</code></td>
 <td></td>
 </tr>
 <tr>
-<td>xor</td>
+<th scope="row">xor</th>
 <td><code>^</code></td>
 <td><code>^</code></td>
 <td></td>
 </tr>
 <tr>
-<td>最小値</td>
+<th scope="row">最小値</th>
 <td><code>.emplace()</code></td>
 <td><code>.erase()</code></td>
 <td><code>multiset</code> で管理し、<code>*s.begin()</code> で取得する。</td>
 </tr>
 <tr>
-<td>最大値</td>
+<th scope="row">最大値</th>
 <td><code>.emplace()</code></td>
 <td><code>.erase()</code></td>
 <td><code>multiset</code> で管理し、<code>*s.rbegin()</code> で取得する。</td>
 </tr>
 <tr>
-<td>種類数</td>
+<th scope="row">種類数</th>
 <td><code>++</code></td>
 <td><code>--</code>、<code>.erase()</code></td>
 <td><code>map</code> で値ごとの個数を管理、$0$ 個になれば消す。</td>

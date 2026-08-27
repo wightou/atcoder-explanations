@@ -101,7 +101,6 @@ STUBS: list[KnowledgeStub] = [
     k("sort", "ソート", "A問題相当", "基本", aliases=["sort"], absorbs=["sort関数", "自力ソート", "バブルソート", "選択ソート", "挿入ソート", "マージソート", "ヒープソート", "カウンティングソート", "バケツソート"]),
     k("arithmetic-operations", "四則演算", "A問題相当", "その他数学系", absorbs=["剰余"]),
     k("maximum-minimum", "最大値・最小値", "A問題相当", "その他数学系", absorbs=["max関数", "min関数"]),
-    k("odd-even", "偶奇判定", "A問題相当", "その他数学系"),
     k("counting", "数え上げ", "A問題相当", "その他数学系", absorbs=["数え上げ（基本）"]),
 
     # B問題相当
@@ -129,7 +128,6 @@ STUBS: list[KnowledgeStub] = [
     k("sentinel", "番兵法", "B問題相当", "基本"),
 
     # C問題相当
-    k("reserve", "reserve関数", "C問題相当", "変数とデータ構造"),
     k("complexity-analysis", "計算量の見積もり", "C問題相当", "高速化系"),
     k("difference-update", "差分更新", "C問題相当", "高速化系"),
     k("preprocessing", "前処理", "C問題相当", "高速化系"),

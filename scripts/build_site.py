@@ -726,6 +726,124 @@ def render_inline(s: str) -> str:
     return s
 
 
+TABLE_ROW_HEADER_DIRECTIVE_RE = re.compile(
+    r"^\s*<!--\s*table-row-header\s*:\s*(true|false)\s*-->\s*$",
+    flags=re.I,
+)
+TABLE_ROW_HEADER_ANY_DIRECTIVE_RE = re.compile(
+    r"^\s*<!--\s*table-row-header\s*:\s*([^>]*)-->\s*$",
+    flags=re.I,
+)
+
+
+def prepare_markdown_table_row_headers(
+    md: str,
+    *,
+    source_path: Path | None = None,
+) -> tuple[str, list[bool]]:
+    """Markdown表ごとの左列見出し指定を読み取り、指定コメントを本文から除く。
+
+    各Markdown表の直前の非空行に
+    `<!-- table-row-header: true -->` または `false` を要求する。
+    指定漏れは警告し、後方互換のため `false` として扱う。
+    コードブロック内は対象外。
+    """
+    lines = md.splitlines()
+    out_lines = list(lines)
+    flags: list[bool] = []
+    consumed_directives: set[int] = set()
+    directive_lines: set[int] = set()
+    in_code = False
+
+    def location(line_index: int) -> str:
+        if source_path is None:
+            return f"本文{line_index + 1}行目"
+        return f"{source_path}（本文{line_index + 1}行目）"
+
+    # まずコードブロック外の指定コメントを記録し、不正値も警告する。
+    code_state = False
+    for idx, line in enumerate(lines):
+        if line.lstrip().startswith("```"):
+            code_state = not code_state
+            continue
+        if code_state:
+            continue
+        any_match = TABLE_ROW_HEADER_ANY_DIRECTIVE_RE.match(line)
+        if any_match is None:
+            continue
+        directive_lines.add(idx)
+        if TABLE_ROW_HEADER_DIRECTIVE_RE.match(line) is None:
+            value = any_match.group(1).strip()
+            print(
+                f"WARNING: table-row-header は true / false のいずれかを指定してください: {location(idx)}: {value!r}",
+                file=sys.stderr,
+            )
+
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        if line.lstrip().startswith("```"):
+            in_code = not in_code
+            i += 1
+            continue
+        if in_code:
+            i += 1
+            continue
+
+        if (
+            "|" in line
+            and i + 1 < len(lines)
+            and "|" in lines[i + 1]
+            and is_markdown_table_separator(lines[i + 1])
+        ):
+            prev = i - 1
+            while prev >= 0 and not lines[prev].strip():
+                prev -= 1
+
+            flag = False
+            if prev >= 0:
+                match = TABLE_ROW_HEADER_DIRECTIVE_RE.match(lines[prev])
+                if match is not None:
+                    flag = match.group(1).lower() == "true"
+                    consumed_directives.add(prev)
+                    out_lines[prev] = ""
+                elif TABLE_ROW_HEADER_ANY_DIRECTIVE_RE.match(lines[prev]) is None:
+                    print(
+                        "WARNING: Markdown表の直前に "
+                        "<!-- table-row-header: true --> または "
+                        f"<!-- table-row-header: false --> を指定してください: {location(i)}",
+                        file=sys.stderr,
+                    )
+            else:
+                print(
+                    "WARNING: Markdown表の直前に "
+                    "<!-- table-row-header: true --> または "
+                    f"<!-- table-row-header: false --> を指定してください: {location(i)}",
+                    file=sys.stderr,
+                )
+            flags.append(flag)
+
+            i += 2
+            while i < len(lines) and lines[i].strip() and "|" in lines[i]:
+                i += 1
+            continue
+
+        i += 1
+
+    # 表に結び付かなかった正しい指定も警告し、HTMLへ露出しないよう除去する。
+    for idx in sorted(directive_lines):
+        if idx in consumed_directives:
+            continue
+        if TABLE_ROW_HEADER_DIRECTIVE_RE.match(lines[idx]) is not None:
+            print(
+                f"WARNING: table-row-header 指定の直後にMarkdown表がありません: {location(idx)}",
+                file=sys.stderr,
+            )
+        out_lines[idx] = ""
+
+    return "\n".join(out_lines), flags
+
+
 def split_table_background_marker(cell: str) -> tuple[str | None, str]:
     """表セル先頭の `{red}` 形式を取り出す。未対応色は通常文字列として残す。"""
     match = re.match(r"^\{([a-z]+)\}\s*", cell, flags=re.I)
@@ -1061,13 +1179,70 @@ def apply_table_alignments_to_html(html: str) -> str:
     return tag_pattern.sub(replace, html)
 
 
+def apply_table_row_headers_to_html(html: str, row_header_flags: list[bool]) -> str:
+    """Markdown表の指定に従い、tbody各行の先頭tdを行見出しthへ変換する。"""
+    table_pattern = re.compile(r"<table\b[^>]*>.*?</table>", flags=re.I | re.S)
+    matches = list(table_pattern.finditer(html))
+    if len(matches) != len(row_header_flags):
+        # 通常は一致する。raw HTML の table などが混在した場合は誤変換を避ける。
+        print(
+            "WARNING: Markdown表の検出数と生成HTMLの table 数が一致しないため、"
+            "左列見出し指定を適用できません。",
+            file=sys.stderr,
+        )
+        return html
+
+    def convert_table(table_html: str) -> str:
+        tbody_pattern = re.compile(r"(<tbody\b[^>]*>)(.*?)(</tbody>)", flags=re.I | re.S)
+
+        def convert_tbody(match: re.Match[str]) -> str:
+            body = match.group(2)
+            row_pattern = re.compile(r"(<tr\b[^>]*>)(.*?)(</tr>)", flags=re.I | re.S)
+
+            def convert_row(row_match: re.Match[str]) -> str:
+                row_body = row_match.group(2)
+                cell_pattern = re.compile(
+                    r"(?P<prefix>^\s*)<td(?P<attrs>[^>]*)>(?P<body>.*?)</td>",
+                    flags=re.I | re.S,
+                )
+                cell_match = cell_pattern.search(row_body)
+                if cell_match is None:
+                    return row_match.group(0)
+                attrs = cell_match.group("attrs")
+                if re.search(r"\bscope\s*=", attrs, flags=re.I) is None:
+                    attrs += ' scope="row"'
+                replacement = (
+                    cell_match.group("prefix")
+                    + f"<th{attrs}>"
+                    + cell_match.group("body")
+                    + "</th>"
+                )
+                row_body = row_body[:cell_match.start()] + replacement + row_body[cell_match.end():]
+                return row_match.group(1) + row_body + row_match.group(3)
+
+            return match.group(1) + row_pattern.sub(convert_row, body) + match.group(3)
+
+        return tbody_pattern.sub(convert_tbody, table_html)
+
+    out: list[str] = []
+    last = 0
+    for match, use_row_header in zip(matches, row_header_flags):
+        out.append(html[last:match.start()])
+        table_html = match.group(0)
+        out.append(convert_table(table_html) if use_row_header else table_html)
+        last = match.end()
+    out.append(html[last:])
+    return "".join(out)
+
+
 def wrap_markdown_tables_html(html: str) -> str:
     """Markdown本文中の表を横スクロール用の要素で囲む。"""
     pattern = re.compile(r"(<table\b[^>]*>.*?</table>)", flags=re.I | re.S)
     return pattern.sub(r'<div class="markdown-table-scroll">\1</div>', html)
 
 
-def markdown_to_html(body_md: str) -> str:
+def markdown_to_html(body_md: str, *, source_path: Path | None = None) -> str:
+    body_md, row_header_flags = prepare_markdown_table_row_headers(body_md, source_path=source_path)
     body_md = remove_duplicate_top_h1(body_md)
     body_md = normalize_unordered_list_indentation(body_md)
     if markdown_lib is not None:
@@ -1080,6 +1255,7 @@ def markdown_to_html(body_md: str) -> str:
         html = fallback_markdown_to_html(body_md)
     html = apply_table_backgrounds_to_html(html)
     html = apply_table_alignments_to_html(html)
+    html = apply_table_row_headers_to_html(html, row_header_flags)
     return wrap_markdown_tables_html(html)
 
 
@@ -2397,7 +2573,7 @@ def load_explanations(src_dir: Path) -> list[ExplanationPage]:
             source_root=src_dir,
             output_subdir="explanations",
         )
-        body_html = markdown_to_html(body_md_for_html)
+        body_html = markdown_to_html(body_md_for_html, source_path=path)
         body_text = markdown_to_plain_text(body_md)
         url = f"explanations/{explanation_filename(str(meta['contest']), str(meta['problem']))}"
         page = ExplanationPage(path, meta, body_md, body_html, body_text, url, assets)
@@ -2419,7 +2595,7 @@ def load_knowledge(src_dir: Path) -> list[KnowledgePage]:
             source_root=src_dir,
             output_subdir="knowledge",
         )
-        body_html = markdown_to_html(body_md_for_html)
+        body_html = markdown_to_html(body_md_for_html, source_path=path)
         body_text = markdown_to_plain_text(body_md)
         url = f"knowledge/{knowledge_filename(path)}"
         pages.append(KnowledgePage(path, meta, body_md, body_html, body_text, url, assets))

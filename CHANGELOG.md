@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v97
+
+- `偶奇判定` と `reserve関数` の独立スタブを廃止。
+- Markdown表ごとに `table-row-header: true/false` で左列を行見出しとして扱うか明示する仕様を追加。
+- `table-row-header: true` の表では本文行の左端セルを `<th scope="row">` として生成し、見出し用の装飾を適用。
+- 表の `table-row-header` 指定漏れ、不正値、未使用指定を警告するように変更。
+
 ## v96
 
 - `最大公約数` と `最小公倍数` の独立スタブを廃止し、`約数と倍数` の `absorbs` に追加。

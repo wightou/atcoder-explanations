@@ -53,7 +53,7 @@ window.MathJax = {
 </tr></thead>
 <tbody>
 <tr>
-<td><code>A</code></td>
+<th scope="row"><code>A</code></th>
 <td>3</td>
 <td>1</td>
 <td>4</td>
@@ -65,7 +65,7 @@ window.MathJax = {
 <td></td>
 </tr>
 <tr>
-<td>「より左」の累積和</td>
+<th scope="row">「より左」の累積和</th>
 <td>0</td>
 <td>3</td>
 <td>4</td>
@@ -93,7 +93,7 @@ window.MathJax = {
 </tr></thead>
 <tbody>
 <tr>
-<td><code>A</code></td>
+<th scope="row"><code>A</code></th>
 <td>3</td>
 <td>1</td>
 <td>4</td>
@@ -104,7 +104,7 @@ window.MathJax = {
 <td>6</td>
 </tr>
 <tr>
-<td>「まで」の累積和</td>
+<th scope="row">「まで」の累積和</th>
 <td>3</td>
 <td>4</td>
 <td>8</td>
@@ -158,12 +158,12 @@ partial_sum(a.begin(),a.end(),sum.begin());</code></pre>
 </tr></thead>
 <tbody>
 <tr>
-<td>$[l,r)$ の和</td>
+<th scope="row">$[l,r)$ の和</th>
 <td><code>sum.at(r)-sum.at(l)</code></td>
 <td><code>sum.at(r-1)-sum.at(l-1)</code></td>
 </tr>
 <tr>
-<td>$[l,r]$ の和</td>
+<th scope="row">$[l,r]$ の和</th>
 <td><code>sum.at(r+1)-sum.at(l)</code></td>
 <td><code>sum.at(r)-sum.at(l-1)</code></td>
 </tr>
@@ -181,22 +181,22 @@ partial_sum(a.begin(),a.end(),sum.begin());</code></pre>
 </tr></thead>
 <tbody>
 <tr>
-<td>累積和</td>
+<th scope="row">累積和</th>
 <td><code>A[i]+x</code></td>
 <td><code>sum[r]-sum[l]</code></td>
 </tr>
 <tr>
-<td>累積積（オーバーフローしない範囲）</td>
+<th scope="row">累積積（オーバーフローしない範囲）</th>
 <td><code>A[i]*x</code></td>
 <td><code>prod[r]/prod[l]</code></td>
 </tr>
 <tr>
-<td>法 $P$（素数）の累積積（$0$ がない）</td>
+<th scope="row">法 $P$（素数）の累積積（$0$ がない）</th>
 <td><code>A[i]*x%P</code></td>
 <td><code>prod[r]*(prod[l]のP-2乗)%P</code> （※E問題級）</td>
 </tr>
 <tr>
-<td>累積XOR</td>
+<th scope="row">累積XOR</th>
 <td><code>A[i]^x</code></td>
 <td><code>xor_sum[r]^xor_sum[l]</code></td>
 </tr>
@@ -212,17 +212,17 @@ partial_sum(a.begin(),a.end(),sum.begin());</code></pre>
 </tr></thead>
 <tbody>
 <tr>
-<td>法 $M$（合成数）の累積積</td>
+<th scope="row">法 $M$（合成数）の累積積</th>
 <td><code>A[i]*x%M</code></td>
 <td>なし</td>
 </tr>
 <tr>
-<td>累積最大値</td>
+<th scope="row">累積最大値</th>
 <td><code>max(A[i],x)</code></td>
 <td>なし</td>
 </tr>
 <tr>
-<td>累積最小値</td>
+<th scope="row">累積最小値</th>
 <td><code>min(A[i],x)</code></td>
 <td>なし</td>
 </tr>
