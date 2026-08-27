@@ -7,7 +7,7 @@ submission_url: https://atcoder.jp/contests/tdpc/submissions/78344978
 tags:
   - 動的計画法
   - 確率
-  - 最大公約数
+  - 約数と倍数
 tag_note: 簡単なレベルの内容は省略。
 ---
 

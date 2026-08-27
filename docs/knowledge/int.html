@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>int型</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-d924c9c5a7">宣言と初期化</a><ul><li><a href="#section-98bc3412c3">宣言だけする場合</a></li><li><a href="#section-1a3dfac5c0">初期化もする場合</a></li></ul></li><li><a href="#section-2e750b0e4e">可能な演算</a><ul><li><a href="#section-1eb5bebcc5">代入 =</a></li><li><a href="#section-3b5179616a">加算 +</a></li><li><a href="#section-3d336f3b28">減算 -</a></li><li><a href="#section-f2fb8ef773">乗算 *</a></li><li><a href="#section-6778fbf6db">除算 /</a></li><li><a href="#section-73daba5943">剰余 %</a></li><li><a href="#section-and-b">AND &amp;（B問題相当）</a></li><li><a href="#section-or-b">OR |（B問題相当）</a></li><li><a href="#section-xor-b">XOR ^（B問題相当）</a></li><li><a href="#section-not-b">NOT ~（B問題相当）</a></li><li><a href="#section-b">左シフト &lt;&lt;（B問題相当）</a></li><li><a href="#section-b-2">右シフト &gt;&gt;（B問題相当）</a></li><li><a href="#section-8df7830bf6">各種複合代入演算子</a></li></ul></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-809b41c6b0">除算（切り上げ）</a></li><li><a href="#section-a4b0f7e751">除算（四捨五入）</a></li><li><a href="#section-2a0c40f88f">倍数判定</a></li><li><a href="#section-3d9d6fe650">倍数化</a></li><li><a href="#section-338222e403">特定の桁だけ抽出</a></li><li><a href="#section-1">全ての桁を1つずつ抽出</a></li><li><a href="#section-char-b">char 型化（B問題相当）</a></li><li><a href="#section-b-3">文字列化（B問題相当）</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-6e77c2d144">桁あふれに注意</a></li><li><a href="#section-06723d7a58">負数の除算の商と余りに注意</a></li><li><a href="#section-6ea139339a">ビット演算の優先順位に注意</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-d924c9c5a7">宣言と初期化</a><ul><li><a href="#section-98bc3412c3">宣言だけする場合</a></li><li><a href="#section-1a3dfac5c0">初期化もする場合</a></li></ul></li><li><a href="#section-2e750b0e4e">可能な演算</a><ul><li><a href="#section-1eb5bebcc5">代入 =</a></li><li><a href="#section-3b5179616a">加算 +</a></li><li><a href="#section-3d336f3b28">減算 -</a></li><li><a href="#section-f2fb8ef773">乗算 *</a></li><li><a href="#section-6778fbf6db">除算 /</a></li><li><a href="#section-73daba5943">剰余 %</a></li><li><a href="#section-and-b">AND &amp;（B問題相当）</a></li><li><a href="#section-or-b">OR |（B問題相当）</a></li><li><a href="#section-xor-b">XOR ^（B問題相当）</a></li><li><a href="#section-not-b">NOT ~（B問題相当）</a></li><li><a href="#section-b">左シフト &lt;&lt;（B問題相当）</a></li><li><a href="#section-b-2">右シフト &gt;&gt;（B問題相当）</a></li><li><a href="#section-8df7830bf6">各種複合代入演算子</a></li></ul></li><li><a href="#section-4fb896d16b">よく使う処理</a><ul><li><a href="#section-809b41c6b0">除算（切り上げ）</a></li><li><a href="#section-a4b0f7e751">除算（四捨五入）</a></li><li><a href="#section-338222e403">特定の桁だけ抽出</a></li><li><a href="#section-1">全ての桁を1つずつ抽出</a></li><li><a href="#section-char-b">char 型化（B問題相当）</a></li><li><a href="#section-b-3">文字列化（B問題相当）</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-6e77c2d144">桁あふれに注意</a></li><li><a href="#section-06723d7a58">負数の除算の商と余りに注意</a></li><li><a href="#section-6ea139339a">ビット演算の優先順位に注意</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>最も代表的な整数型。<br>
 使わない問題はほぼない。</p>
@@ -95,29 +95,6 @@ int b = a;  // 他の整数型や double 型の変数で初期化</code></pre>
 <p><code>a/b</code> を四捨五入で計算したい場合、以下のようにすればよい。</p>
 <pre><code>(2*a+b)/(2*b)</code></pre>
 <p><code>(2*a)/(2*b)</code> と考えて、余りが <code>b</code> 以上あれば、<code>b</code> を足すことで商が $1$ 大きくなるという原理。</p>
-<h3 id="section-2a0c40f88f">倍数判定</h3>
-<p>if文の条件に「<code>a</code> が <code>b</code> の倍数であるなら」を書きたい場合、以下のようにする。</p>
-<pre><code>if (a%b==0)</code></pre>
-<p><code>b</code> の倍数であることと、<code>b</code> で割った余りが <code>0</code> であることは同じである。<br>
-「<code>a</code> が <code>b</code> の倍数でないなら」の場合は、以下。</p>
-<pre><code>if (a%b!=0)</code></pre>
-<p>特に、「<code>a</code> が偶数であるなら」は、以下。</p>
-<pre><code>if (a%2==0)</code></pre>
-<p>「<code>a</code> が奇数であるなら」は、以下。</p>
-<pre><code>if (a%2)</code></pre>
-<p>後者は、<code>int</code> 型の <code>0</code> 以外の数が <code>true</code> として扱われる仕様を利用している。<br>
-自信がなければ、次のように明示的に書いてもよい。</p>
-<pre><code>if (a%2!=0)</code></pre>
-<h3 id="section-3d9d6fe650">倍数化</h3>
-<p><code>a</code> に近い <code>b</code> の倍数を探す場合、<code>b</code> で割ってから <code>b</code> を掛ければよい。</p>
-<p>小さい方へ探すなら切り捨てを利用して、以下。</p>
-<pre><code>a/b*b</code></pre>
-<p>大きい方へ探すなら切り上げを利用して、以下。</p>
-<pre><code>(a+b-1)/b*b</code></pre>
-<p>どちらでもよいから近い方へ探すなら四捨五入を利用して、以下。</p>
-<pre><code>(2*a+b)/(2*b)*b</code></pre>
-<p>これで、<code>a</code> に最も近い <code>b</code> の倍数を求めることができる。<br>
-負数の場合は、後述する注意点を参照。</p>
 <h3 id="section-338222e403">特定の桁だけ抽出</h3>
 <p>非負整数 <code>n</code> の、例えば百の位を取り出したい場合、以下のようにする。</p>
 <pre><code>(n/100)%10</code></pre>
@@ -173,10 +150,8 @@ ASCIIコード上で <code>&#x27;0&#x27;</code> から <code>&#x27;9&#x27;</code
 <code>to_string</code> で <code>int</code> 型から変換でき、<code>stoi</code> で <code>int</code> 型へ変換できる。</p>
 <h3 id="section-c5ffd9eedd"><a href="bit-operation.html">ビット演算</a></h3>
 <p>整数を二進数のビット列として扱い、AND、OR、XOR、NOT、シフトなどを行う。</p>
-<h3 id="section-1b988b5b48"><a href="gcd.html">最大公約数</a></h3>
-<p>$2$ つ、または $3$ つ以上の整数の最大公約数を得る方法と、その活用。</p>
-<h3 id="section-345f25f633"><a href="lcm.html">最小公倍数</a></h3>
-<p>$2$ つ、または $3$ つ以上の整数の最小公倍数を得る方法と、その活用。</p>
+<h3 id="section-338c701f91"><a href="divisors-and-multiples.html">約数と倍数</a></h3>
+<p>整数同士が割りきれるかどうかに関する数学。</p>
 <h3 id="section-bit"><a href="bit-bruteforce.html">bit全探索</a></h3>
 <p>$N$ 個のものをそれぞれ採用するかしないかで $2^N$ 通りを全探索したい場合に利用する。</p>
 <h3 id="section-n"><a href="base-n.html">N進法</a></h3>
@@ -193,7 +168,7 @@ ASCIIコード上で <code>&#x27;0&#x27;</code> から <code>&#x27;9&#x27;</code
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li><a href="../knowledge/double.html">double型</a></li><li><a href="../knowledge/char.html">char型</a></li><li><a href="../knowledge/string.html">string型</a></li><li><a href="../knowledge/long-long.html">long long型</a></li><li><a href="../knowledge/base-n.html">N進法</a></li><li><a href="../knowledge/bit-operation.html">ビット演算</a></li><li><a href="../knowledge/bit-bruteforce.html">bit全探索</a></li><li><a href="../knowledge/gcd.html">最大公約数</a></li><li><a href="../knowledge/lcm.html">最小公倍数</a></li>
+        <li><a href="../knowledge/double.html">double型</a></li><li><a href="../knowledge/char.html">char型</a></li><li><a href="../knowledge/string.html">string型</a></li><li><a href="../knowledge/divisors-and-multiples.html">約数と倍数</a></li><li><a href="../knowledge/long-long.html">long long型</a></li><li><a href="../knowledge/base-n.html">N進法</a></li><li><a href="../knowledge/bit-operation.html">ビット演算</a></li><li><a href="../knowledge/bit-bruteforce.html">bit全探索</a></li>
       </ul>
     </section>
 
