@@ -1,5 +1,5 @@
 ---
-title: 形式的冪級数、畳み込み
+title: 形式的冪級数
 level: G問題以上相当
 category: その他数学系
 summary: 今後記述予定。

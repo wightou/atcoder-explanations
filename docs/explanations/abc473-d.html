@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>四則演算</title>
+<title>ABC473 D - Coefficient Stair</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,37 +28,89 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>四則演算</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC473 D - Coefficient Stair</h1>
+      <p class="explanation-title-ja">係数階段</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc473/tasks/abc473_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc473/submissions/78830600" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>それぞれ、$i$ を $A_i$ 個用意して、合計 $K$ になるようにせよ、という意味である。<br>
+これは再帰による深さ優先探索で調べればよい。</p>
+<p>例えば「3以下で8の和を作る」となったら、以下を調べる。</p>
+<ul>
+<li>3を0個にして、「2以下で合計8を作る」
+</li>
+<li>3を1個にして、「2以下で合計5を作る」
+</li>
+<li>3を2個にして、「2以下で合計2を作る」
+</li>
+</ul>
+<p>使える最大数を $1$ つずつ小さくしていき、「1以下で $x$ を作る」になったら $1$ を $x$ 個用意すればよい。</p>
+<p>もちろんこれでは見つける順序がぐちゃぐちゃだが、辞書順は出力前に普通にソートすればよい。</p>
+<p>計算量は、文字式で示すのは難しいが、答えが $M=3\times 10^5$ 個以下である保証がある。<br>
+それの $N$ 倍くらいと考えると、解生成は C++ なら十分間に合う確認ができる（pythonだとやや厳しい）。<br>
+全体としてはソート部分が支配的で、$O(MN\log M)$。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>$N=3$, $K=8$ なので、</p>
+<p>$$<br>
+A_1+2A_2+3A_3=8<br>
+$$</p>
+<p>を満たす列をすべて求める。</p>
+<p>まず、最も大きい $3$ を何個使うか決める。</p>
+<ul>
+<li>$A_3=0$ とすると、残りは $8$。
+<ul>
+<li>$A_2=0,1,2,3,4$ とでき、それぞれ残りを $1$ で埋めると
+<p>    $(8,0,0),(6,1,0),(4,2,0),(2,3,0),(0,4,0)$ を得る。</p>
+</li>
+</ul>
+</li>
+<li>$A_3=1$ とすると、残りは $5$。
+<ul>
+<li>$A_2=0,1,2$ とでき、
+<p>    $(5,0,1),(3,1,1),(1,2,1)$ を得る。</p>
+</li>
+</ul>
+</li>
+<li>$A_3=2$ とすると、残りは $2$。
+<ul>
+<li>$A_2=0,1$ とでき、
+<p>    $(2,0,2),(0,1,2)$ を得る。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>こうして得た $10$ 個の列を辞書順にソートすると、</p>
+<pre><code>0 1 2
+0 4 0
+1 2 1
+2 0 2
+2 3 0
+3 1 1
+4 2 0
+5 0 1
+6 1 0
+8 0 0</code></pre>
+<p>となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>探索は、大きい方からやること。<br>
+小さい方からやると、ハズレの枝が多すぎて間に合わない。<br>
+大きい方からやれば、探索の枝刈りは不要である。<br>
+というか、この探索方法ならどう進んでも必ず最後に $1$ での帳尻合わせが可能。<br>
+よって、刈れる枝がなく、無駄が一切ない最速の探索になっている。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> その他数学系</p>
-      <p><strong>難易度:</strong> A問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc463-a.html">ABC463 A - 16:9</a></li>
-        <li><a href="../explanations/abc465-a.html">ABC465 A - Supermajority</a></li>
-        <li><a href="../explanations/abc467-a.html">ABC467 A - Obesity</a></li>
-        <li><a href="../explanations/abc469-a.html">ABC469 A - Train Car</a></li>
-        <li><a href="../explanations/abc470-a.html">ABC470 A - Fizz</a></li>
-        <li><a href="../explanations/abc471-a.html">ABC471 A - Nine or Nein</a></li>
-        <li><a href="../explanations/abc473-a.html">ABC473 A - Second Half Sum</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/recursion.html">再帰</a>
+<a class="tag" href="../tags/dfs.html">深さ優先探索</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

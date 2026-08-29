@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC473 F - A/AB Insertion</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC473 F - A/AB Insertion</h1>
+      <p class="explanation-title-ja">A/AB挿入</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc473/tasks/abc473_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc473/submissions/78830650" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>まず、切り出した文字列が条件を満たすかを $O(\log N)$ くらいで高速に判定する方法を考える。</p>
+<p>条件が言っていることは、各 <code>B</code> に対してそれぞれ自身より前に対応する <code>A</code> を重複なくとれること。<br>
+これは、<code>A</code> を $+1$、<code>B</code> を $-1$ として、先頭から任意位置までの累積和が非負であることとも言える。<br>
+この判定は、累積和全体に同じ数が足されていても、最小値の話に読み替えれば問題ない。<br>
+つまり、対応する区間内にある累積和値の最小値が、先頭の累積和値であることと言い換えられる。</p>
+<p>ということで、この累積和の値をクエリ $1$ で動的に変更しながら持てばよい。<br>
+必要な操作は、以下の $3$ つ。</p>
+<ul>
+<li>ある区間での累積和の最小値を取得する
+</li>
+<li>ある区間の左端の値を取得する
+</li>
+<li>ある区間全体に値を足す
+</li>
+</ul>
+<p>よって、これは遅延segment木で解ける。</p>
+<p>クエリ $1$ では、以下を行う。</p>
+<ul>
+<li>文字が不変なら、何もしない
+</li>
+<li><code>B</code> が <code>A</code> になるなら、その位置から後ろすべてに $+2$ する
+</li>
+<li><code>A</code> が <code>B</code> になるなら、その位置から後ろすべてに $-2$ する
+</li>
+</ul>
+<p>クエリ $2$ では、以下を行う。</p>
+<ul>
+<li>先頭の文字の前までの累積和を取得する
+</li>
+<li>先頭の文字の前から末尾の文字の後ろまでの中で、累積和の最小値を取得する
+</li>
+<li>上の $2$ つが一致するなら <code>&quot;Yes&quot;</code>、そうでなければ <code>&quot;No&quot;</code>。
+</li>
+</ul>
+<p>計算量は、$O((N+Q)\log N)$ である。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>最初、</p>
+<pre><code>S = AABBAABABB</code></pre>
+<p>である。</p>
+<p><code>A</code> を $+1$、<code>B</code> を $-1$ とし、「その位置より左」の累積和を作ると次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">位置</th>
+<th class="table-align-right" style="text-align: right;">$0$</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$5$</th>
+<th class="table-align-right" style="text-align: right;">$6$</th>
+<th class="table-align-right" style="text-align: right;">$7$</th>
+<th class="table-align-right" style="text-align: right;">$8$</th>
+<th class="table-align-right" style="text-align: right;">$9$</th>
+<th class="table-align-right" style="text-align: right;">$10$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">累積和</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+</tbody>
+</table></div>
+<p>まず、クエリ <code>2 1 10</code> を処理する。</p>
+<p>先頭の文字の前の累積和は $0$。<br>
+位置 $0$ から $10$ までの累積和の最小値も $0$ なので、一致する。</p>
+<p>よって <code>Yes</code> となる。</p>
+<p>次に、クエリ <code>1 5 B</code> を処理する。</p>
+<p>$5$ 文字目は <code>A</code> から <code>B</code> に変わる。<br>
+そのため、位置 $5$ 以降の累積和すべてに $-2$ する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">位置</th>
+<th class="table-align-right" style="text-align: right;">$0$</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$5$</th>
+<th class="table-align-right" style="text-align: right;">$6$</th>
+<th class="table-align-right" style="text-align: right;">$7$</th>
+<th class="table-align-right" style="text-align: right;">$8$</th>
+<th class="table-align-right" style="text-align: right;">$9$</th>
+<th class="table-align-right" style="text-align: right;">$10$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">累積和</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
+<td class="table-align-right" style="text-align: right;">$-2$</td>
+</tr>
+</tbody>
+</table></div>
+<p>続いて、クエリ <code>2 1 10</code> を処理する。</p>
+<p>先頭の文字の前の累積和は $0$。<br>
+一方、位置 $0$ から $10$ までの累積和の最小値は $-2$ なので、一致しない。</p>
+<p>よって <code>No</code> となる。</p>
+<p>次に、クエリ <code>2 6 8</code> を処理する。</p>
+<p>先頭である $6$ 文字目の前、つまり位置 $5$ の累積和は $-1$。<br>
+位置 $5$ から $8$ までの累積和は</p>
+<p>$$<br>
+-1,0,-1,0<br>
+$$</p>
+<p>であり、最小値は $-1$。</p>
+<p>先頭の累積和と一致するので、<code>Yes</code> となる。</p>
+<p>続いて、クエリ <code>1 3 A</code> を処理する。</p>
+<p>$3$ 文字目は <code>B</code> から <code>A</code> に変わる。<br>
+そのため、位置 $3$ 以降の累積和すべてに $+2$ する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">位置</th>
+<th class="table-align-right" style="text-align: right;">$0$</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$5$</th>
+<th class="table-align-right" style="text-align: right;">$6$</th>
+<th class="table-align-right" style="text-align: right;">$7$</th>
+<th class="table-align-right" style="text-align: right;">$8$</th>
+<th class="table-align-right" style="text-align: right;">$9$</th>
+<th class="table-align-right" style="text-align: right;">$10$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">累積和</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+</tbody>
+</table></div>
+<p>最後に、クエリ <code>2 1 10</code> を処理する。</p>
+<p>先頭の文字の前の累積和は $0$。<br>
+位置 $0$ から $10$ までの累積和の最小値も $0$ なので、一致する。</p>
+<p>よって <code>Yes</code> となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/lazy-segment-tree.html">lazy segment木</a>
+<a class="tag" href="../tags/cumulative-sum.html">累積和</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

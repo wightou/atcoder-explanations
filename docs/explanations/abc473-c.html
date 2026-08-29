@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>四則演算</title>
+<title>ABC473 C - Change Schools</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,37 +28,71 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>四則演算</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC473 C - Change Schools</h1>
+      <p class="explanation-title-ja">転校</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc473/tasks/abc473_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc473/submissions/78830579" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>ややこしいことを言っているように見えるが、丁寧に読めば実は非常に単純なことを言っている。<br>
+以下のいずれかに該当するクラスはいくつあるか、ということである。</p>
+<ul>
+<li>現時点でクラスの人数が最大である。
+</li>
+<li>現時点でクラスの人数が最大より $1$ 小さいだけで、高橋君が加われば最大タイになる。
+</li>
+</ul>
+<p>ということで、各クラスに何人いるかカウンティングすることを思いつけば、あとは簡単。<br>
+全体を一度見て最大値を求めた後に、もう一度全体を見て条件を満たす個数を数えればよい。</p>
+<p>計算量は $O(N+K)$ である。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>$N=8$, $K=5$ で、各生徒が所属しているクラスは $(3,3,5,5,4,4,3,2)$ である。</p>
+<p>各クラスの人数を数えると、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">クラス</th>
+<th class="table-align-right" style="text-align: right;">人数</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$5$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+</tbody>
+</table></div>
+<p>最大人数は $3$ 人である。<br>
+したがって、現在の人数が $3$ 人、またはそれより $1$ 少ない $2$ 人であるクラスを数える。</p>
+<p>条件を満たすのはクラス $3,4,5$ の $3$ クラスなので、答えは $3$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> その他数学系</p>
-      <p><strong>難易度:</strong> A問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc463-a.html">ABC463 A - 16:9</a></li>
-        <li><a href="../explanations/abc465-a.html">ABC465 A - Supermajority</a></li>
-        <li><a href="../explanations/abc467-a.html">ABC467 A - Obesity</a></li>
-        <li><a href="../explanations/abc469-a.html">ABC469 A - Train Car</a></li>
-        <li><a href="../explanations/abc470-a.html">ABC470 A - Fizz</a></li>
-        <li><a href="../explanations/abc471-a.html">ABC471 A - Nine or Nein</a></li>
-        <li><a href="../explanations/abc473-a.html">ABC473 A - Second Half Sum</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

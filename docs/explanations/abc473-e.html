@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC473 E - K-Divisible Subarrays</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC473 E - K-Divisible Subarrays</h1>
+      <p class="explanation-title-ja">Kの倍数区間</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc473/tasks/abc473_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc473/submissions/78830618" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>自由に区切って、条件を満たす区間の個数がなるべく多いようにする。<br>
+これは、互いに重ならないように条件を満たす区間を可能な限りたくさん選ぶと言い換えてもよい。<br>
+つまりこれは、区間スケジューリング問題である。</p>
+<p>ということは、右端 $r$ が小さい順に見て、採用可能なら採用する貪欲法でよい。<br>
+すなわち、以下を実行すればよい。</p>
+<ul>
+<li>先頭から $1$ つずつ探索範囲を広げて、条件を満たす区間が取れるか調べる
+</li>
+<li>条件を満たす区間が取れるとなったら、直ちにそれを採用する
+</li>
+<li>採用したら、今までの数列を全てみなかったことにして、次の数が先頭と思って再び調査を始める
+</li>
+</ul>
+<p>問題は「条件を満たす区間が取れるか調べる」のやり方。<br>
+これは累積和を用いることで高速に処理できる。<br>
+最初に、空の数列の和である $0$ を <code>set</code> か何かに記録しておく。<br>
+そこから $1$ つずつ進めながら累積和を計算し、出現した累積和を $k$ で割った余りを全て記録していく。<br>
+同じ余りが $2$ 回出現した場合、それが出現した $2$ ヶ所の間が条件を満たす区間である。</p>
+<p>計算量は $O(N\log N)$ である。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>$N=6$, $K=10$ で、$A=(6,8,2,2,6,4)$ である。</p>
+<p>最初に、空の数列の累積和の余り $0$ を <code>set</code> に入れておく。<br>
+先頭から順に累積和を計算し、その $10$ で割った余りを調べる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">値</th>
+<th class="table-align-right" style="text-align: right;">累積和の余り</th>
+<th class="table-align-center" style="text-align: center;">出現済みか</th>
+<th>処理</th>
+<th>処理後の出現済の余り</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$6$</th>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+<td>$6$ を記録する</td>
+<td><code>{0,6}</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$8$</th>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+<td>$4$ を記録する</td>
+<td><code>{0,4,6}</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-center" style="text-align: center;">はい</td>
+<td>区間を $1$ つ採用し、状態をリセットする</td>
+<td><code>{0}</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+<td>$2$ を記録する</td>
+<td><code>{0,2}</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$6$</th>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+<td>$8$ を記録する</td>
+<td><code>{0,2,8}</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;">はい</td>
+<td>区間を $1$ つ採用し、状態をリセットする</td>
+<td><code>{0}</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>最初の重複した余り $6$ は、$8+2=10$ となる区間に対応する。<br>
+次の重複した余り $2$ は、$6+4=10$ となる区間に対応する。</p>
+<p>よって、条件を満たす区間を $2$ 個採用でき、答えは $2$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/interval-scheduling-problem.html">区間スケジューリング問題</a>
+<a class="tag" href="../tags/greedy.html">貪欲法</a>
+<a class="tag" href="../tags/cumulative-sum.html">累積和</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
