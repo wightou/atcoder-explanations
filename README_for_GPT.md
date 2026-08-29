@@ -212,6 +212,8 @@ related:
   - 生成時に `docs/explanations/abc463/e1.png` へコピーし、HTML側の参照パスを自動補正します。
 - `explanations/` 配下には、解説 Markdown の `.md`、保存する解答コードの `.cpp`、解説画像の `.png` を置けます。
 - それ以外のファイルがある場合、`build_site.py` は実行ファイルなどの混入を疑って警告します。警告後もビルドは継続します。
+- `explanations/` / `knowledge/` の Markdown で、front matter 欠落、YAML不正、必須項目不足、`tags` / `aliases` / `absorbs` / `related` の型不正、`category_order` / `level_order` の型不正など、その1ファイルに閉じた形式不正が見つかった場合は `WARNING` を出してそのファイルだけスキップし、残りの生成を継続します。
+  - 想定外の内部例外や、出力ディレクトリ操作などサイト全体の生成処理の失敗までは握りつぶしません。
   - `knowledge/` 側の記事でも、記事Markdownから見た相対パスで画像を参照できます。
 - `markdown` パッケージがない環境でも、基本的なMarkdown表と画像はフォールバック変換で表示できます。
 - 数式は MathJax 3 で表示します。

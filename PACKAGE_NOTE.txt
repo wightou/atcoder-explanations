@@ -5,7 +5,7 @@
 - docs/
 - __pycache__/
 
-ただし v98 のタグ定義変更を反映するため、次の知識記事だけは意図的に含めています。
+ただし v98 のタグ定義変更を引き続き反映するため、次の知識記事だけは意図的に含めています。
 
 - knowledge/fps-convolution.md
 - knowledge/counting-technique.md
