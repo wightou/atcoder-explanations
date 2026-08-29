@@ -126,6 +126,7 @@ STUBS: list[KnowledgeStub] = [
     k("brute-force", "全探索", "B問題相当", "データ探索系"),
     k("grid-operation", "グリッド操作", "B問題相当", "基本", absorbs=["グリッド回転"]),
     k("sentinel", "番兵法", "B問題相当", "基本"),
+    k("counting-technique", "カウンティング", "B問題相当", "基本"),
 
     # C問題相当
     k("complexity-analysis", "計算量の見積もり", "C問題相当", "高速化系"),
@@ -230,7 +231,7 @@ STUBS: list[KnowledgeStub] = [
     k("maximum-closure-problem", "最大閉包問題", "G問題以上相当", "典型問題集", related=["プロジェクト選択問題", "最大フロー"]),
     k("bipartite-matching", "二部マッチング", "G問題以上相当", "グラフ理論系"),
     k("minimum-cost-flow", "最小費用流", "G問題以上相当", "グラフ理論系"),
-    k("fps-convolution", "形式的冪級数、畳み込み", "G問題以上相当", "その他数学系", aliases=["FPS", "convolution", "NTT"], absorbs=["NTT"]),
+    k("fps-convolution", "形式的冪級数", "G問題以上相当", "その他数学系", aliases=["FPS"], absorbs=["畳み込み", "convolution", "NTT"]),
     k("wavelet-matrix", "Wavelet Matrix", "G問題以上相当", "変数とデータ構造"),
     k("suffix-array", "Suffix Array", "G問題以上相当", "文字列系"),
     k("binary-tree", "二分木", "G問題以上相当", "変数とデータ構造"),

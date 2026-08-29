@@ -7,9 +7,9 @@ category_order: 9999
 level_order: 9999
 aliases:
   - FPS
-  - convolution
-  - NTT
 absorbs:
+  - 畳み込み
+  - convolution
   - NTT
 related: []
 ---

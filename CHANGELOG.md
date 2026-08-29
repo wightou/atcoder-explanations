@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v98
+
+- `形式的冪級数、畳み込み` の標準名を `形式的冪級数` に変更。既存 slug `fps-convolution` は維持し、`畳み込み`、`convolution`、`NTT` を `absorbs` で吸収する構成に変更。
+- `カウンティング` を `B問題相当` / `基本` の独立した知識記事として追加。slug は `counting-technique`。
+
 ## v97
 
 - `偶奇判定` と `reserve関数` の独立スタブを廃止。
