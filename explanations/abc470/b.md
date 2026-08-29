@@ -6,6 +6,7 @@ problem_title_ja: "単色"
 problem_url: https://atcoder.jp/contests/abc470/tasks/abc470_b
 submission_url: https://atcoder.jp/contests/abc470/submissions/78235624
 tags:
+  - カウンティング
 tag_note: A問題以下レベルの内容は省略。
 ---
 

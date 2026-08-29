@@ -7,6 +7,7 @@ problem_url: https://atcoder.jp/contests/abc471/tasks/abc471_b
 submission_url: https://atcoder.jp/contests/abc471/submissions/78494136
 tags:
   - map
+  - カウンティング
 tag_note: A問題以下レベルの内容は省略。
 ---
 

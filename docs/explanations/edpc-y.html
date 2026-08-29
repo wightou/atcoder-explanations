@@ -115,7 +115,9 @@ odd[3] = 1 + 6 = 7</code></pre>
 <pre><code>even[3] - odd[3] = 10 - 7 = 3</code></pre>
 <p>よって答えは $3$ である。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
-<p>特になし。</p>
+<p>答えは $10^9+7$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+二項係数の計算では階乗の逆元が必要になるため、$10^9+7$ が素数であることを利用し、逆元は $10^9+7-2$ 乗として求める。<br>
+累乗計算には繰り返し二乗法を用いること。</p>
 <h2 id="section-f4aa49c835">別解</h2>
 <p>特になし。</p>
   </article>
@@ -127,6 +129,8 @@ odd[3] = 1 + 6 = 7</code></pre>
         <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
 <a class="tag" href="../tags/permutation-and-combination.html">順列組み合わせ</a>
 <a class="tag" href="../tags/inclusion-exclusion.html">包除原理</a>
+<a class="tag" href="../tags/binomial-coefficient.html">二項係数</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
 <a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
 <a class="tag" href="../tags/binary-exponentiation.html">繰り返し二乗法</a>
       </div>

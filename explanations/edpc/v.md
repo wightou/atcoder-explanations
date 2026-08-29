@@ -8,6 +8,8 @@ submission_url: https://atcoder.jp/contests/dp/submissions/77959971
 tags:
   - 動的計画法
   - 全方位木DP
+  - 木DP
+  - 木構造
   - 剰余類環
 tag_note: 簡単なレベルの内容は省略。
 ---
