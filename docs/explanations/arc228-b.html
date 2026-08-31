@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC228 B - Minimize Topological Order</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ARC228 B - Minimize Topological Order</h1>
+      <p class="explanation-title-ja">最小トポロジカル</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc228/tasks/arc228_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc228/submissions/78855543" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-2">入力例2での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>まず、$f(T)$ の作り方を考える。<br>
+これは、以下のように最良優先探索で貪欲に処理すればよい。</p>
+<ul>
+<li>最初に順列は空にしておく
+</li>
+<li>その頂点は未採用だが親は採用済、という頂点一覧を作る
+<ul>
+<li>最初の $1$ 回は、根のみとする
+</li>
+</ul>
+</li>
+<li>その中で、最も番号が小さいものを採用し、順列の末尾に追加する
+</li>
+<li>未採用頂点が残っていたら、頂点一覧の作成に戻る
+</li>
+</ul>
+<p>ということは、それが指定の順列 $P$ に一致する根付き木 $T$ は、以下のように作られる。</p>
+<ul>
+<li>最初は、順列の先頭を根とする $1$ 頂点のグラフとする
+</li>
+<li>2番目以降について、順に頂点を以下の手順で追加する
+<ul>
+<li>追加しようとしている頂点より大きい番号の頂点を最後に追加したタイミングを求める
+<ul>
+<li>今まで追加したものが全て小さい番号だった場合、根をおいたタイミングとする
+</li>
+</ul>
+</li>
+<li>そのタイミング以後（そのものでもよい）に追加した頂点を $1$ つ選ぶ
+</li>
+<li>それを親とし、追加する頂点をその子とする
+</li>
+</ul>
+</li>
+</ul>
+<p>よって、この作り方でコストが最小になるような親の選び方を求める問題ということになる。</p>
+<p>コストは、$i$ 番の頂点に $k$ 個の子がいると、$A_i\times k^2$ だけかかる。<br>
+つまり、既に $k$ 個の子を持っているところに $1$ つ追加するコストは $A_i\times (2k+1)$ である。<br>
+この毎回のコストが最小であるように選ぶ貪欲法が成立するか考えよう。</p>
+<p>頂点 $P_i$ を追加するときに、その場でコスト最小である親が $X$ だったとしよう。<br>
+そこであえて $Y$ を親に選択してみて、これで得することがあるかどうかを考える。</p>
+<p>まず、それ以後誰も $X$ を親に選ばなかった場合。<br>
+その場合、単純に $P_i$ の親を $Y$ から $X$ に変更しただけの解が、同等以下のコストになる。</p>
+<p>一方、それ以降に誰かが親に $X$ を選んだ場合。<br>
+次に $X$ を親に選んだ頂点を $P_j$ とする。<br>
+この状況では、以下が成立している。</p>
+<ul>
+<li>$X$ 追加以後、$P_i$ 追加まで、$P_i$ より大きい数は追加されていない
+</li>
+<li>$Y$ 追加以後、$P_i$ 追加まで、$P_i$ より大きい数は追加されていない
+</li>
+<li>$X$ 追加以後、$P_j$ 追加まで、$P_j$ より大きい数は追加されていない
+<p>追加順を考慮すると、これらから以下も成立することがわかる。</p>
+</li>
+<li>$Y$ 追加以後、$P_j$ 追加まで、$P_j$ より大きい数は追加されていない
+<p>つまり、実は $P_j$ 追加時に、親の選択肢に $Y$ も存在している。<br>
+したがって、$P_i$ の親を $X$ に、$P_j$ の親を $Y$ に、交換してもコストは変わらない。</p>
+</li>
+</ul>
+<p>以上より、あえてその場で損をすることで後で得するパターンは存在しない。<br>
+よって、毎回の追加コストが最小であるように選ぶ貪欲法でよいことがわかった。<br>
+したがって、$O(N^2)$ でよければこれで解けた。</p>
+<p>あとは、高速化である。</p>
+<p>まず、選択肢の範囲探索の高速化。<br>
+これは、以下のようにすればよい。<br>
+空の <code>stack</code> を用意し、順列を後ろから見て、順に以下を実行する。</p>
+<ul>
+<li><code>stack</code> の中に、次に処理する値より小さいものがあれば、すべて取り除く
+<ul>
+<li>取り除いたタイミングが、取り除いた数の方の選択肢範囲の先頭
+</li>
+</ul>
+</li>
+<li><code>stack</code> に処理する値を追加する
+<ul>
+<li>位置も一緒に入れると、記録がとりやすい
+<p>最後まで <code>stack</code> の中に残りっぱなしだったものは、先頭から選べる。<br>
+末尾は、調べるまでもなく自身の $1$ つ前である。<br>
+これで $O(N)$ ですべての選択肢範囲を調べられる。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>そして、コストが最も安い親を選ぶ方法。<br>
+これは最小値を求めるsegment木でよい。<br>
+頂点番号順でなく順列にある順に、「次にそれを親に選ぶとコストはいくつか？」を入れておく。<br>
+選択肢の範囲と同じ範囲で、最小値がある位置が、そのときに親にするべき頂点である。<br>
+コスト情報更新も込みで、$O(N\log N)$ で処理できる。</p>
+<p>よって、全体として $O(N\log N)$ まで高速化でき、間に合う。</p>
+<h2 id="section-2">入力例2での動作</h2>
+<p>入力は次の通り。</p>
+<pre><code>5
+3 1 5 2 4
+4 1 1 2 1</code></pre>
+<p>以下、順列上の位置は <code>0-indexed</code> で表し、頂点番号は入力のまま表す。</p>
+<p>まず、各位置について親として選べる範囲の左端を求める。<br>
+順列 $P=\{3,1,5,2,4\}$ を後ろから <code>stack</code> で処理すると、次のようになる。<br>
+<code>stack</code> は左から順に底から上を表す。</p>
+<pre><code>i=4: 4 を追加
+stack: {4}
+
+i=3: 2 を追加
+stack: {4, 2}
+
+i=2: 2, 4 を取り除き、5 を追加
+b[3] = 2
+b[4] = 2
+stack: {5}
+
+i=1: 1 を追加
+stack: {5, 1}
+
+i=0: 1 を取り除き、3 を追加
+b[1] = 0
+stack: {5, 3}</code></pre>
+<p>最後まで残った頂点については先頭から選べるので、<code>b[2]=0</code> となる。<br>
+<code>b[0]</code> は使用しないダミーとして $-1$ とすると、</p>
+<pre><code>b: {-1, 0, 0, 2, 2}</code></pre>
+<p>となる。</p>
+<p>次に、segment木の位置 $i$ に、頂点 $P_i$ を次に親として選ぶ場合の追加コストを入れる。<br>
+最初はどの頂点も子を持たないので、各位置の値は $A_{P_i}$ そのものである。</p>
+<pre><code>segment木: {1, 4, 1, 1, 2}
+result: 0</code></pre>
+<p>$i=1$、頂点 $1$ を追加する。<br>
+親候補は位置区間 $[b[1],1)=[0,1)$ にある頂点 $3$ のみ。<br>
+追加コスト $1$ で頂点 $3$ を親にする。</p>
+<p>頂点 $3$ の子は $1$ 個になったので、次に子を追加するコストは $1\times(2\times1+1)=3$ となる。</p>
+<pre><code>segment木: {3, 4, 1, 1, 2}
+result: 1</code></pre>
+<p>$i=2$、頂点 $5$ を追加する。<br>
+親候補は位置区間 $[0,2)$ にある頂点 $3,1$ で、追加コストはそれぞれ $3,4$。<br>
+よって頂点 $3$ を親にする。</p>
+<p>頂点 $3$ の子は $2$ 個になったので、次の追加コストは $1\times(2\times2+1)=5$ となる。</p>
+<pre><code>segment木: {5, 4, 1, 1, 2}
+result: 4</code></pre>
+<p>$i=3$、頂点 $2$ を追加する。<br>
+親候補は位置区間 $[2,3)$ にある頂点 $5$ のみで、追加コストは $1$。<br>
+頂点 $5$ を親にする。</p>
+<pre><code>segment木: {5, 4, 3, 1, 2}
+result: 5</code></pre>
+<p>$i=4$、頂点 $4$ を追加する。<br>
+親候補は位置区間 $[2,4)$ にある頂点 $5,2$ で、追加コストはそれぞれ $3,1$。<br>
+よって頂点 $2$ を親にし、<code>result</code> は $6$ となる。</p>
+<p>したがって、答えは $6$ である。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>コストや答えは <code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/segment-tree.html">segment木</a>
+<a class="tag" href="../tags/greedy.html">貪欲法</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
