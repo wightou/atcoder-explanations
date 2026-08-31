@@ -6,6 +6,7 @@ problem_title_ja: "最小トポロジカル"
 problem_url: https://atcoder.jp/contests/arc228/tasks/arc228_b
 submission_url: https://atcoder.jp/contests/arc228/submissions/78855543
 tags:
+  - 根付き木
   - segment木
   - 貪欲法
   - 考察問題
