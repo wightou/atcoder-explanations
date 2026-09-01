@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC228 A - Row and Col swap</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ARC228 A - Row and Col swap</h1>
+      <p class="explanation-title-ja">行と列の交換</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc228/tasks/arc228_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc228/submissions/78888113" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-5cb8596c74">前半の動的計画法</a></li><li><a href="#section-f8ae091582">後半の動的計画法</a></li><li><a href="#section-96082e75a3">計算量</a></li></ul></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>同じ値 $i$ が $2$ つずつあると考えにくいので、まずはここを工夫する。</p>
+<p>ある操作で、最終的に条件が満たされたとする。<br>
+このとき、$P$ 側にある $i$ を $+i$、$Q$ 側にある $i$ を $-i$ と書き換える。<br>
+そして操作を逆再生すると、与えられた $2$ つの順列に適切に符号がつけてあったことにできる。</p>
+<p>このとき、異なる割り当てが同じ手順で両方条件を満たすようにはならない。<br>
+したがって、問題は以下のように言い換えられる。</p>
+<pre><code>PとQの同じ値の、片方は+、片方は-に置き換える。
+問題にある操作をM回繰り返して、P側を全て+、Q側を全て-にする。
+このような初期符号の割り当て方と手順は何通りあるか？</code></pre>
+<p>ということで、初期符号と手順の組 $2^N\times (N^2)^M$ 通り全ての検証をすればよい。<br>
+これは、前後半分けて動的計画法を $2$ つ行うことで達成できる。</p>
+<p>DPテーブルは、同じ縦列の符号の組がいくつあるかごとに情報を持つ。<br>
+$[+-]$ という組が $i$ 組、$[-+]$ という組が $j$ 組あるとする。<br>
+$[++]$ と $[--]$ は同数あるので、残りの半分ずつある。<br>
+このような組数になっているパターン数を <code>dp[i][j]</code> とする。</p>
+<h3 id="section-5cb8596c74">前半の動的計画法</h3>
+<p>初期の符号割り当て $2^N$ 通りの分類を求める。</p>
+<p>まず、$P$ と $Q$ を巡回順に並べなおす。<br>
+というのは、与えられた問題で $P_i$ と $P_j$ を、$Q_i$ と $Q_j$ を同時に入れ替えても影響がない。<br>
+よって、例えば以下のように、巡回順に並べなおす。</p>
+<pre><code>P : 1 2 3 4 5 6
+Q : 5 6 2 4 1 3
+↓
+P : 1 5 2 6 3 4
+Q : 5 1 6 3 2 4</code></pre>
+<p>すなわち、$(1,5),(2,6,3),(4)$ がそれぞれの中で $1$ つずつ右にずれる巡回になっているような状態にする。<br>
+そしてこの順番通りにDPを行うことで、持つ状態数を減らすことができる。</p>
+<p><code>dp[i][j]</code> は前述の通りの意味で、さらに次が $[+?]$ であるべきか $[-?]$ であるべきかで分けて数える。<br>
+巡回が続いている限り、$1$ つ前が $[?+]$ であれば次は $[-?]$ である必要がある、というのを利用する。</p>
+<p>つまり、巡回の内部では、配るDPとして以下の $4$ つの遷移が成立する。</p>
+<ul>
+<li><code>dp[i][j][+]</code> $\to$ <code>dp[i][j][-]</code> （$[++]$ にする場合）
+</li>
+<li><code>dp[i][j][-]</code> $\to$ <code>dp[i][j][+]</code> （$[--]$ にする場合）
+</li>
+<li><code>dp[i][j][+]</code> $\to$ <code>dp[i+1][j][+]</code> （$[+-]$ にする場合）
+</li>
+<li><code>dp[i][j][-]</code> $\to$ <code>dp[i][j+1][-]</code> （$[-+]$ にする場合）
+</li>
+</ul>
+<p>巡回の切れ目では、以下のように考える。</p>
+<p>切れ目では、次に何が来るべきという指定がないので、全て「次が $[+?]$ であるべき」側で数えておく。<br>
+すると、自然と次の巡回が $[+?]$ で始まったものだけ数えることになる。<br>
+そして、巡回の最後の組では $4$ つのうち $[?-]$ に相当する $2$ つの遷移だけ行う。<br>
+結果として、設計通り <code>dp[i][j][+]</code> の方だけ値が構築され、<code>dp[i][j][-]</code> はすべて $0$ になる。</p>
+<p>このとき、<code>dp[i][j][+]</code> に入っている個数は、最後の巡回が $[+?]$ で始まり $[?-]$ で終わるものだけ。<br>
+これに、最後の巡回が $[-?]$ で始まり $[?+]$ で終わるものの個数を加えなければならない。<br>
+実はこの個数は、全体の $+/-$ を入れ替えることを考えると、実は <code>dp[j][i][+]</code> に入っている。<br>
+よって、$i$ と $j$ を入れ替えた値同士、お互いをお互いに足せばよい。<br>
+（<code>dp[i][i][+]</code> は $2$ 倍することになる）</p>
+<p>巡回順に並べなおしたのを見ながら $N$ 要素分繰り返す。<br>
+これで、初期の符号割り当て $2^N$ 通りの分類を求めることができた。</p>
+<p>以後 <code>[-]</code> のデータは不要なので、<code>[+]</code> の方だけ取り出したものにDPテーブルを作り直す。</p>
+<h3 id="section-f8ae091582">後半の動的計画法</h3>
+<p>後半では、このデータが操作 $1$ 回ごとにどう変わるか調べればよい。<br>
+操作する場所の選び方は $N(N-1)/2\times 2+N=N^2$ とおりある。<br>
+そのときの $i$ や $j$ の変化、つまり遷移先は以下のようになっている。</p>
+<p>$[++]$ と $[--]$ はそれぞれ $k=(N-i-j)/2$ 組ある。</p>
+<ul>
+<li>$i,j$ がともに変わらないものは、$4(i+j)k+i(i-1)+j(j-1)+2k(k-1)+2k$ 通り
+<ul>
+<li>$[++]$ または $[--]$ と、$[+-]$ または $[-+]$ の同じ段同士の入れ替えが $4(i+j)k$ 通り
+</li>
+<li>同タイプ同士での同じ段同士の入れ替えが $i(i-1)+j(j-1)+2k(k-1)$ 通り
+</li>
+<li>$[++]$ または $[--]$ での上下入れ替えが $2k$ 通り
+</li>
+</ul>
+</li>
+<li>$[+-]$ と $[-+]$ の同じ段同士を入れ替えると、$i,j$ がともに $1$ 減る。これは $2ij$ 通り
+</li>
+<li>$[++]$ と $[--]$ の同じ段同士を入れ替えると、$i,j$ がともに $1$ 増える。これは $2k^2$ 通り
+</li>
+<li>$[+-]$ の上下を入れ替えると、$i$ が $1$ 減って $j$ が $1$ 増える。これは $i$ 通り
+</li>
+<li>$[-+]$ の上下を入れ替えると、$i$ が $1$ 増えて $j$ が $1$ 減る。これは $j$ 通り
+</li>
+</ul>
+<p>この遷移を愚直に $M$ 回実行すればよい。</p>
+<p>最終的に、$N$ 組全てが $[+-]$ になっている個数が答えとなる。</p>
+<h3 id="section-96082e75a3">計算量</h3>
+<p>計算量は、前半が $O(N^3)$、後半が $O(MN^2)$ である。<br>
+メモリも計算量も余裕がないので、明らかにデータがない場所の処理をスキップするなど工夫すること。<br>
+C++ならそこまでせずとも一応通りそうではあるが。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力は次の通り。</p>
+<pre><code>3 1
+1 2 3
+1 3 2</code></pre>
+<p>まず、各位置にある $P$ 側の値から $Q$ 側の値への対応を見ると、$1\to1,2\to3,3\to2$ となる。<br>
+したがって、巡回は $(1),(2,3)$ の $2$ 個である。</p>
+<p>前半のDPを行う。<br>
+最初の巡回 $(1)$ を処理し終えると、値 $1$ の符号の付け方は $[+-]$ と $[-+]$ の $2$ 通りなので、</p>
+<pre><code>dp[1][0][+] = 1
+dp[0][1][+] = 1</code></pre>
+<p>となる。</p>
+<p>次に巡回 $(2,3)$ を処理する。<br>
+最初の $2$ を処理した時点では、</p>
+<pre><code>dp[1][0][-] = 1
+dp[2][0][+] = 1
+dp[0][1][-] = 1
+dp[1][1][+] = 1</code></pre>
+<p>となる。<br>
+最後の $3$ を処理して巡回を閉じ、さらに $+/-$ を全て反転した場合も加えると、前半DPの最終状態は、</p>
+<pre><code>dp[3][0] = 1
+dp[2][1] = 1
+dp[1][2] = 1
+dp[0][3] = 1
+dp[1][0] = 2
+dp[0][1] = 2</code></pre>
+<p>となる。<br>
+合計は $1+1+1+1+2+2=8=2^3$ で、全ての初期符号割り当てが分類されている。</p>
+<p>後半では、この状態から操作を $M=1$ 回行う。<br>
+$N=3$ なので、各状態から選べる操作は $N^2=9$ 通りである。<br>
+遷移後のDPは、</p>
+<pre><code>dp[3][0] = 7
+dp[2][1] = 11
+dp[1][2] = 11
+dp[0][3] = 7
+dp[1][0] = 18
+dp[0][1] = 18</code></pre>
+<p>となる。<br>
+合計は $72=8\times9$ で、$8$ 通りの初期符号割り当てそれぞれについて $9$ 通りの操作を全て数えられている。</p>
+<p>最終的に $P$ 側を全て $+$、$Q$ 側を全て $-$ にするには、全 $3$ 組が $[+-]$ であればよい。<br>
+よって答えは <code>dp[3][0]</code> の値である $7$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
+何か足し算や掛け算をするたびに結果を <code>% 998244353</code> する。<br>
+計算量削減のために剰余を取る回数を減らしてもいいが、<code>long long</code> 型から溢れない程度にすること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
