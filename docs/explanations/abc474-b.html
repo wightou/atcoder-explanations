@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>貪欲法</title>
+<title>ABC474 B - Exit Order</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,54 +28,49 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>貪欲法</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC474 B - Exit Order</h1>
+      <p class="explanation-title-ja">退場順</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc474/tasks/abc474_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc474/submissions/79043950" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>この人は、何番目のグループになるのかを求められればよい。<br>
+実はこれは簡単で、番号から $1$ を引いて <code>0-indexed</code> にしてから $10$ で割ればよい。</p>
+<p>指定順位と実際の退場順位に同じことをやって、全ての人で商が一致するか確認すればよい。</p>
+<p>例えば $23$ 番席の人が $27$ 番目に退場したとしよう。<br>
+指定の退場順は、$23-1=22$ を $10$ で割って $2$ 番目グループである。<br>
+実際の退場順は、$27-1=26$ を $10$ で割って $2$ 番目グループである。<br>
+（グループ番号も <code>0-indexed</code> になっている）<br>
+一致しているので、この人は正しく退場している。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力された座席番号から $1$ を引いて <code>0-indexed</code> にすると、退場順は次のようになる。</p>
+<pre><code>0, 5, 4, 6, 7, 9, 1, 3, 2, 8,
+14, 16, 11, 10, 18, 19, 17, 12, 13, 15,
+20, 22, 23, 21, 24</code></pre>
+<p>まず、$0$ 番目から $9$ 番目までを見る。<br>
+この範囲では、退場順位を $10$ で割った商は全て $0$ である。<br>
+また、対応する座席番号も全て $0$ 以上 $9$ 以下なので、座席番号を $10$ で割った商も全て $0$ である。</p>
+<p>次に、$10$ 番目から $19$ 番目までを見る。<br>
+この範囲では、退場順位を $10$ で割った商は全て $1$ である。<br>
+また、対応する座席番号も全て $10$ 以上 $19$ 以下なので、座席番号を $10$ で割った商も全て $1$ である。</p>
+<p>最後に、$20$ 番目から $24$ 番目までを見る。<br>
+この範囲では、退場順位を $10$ で割った商は全て $2$ である。<br>
+また、対応する座席番号も全て $20$ 以上 $24$ 以下なので、座席番号を $10$ で割った商も全て $2$ である。</p>
+<p>全ての人について商が一致するので、答えは <code>Yes</code> である。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> データ探索系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-c.html">ABC461 C - Variety</a></li>
-        <li><a href="../explanations/abc462-e.html">ABC462 E - Alternating Costs</a></li>
-        <li><a href="../explanations/abc463-d.html">ABC463 D - Maximize the Gap</a></li>
-        <li><a href="../explanations/abc467-e.html">ABC467 E - Adjacent Sums (hard)</a></li>
-        <li><a href="../explanations/abc467-f.html">ABC467 F - Email Scheduling Optimization</a></li>
-        <li><a href="../explanations/abc468-f.html">ABC468 F - Chmax</a></li>
-        <li><a href="../explanations/abc471-c.html">ABC471 C - Cookies and Greedy Takahashi</a></li>
-        <li><a href="../explanations/abc471-f.html">ABC471 F - Concat (maximize)</a></li>
-        <li><a href="../explanations/abc473-e.html">ABC473 E - K-Divisible Subarrays</a></li>
-        <li><a href="../explanations/abc474-e.html">ABC474 E - One Time Coupon</a></li>
-        <li><a href="../explanations/arc223-a.html">ARC223 A - Unusual-Constraint Knapsack</a></li>
-        <li><a href="../explanations/arc224-b.html">ARC224 B - Adjacent Tiles</a></li>
-        <li><a href="../explanations/arc224-c.html">ARC224 C - Ascending Labels</a></li>
-        <li><a href="../explanations/arc224-d.html">ARC224 D - Angst for All Pairs</a></li>
-        <li><a href="../explanations/arc224-e.html">ARC224 E - ABC|AB|A</a></li>
-        <li><a href="../explanations/arc226-b.html">ARC226 B - Bin-ary Packing</a></li>
-        <li><a href="../explanations/arc227-b.html">ARC227 B - Know Your Place</a></li>
-        <li><a href="../explanations/arc228-b.html">ARC228 B - Minimize Topological Order</a></li>
-        <li><a href="../explanations/arc229-a.html">ARC229 A - AtCoder Reverse Contest</a></li>
-        <li><a href="../explanations/arc229-c.html">ARC229 C - Sum of Average 2</a></li>
-        <li><a href="../explanations/arc229-f.html">ARC229 F - Angst for All Pairs 2</a></li>
-        <li><a href="../explanations/edpc-x.html">EDPC X - Tower</a></li>
-        <li><a href="../explanations/tdpc-g.html">TDPC G - 辞書順</a></li>
-        <li><a href="../explanations/tdpc-i.html">TDPC I - イウィ</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <span class="muted">なし</span>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

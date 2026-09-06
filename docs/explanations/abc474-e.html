@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC474 E - One Time Coupon</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC474 E - One Time Coupon</h1>
+      <p class="explanation-title-ja">使い捨て割引券</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc474/tasks/abc474_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc474/submissions/79043972" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>このクーポンは、要は、$2$ つ同時に買うと片方は $B$ 円に値引きしてもらえるということ。<br>
+つまり、買い方として、以下の $3$ つを考えればよい。<br>
+購入済品を $2$ つ買うのはただの無駄なので考えなくてよい。</p>
+<ul>
+<li>未購入品を $2$ つ選んで、片方を $A$ 円、片方を $B$ 円で買う
+</li>
+<li>未購入品を $1$ つ、購入済品を $1$ つ選んで、片方を $A$ 円、片方を $B$ 円で買う
+</li>
+<li>未購入品を $1$ つ選んで、$A$ 円で買う
+</li>
+</ul>
+<p>ここで、$2$ 番目の買い方について考える。<br>
+割引の権利を利用して購入済品を再度買うのは損しかしない。<br>
+ということは、これを行うなら、未購入品を $B$ 円で、購入済品を $A$ 円で買うことになる。<br>
+ならば、購入済品としては $A$ が最小であるもののみ考えればよい。</p>
+<p>つまり、これが役に立つのは、以下の $2$ つの条件を両方満たした場合である。</p>
+<p>まず $1$ つめの条件として、未購入品の割引額が $A_{min}$ より大きいこと。<br>
+そうでなければ、$3$ 番目の買い方で未購入品を単品で買えばよい。</p>
+<p>そして $2$ つめの条件として、未購入品 $2$ つ組の割引額がどちらも $2A_{min}$ より大きいこと。<br>
+そうでなければ、その未購入品 $2$ つをセットで買えばよい。</p>
+<p>なるべく割引額が大きいものを $B$ で買うべきということも考えると、以下の貪欲法が成立する。</p>
+<ul>
+<li>全ての商品の割引額を求め、昇順に並べておく
+</li>
+<li>以下のどちらかになるまで、割引額最小の商品と最大の商品をセットにして $1$ 番目の方法で購入する
+<ul>
+<li>残りの商品が $0$ 個または $1$ 個になる
+</li>
+<li>残りの商品の最小割引額が $2A_{min}$ より大きくなる
+</li>
+</ul>
+</li>
+<li>残りが $1$ 個だった場合、割引額が $A_{min}$ 以上なら $2$ 番目の方法で、そうでなければ $3$ 番目で買う
+</li>
+<li>残りが $2$ 個以上だった場合、割引額が大きいものばかりなので、全て $2$ 番目の方法で買う
+</li>
+</ul>
+<p>$2$ 番目の買い方をするときに $A_{min}$ であるものは必ず購入済になっている。<br>
+これは、割引額は $A$ より小さいことから成り立つ。</p>
+<p>あらかじめ全て $B$ 円は払っておき、$A$ 円で払うものだけ追加支払いすると実装しやすい。<br>
+計算量はソート部分が支配的で $O(N\log N)$ となる。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力例1には $3$ つのテストケースがある。</p>
+<p>まず、$1$ つ目のテストケースを考える。<br>
+$A_{min}=2$ であり、各商品の割引額 $A_i-B_i$ を昇順に並べると次のようになる。</p>
+<pre><code>1, 1, 3, 5, 5</code></pre>
+<p>あらかじめ全ての商品を $B$ 円で買うと考えると、最初に払う金額は</p>
+<p>$6+5+1+3+4=19$</p>
+<p>円である。</p>
+<p>$2A_{min}=4$ なので、残りの割引額の最小値が $4$ 以下である間、最小と最大を組にする。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>残っている割引額</th>
+<th>組にする割引額</th>
+<th class="table-align-right" style="text-align: right;">追加で払う金額</th>
+<th class="table-align-right" style="text-align: right;">合計</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>1, 1, 3, 5, 5</code></td>
+<td>$1,5$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$20$</td>
+</tr>
+<tr>
+<td><code>1, 3, 5</code></td>
+<td>$1,5$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$21$</td>
+</tr>
+</tbody>
+</table></div>
+<p>最後に割引額 $3$ の商品が $1$ つ残る。<br>
+$3&gt;A_{min}(=2)$ なので、$A_{min}$ の商品を $A$ 円で再購入してクーポンを得て、この商品を $B$ 円で買う。<br>
+追加で $2$ 円払うことになり、答えは $23$ 円となる。</p>
+<p>次に、$2$ つ目のテストケースを考える。<br>
+$A_{min}=5$、割引額を昇順に並べると次のようになる。</p>
+<pre><code>1, 2, 3, 4</code></pre>
+<p>全て $B$ 円で買う金額は $1+2+3+4=10$ 円である。<br>
+最小と最大を順に組にすると、$1$ 円、$2$ 円を追加で払うことになる。<br>
+したがって、答えは $10+1+2=13$ 円となる。</p>
+<p>最後に、$3$ つ目のテストケースを考える。<br>
+$A_{min}=10$、割引額を昇順に並べると次のようになる。</p>
+<pre><code>2, 9, 10, 11, 22, 38</code></pre>
+<p>全て $B$ 円で買う金額は</p>
+<p>$13+2+12+25+26+1=79$</p>
+<p>円である。</p>
+<p>$2A_{min}=20$ なので、最小と最大を順に組にする。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>残っている割引額</th>
+<th>組にする割引額</th>
+<th class="table-align-right" style="text-align: right;">追加で払う金額</th>
+<th class="table-align-right" style="text-align: right;">合計</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>2, 9, 10, 11, 22, 38</code></td>
+<td>$2,38$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$81$</td>
+</tr>
+<tr>
+<td><code>9, 10, 11, 22</code></td>
+<td>$9,22$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$90$</td>
+</tr>
+<tr>
+<td><code>10, 11</code></td>
+<td>$10,11$</td>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td class="table-align-right" style="text-align: right;">$100$</td>
+</tr>
+</tbody>
+</table></div>
+<p>全ての商品を購入でき、答えは $100$ 円となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>答えは <code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/greedy.html">貪欲法</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

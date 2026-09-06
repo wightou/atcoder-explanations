@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>貪欲法</title>
+<title>ABC474 A - Not X</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,54 +28,44 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>貪欲法</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC474 A - Not X</h1>
+      <p class="explanation-title-ja">Xではない</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc474/tasks/abc474_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc474/submissions/79043944" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>A問題では珍しい構築問題。</p>
+<p>入力は整数が $1$ つなので、<code>int</code> 型の変数を用意し、<code>cin</code> で入力を受け取る。</p>
+<p>これと違うものを $1$ つ出力すればよいので、単純に $1$ を足してみることにする。<br>
+テストすると、入力が $1$ のときと $2$ のときはクリアできる。</p>
+<p>ただし、入力が $3$ のときは、出力が $4$ になって条件違反。<br>
+そこで、出力予定の数が $4$ のときだけ、代わりに $1$ を出力する。</p>
+<p>他にもいろいろな解き方、いろいろな答えがある。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力は $1$ である。</p>
+<p>まず $1$ を足すと $2$ になる。<br>
+$2$ は $4$ ではないので、そのままでよい。</p>
+<p>したがって、答えは $2$ である。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>構築問題であり、「正しい答え」は複数ある。<br>
+それらのうちどれを出力しても正解となる。</p>
+<p>入力例と異なる出力になった場合でも焦る必要はなく、自分で条件に合う出力か確認すればよい。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> データ探索系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-c.html">ABC461 C - Variety</a></li>
-        <li><a href="../explanations/abc462-e.html">ABC462 E - Alternating Costs</a></li>
-        <li><a href="../explanations/abc463-d.html">ABC463 D - Maximize the Gap</a></li>
-        <li><a href="../explanations/abc467-e.html">ABC467 E - Adjacent Sums (hard)</a></li>
-        <li><a href="../explanations/abc467-f.html">ABC467 F - Email Scheduling Optimization</a></li>
-        <li><a href="../explanations/abc468-f.html">ABC468 F - Chmax</a></li>
-        <li><a href="../explanations/abc471-c.html">ABC471 C - Cookies and Greedy Takahashi</a></li>
-        <li><a href="../explanations/abc471-f.html">ABC471 F - Concat (maximize)</a></li>
-        <li><a href="../explanations/abc473-e.html">ABC473 E - K-Divisible Subarrays</a></li>
-        <li><a href="../explanations/abc474-e.html">ABC474 E - One Time Coupon</a></li>
-        <li><a href="../explanations/arc223-a.html">ARC223 A - Unusual-Constraint Knapsack</a></li>
-        <li><a href="../explanations/arc224-b.html">ARC224 B - Adjacent Tiles</a></li>
-        <li><a href="../explanations/arc224-c.html">ARC224 C - Ascending Labels</a></li>
-        <li><a href="../explanations/arc224-d.html">ARC224 D - Angst for All Pairs</a></li>
-        <li><a href="../explanations/arc224-e.html">ARC224 E - ABC|AB|A</a></li>
-        <li><a href="../explanations/arc226-b.html">ARC226 B - Bin-ary Packing</a></li>
-        <li><a href="../explanations/arc227-b.html">ARC227 B - Know Your Place</a></li>
-        <li><a href="../explanations/arc228-b.html">ARC228 B - Minimize Topological Order</a></li>
-        <li><a href="../explanations/arc229-a.html">ARC229 A - AtCoder Reverse Contest</a></li>
-        <li><a href="../explanations/arc229-c.html">ARC229 C - Sum of Average 2</a></li>
-        <li><a href="../explanations/arc229-f.html">ARC229 F - Angst for All Pairs 2</a></li>
-        <li><a href="../explanations/edpc-x.html">EDPC X - Tower</a></li>
-        <li><a href="../explanations/tdpc-g.html">TDPC G - 辞書順</a></li>
-        <li><a href="../explanations/tdpc-i.html">TDPC I - イウィ</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/input-output.html">入出力</a>
+<a class="tag" href="../tags/int.html">int型</a>
+<a class="tag" href="../tags/if-statement.html">if分岐</a>
+<a class="tag" href="../tags/arithmetic-operations.html">四則演算</a>
+<a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+      </div>
+      
     </section>
 
     <section class="side-card">

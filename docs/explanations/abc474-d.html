@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC474 D - Outweigh</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC474 D - Outweigh</h1>
+      <p class="explanation-title-ja">より重く</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc474/tasks/abc474_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc474/submissions/79043971" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>直感的に、以下のようにしたくなる。</p>
+<ul>
+<li>高橋君の方がたくさん持っているものはなるべく重い方がいいので $10^{18}$ にする
+</li>
+<li>青木君の方がたくさん持っているものはなるべく軽い方がいいので $1$ にする
+</li>
+<li>同じである場合は、何にしても影響がないので範囲内で適当に設定する
+<ul>
+<li>$10^{18}$ にすると話がややこしくなる（以下の説明が成立しなくなる）ので、$1$ にすると無難
+</li>
+</ul>
+</li>
+</ul>
+<p>そして、$10^{18}$ にした石が $1$ つでもあればこれを出力、なければ不可能判定、で正解である。<br>
+計算量は $O(N)$ である。</p>
+<p>以下、これで正しいことの証明。</p>
+<p>まず、$10^{18}$ にした石が $1$ つもない場合。<br>
+この場合、全ての種類の石を青木君が高橋君以上に持っている。<br>
+したがって、高橋君が青木君を上回ることは絶対にないことは明らか。</p>
+<p>次に、$10^{18}$ にした石が $1$ つでもあった場合。<br>
+$10^{18}$ にした石の分だけを見ると、高橋君の方がこれを $1$ つ以上多く持っている。<br>
+よって、それにより生じる差は、少なくとも $10^{18}$ ある。<br>
+$1$ にした石の分だけ見ると、その種類数は $10^5$ より小さく、各種の個数差は $10^9$ より小さい。<br>
+よって、それにより生じる差は、多くとも $10^{14}$ となる。<br>
+したがって、必ず高橋君の方が重くなっている。</p>
+<p>以上、証明終わり。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力は次の通り。</p>
+<pre><code>A: {4, 7, 4}
+B: {5, 5, 5}</code></pre>
+<p>各種類について、高橋君の方が多く持っているかを確認する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>種類</th>
+<th class="table-align-right" style="text-align: right;">$A_i$</th>
+<th class="table-align-right" style="text-align: right;">$B_i$</th>
+<th class="table-align-right" style="text-align: right;">決める重さ</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td>$2$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$10^{18}$</td>
+</tr>
+<tr>
+<td>$3$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+</tbody>
+</table></div>
+<p>$2$ 種類目では高橋君の方が多く持っているので、$10^{18}$ にした石が $1$ つ以上ある。<br>
+したがって、条件を満たす構築が以下のように可能である。</p>
+<pre><code>W: {1, 1000000000000000000, 1}</code></pre>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>この方法で作ったものが本当に条件を満たすか確認すると、<code>long long</code> 型でもオーバーフロー。<br>
+手作業で証明して、コードには構築方法だけを書くこと。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
