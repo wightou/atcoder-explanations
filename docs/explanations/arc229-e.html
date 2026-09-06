@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC229 E - Taka and Hashi</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ARC229 E - Taka and Hashi</h1>
+      <p class="explanation-title-ja">タカ アンド ハシ</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc229/tasks/arc229_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc229/submissions/78987233" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>まずは、計算量を気にせず考える。</p>
+<p>各ラベルごとにUnionFind木を作成する。<br>
+まず、ラベル $1$ で頂点 $1$ と繋がっている範囲は、全て答えである。<br>
+ではラベル $1$ で繋がっていないところに行く方法は、と考えてみる。</p>
+<p>これは、頂点 $P$ と頂点 $Q$ が、ラベル $2$ でもラベル $3$ でも同じ連結成分にいることである。<br>
+この場合、この $2$ 頂点の間で高橋くんが移動できるので、ラベル $1$ の辺を追加で引いてしまってよい。<br>
+これを全頂点間で調査後、各頂点ごとにラベル $1$ で頂点 $1$ と同一連結成分にあるか確認をすればよい。</p>
+<p>さて、これの計算量を考えてみると、$2$ 頂点間で確認する部分が $O(N^2\alpha(N))$ である。<br>
+アッカーマン関数の逆関数 $\alpha(N)$ はほぼ定数とみても $O(N^2)$ で間に合わない。<br>
+よって、ここを高速化する必要がある。</p>
+<p>これは、調べているのがUnionFind木であることを活かして高速化できる。<br>
+$3$ つの頂点 $P,Q,R$ が全てラベル $2$ でもラベル $3$ でも同じ連結成分にいるとしよう。<br>
+この場合、$P-Q$ 間を連結し、$P-R$ 間を連結すると、その後 $Q-R$ 間を連結する必要はない。<br>
+つまり、条件を満たす相手が自分より小さい番号範囲に複数いるなら、そのうち $1$ つだけみつければよい。</p>
+<p>となれば、前から頂点を $1$ つずつ見て、各ラベルでの連結成分のリーダーを調べる。<br>
+一度見たリーダー組が再び出てきたときには、それが初めて出てきたときの頂点と連結してやればよい。<br>
+これは <code>map</code> などを用いれば $O(N\log N)$ で実行できる。<br>
+これで全体の計算量は $O(M\alpha(N)+N\log N)$ になって、間に合う。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>$1$ 番目のテストケースを考える。</p>
+<p>ラベル $1$ の辺は $1-2,4-5$ である。<br>
+よって、まずラベル $1$ のUnionFind木では $\{1,2\},\{3\},\{4,5\}$ がそれぞれ連結成分になる。</p>
+<p>ラベル $2$ の辺は $2-3,3-4$ なので、連結成分は $\{1\},\{2,3,4\},\{5\}$ である。<br>
+ラベル $3$ の辺は $2-4$ なので、連結成分は $\{1\},\{2,4\},\{3\},\{5\}$ である。</p>
+<p>各頂点について、ラベル $2$ とラベル $3$ で属する連結成分の組を調べる。</p>
+<p>ここでは、仮に各 UnionFind 木で連結成分内の番号が最小の頂点がリーダーになるとする。<br>
+すると、各頂点のリーダー組は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>頂点</th>
+<th>ラベル $2$ のリーダー</th>
+<th>ラベル $3$ のリーダー</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">$1$</th>
+<td>$1$</td>
+<td>$1$</td>
+</tr>
+<tr>
+<th scope="row">$2$</th>
+<td>$2$</td>
+<td>$2$</td>
+</tr>
+<tr>
+<th scope="row">$3$</th>
+<td>$2$</td>
+<td>$3$</td>
+</tr>
+<tr>
+<th scope="row">$4$</th>
+<td>$2$</td>
+<td>$2$</td>
+</tr>
+<tr>
+<th scope="row">$5$</th>
+<td>$5$</td>
+<td>$5$</td>
+</tr>
+</tbody>
+</table></div>
+<p>このリーダー組をキーとして、最初にその組が出てきた頂点番号を <code>map</code> に保存しながら前から見ていく。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>頂点</th>
+<th>リーダー組</th>
+<th><code>map</code> での処理</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">$1$</th>
+<td>$(1,1)$</td>
+<td>未登録なので <code>map[(1,1)] = 1</code></td>
+</tr>
+<tr>
+<th scope="row">$2$</th>
+<td>$(2,2)$</td>
+<td>未登録なので <code>map[(2,2)] = 2</code></td>
+</tr>
+<tr>
+<th scope="row">$3$</th>
+<td>$(2,3)$</td>
+<td>未登録なので <code>map[(2,3)] = 3</code></td>
+</tr>
+<tr>
+<th scope="row">$4$</th>
+<td>$(2,2)$</td>
+<td>すでに頂点 $2$ が登録されているので、ラベル $1$ のUnionFind木で $2$ と $4$ を連結</td>
+</tr>
+<tr>
+<th scope="row">$5$</th>
+<td>$(5,5)$</td>
+<td>未登録なので <code>map[(5,5)] = 5</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>このように、頂点 $2$ と頂点 $4$ だけが同じリーダー組になる。<br>
+したがって、ラベル $1$ のUnionFind木で頂点 $2$ と頂点 $4$ を連結する。</p>
+<p>これにより、ラベル $1$ のUnionFind木では $\{1,2,4,5\}$ が同じ連結成分になる。<br>
+頂点 $1$ と同じ連結成分にある頂点は $1,2,4,5$ なので、これらが答えである。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/union-find.html">UnionFind木</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

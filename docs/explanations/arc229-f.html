@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC229 F - Angst for All Pairs 2</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ARC229 F - Angst for All Pairs 2</h1>
+      <p class="explanation-title-ja">全ペアへの苦悩2</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc229/tasks/arc229_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc229/submissions/78987621" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>まず、$1$ と $2$ を選んだら条件違反になるケースを考える。</p>
+<p>すぐに思いつくのは、$1$ も $2$ もどこにもないケース。<br>
+これは明らかに違反している。</p>
+<p>さらに、$1$ があるのに違反しているケースもある。<br>
+この場合、$1$ があるカードを選んでも違反なのだから、$2$ もそのカードにあるはず。<br>
+すると $2$ が書いてあるカードが存在することになり、逆のこともいえる。<br>
+つまり、$1$ または $2$ が書いてあるカードが全て $1$ と $2$ の組であると条件違反である。<br>
+とはいえ、全く同一のカードを $2$ つ用意する意味はない。<br>
+したがって、実質的に、唯一の $1$ と唯一の $2$ が同じカードに書かれている場合ということになる。<br>
+これが、$1$ と書かれたカードがあるのに条件違反になる唯一のケース。</p>
+<p>そして、この $2$ つ以外はどんな場合でも $1$ と $2$ を選んだら条件違反になるケースはない。<br>
+ということは、条件は以下のように言い換えることができる。</p>
+<ul>
+<li>$1$ つも書かれていない数は、高々 $1$ つまで
+</li>
+<li>$1$ つしか書かれていない数同士がペアになってはいけない
+</li>
+</ul>
+<p>この言い換えをしたうえで、最小コストを考えよう。</p>
+<p>ソートをすることで、数が小さい方がコストが少ない（あるいは等しい）と思ってよい。<br>
+その前提で、いくつかの貪欲法が成立する。</p>
+<p>まず、$2$ 以上の数を $3$ 回以上使う意味はない。<br>
+そのうち $1$ つを $1$ に変えれば、条件を壊さずに結果を同等以上にできる。</p>
+<p>さらに、コスト最大の数を $1$ 回以上使う意味もない。<br>
+他に未使用の数があればその数に、なければ $1$ に変えれば、条件を壊さずに結果を同等以上にできる。</p>
+<p>そして、$2$ を $1$ 回しか使わないのに $3$ を $2$ 回使うようなものも考えなくてよい。<br>
+この場合、$2$ と $3$ をまるごと入れ替えれば、条件を壊さずに結果を同等以上にできる。</p>
+<p>ということで、$2$ 以上の使用回数を数列にすると、途中まで $2$、途中から $1$、最後だけ $0$ という列になる。<br>
+この貪欲条件を採用すると、あり得るパターンは限られる。</p>
+<p>例えば数が $11$ までだとしよう。<br>
+使用回数が $\{?,1,1,1,1,1,1,1,1,1,0\}$ なら、唯一同士を組にできないので以下のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th>カード1</th>
+<th>カード2</th>
+<th>カード3</th>
+<th>カード4</th>
+<th>カード5</th>
+<th>カード6</th>
+<th>カード7</th>
+<th>カード8</th>
+<th>カード9</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">表</th>
+<td>$1$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$1$</td>
+</tr>
+<tr>
+<th scope="row">裏</th>
+<td>$2$</td>
+<td>$3$</td>
+<td>$4$</td>
+<td>$5$</td>
+<td>$6$</td>
+<td>$7$</td>
+<td>$8$</td>
+<td>$9$</td>
+<td>$10$</td>
+</tr>
+</tbody>
+</table></div>
+<p>使用回数が $\{?,2,1,1,1,1,1,1,1,1,0\}$ なら、以下のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th>カード1</th>
+<th>カード2</th>
+<th>カード3</th>
+<th>カード4</th>
+<th>カード5</th>
+<th>カード6</th>
+<th>カード7</th>
+<th>カード8</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">表</th>
+<td>$1$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$2$</td>
+<td>$2$</td>
+</tr>
+<tr>
+<th scope="row">裏</th>
+<td>$3$</td>
+<td>$4$</td>
+<td>$5$</td>
+<td>$6$</td>
+<td>$7$</td>
+<td>$8$</td>
+<td>$9$</td>
+<td>$10$</td>
+</tr>
+</tbody>
+</table></div>
+<p>使用回数が $\{?,2,2,1,1,1,1,1,1,1,0\}$ なら、以下のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th>カード1</th>
+<th>カード2</th>
+<th>カード3</th>
+<th>カード4</th>
+<th>カード5</th>
+<th>カード6</th>
+<th>カード7</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">表</th>
+<td>$1$</td>
+<td>$1$</td>
+<td>$1$</td>
+<td>$2$</td>
+<td>$2$</td>
+<td>$3$</td>
+<td>$3$</td>
+</tr>
+<tr>
+<th scope="row">裏</th>
+<td>$4$</td>
+<td>$5$</td>
+<td>$6$</td>
+<td>$7$</td>
+<td>$8$</td>
+<td>$9$</td>
+<td>$10$</td>
+</tr>
+</tbody>
+</table></div>
+<p>つまり、$2$ 以上の安い方から順に、$1$ を $3$ つ消してその数を $1$ 増やすことができると考えられる。<br>
+これは $1$ の残り個数が $2$ 個以上残る範囲で実行できる。</p>
+<p>よって、この調査で最小値を探せばよい。<br>
+凸関数であるため、$2$ 回使用の個数が少ない順に調査し、最小値記録更新失敗した時点で打ち切ってよい。</p>
+<p>これで解答……と思いきや、コーナーケースが存在する。<br>
+$N=2$ の場合には、この方法ではカードが $0$ 枚ということになってしまう。<br>
+よって、$1-1$ のペアを $1$ 枚特別に用意する必要がある。<br>
+$N=3$ の場合には、この方法だと $1-2$ ペア $1$ 枚だけになって条件違反。<br>
+よって、$1-1$ のペアを $1$ 枚特別に用意する必要がある。<br>
+これらの対応をすれば完了。</p>
+<p>計算量はソート部分が支配的で $O(N\log N)$ である。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力例1の $1$ 番目と $3$ 番目のテストケースを考える。</p>
+<p>まず、$1$ 番目は $N=3$, $C=\{3,2,5\}$ である。<br>
+コストを昇順にソートすると $\{2,3,5\}$ となる。</p>
+<p>通常の形では、最大コストの数を使わず、中央のコスト $3$ を $1$ 回、最小コスト $2$ を $N-2=1$ 回使う。<br>
+この時点のコストは $3+2=5$ である。</p>
+<p>しかし、$N=3$ ではこれだけだと、使用回数が $1$ 回の数同士だけを組にしたカード $1$ 枚になってしまう。<br>
+そこで最小コストの数を両面に書いたカードを $1$ 枚追加する。<br>
+追加コストは $2\times2=4$ なので、答えは $5+4=9$ となる。</p>
+<p>次に、$3$ 番目は $N=7$, $C=\{12,42,21,10,29,33,18\}$ である。<br>
+コストを昇順にソートすると $\{10,12,18,21,29,33,42\}$ となる。</p>
+<p>まず、最大コスト $42$ の数を $0$ 回、最小コスト $10$ の数を $N-2=5$ 回、残りを $1$ 回ずつ使う。<br>
+コストは $12+18+21+29+33+10\times5=163$ である。</p>
+<p>ここから、最小コスト $10$ の数 $3$ 回の代わりに、次に安いコスト $12$ の数をもう $1$ 回使うことを考える。<br>
+コストは $10\times3=30$ から $12$ になるため、$18$ 改善する。</p>
+<p>したがって、答えは $163-18=145$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>答えは <code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/greedy.html">貪欲法</a>
+<a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

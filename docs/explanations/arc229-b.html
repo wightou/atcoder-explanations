@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC229 B - Halving Subtraction</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ARC229 B - Halving Subtraction</h1>
+      <p class="explanation-title-ja">半減引き算</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc229/tasks/arc229_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc229/submissions/78987568" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>数列の各値は、操作で減ることはあっても増えることは絶対にない。<br>
+ということは、一度でも負の数ができてしまった時点で、それは不可能ということになる。</p>
+<p>さて、この操作だが、$x$ が半分（切り捨て）になるというのは、右にビットシフトと言い換えられる。<br>
+ということは、ある $x_0$ を選んでの操作は、ビットごとに分割して考えても（回数以外）同じ結果になる。<br>
+例えば、$x_0=11$ での操作は、$x_0=8$ と $x_0=2$ と $x_0=1$ の $3$ つに分割して行ったと思ってもよい。<br>
+さらに、異なる $x_0$ での $2$ つの操作の順番を入れ替えるのも、明らかに結果に影響しない。</p>
+<p>ということは、$x_0$ の値を $2$ の累乗に限っても、操作の本質は失わない。<br>
+つまり、以下のような $2$ つの操作だけで考えても、回数以外は本質的差異がない。</p>
+<ul>
+<li>数列の好きなところを $1$ 減らし、その前を $2$ 減らし、その前を $4$ 減らし、以下先頭まで繰り返す
+</li>
+<li>末尾を $2$ の累乗数だけ減らし、その前を $2$ 倍減らし、その前を $4$ 倍減らし、以下先頭まで繰り返す
+</li>
+</ul>
+<p>さて、末尾を $0$ にするには後者を活用するしかない。<br>
+そして、同じ $2^i$ を $2$ 回選ぶのは $2^{i+1}$ を $1$ 回やるのと結果が変わらず、考える意味がない。<br>
+よって、まず最初に末尾を単純にビットで分解し、それぞれを削除して末尾 $0$ 状態にする。</p>
+<p>すると、末尾の $1$ つ手前は、残りを前者で消すしかない。<br>
+つまり、残っている数と同じ回数だけ前者を行う。<br>
+続いて、さらにもう $1$ つ前も同様。<br>
+以下これを繰り返して先頭まで続く。<br>
+この途中で負の数が登場したら、不可能と判定する。</p>
+<p>さて、ある $x_0$ を選んでの操作は、ビットごとに分割しても（回数以外）同じ結果になる事実を思い出す。<br>
+これは、$2$ 種類の操作は、内容が違うものを好きなだけ同時に $1$ 回に圧縮して実行できるということ。<br>
+つまり、同じ操作をやらなければいけない最大個数が答えである。<br>
+愚直にやれば $1$ ケース当たり $O(N^2)$ となる。</p>
+<p>どんな操作でも基本的に後ろの $2$ 倍減ることを利用すると、高速化もできる。<br>
+$A_i-2A_{i+1}$ の値が $k$ であれば、ここをスタートとする前者の操作は $k$ 回必要ということ。<br>
+よって、以下のうちの最大値を求めればよい。</p>
+<ul>
+<li>各 $i$ についての $A_i-2A_{i+1}$ の値（$1$ 回でも負の数が出たら不可能）
+</li>
+<li>末尾が $0$ なら $0$、そうでなければ $1$
+</li>
+</ul>
+<p>これで $1$ ケース当たり $O(N)$ となる……が、$N$ は高々 $30$ なので高速化の価値はあまりない。<br>
+書きやすいと感じるならこちらで、くらい。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力例1のうち、まず $4$ 番目のテストケースを考える。</p>
+<pre><code>N: 5
+A: {16, 7, 2, 1, 0}</code></pre>
+<p>末尾は $0$ なので、末尾に由来する必要操作回数は $0$ 回として始める。</p>
+<p>各 $i$ について $A_i-2A_{i+1}$ を順に求める。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$i$</th>
+<th class="table-align-right" style="text-align: right;">$A_i$</th>
+<th class="table-align-right" style="text-align: right;">$A_{i+1}$</th>
+<th class="table-align-right" style="text-align: right;">$A_i-2A_{i+1}$</th>
+<th class="table-align-right" style="text-align: right;">ここまでの最大値</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$16$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+</tbody>
+</table></div>
+<p>すべて非負なので、全要素を $0$ にすることは可能である。<br>
+また、必要操作回数の最大値は $3$ なので、答えは $3$ となる。</p>
+<p>次に、$2$ 番目のテストケースを考える。</p>
+<pre><code>N: 2
+A: {0, 1}</code></pre>
+<p>末尾が $0$ ではないので、まず必要操作回数を少なくとも $1$ 回とする。</p>
+<p>唯一の差を調べると、$A_1-2A_2=0-2\times1=-2$ となる。<br>
+これは負なので、末尾側を必要なだけ減らそうとすると、その前の要素が負になってしまう。</p>
+<p>したがって、このテストケースでは全要素を $0$ にすることは不可能であり、答えは $-1$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/bit-operation.html">ビット演算</a>
+<a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
