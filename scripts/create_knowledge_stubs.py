@@ -221,6 +221,7 @@ STUBS: list[KnowledgeStub] = [
     k("mo-algorithm", "Moアルゴリズム", "F問題相当", "高速化系"),
     k("meet-in-the-middle", "半分全列挙", "F問題相当", "データ探索系", aliases=["meet-in-the-middle"]),
     k("inversion-number", "転倒数", "F問題相当", "典型問題集", related=["Fenwick木", "座標圧縮", "分割統治法"]),
+    k("mobius-function", "メビウス関数", "F問題相当", "その他数学系", absorbs=["メルテンス関数"]),
     k("sqrt-decomposition", "平方分割", "F問題相当", "高速化系", aliases=["sqrt decomposition"]),
 
     # G問題以上相当
