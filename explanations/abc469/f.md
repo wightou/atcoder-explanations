@@ -6,7 +6,6 @@ problem_title_ja: "GCD最大全域木"
 problem_url: https://atcoder.jp/contests/abc469/tasks/abc469_f
 submission_url: https://atcoder.jp/contests/abc469/submissions/78057140
 tags:
-  - 最大公約数
   - 約数と倍数
   - UnionFind木
   - 最小全域木
