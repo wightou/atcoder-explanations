@@ -7,7 +7,6 @@ problem_url: https://atcoder.jp/contests/arc227/tasks/arc227_d
 submission_url: https://atcoder.jp/contests/arc227/submissions/78530827
 tags:
   - 考察問題
-  - コーナーケース
 tag_note: 簡単なレベルの内容は省略。
 ---
 

@@ -8,6 +8,7 @@ submission_url: https://atcoder.jp/contests/arc226/submissions/78264496
 tags:
   - 考察問題
   - 構築問題
+  - パリティ
 tag_note: 簡単なレベルの内容は省略。
 ---
 
