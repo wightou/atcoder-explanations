@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>プロジェクト選択問題</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -19,9 +29,300 @@
 <main class="page-layout">
   <article class="markdown-body">
     <h1>プロジェクト選択問題</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-793d267b14">典型問題例</a></li><li><a href="#section-369acefbdf">コード例</a><ul><li><a href="#section-g">異なる選択へのペナルティしかない問題を解く（G問題以上レベル）</a></li><li><a href="#section-2-g">$2$ つの選択の間にもっと自由な条件がある場合の問題を解く（G問題以上レベル）</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+<p>選択肢 $A$ と $B$ がある $2$ 択が大量にある。<br>
+それぞれの $2$ 択で、$A$ を選ぶか $B$ を選ぶかで得点が設定されている。<br>
+さらに、$2$ つの $2$ 択の間で、組み合わせによる得点も設定されている。<br>
+その中で得点の最大値を求める問題。</p>
+<p>ただし、どんな制約でも解けるわけではなく、任意の $2$ つの選択の組で以下が成り立つ必要がある。</p>
+<ul>
+<li>両選択で同じ選択肢を選んだ場合の得点の和が、異なる選択肢を選んだ場合の和以上である
+</li>
+</ul>
+<p>「燃やす埋める問題」と呼ばれることもある。</p>
+<p>$2$ つの $2$ 択の間の得点を、「何もなし」「禁止（$-\infty$ 点）」だけにすると、最大閉包問題になる。<br>
+（この場合も、上述の制約を満たしている必要がある）<br>
+詳しくは「<a href="maximum-closure-problem.html">最大閉包問題</a>」の記事参照。<br>
+本記事は、最大閉包問題は理解できているという前提で記述する。</p>
+<h2 id="section-793d267b14">典型問題例</h2>
+<ul>
+<li><a href="https://atcoder.jp/contests/abc225/tasks/abc225_g" target="_blank" rel="noopener noreferrer">ABC225 G - X</a>
+<ul>
+<li>各マスの $2$ 択と、斜めに隣接するマス間のコストを最小カットで扱う問題。
+</li>
+</ul>
+</li>
+<li><a href="https://atcoder.jp/contests/abc193/tasks/abc193_f" target="_blank" rel="noopener noreferrer">ABC193 F - Zebraness</a>
+<ul>
+<li>二部グラフとして片側の白黒を反転し、隣接マスの得点を最小カットで扱う問題。
+</li>
+</ul>
+</li>
+<li><a href="https://atcoder.jp/contests/abc259/tasks/abc259_g" target="_blank" rel="noopener noreferrer">ABC259 G - Grid Card Game</a>
+<ul>
+<li>各行・各列の $2$ 択と、各マスの得点・禁止条件を最小カットで扱う問題。
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-369acefbdf">コード例</h2>
+<h3 id="section-g">異なる選択へのペナルティしかない問題を解く（G問題以上レベル）</h3>
+<p>基本的な発想は、最大閉包問題と同じである。<br>
+まず各選択肢単独での損得を、制約を無視して最大である方を選んだ場合の得点を求める。<br>
+しかし、これは不正に得た得点が含まれている。<br>
+そのため、フローネットワークでそれを表現し、不正解消のために受け入れる最小損失を考える。<br>
+この流れは変わらない。</p>
+<p>最大閉包問題との違いは以下の点。</p>
+<p>まず、選択肢の組み合わせによる得点設定の扱い。<br>
+最大閉包問題では、異なる選択をすることに対しての「何もなし」「禁止（$-\infty$ 点）」だけであった。<br>
+ここが、「$5$ 点のペナルティを受け入れるなら異なる選択をしてもよい」などになる。<br>
+それどころか、概要で述べた制限内で「異なる選択を選ぶなら $3$ 点ボーナス」などである場合もある。<br>
+そもそも、異なる場合のみではなく、「両方 $A$ だと $2$ 点ペナルティ」などもありえる。</p>
+<p>とはいえ、これをいきなりすべて扱うと難しい。<br>
+そこで、まず「異なる選択をするとペナルティ」という形のみの場合を考える。</p>
+<p>例えば、このような問題を考える。</p>
+<pre><code>左手を挙げると4点もらえるが、挙げないと1点失う。
+右手を挙げると1点失うが、挙げないと1点もらえる。
+そして、どちらか片手だけを挙げると、3点失う。
+もらえる得点の最大値は？</code></pre>
+<p>この問題だけ解きたいなら $4$ パターンの得点を素直に計算すればよい。<br>
+しかし、ここではプロジェクト選択問題として考えてみよう。</p>
+<p>まず、選択間の条件を全部無視して各選択のいい方を取った得点を出し、その後以下を行う。</p>
+<ul>
+<li>$2$ 択の数 $+2$ 個の頂点を用意する。
+<ul>
+<li>追加の $2$ 個は、フローの始点と終点の分
+</li>
+</ul>
+</li>
+<li>$A$ を選ばないと損する選択について、始点から対応頂点に向かって、損失分を容量とする辺を引く
+<ul>
+<li>$A$ を選ぶことで儲けになっている分、と考えてもよい
+</li>
+</ul>
+</li>
+<li>$B$ を選ばないと損する選択について、対応頂点から終点に向かって、損失分を容量とする辺を引く
+<ul>
+<li>$B$ を選ぶことで儲けになっている分、と考えてもよい
+</li>
+</ul>
+</li>
+<li>選択 $P$ で $A$ 、選択 $Q$ で $B$ を選ぶとペナルティならば、$P\to Q$ にペナルティを容量とする辺を引く
+<ul>
+<li>最大閉包問題では、ここが「引かない」か「容量 $\infty$ の辺を引く」しかなかった
+</li>
+</ul>
+</li>
+</ul>
+<p>上の手を挙げる問題であれば、以下のようになる。<br>
+まず、左手は挙げると $4$ 点、右手は挙げないと $1$ 点で、足して $5$ 点としておく。<br>
+そして、フローネットワークで以下の辺を作る。<br>
+左手の選択を頂点 $1$、右手の選択を頂点 $2$ としている。</p>
+<ul>
+<li>$S\to 1$ に容量 $5$ の辺
+<ul>
+<li>左手は「挙げる」を選択することで、「挙げない」より $5$ 点得している
+</li>
+</ul>
+</li>
+<li>$2\to T$ に容量 $2$ の辺
+<ul>
+<li>右手は「挙げない」を選択することで、「挙げる」より $2$ 点得している
+</li>
+</ul>
+</li>
+<li>$1\to 2$ に容量 $3$ の辺
+<ul>
+<li>左手は「挙げる」、右手は「挙げない」を選択すると $3$ 点ペナルティ
+</li>
+</ul>
+</li>
+<li>$2\to 1$ に容量 $3$ の辺
+<ul>
+<li>右手は「挙げる」、左手は「挙げない」を選択すると $3$ 点ペナルティ
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="project_selection_problem1.png" alt="実際に作ったフローネットワーク"></p>
+<p>このフローネットワークにおいて、$S\to 1\to 2\to T$ の経路が成立している。<br>
+これは、以下のいずれかを受け入れなくてはいけないことを意味している。</p>
+<ul>
+<li>左手を「挙げない」にして、$5$ の利得を諦める
+</li>
+<li>左手を「挙げる」、右手を「挙げない」にして、$3$ のペナルティを受け入れる
+</li>
+<li>右手を「挙げる」にして、$2$ の利得を諦める
+</li>
+</ul>
+<p>今回であれば、この経路の最大流量は $2$ であり、つまり $2$ の利得を諦めるのが損失最小。<br>
+よって、得られる最大得点は、事前に求めた $5$ から損失最小値 $2$ を引いて、$3$ 点となる。</p>
+<p>もっと複雑な制約になれば、あちこちで発生する損得が独立でない場合もある。<br>
+その場合でも、全体を表すフローネットワークを作り、最小カットを求めればそれが最小損失である。</p>
+<p>このとき、各選択肢でどちらを選ぶべきかは、最大閉包問題と同じく、以下で判断できる。</p>
+<ul>
+<li>削除後のグラフで $S$ からそこへたどり着ける頂点が、$A$ を選択する頂点
+</li>
+<li>同じく、たどり着けない頂点が、$B$ を選択する頂点
+</li>
+</ul>
+<p>AtCoder library を使える場合は、<code>mf_graph</code> で解ける。<br>
+仮に $A$ と $B$ の $2$ 択が $n$ 個あった場合、以下のようなコードになる。</p>
+<pre><code>// フローネットワークを用意、始点と終点分で2頂点追加しておく
+mf_graph&lt;long long&gt; g(n+2);
+
+// 各選択での損得
+for (int i=0; i&lt;n; i++) {
+  long long score_a = ; // Aを選ぶと得られる得点を入れる
+  long long score_b = ; // Bを選ぶと得られる得点を入れる
+  if (score_a&gt;score_b) {
+    result += score_a;
+    g.add_edge(n,i,score_a-score_b);
+  } else if (score_a&lt;score_b) {
+    result += score_b;
+    g.add_edge(i,n+1,score_b-score_a);
+  } else {
+    result += score_a;
+  }
+}
+
+// uでAを、vでBを選ぶペナルティの反映
+for (int j=0; j&lt;m; j++) {
+  g.add_edge(u[j],v[j],penalty[j]);
+}
+
+// フローを流して、最小カット分、すなわち受け入れる最小損失を結果から引く
+result -= g.flow(n,n+1);
+
+// 必要なら、残りで始点から到達できる頂点を調べる（末尾2つは始点用と終点用のダミーが入る）
+vector&lt;bool&gt; reachable = g.min_cut(n);</code></pre>
+<p>二部グラフの場合には、片方を反転させることで制約を満たすようにできる可能性がある。<br>
+「<a href="maximum-closure-problem.html">最大閉包問題</a>」の記事参照。</p>
+<h3 id="section-2-g">$2$ つの選択の間にもっと自由な条件がある場合の問題を解く（G問題以上レベル）</h3>
+<p>複数の選択の間の制約がもっと自由である場合を考える。<br>
+例えば、以下のような条件がある場合を考える。<br>
+表の値は、正の数ならボーナス、負の数ならペナルティ、$-\infty$ なら禁止である。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th class="table-align-right" style="text-align: right;">選択 $2$ は $A$</th>
+<th class="table-align-right" style="text-align: right;">選択 $2$ は $B$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">選択 $1$ は $A$</th>
+<td class="table-align-right" style="text-align: right;">$x$</td>
+<td class="table-align-right" style="text-align: right;">$y$</td>
+</tr>
+<tr>
+<th scope="row">選択 $1$ は $B$</th>
+<td class="table-align-right" style="text-align: right;">$z$</td>
+<td class="table-align-right" style="text-align: right;">$w$</td>
+</tr>
+</tbody>
+</table></div>
+<p>ただし、冒頭に述べた制約通り、$x+w \geq y+z$ が満たされているものとする。</p>
+<p>まず、$x$ が $-\infty$ である場合を特別処理する。<br>
+これは、$x+w \geq y+z$ という制約の扱いが難しくなる問題と、オーバーフロー回避のため。<br>
+この場合、$y$ か $z$ の少なくとも一方も $-\infty$ である。<br>
+よって、「$1$ では $A$ を選べない」または「$2$ では $A$ を選べない」の該当する方として処理する。<br>
+例えば前者なら、$1\to T$ に $\infty$ の辺を引き、$z$ と $w$ は $2$ の単独での利得に足してしまう。</p>
+<p>同じように、$w$ が $-\infty$ である場合も特別処理をする。<br>
+方法は同様。<br>
+もしくは、$y$ や $z$ に使う $-\infty$ より絶対値が小さいものを用いて制約を無理矢理満たさせる。</p>
+<p>いずれでもない場合、以下のように言い換えをすることで、フローネットワークに反映することができる。</p>
+<p>まず、固定で $x$ 点もらってしまい、全てのパターンの得点から $x$ を引く。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th class="table-align-right" style="text-align: right;">選択 $2$ は $A$</th>
+<th class="table-align-right" style="text-align: right;">選択 $2$ は $B$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">選択 $1$ は $A$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$y-x$</td>
+</tr>
+<tr>
+<th scope="row">選択 $1$ は $B$</th>
+<td class="table-align-right" style="text-align: right;">$z-x$</td>
+<td class="table-align-right" style="text-align: right;">$w-x$</td>
+</tr>
+</tbody>
+</table></div>
+<p>（これに加え、固定で $x$ 点）</p>
+<p>そして、選択 $1$ で $B$ を選んだ場合、選択 $2$ にかかわらず $z-x$ 点もらうことにする。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th class="table-align-right" style="text-align: right;">選択 $2$ は $A$</th>
+<th class="table-align-right" style="text-align: right;">選択 $2$ は $B$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">選択 $1$ は $A$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$y-x$</td>
+</tr>
+<tr>
+<th scope="row">選択 $1$ は $B$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$w-z$</td>
+</tr>
+</tbody>
+</table></div>
+<p>（これに加え、固定で $x$ 点、選択肢 $1$ が $B$ なら $z-x$ 点）</p>
+<p>そして、選択 $2$ で $B$ を選んだ場合、選択 $1$ にかかわらず $w-z$ 点もらうことにする。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th></th>
+<th class="table-align-right" style="text-align: right;">選択 $2$ は $A$</th>
+<th class="table-align-right" style="text-align: right;">選択 $2$ は $B$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">選択 $1$ は $A$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$(y+z)-(x+w)$</td>
+</tr>
+<tr>
+<th scope="row">選択 $1$ は $B$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+</tbody>
+</table></div>
+<p>（これに加え、固定で $x$ 点、選択肢 $1$ が $B$ なら $z-x$ 点、選択肢 $2$ が $B$ なら $w-z$ 点）</p>
+<p>こうなると、$x+w \geq y+z$ という制約から、右上は $0$ 以下なので通常の条件として処理できる。<br>
+つまり、以下のように $4$ つの処理をすればよい。</p>
+<ul>
+<li>固定で $x$ を足す（ペナルティ値を出した場合は引く）
+</li>
+<li>選択肢 $1$ で $B$ を選んだ場合の利得に $z-x$ 点を足す（ペナルティ値を出した場合は引く）
+</li>
+<li>選択肢 $2$ で $B$ を選んだ場合の利得に $w-z$ 点を足す（ペナルティ値を出した場合は引く）
+</li>
+<li>頂点 $1$ から頂点 $2$ に容量 $(x+w)-(y+z)$ の辺を引く
+</li>
+</ul>
+<p>この先は、通常のプロジェクト選択問題と同様である。<br>
+二部グラフの場合には、片方を反転させることで制約を満たすようにできる可能性があるのも同様。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p><code>INF</code> の扱いに注意。<br>
+固定値足しこみに <code>INF</code> が混ざるとオーバーフローのリスクがある。<br>
+また、禁止が $2$ マスあるのを同じ <code>INF</code> にすると、数値上制約を満たさなくなってしまうことがある。<br>
+このあたりでバグを埋め込んでしまうと発見が難しいため注意すること。</p>
+<p>また、フローを解くには計算量がかかり、頂点数が多い場合は <code>TLE</code> の可能性がある。<br>
+条件の入り方によってはフローなど用いなくても動的計画法などで解ける場合もある。<br>
+問題の形だけ見てフローを決めつけないこと。</p>
+<h2 id="section-2773da9bff">関連知識</h2>
+<h3 id="section-455f920a41"><a href="maximum-flow.html">最大フロー</a></h3>
+<p>最大フロー最小カット定理により、最大流量と最小カットの容量は等しい。<br>
+プロジェクト選択問題では、受け入れる最小損失を最小カットとして求めるために用いる。</p>
+<h3 id="section-0ef162f6ef"><a href="maximum-closure-problem.html">最大閉包問題</a></h3>
+<p>プロジェクト選択問題の特殊な場合で、選択間の得点が「何もなし」「禁止」に限られる場合に相当する。</p>
   </article>
 
   <aside class="sidebar">
@@ -34,7 +335,7 @@
     <section class="side-card">
       <h2>関連知識</h2>
       <ul class="side-links">
-        <li><a href="../knowledge/maximum-flow.html">最大フロー</a></li>
+        <li><a href="../knowledge/maximum-flow.html">最大フロー</a></li><li><a href="../knowledge/maximum-closure-problem.html">最大閉包問題</a></li>
       </ul>
     </section>
 

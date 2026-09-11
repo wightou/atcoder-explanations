@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>知識集（G問題以上相当）</title>
 <link rel="stylesheet" href="../../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -104,7 +114,7 @@
 
 <li class="knowledge-entry">
   <a class="knowledge-title" href="../project-selection-problem.html">プロジェクト選択問題</a>
-  <div class="knowledge-summary">今後記述予定。</div>
+  <div class="knowledge-summary">多くの $2$ 択があり、それらの間に制約がある条件下での最大値問題。</div>
 </li>
 </ul>
 </section>
