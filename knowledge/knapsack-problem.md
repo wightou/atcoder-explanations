@@ -68,7 +68,7 @@ i 番目の品物の重さは w[i]、価値は v[i] である。
 - [ABC286 D - Money in Hand](https://atcoder.jp/contests/abc286/tasks/abc286_d)
   - 各種類を使える個数に上限がある部分和問題。
 
-## コード例
+## 解説
 
 ### $0/1$ ナップサック問題、$N$ が最大 $20$ くらい（C問題レベル）
 

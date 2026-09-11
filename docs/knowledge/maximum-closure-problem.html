@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>最大閉包問題</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-793d267b14">典型問題例</a></li><li><a href="#section-369acefbdf">コード例</a><ul><li><a href="#section-g">最大閉包問題を最大フローで解く（G問題以上レベル）</a></li><li><a href="#section-g-2">最小閉包問題を解く（G問題以上レベル）</a></li><li><a href="#section-2-g">多くの $2$ 択の間に制約がある問題を解く（G問題以上レベル）</a></li><li><a href="#section-g-3">二部グラフの安定集合と最小点被覆（G問題以上レベル）</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-inf">INF の大きさ</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-793d267b14">典型問題例</a></li><li><a href="#section-06f9056525">解説</a><ul><li><a href="#section-g">最大閉包問題を最大フローで解く（G問題以上レベル）</a></li><li><a href="#section-g-2">最小閉包問題を解く（G問題以上レベル）</a></li><li><a href="#section-2-g">多くの $2$ 択の間に制約がある問題を解く（G問題以上レベル）</a></li><li><a href="#section-g-3">二部グラフの安定集合と最小点被覆（G問題以上レベル）</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-inf">INF の大きさ</a></li></ul></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>有向グラフから、いくつかの頂点を選ぶことを考える。<br>
 ただし、頂点 $P$ から頂点 $Q$ へ辺が引かれていたら、頂点 $P$ を選ぶなら頂点 $Q$ も選ばなければならない。<br>
@@ -60,7 +60,7 @@ window.MathJax = {
 </ul>
 </li>
 </ul>
-<h2 id="section-369acefbdf">コード例</h2>
+<h2 id="section-06f9056525">解説</h2>
 <h3 id="section-g">最大閉包問題を最大フローで解く（G問題以上レベル）</h3>
 <p>例えば、$3\times 3$ のグリッドに、以下のように得点が定められている。<br>
 ここからいくつかのマスを選ぶが、あるマスを選んだらその右と下のマスも選ばなければならない。<br>

@@ -26,7 +26,7 @@ ABCでは主にE問題以降で登場する。
 - [Educational DP Contest F - LCS](https://atcoder.jp/contests/dp/tasks/dp_f)
   - $2$ つの文字列の最長共通部分列そのものを求める基本問題。
 
-## コード例
+## 解説
 
 ### 最長共通部分列を求める通常の方法
 

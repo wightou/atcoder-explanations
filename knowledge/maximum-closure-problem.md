@@ -35,7 +35,7 @@ related:
 - [ARC085 E - MUL](https://atcoder.jp/contests/arc085/tasks/arc085_c)
   - 倍数関係による選択制約を閉包として扱い、最小カットに帰着する問題。
 
-## コード例
+## 解説
 
 ### 最大閉包問題を最大フローで解く（G問題以上レベル）
 

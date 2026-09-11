@@ -29,7 +29,7 @@ ABCでは主にE問題以降で登場する。
 - [Typical90 060 - Chimera](https://atcoder.jp/contests/typical90/tasks/typical90_bh)
   - 左右から最長増加部分列を求め、増加してから減少する部分列の最大長を求める問題。
 
-## コード例
+## 解説
 
 ### 最長増加部分列を求める（E問題レベル）
 
