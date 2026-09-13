@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>差分更新</title>
+<title>ABC475 A - mnclr</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,33 +28,52 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>差分更新</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC475 A - mnclr</h1>
+      <p class="explanation-title-ja">単色</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc475/tasks/abc475_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc475/submissions/79235178" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>入力は文字列が $1$ つなので、<code>string</code> 型の変数を $1$ つ用意し、<code>cin</code> で入力を受け取る。</p>
+<p>文字列の中身を $1$ 文字ずつ見ていきたいので、forループを用意する。<br>
+そして、出力用文字列に $1$ 文字ずつコピーしていく。</p>
+<pre><code>for (int i=0; i&lt;n; i++) {
+  result += s.at(i);
+}</code></pre>
+<p>これで、全く同じ文字列を $1$ 文字ずつコピーすることはできる。<br>
+これを、$1$ 文字ずつ <code>&#x27;o&#x27;</code> を挟んでいくには、コピー後に <code>&#x27;o&#x27;</code> を追加すればよい。</p>
+<pre><code>result += &#x27;o&#x27;;</code></pre>
+<p>ただし、これでは最後の文字の後ろに余計な <code>&#x27;o&#x27;</code> が追加されてしまう。<br>
+そこで、<code>&#x27;o&#x27;</code> の追加はif文で「最後じゃなかったら追加する」ようにすればよい。</p>
+<p>最後に忘れずに、作った答え用の文字列を <code>cout</code> で出力しておしまい。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p><code>S=&quot;mtr&quot;</code> を受け取る。<br>
+<code>result</code> は空文字列で初期化する。</p>
+<p>1文字ずつ順に見ていく。</p>
+<p>$i=0$ では、<code>s[0]=&#x27;m&#x27;</code> を追加して <code>result=&quot;m&quot;</code> となる。<br>
+最後の文字ではないので、さらに <code>&#x27;o&#x27;</code> を追加して <code>result=&quot;mo&quot;</code> となる。</p>
+<p>$i=1$ では、<code>s[1]=&#x27;t&#x27;</code> を追加して <code>result=&quot;mot&quot;</code> となる。<br>
+最後の文字ではないので、さらに <code>&#x27;o&#x27;</code> を追加して <code>result=&quot;moto&quot;</code> となる。</p>
+<p>$i=2$ では、<code>s[2]=&#x27;r&#x27;</code> を追加して <code>result=&quot;motor&quot;</code> となる。<br>
+最後の文字なので、<code>&#x27;o&#x27;</code> は追加しない。</p>
+<p>最後に、<code>result</code> の <code>motor</code> を出力する。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 高速化系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc464-c.html">ABC464 C - Plumage Palette</a></li>
-        <li><a href="../explanations/abc470-c.html">ABC470 C - Inc, Dec, Xor</a></li>
-        <li><a href="../explanations/abc475-e.html">ABC475 E - Quiz Competition: Qualifiers</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/input-output.html">入出力</a>
+<a class="tag" href="../tags/string.html">string型</a>
+<a class="tag" href="../tags/if-statement.html">if分岐</a>
+<a class="tag" href="../tags/for-loop.html">forループ</a>
+      </div>
+      
     </section>
 
     <section class="side-card">

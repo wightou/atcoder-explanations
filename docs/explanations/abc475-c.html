@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC475 C - Walk the Line</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC475 C - Walk the Line</h1>
+      <p class="explanation-title-ja">直線上の散歩</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc475/tasks/abc475_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc475/submissions/79235184" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc475/submissions/79235189" target="_blank" rel="noopener noreferrer">別解</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>うろうろする方法はいろいろある。<br>
+しかし、一度行った町を再訪する意味がないことを考えると、調べる候補を削ることができる。<br>
+つまり、左に行って右に行ってまた左、のように $2$ 回以上折り返すのは意味がない。<br>
+一方向に進むだけ、または $1$ 回だけ折り返して $S$ を通過して反対へ行く場合、だけ考えれば十分。<br>
+しかも、折り返しまでの距離が $0$ と考えることで前者は後者に吸収できる。</p>
+<p>ということで、折り返し位置を動かしながらゴール地点も動かす尺取法が成立する。<br>
+折り返し位置までで既に距離がオーバーするようになったら打ち切り。<br>
+あるいは、折り返した後 $S$ まで戻ることすらできなくなった場合も打ち切りでよい。</p>
+<p>これを $S$ から左右どちらに出発するかで $2$ 回やって、最大値を答えればよい。<br>
+計算量は $O(N)$ である。</p>
+<p>尺取法の際、毎回 $A$ の値を足し引きしてもよいが、累積和で町の位置を出しておくと書きやすくなる。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>町の番号は <code>0-indexed</code> とする。</p>
+<p>町は $6$ 個あり、町 $2$ から出発する。<br>
+移動できる距離の合計は $10$ 以下である。<br>
+また、隣り合う町どうしの距離は、左から順に $5,2,4,1,6$ である。</p>
+<p>各町の位置を累積和で求めると、左から順に $0,5,7,11,12,18$ となる。<br>
+出発地点である町 $2$ の位置は $7$ である。</p>
+<p>まず、左へ進んでから右へ進む場合を調べる。<br>
+左端を $1$ つずつ左へ動かし、距離和が $10$ を超える間は右端も左へ動かす。<br>
+左移動距離は出発地点から左端まで、右移動距離は左端から右端までの距離とする。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>左端</th>
+<th>右端</th>
+<th>左移動距離</th>
+<th>右移動距離</th>
+<th>距離和</th>
+<th>判定</th>
+<th>町数</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$2$</td>
+<td>$5$</td>
+<td>$0$</td>
+<td>$11$</td>
+<td>$11$</td>
+<td>×</td>
+<td>—</td>
+</tr>
+<tr>
+<td>$2$</td>
+<td>$4$</td>
+<td>$0$</td>
+<td>$5$</td>
+<td>$5$</td>
+<td>○</td>
+<td>$3$</td>
+</tr>
+<tr>
+<td>$1$</td>
+<td>$4$</td>
+<td>$2$</td>
+<td>$7$</td>
+<td>$9$</td>
+<td>○</td>
+<td>$4$</td>
+</tr>
+<tr>
+<td>$0$</td>
+<td>$4$</td>
+<td>$7$</td>
+<td>$12$</td>
+<td>$19$</td>
+<td>×</td>
+<td>—</td>
+</tr>
+<tr>
+<td>$0$</td>
+<td>$3$</td>
+<td>$7$</td>
+<td>$11$</td>
+<td>$18$</td>
+<td>×</td>
+<td>—</td>
+</tr>
+<tr>
+<td>$0$</td>
+<td>$2$</td>
+<td>$7$</td>
+<td>$7$</td>
+<td>$14$</td>
+<td>×</td>
+<td>—</td>
+</tr>
+<tr>
+<td>$0$</td>
+<td>$1$</td>
+<td>$7$</td>
+<td>$5$</td>
+<td>$12$</td>
+<td>×</td>
+<td>—</td>
+</tr>
+<tr>
+<td>$0$</td>
+<td>$0$</td>
+<td>$7$</td>
+<td>$0$</td>
+<td>$7$</td>
+<td>○</td>
+<td>$3$</td>
+</tr>
+</tbody>
+</table></div>
+<p>左へ進んでから右へ進む場合、訪問できる町数の最大値は $4$ である。</p>
+<p>次に、右へ進んでから左へ進む場合を調べる。<br>
+今度は右端を $1$ つずつ右へ動かし、距離和が $10$ を超える間は左端も右へ動かす。<br>
+右移動距離は出発地点から右端まで、左移動距離は右端から左端までの距離とする。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>左端</th>
+<th>右端</th>
+<th>左移動距離</th>
+<th>右移動距離</th>
+<th>距離和</th>
+<th>判定</th>
+<th>町数</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>$0$</td>
+<td>$2$</td>
+<td>$7$</td>
+<td>$0$</td>
+<td>$7$</td>
+<td>○</td>
+<td>$3$</td>
+</tr>
+<tr>
+<td>$0$</td>
+<td>$3$</td>
+<td>$11$</td>
+<td>$4$</td>
+<td>$15$</td>
+<td>×</td>
+<td>—</td>
+</tr>
+<tr>
+<td>$1$</td>
+<td>$3$</td>
+<td>$6$</td>
+<td>$4$</td>
+<td>$10$</td>
+<td>○</td>
+<td>$3$</td>
+</tr>
+<tr>
+<td>$1$</td>
+<td>$4$</td>
+<td>$7$</td>
+<td>$5$</td>
+<td>$12$</td>
+<td>×</td>
+<td>—</td>
+</tr>
+<tr>
+<td>$2$</td>
+<td>$4$</td>
+<td>$5$</td>
+<td>$5$</td>
+<td>$10$</td>
+<td>○</td>
+<td>$3$</td>
+</tr>
+<tr>
+<td>$2$</td>
+<td>$5$</td>
+<td>—</td>
+<td>$11$</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>町 $5$ は、出発地点から右へ進むだけで距離が $11$ となるので、ここで探索を打ち切る。<br>
+右へ進んでから左へ進む場合、訪問できる町数の最大値は $3$ である。</p>
+<p>両方の最大値を比べると、答えは $4$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>街の位置や移動距離は、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>「$S$ を挟んでここからここまで」という範囲を全探索すると、計算量が $O(N^2)$ になってしまう。<br>
+だが、実は $N$ の上限が $8000$ なので、今回はそれでも間に合う。</p>
+<p>指定範囲の街を全て巡る最短距離は、以下の $2$ つの短い方を調べるだけで見つかる。</p>
+<ul>
+<li>範囲の一番左まで行ってから、範囲の一番右まで行く
+</li>
+<li>範囲の一番右まで行ってから、範囲の一番左まで行く
+</li>
+</ul>
+<p>累積和により町の位置が計算してあれば、候補 $1$ つの判定が $O(1)$ で済む。<br>
+よって、全体で計算量は $O(N^2)$ になる。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/cumulative-sum.html">累積和</a>
+<a class="tag" href="../tags/shakutori-method.html">尺取法</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

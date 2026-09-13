@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC475 G - Has Many Divisors</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC475 G - Has Many Divisors</h1>
+      <p class="explanation-title-ja">大量の約数</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc475/tasks/abc475_g" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc475/submissions/79235203" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-72986c8568">具体例での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>まず、$D$ が無害な値である場合を考えてみる。</p>
+<p>正の約数の個数は、素因数分解したときの指数に $1$ を足した数の総乗。<br>
+ということは、例えば $18$ や $600$ などは、考える意味がない。<br>
+なぜなら、$18=2^1\times 3^2$ と同じ個数を $12=2^2\times 3^1$ で表現できる。<br>
+$600=2^3\times 3^1\times 5^2$ も $360=2^3\times 3^2\times 5^1$ でよい。</p>
+<p>ということで、指数が全て降順になっているものだけ探索すればよい。<br>
+$53$ 以下の素数の積が $10^{18}$ を超えるので、番兵を含めても $60$ より大きい素数は考えなくてよい。<br>
+各素数の指数を深さ優先探索で決めて、$N$ 以下に収まる範囲の、整数とその約数個数を列挙できる。</p>
+<p>$D$ が無害な値というのは、$60$ より大きい素因数をもつ場合という意味。<br>
+この場合、$D$ の倍数でないという制約を無視しても、そもそも最善の値が $D$ の倍数にならない。</p>
+<p>では、$D$ が小さい素因数ばかりの場合にはどうか。<br>
+例えば $D=600=2^3\times 3^1\times 5^2$ の場合。<br>
+$D$ の倍数でないようにするには、いずれかの指数が $D$ での指数より小さければよい。<br>
+つまり、以下の $4$ パターンを調べればよい。</p>
+<ul>
+<li>全ての指数が降順になっているもので、$D$ の倍数であるものを除外する
+</li>
+<li>$2^2$ として、他の指数が降順になっているものを調べる
+</li>
+<li>$3^0$ として、他の指数が降順になっているものを調べる
+</li>
+<li>$5^1$ として、他の指数が降順になっているものを調べる
+</li>
+</ul>
+<p>「$2^1$ として、他の指数が降順になっているものを調べる」などは調べる必要がない。<br>
+$3$ 以上の素数の指数に $2$ 以上のものがあれば、それを $1$ 減らして $2^2$ にしても約数が減らないからである。</p>
+<p>ただし、途中の素数が飛ばされることがあるので、素因数として使う必要がある範囲が広がる。<br>
+$60$ までだと足りなくなることがあるので、$70$ 程度まで範囲に入れておく。 </p>
+<p>計算量の推定は難しい。<br>
+とはいえ、列挙する数が $10^7$ 個を超えることはなさそうなので、$10$ ケース分やっても間に合う。</p>
+<h2 id="section-72986c8568">具体例での動作</h2>
+<p>$N=25,\ D=12$ の場合を考える。<br>
+$D=12=2^2\times3^1$ なので、以下の $3$ 種類の探索をする。</p>
+<ul>
+<li>通常の探索
+</li>
+<li>$2$ の指数を $1$ に固定する探索
+</li>
+<li>$3$ の指数を $0$ に固定する探索
+</li>
+</ul>
+<p>まず、全ての指数が降順になっているものを探索する。<br>
+$25$ 以下で列挙される候補は次の通り。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">候補</th>
+<th>素因数分解</th>
+<th class="table-align-right" style="text-align: right;">約数個数</th>
+<th>$12$ の倍数か</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td>$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td>いいえ</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td>$2^1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td>いいえ</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td>$2^1\times3^1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td>いいえ</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td>$2^2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td>いいえ</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$12$</td>
+<td>$2^2\times3^1$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td>はい</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td>$2^3$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td>いいえ</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$24$</td>
+<td>$2^3\times3^1$</td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td>はい</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$16$</td>
+<td>$2^4$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td>いいえ</td>
+</tr>
+</tbody>
+</table></div>
+<p>$12,24$ は除外されるので、この探索での最善は $16$ となる。</p>
+<p>次に、$D$ の素因数ごとに、その指数を $D$ での指数より $1$ 小さく固定して探索する。</p>
+<p>$2$ の指数を $1$ に固定した場合、$3$ 以降の指数を降順にすると次の候補が列挙される。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">候補</th>
+<th>素因数分解</th>
+<th class="table-align-right" style="text-align: right;">約数個数</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td>$2^1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td>$2^1\times3^1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$18$</td>
+<td>$2^1\times3^2$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+</tr>
+</tbody>
+</table></div>
+<p>この探索での最善は $18$ となる。</p>
+<p>$3$ の指数を $0$ に固定した場合、$3$ を飛ばし、残りの素数の指数を降順にすると次の候補が列挙される。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">候補</th>
+<th>素因数分解</th>
+<th class="table-align-right" style="text-align: right;">約数個数</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td>$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td>$2^1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td>$2^1\times5^1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td>$2^2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$20$</td>
+<td>$2^2\times5^1$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td>$2^3$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$16$</td>
+<td>$2^4$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+</tbody>
+</table></div>
+<p>この探索での最善は $20$ となる。</p>
+<p>以上より、各探索での最善は $16,18,20$ である。<br>
+約数個数の最大値は $6$ 個で、$18$ と $20$ が並ぶ。<br>
+そのいずれかを答えればよい。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>$N$ や探索中の整数は <code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/prime-factorization.html">素因数分解</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

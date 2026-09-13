@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>差分更新</title>
+<title>ABC475 B - Change</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,33 +28,49 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>差分更新</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC475 B - Change</h1>
+      <p class="explanation-title-ja">おつり</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc475/tasks/abc475_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc475/submissions/79235181" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>まずは $1$ 回ごとの支払いで、全部 $1000$ 円紙幣で行うときのおつりを求める方法を考える。<br>
+$1000$ 円以上である部分は、そのまま $1000$ 円札で支払ってよい。<br>
+支払った分を代金から引くと、残りは $0$ 円以上 $999$ 円以下になる。<br>
+もし $0$ 円ならおつりはないので、この時点で <code>continue;</code> してしまってよい。<br>
+$1$ 円以上端数があったら、その端数を $1000$ から引けばおつりの額である。</p>
+<p>このおつりを求める部分が書けたら、あとは簡単。<br>
+毎回おつりの百の位、十の位、一の位を求めて、対応する変数に足しこんでいけばよい。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>$N=3$、<code>A={1296,110,1}</code> を受け取る。<br>
+最初は、$1$ 円硬貨、$10$ 円硬貨、$100$ 円硬貨の枚数を全て $0$ 枚としておく。</p>
+<p>$1$ 回目は $1296$ 円の買い物である。<br>
+$1296$ を $1000$ で割った余りは $296$ なので、おつりは $1000-296=704$ 円となる。<br>
+よって、$1$ 円硬貨を $4$ 枚、$10$ 円硬貨を $0$ 枚、$100$ 円硬貨を $7$ 枚受け取る。</p>
+<p>$2$ 回目は $110$ 円の買い物である。<br>
+$110$ を $1000$ で割った余りは $110$ なので、おつりは $1000-110=890$ 円となる。<br>
+よって、$1$ 円硬貨を $0$ 枚、$10$ 円硬貨を $9$ 枚、$100$ 円硬貨を $8$ 枚受け取る。</p>
+<p>$3$ 回目は $1$ 円の買い物である。<br>
+$1$ を $1000$ で割った余りは $1$ なので、おつりは $1000-1=999$ 円となる。<br>
+よって、$1$ 円硬貨を $9$ 枚、$10$ 円硬貨を $9$ 枚、$100$ 円硬貨を $9$ 枚受け取る。</p>
+<p>全て足すと、$1$ 円硬貨は $4+0+9=13$ 枚となる。<br>
+$10$ 円硬貨は $0+9+9=18$ 枚となる。<br>
+$100$ 円硬貨は $7+8+9=24$ 枚となる。</p>
+<p>したがって、答えは <code>13 18 24</code> である。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 高速化系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc464-c.html">ABC464 C - Plumage Palette</a></li>
-        <li><a href="../explanations/abc470-c.html">ABC470 C - Inc, Dec, Xor</a></li>
-        <li><a href="../explanations/abc475-e.html">ABC475 E - Quiz Competition: Qualifiers</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <span class="muted">なし</span>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

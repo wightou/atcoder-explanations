@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC475 E - Quiz Competition: Qualifiers</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC475 E - Quiz Competition: Qualifiers</h1>
+      <p class="explanation-title-ja">クイズ大会予選</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc475/tasks/abc475_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc475/submissions/79235194" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc475/submissions/79235197" target="_blank" rel="noopener noreferrer">解答例2</a><a href="https://atcoder.jp/contests/abc475/submissions/79235199" target="_blank" rel="noopener noreferrer">解答例3</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-1">方針 $1$</a></li><li><a href="#section-2">方針 $2$</a></li><li><a href="#section-3">方針 $3$</a></li></ul></li><li><a href="#section-1-2">入力例1での動作</a><ul><li><a href="#section-1-3">方針 $1$</a></li><li><a href="#section-2-2">方針 $2$</a></li><li><a href="#section-3-2">方針 $3$</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>予選通過者の判定アルゴリズムをよく見ると、これは辞書順評価などとほぼ同じことをしている。<br>
+よって、正解を <code>&#x27;0&#x27;</code>、不正解を <code>&#x27;1&#x27;</code> と割り当てて、辞書順に並べれば通過順がわかる。</p>
+<p>ただし、いくつか注意点がある。</p>
+<p>$1$ つめに、最後まで全く同じ解答をした人の扱い。<br>
+仮に $M=10$ だとして、辞書順ソート $10$ 番目と $11$ 番目が同じなら、両者予選落ちである。<br>
+つまり、自分が $M$ 位以内かではなく、$M+1$ 位の人よりもいい解答だったかで調べる必要がある。<br>
+実際に $M+1$ 位を取得する方針と、自分と同等以上が $M$ 人以下か調べる方針がある。<br>
+ただし、前者は $M=N$ の場合に範囲外アクセスになるという問題が発生する。</p>
+<p>$2$ つめに、全問不正解者の扱い。<br>
+$M=N$ の場合、全問不正解でも $M$ 位以内になるが、この場合は予選敗退になる。<br>
+これは、全問不正解の人を $1$ 人番兵で入れておくとよい。<br>
+すると、全問不正解者はその人と同順位扱いになり、$M$ 位以内に入れなかったと判定される。<br>
+ついでに、$M=N$ の場合に範囲外アクセスする問題も同時に解消されて一石二鳥。</p>
+<p>ということで、これを実装すればよい。<br>
+そのためには、配列に類似していながら、以下が全て $O(K\log N)$ 以下でできるデータ構造が必要となる。</p>
+<ul>
+<li>文字列の追加ができる
+</li>
+<li>文字列の削除ができる
+</li>
+<li>以下のいずれか
+<ul>
+<li>辞書順で小さい方から $M+1$ 番目の文字列をいつでも取得できる
+</li>
+<li>辞書順が指定文字列以下であるデータの個数をいつでも取得できる
+</li>
+</ul>
+</li>
+</ul>
+<p>実はPythonなら、sortedlistというデータ構造が使用可能ライブラリにあるらしい。<br>
+多重集合として常時ソートされていて、かつランダムアクセス可能。<br>
+つまり、Python使いならこの時点でほぼ解き終わっている。ずるい。</p>
+<p>C++ 使いは自力で頑張るしかなく、主に以下の $3$ つの方針が考えられる。</p>
+<ul>
+<li>priority_queue を $4$ 本使って、中央値管理と同じアルゴリズムで $M+1$ 番目の文字列を取得する
+</li>
+<li>クエリを全て先読みし、座標圧縮してからFenwick木で指定文字列以下であるデータの個数を取得する
+</li>
+<li>重み付きTrie木に累積和機能を搭載し、$M+1$ 番目の文字列を取得する
+</li>
+</ul>
+<h3 id="section-1">方針 $1$</h3>
+<p>priority_queueを $4$ 本使って、中央値管理と同じアルゴリズムで $M+1$ 番目の文字列を取得する。</p>
+<p>以下の $2$ 本のpriority_queueを用意する。</p>
+<ul>
+<li>「左側」用の、大きい方を取り出すpriority_queue
+</li>
+<li>「右側」用の、小さい方を取り出すpriority_queue
+</li>
+</ul>
+<p>ここに値を追加していき、常に「左側」のトップが「右側」のトップ以下であるように保つ。<br>
+左側の個数が $M$ 個になっていれば、「右側」のトップが $M+1$ 位になっている。</p>
+<p>問題は、データの削除が大変なこと。<br>
+priority_queueは、トップに来ていない中身の削除はできない。<br>
+そこで、遅延処理用に左右それぞれ「削除されたと見なす文字列」を入れるpriority_queueを追加で用意する。<br>
+先頭が変化する処理を行うごとに、本体と削除用のトップが一致していたらそれらを削除するようにすればよい。</p>
+<p>計算量は $O(K(N+Q)\log(N+Q))$ となる。<br>
+実装例は「解答例」のコード参照。</p>
+<h3 id="section-2">方針 $2$</h3>
+<p>クエリを全て先読みし、座標圧縮してからFenwick木で指定文字列以下であるデータの個数を取得する。</p>
+<p>クエリを先読みし、登場する可能性がある文字列を先に全て列挙してしまう。<br>
+それを座標圧縮し、Fenwick木の各要素に割り当てる。<br>
+文字列が追加されたらそこに $+1$、削除されたらそこに $-1$ をする。<br>
+Fenwick木で先頭から指定文字列までの和をとれば、その文字列以下の個数になる。</p>
+<p>計算量は $O(K(N+Q)\log(N+Q))$ となる。<br>
+「解答例2」のコード参照。</p>
+<h3 id="section-3">方針 $3$</h3>
+<p>重み付きTrie木に累積和機能を搭載し、指定文字列以下であるデータの個数を取得する。<br>
+もしくは、$M+1$ 番目の文字列を取得する方針でもよい。</p>
+<p>AtCoder LibraryにはTrie木がないので、自前ライブラリの実装を頑張る。</p>
+<p>計算量は $O(K(N+Q))$ となる。<br>
+「解答例3」のコード参照。</p>
+<h2 id="section-1-2">入力例1での動作</h2>
+<h3 id="section-1-3">方針 $1$</h3>
+<p>$N=5$、$M=3$、$K=3$ で、正解は <code>oxo</code> である。</p>
+<p>正解を <code>0</code>、不正解を <code>1</code> として各参加者の解答を文字列に変換すると、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>参加者</th>
+<th>解答</th>
+<th>評価文字列</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">$1$</th>
+<td><code>oxo</code></td>
+<td><code>000</code></td>
+</tr>
+<tr>
+<th scope="row">$2$</th>
+<td><code>oxx</code></td>
+<td><code>001</code></td>
+</tr>
+<tr>
+<th scope="row">$3$</th>
+<td><code>xxo</code></td>
+<td><code>100</code></td>
+</tr>
+<tr>
+<th scope="row">$4$</th>
+<td><code>xox</code></td>
+<td><code>111</code></td>
+</tr>
+<tr>
+<th scope="row">$5$</th>
+<td><code>xoo</code></td>
+<td><code>110</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>さらに、全問不正解を表す番兵 <code>111</code> を $1$ つ追加する。</p>
+<p>方針 $1$ では、辞書順で小さい方から $M=3$ 個を「左側」、残りを「右側」として管理する。<br>
+「右側」の先頭が $M+1=4$ 番目の文字列であり、変更された参加者の評価文字列がこれより小さければ <code>Yes</code> となる。</p>
+<p>初期状態では、左側が <code>000, 001, 100</code>、右側が <code>110, 111, 111</code> である。</p>
+<p>各クエリ後の状態は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>クエリ</th>
+<th>文字列の変化</th>
+<th>左側</th>
+<th>右側</th>
+<th>$M+1$ 番目</th>
+<th>判定</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row"><code>5 1</code></th>
+<td><code>110</code> → <code>010</code></td>
+<td><code>000,001,010</code></td>
+<td><code>100,111,111</code></td>
+<td><code>100</code></td>
+<td><code>Yes</code></td>
+</tr>
+<tr>
+<th scope="row"><code>1 3</code></th>
+<td><code>000</code> → <code>001</code></td>
+<td><code>001,001,010</code></td>
+<td><code>100,111,111</code></td>
+<td><code>100</code></td>
+<td><code>Yes</code></td>
+</tr>
+<tr>
+<th scope="row"><code>4 1</code></th>
+<td><code>111</code> → <code>011</code></td>
+<td><code>001,001,010</code></td>
+<td><code>011,100,111</code></td>
+<td><code>011</code></td>
+<td><code>No</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、各クエリへの答えは順に <code>Yes</code>, <code>Yes</code>, <code>No</code> となる。</p>
+<h3 id="section-2-2">方針 $2$</h3>
+<p>まず、クエリを全て先読みして、登場する可能性がある評価文字列を列挙する。<br>
+入力例1では、番兵も含めると <code>000, 001, 010, 011, 100, 110, 111</code> の $7$ 種類が登場する。</p>
+<p>これをこの順に座標圧縮し、Fenwick木で各評価文字列の人数を管理する。<br>
+Fenwick木の内部配列そのものではなく、管理している配列として見ると、初期状態は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>評価文字列</th>
+<th class="table-align-right" style="text-align: right;"><code>000</code></th>
+<th class="table-align-right" style="text-align: right;"><code>001</code></th>
+<th class="table-align-right" style="text-align: right;"><code>010</code></th>
+<th class="table-align-right" style="text-align: right;"><code>011</code></th>
+<th class="table-align-right" style="text-align: right;"><code>100</code></th>
+<th class="table-align-right" style="text-align: right;"><code>110</code></th>
+<th class="table-align-right" style="text-align: right;"><code>111</code></th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">個数</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+</tbody>
+</table></div>
+<p>評価文字列が変更されたら、変更前の位置に $-1$、変更後の位置に $+1$ をする。<br>
+各クエリ後の配列は次のように変化する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>クエリ</th>
+<th>文字列の変化</th>
+<th>管理する配列</th>
+<th class="table-align-right" style="text-align: right;">評価文字列以下の人数</th>
+<th>判定</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row"><code>5 1</code></th>
+<td><code>110</code> → <code>010</code></td>
+<td><code>{1,1,1,0,1,0,2}</code></td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td><code>Yes</code></td>
+</tr>
+<tr>
+<th scope="row"><code>1 3</code></th>
+<td><code>000</code> → <code>001</code></td>
+<td><code>{0,2,1,0,1,0,2}</code></td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td><code>Yes</code></td>
+</tr>
+<tr>
+<th scope="row"><code>4 1</code></th>
+<td><code>111</code> → <code>011</code></td>
+<td><code>{0,2,1,1,1,0,1}</code></td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td><code>No</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>各クエリで、変更された参加者の評価文字列までの累積和をFenwick木で求める。<br>
+その人数が $M=3$ 以下なら <code>Yes</code>、$4$ 人以上なら <code>No</code> である。</p>
+<p>したがって、各クエリへの答えは順に <code>Yes</code>, <code>Yes</code>, <code>No</code> となる。</p>
+<h3 id="section-3-2">方針 $3$</h3>
+<p>Trie木の各ノードに、その部分木に存在する評価文字列の個数を持たせる。<br>
+評価文字列が変更されたら、変更前の文字列を $-1$、変更後の文字列を $+1$ して更新する。</p>
+<p>指定文字列以下の個数を求めるときは、先頭から順にTrie木をたどる。<br>
+現在見ている文字が <code>1</code> なら、<code>0</code> 側の部分木にある文字列は全て指定文字列より小さい。<br>
+そこで、その個数を答えに加えてから <code>1</code> 側へ進む。<br>
+最後までたどったら、指定文字列と全く同じ文字列の個数も加える。</p>
+<p>入力例1では、各クエリについて次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>クエリ</th>
+<th>評価文字列</th>
+<th>数える文字列</th>
+<th class="table-align-right" style="text-align: right;">個数</th>
+<th>判定</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row"><code>5 1</code></th>
+<td><code>010</code></td>
+<td><code>000</code>, <code>001</code>, <code>010</code></td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td><code>Yes</code></td>
+</tr>
+<tr>
+<th scope="row"><code>1 3</code></th>
+<td><code>001</code></td>
+<td><code>001</code>, <code>001</code></td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td><code>Yes</code></td>
+</tr>
+<tr>
+<th scope="row"><code>4 1</code></th>
+<td><code>011</code></td>
+<td><code>001</code>, <code>001</code>, <code>010</code>, <code>011</code></td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td><code>No</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、各クエリへの答えは順に <code>Yes</code>, <code>Yes</code>, <code>No</code> となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>方針 $2$、方針 $3$ を参照。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/difference-update.html">差分更新</a>
+<a class="tag" href="../tags/fenwick-tree.html">Fenwick木</a>
+<a class="tag" href="../tags/coordinate-compression.html">座標圧縮</a>
+<a class="tag" href="../tags/trie.html">Trie木</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
