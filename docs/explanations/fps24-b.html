@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FPS24 B - 整数の組</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>FPS24 B - 整数の組</h1>
+      
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/fps-24/tasks/fps_24_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/fps-24/submissions/79266767" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-1">方針 $1$</a></li><li><a href="#section-2">方針 $2$</a></li><li><a href="#section-b459df70c5">畳み込み後</a></li></ul></li><li><a href="#section-1-2">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>前問からレベルアップして、無限級数が登場した。<br>
+それぞれの選び方の母関数は、以下のようになる。</p>
+<ul>
+<li>$a$ の選び方の母関数は、$A(x)=1+x$
+</li>
+<li>$b$ の選び方の母関数は、$B(x)=1+x+x^2$
+</li>
+<li>$c$ の選び方の母関数は、$C(x)=1+x^2+x^4+x^6+\dots+x^{2k}+\dots$
+</li>
+<li>$d$ の選び方の母関数は、$D(x)=1+x^3+x^6+x^9+\dots+x^{3k}+\dots$
+</li>
+</ul>
+<p>これらの積を畳み込んで、$x^N$ の係数を答えればよい。<br>
+この畳み込みは、ある特殊な構造になっていることに気が付くと簡単に計算できる。<br>
+気づくパターンと気づかないパターンを両方解説する。</p>
+<h3 id="section-1">方針 $1$</h3>
+<p>$A(x)C(x)$ という組み合わせの積は、実は $1+x+x^2+x^3+\dots+x^{k}+\dots$ となる。<br>
+$B(x)D(x)$ という組み合わせの積も、実は $1+x+x^2+x^3+\dots+x^{k}+\dots$ となる。</p>
+<p>これに気づくと、この $2$ つの畳み込み結果は明らかで、以下のようになる。<br>
+$$<br>
+A(x)B(x)C(x)D(x) = 1+2x+3x^2+4x^3+\dots+(k+1)x^k+\dots<br>
+$$</p>
+<h3 id="section-2">方針 $2$</h3>
+<p>分数型表現の知識を用いる。</p>
+<p>無限級数のままでは扱いにくいので、分数型に書き換える。<br>
+$C(x)=1+x^2+x^4+x^6+\dots+x^{2k}+\dots=\dfrac{1}{1-x^2}$<br>
+$D(x)=1+x^3+x^6+x^9+\dots+x^{3k}+\dots=\dfrac{1}{1-x^3}$</p>
+<p>すると、これら $4$ つの積は $A(x)B(x)C(x)D(x) = \dfrac{1}{(1-x)^2}$ となる。<br>
+以下の公式で $r=2$ とすることで、級数の形に戻すことができる。</p>
+<p>$$<br>
+\begin{aligned}<br>
+\dfrac{1}{(1-x)^r}<br>
+&amp;={}_{r-1}\mathrm{C}_{r-1}x^0+{}_{r}\mathrm{C}_{r-1}x^1+{}_{r+1}\mathrm{C}_{r-1}x^2+{}_{r+2}\mathrm{C}_{r-1}x^3+\dots\\<br>
+A(x)B(x)C(x)D(x)<br>
+&amp;=1+2x+3x^2+4x^3+\dots+(k+1)x^k+\dots<br>
+\end{aligned}<br>
+$$</p>
+<h3 id="section-b459df70c5">畳み込み後</h3>
+<p>いずれの方法で求めても当然同じ式になり、畳み込んだ後の $x^N$ の係数は $N+1$ である。<br>
+よって、これ（を$998244353$ で割った余り）を答えて終わり。<br>
+計算量は $O(1)$ である。</p>
+<p>実はこの問題、形式的冪級数など用いなくても解ける。</p>
+<p>$a+c$ の値が指定されたとしよう。<br>
+このとき、$a$ と $c$ は、$2$ で割った余りを $a$ として、残りを $c$ とする $1$ 通りの分割のみ。</p>
+<p>$b+d$ の値が指定されたとしよう。<br>
+このとき、$b$ と $d$ は、$3$ で割った余りを $b$ として、残りを $d$ とする $1$ 通りの分割のみ。</p>
+<p>つまり、結局 $N$ を $a+c$ と $b+d$ に分ける方法の数が答えである。<br>
+こう考えると、ややこしい計算は何もなしで $N+1$ と答えられる。</p>
+<h2 id="section-1-2">入力例1での動作</h2>
+<p>$N=5$ である。<br>
+したがって、それに $1$ を加えて $998244353$ で割った余りである $6$ が答え。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>$N+1$ は $998244353$ 以上になることがある。<br>
+最後に $998244353$ で割った余りを求めること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/fps-convolution.html">形式的冪級数</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

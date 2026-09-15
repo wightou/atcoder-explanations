@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FPS24 C - 数列</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>FPS24 C - 数列</h1>
+      
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/fps-24/tasks/fps_24_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/fps-24/submissions/79267357" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/fps-24/submissions/79282787" target="_blank" rel="noopener noreferrer">解答例2</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-1">方針 $1$</a></li><li><a href="#section-2">方針 $2$</a></li></ul></li><li><a href="#section-1-2">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>分数型の母関数の扱いが登場。</p>
+<p>数列の $1$ つの要素に $M$ 以下の数を割り当てることを表現する母関数は、以下。<br>
+$$<br>
+A(x)=1+x+x^2+x^3+\dots +x^M<br>
+$$</p>
+<p>これを $N$ 乗して、$x^S$ の係数を答えればよい。<br>
+求める方針を $2$ つ紹介する。</p>
+<h3 id="section-1">方針 $1$</h3>
+<p>人力で畳み込みをしやすくするための式変形を頑張る。<br>
+まず、$A(x)$ を以下のように変形する。<br>
+$$<br>
+A(x)=1+x+x^2+x^3+\dots +x^M=\dfrac{1-x^{M+1}}{1-x}<br>
+$$<br>
+これを $N$ 乗すると、以下のようになる。<br>
+$$<br>
+\{A(x)\}^N=\dfrac{(1-x^{M+1})^N}{(1-x)^N}<br>
+$$<br>
+これの分子側は、普通に二項展開すればよい。<br>
+$$<br>
+(1-x^{M+1})^N = ({}_N\mathrm{C}_0-{}_N\mathrm{C}_1x^{M+1}+{}_N\mathrm{C}_2x^{2M+2}-{}_N\mathrm{C}_3x^{3M+3}+\dots+(-1)^{N}{}_N\mathrm{C}_Nx^{NM+N})<br>
+$$<br>
+分母側は、以下の公式で $r=N$ とすることで、級数の形に戻すことができる。<br>
+$$<br>
+\dfrac{1}{(1-x)^r} = {}_{r-1}\mathrm{C}_{r-1}x^0+{}_{r}\mathrm{C}_{r-1}x^1+{}_{r+1}\mathrm{C}_{r-1}x^2+{}_{r+2}\mathrm{C}_{r-1}x^3+\dots<br>
+$$<br>
+最後の畳み込みは、素直に指数の和が $S$ になる組を拾って、係数の積の総和を求めればよい。</p>
+<p>コード部分は二項係数ライブラリさえあればシンプルで、階乗の事前計算分に加えて $O(S)$ である。</p>
+<h3 id="section-2">方針 $2$</h3>
+<p>少し発展的な知識を使って力技で求める。<br>
+つまり、NTTによる畳み込みを用いて、繰り返し二乗法で $N$ 乗を計算する。</p>
+<p>$x^{S+1}$ 以上は意味がないのでそこから先は途中で切り捨てながら求める。<br>
+計算量は $O(S\log S\log N)$ となる。<br>
+「解答例2」参照。</p>
+<h2 id="section-1-2">入力例1での動作</h2>
+<p>$N=3,\ M=2,\ S=4$ である。</p>
+<p>まず、$N+S=7$ までの階乗と逆階乗を用意する。</p>
+<p>$i=0$ では、分母側の冪は $j=4$ となる。<br>
+加える値は ${}_3\mathrm{C}_0\times{}_6\mathrm{C}_2=15$ なので、ここまでの総和は $15$ となる。</p>
+<p>$i=1$ では、分母側の冪は $j=1$ となる。<br>
+二項係数の積は ${}_3\mathrm{C}_1\times{}_3\mathrm{C}_2=9$ だが、$i$ が奇数なので符号を反転させる。<br>
+よって、ここまでの総和は $15-9=6$ となる。</p>
+<p>$i=2$ では $i(M+1)=6&gt;S=4$ となるので、これ以上調べる必要はない。<br>
+以上より、答えは $6$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>二項係数同士の積は、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<p>二項係数は $998244353$ で割った余りを求めながら計算する。<br>
+階乗を用いて二項係数を求める際の除算には逆元を用い、逆元は繰り返し二乗法で求める。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/fps-convolution.html">形式的冪級数</a>
+<a class="tag" href="../tags/binomial-coefficient.html">二項係数</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/binary-exponentiation.html">繰り返し二乗法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

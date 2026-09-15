@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FPS24 A - お菓子</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>FPS24 A - お菓子</h1>
+      
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/fps-24/tasks/fps_24_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/fps-24/submissions/79266691" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/fps-24/submissions/79282783" target="_blank" rel="noopener noreferrer">解答例2</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-1">方針 $1$</a></li><li><a href="#section-2">方針 $2$</a></li></ul></li><li><a href="#section-1-2">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>コンテストトップページに $H$ 問題までは知識を必要としないと書かれている。<br>
+しかしこれは大嘘で、序盤からいろいろな知識やテクニックを要求してくる。<br>
+序盤で使うあたりのことは別記事にまとめたので、「<a href="../knowledge/fps-convolution.html">形式的冪級数</a>」の記事参照。<br>
+$A$ 問題では、上のリンク先の記事で、少なくとも以下の $4$ 項目を理解する必要がある。</p>
+<ul>
+<li>形式的冪級数
+</li>
+<li>通常型母関数
+</li>
+<li>畳み込み
+</li>
+<li>組み合わせ問題への適用
+</li>
+</ul>
+<p>上記をすべて理解している前提で解説を行う。</p>
+<p>$1$ 日のお金の使い方は、$1$ 円、$3$ 円、$4$ 円、$6$ 円 が $1$ 通りずつで、残りは $0$ 通り。<br>
+よって、その母関数は $x+x^3+x^4+x^6$ と表せる。<br>
+すると、$D$ 日間でのお金の使い方は、$(x+x^3+x^4+x^6)^D$ で表せる。<br>
+このうち、$x^N$ の係数を答えればよいことになる。</p>
+<p>問題はその係数をどのように求めるか。<br>
+わかりやすい方針は $2$ つある。<br>
+わかりにくい高度な方針なら他にもあるが、ここではそれは見なかったことにする。</p>
+<h3 id="section-1">方針 $1$</h3>
+<p>冒頭の $4$ 項目の知識だけで求める。<br>
+つまり、人力で畳み込みをしやすくするための式変形を頑張る。</p>
+<p>$x+x^3+x^4+x^6 = x(1+x^2)(1+x^3)$ と変形できるので、$(x+x^3+x^4+x^6)^D=x^D(1+x^2)^D(1+x^3)^D$ となる。<br>
+これの $x^N$ の係数というのは、つまり、$(1+x^2)^D(1+x^3)^D$ における $x^{N-D}$ の係数である。<br>
+それぞれの $D$ 乗を二項展開すると、以下のような式になる。<br>
+$$<br>
+({}_D\mathrm{C}_0+{}_D\mathrm{C}_1x^2+{}_D\mathrm{C}_2x^4+\dots+{}_D\mathrm{C}_Dx^{2D}) \times<br>
+({}_D\mathrm{C}_0+{}_D\mathrm{C}_1x^3+{}_D\mathrm{C}_2x^6+\dots+{}_D\mathrm{C}_Dx^{3D})<br>
+$$</p>
+<p>この式の畳み込みは、素直に指数の和が $N-D$ になる組を拾って、係数の積の総和を求めればよい。</p>
+<p>コード部分は二項係数ライブラリさえあればシンプルで、階乗の事前計算分に加えて $O(D)$ である。<br>
+「解答例」参照。</p>
+<h3 id="section-2">方針 $2$</h3>
+<p>冒頭の $4$ 項目よりは少し発展的な知識を使って力技で求める。<br>
+つまり、NTTによる畳み込みを用いて、繰り返し二乗法で $D$ 乗を計算する。</p>
+<p>$x^{N+1}$ 以上は意味がないのでそこから先は途中で切り捨てながら求める。<br>
+計算量は $O(N\log N\log D)$ となる。<br>
+「解答例2」参照。</p>
+<h2 id="section-1-2">入力例1での動作</h2>
+<p>$D=2,\ N=7$ である。</p>
+<p>方針 $1$ では、$(1+x^2)^2(1+x^3)^2$ の $x^{N-D}=x^5$ の係数を求める。</p>
+<p>$x^3$ を $i$ 回取るとする。<br>
+$i=0$ では、残りの次数は $5$ であり、$x^2$ だけでは作れないのでスキップする。</p>
+<p>$i=1$ では、残りの次数は $5-3=2$ なので、$x^2$ を $1$ 回取ればよい。<br>
+この選び方は、${}_2\mathrm{C}_1\times{}_2\mathrm{C}_1=2\times 2=4$ 通りである。</p>
+<p>$i=2$ では $3i=6&gt;N-D=5$ となるので、これ以上調べる必要はない。<br>
+以上より、答えは $4$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>二項係数同士の積は、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<p>二項係数は $998244353$ で割った余りを求めながら計算する。<br>
+階乗を用いて二項係数を求める際の除算には逆元を用い、逆元は繰り返し二乗法で求める。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/fps-convolution.html">形式的冪級数</a>
+<a class="tag" href="../tags/binomial-coefficient.html">二項係数</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/binary-exponentiation.html">繰り返し二乗法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
