@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>形式的冪級数</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a><ul><li><a href="#section-d2285c7d8a">形式的冪級数</a></li><li><a href="#section-a6d82952a6">通常型母関数</a></li><li><a href="#section-d94dccd6b7">分数型の母関数の級数展開</a></li><li><a href="#section-4f59605b60">畳み込み</a></li><li><a href="#section-fft-ntt">高速フーリエ変換（FFT）と数論変換（NTT）</a></li></ul></li><li><a href="#section-369acefbdf">コード例</a></li><li><a href="#section-aec54ceb12">使い方の応用</a><ul><li><a href="#section-181bb52b40">組み合わせ問題への適用</a></li><li><a href="#section-2">2変数の母関数の利用</a></li><li><a href="#section-1e8af79f51">指数型母関数の利用</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a><ul><li><a href="#section-d2285c7d8a">形式的冪級数</a></li><li><a href="#section-a6d82952a6">通常型母関数</a></li><li><a href="#section-d94dccd6b7">分数型の母関数の級数展開</a></li><li><a href="#section-4f59605b60">畳み込み</a></li><li><a href="#section-fft">高速フーリエ変換（FFT）</a></li><li><a href="#section-ntt">数論変換（NTT）</a></li></ul></li><li><a href="#section-369acefbdf">コード例</a></li><li><a href="#section-aec54ceb12">使い方の応用</a><ul><li><a href="#section-181bb52b40">組み合わせ問題への適用</a></li><li><a href="#section-2">2変数の母関数の利用</a></li><li><a href="#section-1e8af79f51">指数型母関数の利用</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>多項式の展開計算ルールを用いて、複雑な組み合わせの計算等を行う方法。<br>
 英語のFormal Power Seriesの頭文字を取ってFPSと呼ばれることもある。</p>
@@ -208,18 +208,287 @@ $$</p>
 $(3x^0+2x+1x^2)\times(20x^0+15x^1+10x^2) = 60x^0+85x^1+80x^2+35x^3+10x^4$ ということである。</p>
 <p>愚直に計算するのは簡単なコードで実装でき、計算量は $O(|A||B|)$ である。<br>
 次に述べるFFT/NTTを用いれば $O((|A|+|B|)\log(|A|+|B|))$ に高速化できる。</p>
-<h3 id="section-fft-ntt">高速フーリエ変換（FFT）と数論変換（NTT）</h3>
-<p>長さ $M$ の数列と長さ $N$ の数列の畳み込みを愚直に求めると、$O(MN)$ かかる。<br>
-しかし、高速フーリエ変換（FFT）を利用すると $O((M+N)log(M+N))$ で畳み込みを行える。<br>
-また、ある素数 $p$ で $\bmod$ を取る場合も、数論変換（NTT）で $O((M+N)log(M+N)+\log p)$ で済む。</p>
-<p>ここでは、その原理の数学的説明を述べ、コード例の項目で実装方法を解説する。<br>
+<h3 id="section-fft">高速フーリエ変換（FFT）</h3>
+<p>長さ $|A|$ の数列 $A$ と長さ $|B|$ の数列 $B$ の畳み込みを愚直に求めると、$O(|A||B|)$ かかる。<br>
+しかし、高速フーリエ変換（FFT）を利用すると $O((|A|+|B|)\log(|A|+|B|))$ で畳み込みを行える。</p>
+<p>ここでは、その原理の数学的説明を述べる。<br>
 が、実はこの点については、AtCoder Libraryのconvolutionを利用することも可能。<br>
 「中身わからなくてもライブラリ使って問題解ければ十分です！」の場合は、この項目はスキップ推奨。</p>
-<p>ここから先は、今後記述予定。</p>
-<h2 id="section-369acefbdf">コード例</h2>
-<p>FFTとNTTの実装例を載せる。<br>
+<p>$A(x)=2+x$ と $B(x)=1-2x$ の畳み込み $C(x)$ を、変換を用いて求める方法を考える。</p>
+<p>まず、普通の複素離散フーリエ変換による畳み込みを考えてみる。<br>
+普通のというのは、計算量が愚直な畳み込みから改善していない（むしろ悪化する）という意味である。</p>
+<p>まず、畳み込み後の次数を考えると $1+1=2$ 次となるので、それより大きい数として $4$ を選ぶ。<br>
+つまり、畳み込みを $4-1=3$ 次式として求める。 <br>
+（$3$ を選ぶと以後の計算が少し面倒になり、しかも高速化は同じ方法ではできない）</p>
+<p>まず、$4$ 乗すれば $1$ になるが、$3$ 乗以下では $1$ にならない複素数を $1$ つ選ぶ。<br>
+今回は、虚数単位 $i$ を選ぶことにする。<br>
+$A$ と $B$ それぞれ、$i^0=1,i^1=i,i^2=-1,i^3=-i$ を代入して値を求め、掛けて $C$ での値にする。</p>
+<ul>
+<li>$A(1) = 3, B(1) = -1$ より $C(1) = -3$
+</li>
+<li>$A(i) = 2+i, B(i) = 1-2i$ より $C(i) = 4-3i$
+</li>
+<li>$A(-1) = 1, B(-1) = 3$ より $C(-1) = 3$
+</li>
+<li>$A(-i) = 2-i, B(-i) = 1+2i$ より $C(-i) = 4+3i$
+</li>
+</ul>
+<p>これを逆変換にかければよい。<br>
+つまり、以下の式に代入して計算する。<br>
+$$<br>
+c_j = 4^{-1} \sum_{k=0}^{3} C(i^k) i^{-jk}<br>
+$$</p>
+<p>すると、以下のようになる。</p>
+<ul>
+<li>$c_0 = 4^{-1}\times \{ -3\times i^0+(4-3i)\times i^0+3\times i^0+(4+3i)\times i^0\} = 2$
+</li>
+<li>$c_1 = 4^{-1}\times \{ -3\times i^0+(4-3i)\times i^{-1}+3\times i^{-2}+(4+3i)\times i^{-3}\} = -3$
+</li>
+<li>$c_2 = 4^{-1}\times \{ -3\times i^0+(4-3i)\times i^{-2}+3\times i^{-4}+(4+3i)\times i^{-6}\} = -2$
+</li>
+<li>$c_3 = 4^{-1}\times \{ -3\times i^0+(4-3i)\times i^{-3}+3\times i^{-6}+(4+3i)\times i^{-9}\} = 0$
+</li>
+</ul>
+<p>よって、$C(x)=2-3x-2x^2$ である。</p>
+<p>念のため、一般の関数でこれが可能な証明の概略も示しておく。<br>
+$1$ の原始 $N$ 乗根をとり、$\xi$ とする。<br>
+そして、$C(\xi) = A(\xi)B(\xi)$ を求めるまでは、ただの作業しかしていない。<br>
+最後に $c_n$ を取り出すところだが、<br>
+$$<br>
+N^{-1} \sum_{k=0}^{N-1} C(\xi^k) \xi^{-jk}<br>
+= N^{-1} \sum_{k=0}^{N-1} \sum_{l=0}^{N-1} c_l \xi^{lk} \xi^{-jk}<br>
+= N^{-1} \sum_{k=0}^{N-1} \sum_{l=0}^{N-1} c_l \xi^{(l-j)k}<br>
+= N^{-1} \sum_{l=0}^{N-1} c_l N\delta_{jl}<br>
+= c_j<br>
+$$<br>
+となる。<br>
+ただし、$\delta_{ij}$ はクロネッカーのデルタ。</p>
+<p>以上が、複素離散フーリエ変換である。</p>
+<p>既に述べた通り、このままでは計算量が $O(|A||B|)$ どころか $O(N^2)$ で悪化している。<br>
+しかし、最初に選ぶ数 $N$ が $2$ の累乗である場合、これを高速化できる。</p>
+<p>関数 $A$ を、偶数次と奇数次で分ける。<br>
+$A(x) = A_E(x^2) + xA_O(x^2)$<br>
+$A_E(\xi^{2k})$ と $A_O(\xi^{2k})$ の値がわかれば、$A(\xi^k)$ は $1$ つあたり $O(1)$ で求められる。<br>
+そして、$2$ つの関数 $A_E(x)$ と $A_O(x)$ は $A(x)$ と比べて長さが半分になっている。<br>
+しかも、$\xi$ が $1$ の原始 $N$ 乗根であれば、$\xi^2$ は $1$ の原始 $N/2$ 乗根である。</p>
+<p>ということは、これを再帰的に行うことができ、$\log_2{N}$ 回行うと、長さ $1$ になる。<br>
+長さ $1$ の複素離散フーリエ変換は明らかにそのまま何もしないことである。<br>
+よって、$O(N\log N)$ で変換はできた。</p>
+<p>次に逆変換だが、実はよく見ると普通の変換とほぼ同じことをしている。<br>
+違いは以下の $3$ 点。</p>
+<ul>
+<li>$x^k$ 係数に $C(\xi^k)$ を用いている
+</li>
+<li>$x$ に入れる値に $\xi^0,\xi^(-1),\xi^(-2),\dots,\xi^(-N+1)$ を用いている
+</li>
+<li>最後に $N$ で割る処理がある
+</li>
+</ul>
+<p>これは高速化処理のロジックに影響を与えない。<br>
+よって、逆変換も $O(N\log N)$ でできた。</p>
+<p>間の $N$ 個の掛け算は当然 $O(N)$ で終わるので、これで全体が $O(N\log N)$ となった。<br>
+$N$ として、$(|A|+|B|-1)$ 以上の最小の $2$ の累乗を選べば $O((|A|+|B|)\log(|A|+|B|))$ である。<br>
+これが高速フーリエ変換（fast Fourier transform）である。</p>
+<p>ただし、これを機械計算で行うのは、計算量とは別の問題がある。<br>
+一般に $N\geq3$ の場合、$1$ の原始 $N$ 乗根は、非整数である。<br>
+そのため、小数計算で途中の処理を行い、最後に整数にまとめるという強引な方法を取らざるを得ない。<br>
+この問題を解決するのが、次に述べる数論変換である。</p>
+<h3 id="section-ntt">数論変換（NTT）</h3>
+<p>数論変換の原理の数学的説明を述べ、コード例の項目で実装方法を解説する。<br>
 「中身わからなくてもライブラリ使って問題解ければ十分です！」の場合は、この項目はスキップ推奨。</p>
-<p>今後記述予定。</p>
+<p>離散フーリエ変換には、$N\geq3$ の場合 $1$ の原始 $N$ 乗根が整数にならないという問題点があった。<br>
+しかし、ある素数 $p$ を法とした有限体 $\mathbb{F}_p$ 上ではどうだろう。<br>
+（有限体については、$p$ が素数なので割り算も許される剰余類環、くらいに理解していれば十分）</p>
+<p>例えば有限体 $\mathbb{F}_5$ において、$2^1=2,2^2=4,2^3=3,2^4=1$ であるため、$2$ は $1$ の原始 $4$ 乗根である。<br>
+つまり、先ほどの畳み込みは、$i$ ではなく $2$ を用いて以下のように計算できる。<br>
+全て $\bmod 5$ で計算していることに注意。</p>
+<ul>
+<li>$A(x)=2+x$
+</li>
+<li>$B(x)=1-2x=1+3x$
+</li>
+</ul>
+<ul>
+<li>$A(1) = 3, B(1) = 4$ より $C(1) = 2$
+</li>
+<li>$A(2) = 4, B(2) = 2$ より $C(2) = 3$
+</li>
+<li>$A(4) = 1, B(4) = 3$ より $C(4) = 3$
+</li>
+<li>$A(3) = 0, B(3) = 0$ より $C(3) = 0$
+</li>
+</ul>
+<ul>
+<li>$c_0 = 4^{-1}\times \{ 2\times 2^0+3\times 2^0+3\times 2^0+0\times 2^0\} = 2$
+</li>
+<li>$c_1 = 4^{-1}\times \{ 2\times 2^0+3\times 2^{-1}+3\times 2^{-2}+0\times 2^{-3}\} = 2$
+</li>
+<li>$c_2 = 4^{-1}\times \{ 2\times 2^0+3\times 2^{-2}+3\times 2^{-4}+0\times 2^{-6}\} = 3$
+</li>
+<li>$c_3 = 4^{-1}\times \{ 2\times 2^0+3\times 2^{-3}+3\times 2^{-6}+0\times 2^{-9}\} = 0$
+</li>
+</ul>
+<p>よって、$C(x)=2+2x+3x^2$ となる。<br>
+本来の計算結果である $C(x)=2-3x-2x^2$ と、$\bmod 5$ で一致している。<br>
+このようにして、$\bmod p$ での答えでよければ整数計算だけで答えが出せる。</p>
+<p>しかし、これを実用する上では $1$ つ問題がある。<br>
+高速変換のためには、$N$ の値として $(|A|+|B|-1)$ 以上の最小の $2$ の累乗を選ぶ必要がある。<br>
+しかし、先に $N$ を決めてから $\mathbb{F}_p$ 上での原始 $N$ 乗根を見つけるのは非常に難しい。<br>
+最悪の場合、そもそも存在しない場合すらある。</p>
+<p>そこで競プロでよく用いられるのが、$\mathbb{F}_{998244353}$ という有限体。<br>
+$\mathbb{F}_{998244353}$ 上では、実は $3$ が原始 $119\times2^{23}$ 乗根になっているのである。 <br>
+ということは、$3^{119\times2^{23-k}}$ という数を用意すれば、これは $1$ の原始 $2^k$ 乗根。<br>
+$k$ の値として最大で $23$ まで選べるため、長さも十分。<br>
+これで足りないようなら、そもそも配列の長さが $10^7$ くらいあるということ。<br>
+つまり、$O(N\log N)$ がちゃんと走ったところでどうせ間に合わないのである。</p>
+<p>ということで、$\mod{998244353}$ で割った余りを答える問題でなら、実用的にNTTを使える。<br>
+$p-1$ 乗などの計算が入るため、計算量は $O((|A|+|B|)\log(|A|+|B|))+\log p\log(|A|+|B|)$ となる。<br>
+（工夫すれば $O((|A|+|B|)\log(|A|+|B|))+\log p$ にもできるが、労力に見合わない）</p>
+<p>$998244353$ 以外の法では、原始 $2^k$ 乗根を気合で探す分が上乗せになる。<br>
+（Google検索等で原始 $2^k$ 乗根の情報が手に入れば、その法でも使える）</p>
+<p>余談だが、何かで割って余りを答える問題で、ほとんどの場合に法が $998244353$ なのはここが原因。<br>
+想定解がNTTのときだけ $998244353$ で割った余りを要求すると、解法がNTTだとバレるのである。</p>
+<h2 id="section-369acefbdf">コード例</h2>
+<p>NTTの実装例を載せる。<br>
+FFTは省略。<br>
+「中身わからなくてもライブラリ使って問題解ければ十分です！」の場合は、この項目はスキップ推奨。</p>
+<p>AtCoder Libraryのものとの違いは、以下。</p>
+<ul>
+<li>$\bmod 998244353$ 固定で、他の法でやることは考えていない
+</li>
+<li>第 $3$ 引数 <code>lim</code> として、$x$ の最高次数を指定して切り落とせるようになっている
+<ul>
+<li>「分数型の母関数の級数展開」のところで述べた、$f(x)$ を一時的に切り落とす処理も行う
+</li>
+<li>指定の省略も可
+</li>
+</ul>
+</li>
+</ul>
+<p><code>power_mod(a,m)</code> という、$a^m \mod 998244353$ を求めてくれる関数が別に必要。<br>
+しかも、それが $m&lt;0$ にも対応されている前提。 <br>
+また、全ての要素が事前に $0$ 以上 $998244353$ 未満にしてある前提である。</p>
+<pre><code>// bit反転位置でswapして整列しなおす関数
+// 偶数次と奇数次にわけていく、再帰を潜る処理に相当
+// 例えば、5bitで11(01011)番目の要素と26(11010)番目の要素を入れ替える
+void bit_rev(vector&lt;long long&gt;&amp; a, int len) {
+  assert(0&lt;=len&amp;&amp;len&lt;=30);
+  assert(ssize(a)==(1&lt;&lt;len));
+  if (len==0) return;
+  for (int i=1, pos=0; i&lt;(1&lt;&lt;len); i++) {
+    int bit=(1&lt;&lt;(len-1));
+    while (pos&amp;bit) {pos ^= bit; bit &gt;&gt;= 1;}
+    pos ^= bit;
+    if (i&lt;pos) swap(a[i],a[pos]);
+  }
+}
+
+// バタフライ演算
+// 偶数次と奇数次の結果から本来の値を求める、再帰を戻る処理に相当
+// xが原始N乗根であるとき、x^(N/2)は-1であることを利用して少し効率化している
+void butterfly(vector&lt;long long&gt;&amp; a, int len, bool inv = false) {
+  assert(mod==998244353);
+  assert(0&lt;=len&amp;&amp;len&lt;=23);
+  assert(ssize(a)==(1&lt;&lt;len));
+  for (int w=1; w&lt;(1&lt;&lt;len); w*=2) {
+    long long x;
+    if (!inv) x = power_mod(3,(mod-1)/(2*w));
+    else x = power_mod(3,-(mod-1)/(2*w));
+    for (int i=0; i&lt;(1&lt;&lt;len); i+=2*w) {
+      long long xk = 1;
+      for (int j=0; j&lt;w; j++) {
+        long long ae = a[i+j];
+        long long xao = xk*a[i+j+w]%mod;
+        a[i+j] = (ae+xao)%mod;
+        a[i+j+w] = (ae-xao+mod)%mod;
+        xk = xk*x%mod;
+      }
+    }
+  }
+}
+
+// NTTによる順変換および逆変換
+void ntt(vector&lt;long long&gt;&amp; a, int len, bool inv = false) {
+  assert(mod==998244353);
+  assert(0&lt;=len&amp;&amp;len&lt;=23);
+  assert(ssize(a)==(1&lt;&lt;len));
+  bit_rev(a,len);
+  butterfly(a,len,inv);
+  if (inv) {
+    long long x = power_mod(1&lt;&lt;len,-1);
+    for (long long&amp; i : a) i = i*x%mod;
+  }
+}
+
+// 畳み込み
+vector&lt;long long&gt; convolution(const vector&lt;long long&gt;&amp; a_org, const vector&lt;long long&gt;&amp; b_org, int lim = (1&lt;&lt;23)-1) {
+  if (a_org.empty()||b_org.empty()||lim&lt;0) return {};
+  vector&lt;long long&gt; a(a_org.begin(),a_org.begin()+min((int)ssize(a_org),lim+1));
+  vector&lt;long long&gt; b(b_org.begin(),b_org.begin()+min((int)ssize(b_org),lim+1));
+  int len = 0;
+  int max_deg = ssize(a)+ssize(b)-2;
+  while ((1&lt;&lt;len)&lt;=max_deg) len++;
+  assert(len&lt;=23);
+  a.resize(1&lt;&lt;len,0);
+  ntt(a,len);
+  b.resize(1&lt;&lt;len,0);
+  ntt(b,len);
+  for (int i=0; i&lt;(1&lt;&lt;len); i++) a[i] = a[i]*b[i]%mod;
+  ntt(a,len,true);
+  a.resize(min(max_deg,lim)+1);
+  return a;
+}
+
+// 逆数
+// 途中計算では、全て符号反転状態で保持している
+vector&lt;long long&gt; fps_inv(const vector&lt;long long&gt;&amp; a, int lim) {
+  assert(mod==998244353);
+  assert(lim&gt;=0);
+  assert(!a.empty());
+  assert(a[0]!=0);
+  vector &lt;long long&gt; inv = {mod-power_mod(a[0],-1)};
+  for (int n=1; n&lt;=lim; n*=2) {
+    vector&lt;long long&gt; tmp = convolution(a,inv,min(2*n-1,lim));
+    tmp[0] = (tmp[0]+2)%mod;
+    inv = convolution(tmp,inv,min(2*n-1,lim));
+  }
+  inv.resize(lim+1);
+  for (long long&amp; i : inv) if (i&gt;0) i = mod-i;
+  return inv;
+}</code></pre>
+<p>おまけ。（むしろ本体説もある）<br>
+AtCoder Library を部分的に取り入れた逆数計算のコード。</p>
+<p><code>power_mod(a,m)</code> という、$a^m \mod 998244353$ を求めてくれる関数が別に必要。<br>
+しかも、それが $m&lt;0$ にも対応されている前提。 <br>
+また、全ての要素が事前に $0$ 以上 $998244353$ 未満にしてある前提である。</p>
+<p>うっかり上のコードと両方並べると <code>convolution</code> が衝突するので注意。</p>
+<pre><code>// AtCoder Libraryのconvolutionのラッパー
+vector&lt;long long&gt; convolution_acl(const vector&lt;long long&gt;&amp; a_org, const vector&lt;long long&gt;&amp; b_org, int lim = (1&lt;&lt;23)-1) {
+  if (a_org.empty()||b_org.empty()||lim&lt;0) return {};
+  vector&lt;long long&gt; a(a_org.begin(),a_org.begin()+min((int)ssize(a_org),lim+1));
+  vector&lt;long long&gt; b(b_org.begin(),b_org.begin()+min((int)ssize(b_org),lim+1));
+  vector&lt;long long&gt; result = convolution(a,b);
+  if (ssize(result)&gt;lim+1) result.resize(lim+1);
+  return result;
+}
+
+// 逆数
+// 途中計算では、全て符号反転状態で保持している
+vector&lt;long long&gt; fps_inv(const vector&lt;long long&gt;&amp; a, int lim) {
+  assert(mod==998244353);
+  assert(lim&gt;=0);
+  assert(!a.empty());
+  assert(a[0]!=0);
+  vector &lt;long long&gt; inv = {mod-power_mod(a[0],-1)};
+  for (int n=1; n&lt;=lim; n*=2) {
+    vector&lt;long long&gt; tmp = convolution_acl(a,inv,min(2*n-1,lim));
+    tmp[0] = (tmp[0]+2)%mod;
+    inv = convolution_acl(tmp,inv,min(2*n-1,lim));
+  }
+  inv.resize(lim+1);
+  for (long long&amp; i : inv) if (i&gt;0) i = mod-i;
+  return inv;
+}</code></pre>
 <h2 id="section-aec54ceb12">使い方の応用</h2>
 <h3 id="section-181bb52b40">組み合わせ問題への適用</h3>
 <p>例えば、以下の問題を考える。</p>
@@ -249,7 +518,7 @@ $$</p>
 ある $2$ つの評価 $A$ と $B$ があり、それぞれ何点になるのが何パターンあるか、全て既知であるとする。<br>
 このとき、評価 $k$ になるパターンが $m$ 通りあることを、$mx^k$ と表現して母関数にする。<br>
 両者を掛け算して展開すれば、評価の和が何点になるのが何パターンあるか、全てわかるのである。</p>
-<p>あるいは、$3$ つ以上あってもよい。<br>
+<p>あるいは、評価が $3$ つ以上あってもよい。<br>
 評価が存在する個数分だけ母関数を用意して、全て掛け算すればよい。<br>
 例えば冒頭の問題は、$(x+x^2+x^3+x^4+x^5+x^6)^{20}$ を畳み込み $19$ 回で展開すれば解ける。</p>
 <p>ただし、多数掛け算する場合は、計算量に注意。<br>
