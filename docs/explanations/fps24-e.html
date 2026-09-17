@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>階乗</title>
+<title>FPS24 E - 数列 3</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,45 +28,84 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>階乗</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>FPS24 E - 数列 3</h1>
+      
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/fps-24/tasks/fps_24_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/fps-24/submissions/79313565" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>何を何個使うかのパターン数だけ数えればよいのなら、以下の全ての積の $x^N$ の係数でよい。</p>
+<ul>
+<li>$A_1(x) = 1+x$
+</li>
+<li>$A_2(x) = 1+x+x^2$
+</li>
+<li>$A_3(x) = 1+x+x^2+x^3$
+</li>
+<li>$A_4(x) = 1+x+x^2+x^3+x^4$
+</li>
+<li>中略
+</li>
+<li>$A_M(x) = 1+x+x^2+x^3+x^4+\dots+x^M$
+</li>
+</ul>
+<p>しかし、今回はその後に並べ替えをしなければならない。<br>
+つまり、$1$ が $n_1$ 個、$2$ が $n_2$ 個、……、$M$ が $n_M$ 個あるなら、$\dfrac{N!}{n_1!n_2!\dots n_M!}$ 倍する必要がある。</p>
+<p>この「各指数の合計の階乗をかけ、各指数の階乗の積で割る形」は、指数型母関数の出番。<br>
+詳しくは「<a href="../knowledge/fps-convolution.html">形式的冪級数</a>」の記事参照。</p>
+<p>ということで、母関数は以下のようにとる。</p>
+<ul>
+<li>$A_1(x) = 1+x$
+</li>
+<li>$A_2(x) = 1+x+\dfrac{x^2}{2}$
+</li>
+<li>$A_3(x) = 1+x+\dfrac{x^2}{2}+\dfrac{x^3}{6}$
+</li>
+<li>$A_4(x) = 1+x+\dfrac{x^2}{2}+\dfrac{x^3}{6}+\dfrac{x^4}{24}$
+</li>
+<li>中略
+</li>
+<li>$A_M(x) = 1+x+\dfrac{x^2}{2}+\dfrac{x^3}{6}+\dfrac{x^4}{24}+\dots+\dfrac{x^M}{M!}$
+</li>
+</ul>
+<p>これら全ての積の $\dfrac{x^N}{N!}$ の係数でよい。<br>
+畳み込んだ結果の係数は $x^N$ の係数として出てくる。<br>
+つまりこの分母の $N!$ の分までふくまれてしまっているので、$N!$ をかけてから答える。</p>
+<p>$1$ 回畳み込むごとに、$x^{N+1}$ 以降は切り落とす前提で、計算量を考える。<br>
+愚直な畳み込みで毎回 $O(MN)$ かかっても、全体 $O(M^2N)$ で今回の制約下なら間に合う。<br>
+NTTで毎回 $O((M+N)\log (M+N))$ で済むなら $O(M(M+N)\log (M+N))$ で求められる。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>$N=2,\ M=3$ である。</p>
+<p>最初は $f(x)=1$ とする。<br>
+$A_1(x)=1+x$ を掛けると、$f(x)=1+x$ となる。</p>
+<p>次に $A_2(x)=1+x+\dfrac{x^2}{2}$ を掛け、$x^2$ まで残す。<br>
+$$<br>
+f(x)=1+2x+\dfrac{3}{2}x^2<br>
+$$</p>
+<p>さらに $A_3(x)=1+x+\dfrac{x^2}{2}+\dfrac{x^3}{6}$ を掛け、同様に $x^2$ まで残す。<br>
+$$<br>
+f(x)=1+3x+4x^2<br>
+$$</p>
+<p>$x^2$ の係数は $4$ なので、これに $2!=2$ を掛ける。<br>
+よって、答えは $4\times 2=8$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>階乗の逆数は $998244353$ 上の逆元を用いて求める。<br>
+逆元は繰り返し二乗法で求める。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> その他数学系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li><a href="../knowledge/permutation-and-combination.html">順列組み合わせ</a></li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-f.html">ABC461 F - Total Product is N</a></li>
-        <li><a href="../explanations/abc463-f.html">ABC463 F - Senshuraku</a></li>
-        <li><a href="../explanations/abc464-f.html">ABC464 F - Random Vault Heist</a></li>
-        <li><a href="../explanations/abc468-c.html">ABC468 C - Between P and Q</a></li>
-        <li><a href="../explanations/abc468-g.html">ABC468 G - Restricted Permutation</a></li>
-        <li><a href="../explanations/abc470-f.html">ABC470 F - Googol Swaps</a></li>
-        <li><a href="../explanations/abc471-e.html">ABC471 E - Sum of Square of Sum</a></li>
-        <li><a href="../explanations/arc223-b.html">ARC223 B - Valid Arrays by K-Divisible Swaps</a></li>
-        <li><a href="../explanations/arc223-c.html">ARC223 C - Whole Product of Pairwise Distances</a></li>
-        <li><a href="../explanations/arc223-d.html">ARC223 D - Xpectation of Cards in Hand with Laboratory</a></li>
-        <li><a href="../explanations/edpc-y.html">EDPC Y - Grid 2</a></li>
-        <li><a href="../explanations/fps24-a.html">FPS24 A - お菓子</a></li>
-        <li><a href="../explanations/fps24-c.html">FPS24 C - 数列</a></li>
-        <li><a href="../explanations/fps24-d.html">FPS24 D - 数列 2</a></li>
-        <li><a href="../explanations/fps24-e.html">FPS24 E - 数列 3</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/fps-convolution.html">形式的冪級数</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/binary-exponentiation.html">繰り返し二乗法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

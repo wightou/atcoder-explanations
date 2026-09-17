@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FPS24 F - 色紙</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>FPS24 F - 色紙</h1>
+      
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/fps-24/tasks/fps_24_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/fps-24/submissions/79313573" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-1">方針 $1$</a></li><li><a href="#section-2">方針 $2$</a></li></ul></li><li><a href="#section-1-2">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>方針が $2$ つある。<br>
+どちらの考え方も母関数らしい考え方で手計算で最後の答えが出るので、両方紹介する。</p>
+<h3 id="section-1">方針 $1$</h3>
+<p>赤く塗らない紙を選ぶ方法を考える。</p>
+<p>まず偶奇を考えずに選ぶ。<br>
+すると、$1$ 枚ごとに選ぶか選ばないかの選択があるので、母関数は $(1+x)^N$ となる。</p>
+<p>実際には青色が偶数枚で黄色が奇数枚、つまり赤く塗らない紙は奇数枚でなければならない。<br>
+そこで、この $(1+x)^N$ の奇数次だけ残して偶数次を削除する。<br>
+$f(x)$ の奇数次だけ取り出したものは $\dfrac{f(x)-f(-x)}{2}$ である。<br>
+つまり、赤く塗らない紙を奇数枚選ぶ母関数は $\dfrac{(1+x)^N-(1-x)^N}{2}$ となる。</p>
+<p>さて、赤く塗らない紙を青色偶数枚と黄色奇数枚で塗り分ける方法を考える。<br>
+併せて $k$ 枚ある場合、偶奇を考えずに塗る方法は $2^k$ 通りある。<br>
+青色と黄色の総入れ替えを考えると、青色偶数枚と黄色奇数枚になっているのはそのちょうど半分。</p>
+<p>つまり、$\dfrac{(1+x)^N-(1-x)^N}{2}$ の $x^k$ の係数に $2^{k-1}$ をかけて合計すれば答え。<br>
+そしてこれは、形式的に $x=2$ を代入して $2$ で割ればよい。<br>
+よって、答えは $\dfrac{3^N-(-1)^N}{2^2}$。</p>
+<p>計算量は、繰り返し二乗法 $3$ 回分で $O(\log N)$。</p>
+<h3 id="section-2">方針 $2$</h3>
+<p>E問題と同じく、各色の枚数を選んだあとで並べ替えを行うので、指数型母関数の出番。<br>
+各色の塗り方の母関数は以下のようになる。</p>
+<ul>
+<li>$R(x) = 1+x+\dfrac{x^2}{2}+\dfrac{x^3}{6}+\dfrac{x^4}{24}+\dots = e^x$
+</li>
+<li>$B(x) = 1+\dfrac{x^2}{2}+\dfrac{x^4}{24}+\dfrac{x^6}{720}+\dots = \cosh x$
+</li>
+<li>$Y(x) = x+\dfrac{x^3}{6}+\dfrac{x^5}{120}+\dfrac{x^7}{5040}+\dots = \sinh x$
+</li>
+</ul>
+<p>よって、これらを掛け合わせて $\dfrac{x^N}{N!}$ の係数を答えればよい。<br>
+実際にかけ合わせると、以下のようになる。<br>
+$$<br>
+\begin{aligned}<br>
+R(x)B(x)Y(x)<br>
+&amp;= e^x\cosh x\sinh x \\<br>
+&amp;= \dfrac{e^x\sinh 2x}{2} \\<br>
+&amp;= \dfrac{e^x(e^{2x}-e^{-2x})}{2^2} \\<br>
+&amp;= \dfrac{e^{3x}-e^{-x}}{2^2}.<br>
+\end{aligned}<br>
+$$</p>
+<p>$\dfrac{x^N}{N!}$ の係数は $\dfrac{3^N-(-1)^N}{2^2}$ なので、これが答え。</p>
+<p>計算量は、繰り返し二乗法 $3$ 回分で $O(\log N)$。</p>
+<h2 id="section-1-2">入力例1での動作</h2>
+<p>$N=3$ である。</p>
+<p>求める値は以下。<br>
+$$<br>
+\dfrac{3^3-(-1)^3}{2^2}<br>
+=\dfrac{27+1}{4}<br>
+=7<br>
+$$</p>
+<p>よって、答えは $7$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>$998244353$ で割った余りを求めるため、$2^2$ での除算には逆元を用いる。<br>
+逆元は繰り返し二乗法で求める。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/fps-convolution.html">形式的冪級数</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/binary-exponentiation.html">繰り返し二乗法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
