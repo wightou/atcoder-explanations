@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>形式的冪級数</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a><ul><li><a href="#section-d2285c7d8a">形式的冪級数</a></li><li><a href="#section-a6d82952a6">通常型母関数</a></li><li><a href="#section-d94dccd6b7">分数型の母関数の級数展開</a></li><li><a href="#section-4f59605b60">畳み込み</a></li><li><a href="#section-fft">高速フーリエ変換（FFT）</a></li><li><a href="#section-ntt">数論変換（NTT）</a></li></ul></li><li><a href="#section-369acefbdf">コード例</a></li><li><a href="#section-aec54ceb12">使い方の応用</a><ul><li><a href="#section-181bb52b40">組み合わせ問題への適用</a></li><li><a href="#section-1e8af79f51">指数型母関数の利用</a></li><li><a href="#section-2">2変数の母関数の利用</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a><ul><li><a href="#section-d2285c7d8a">形式的冪級数</a></li><li><a href="#section-a6d82952a6">通常型母関数</a></li><li><a href="#section-d94dccd6b7">分数型の母関数の級数展開</a></li><li><a href="#section-4f59605b60">畳み込み</a></li><li><a href="#section-fft">高速フーリエ変換（FFT）</a></li><li><a href="#section-ntt">数論変換（NTT）</a></li></ul></li><li><a href="#section-369acefbdf">コード例</a></li><li><a href="#section-aec54ceb12">使い方の応用</a><ul><li><a href="#section-181bb52b40">組み合わせ問題への適用</a></li><li><a href="#section-1e8af79f51">指数型母関数の利用</a></li><li><a href="#section-2">2変数の母関数の利用</a></li></ul></li><li><a href="#section-7f30376994">分割統治による畳み込み</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>多項式の展開計算ルールを用いて、複雑な組み合わせの計算等を行う方法。<br>
 英語のFormal Power Seriesの頭文字を取ってFPSと呼ばれることもある。</p>
@@ -588,7 +588,102 @@ $$</p>
 上の例では $5$ 乗した後での $x$ の指数は最大で $10$ である。<br>
 つまり $k=11$ として、$A(x) = x+x^2+x^{11}+x^{12}$ とすればよい。</p>
 <p>切り落としをしたい場合は、切り落とす先を頑張って $0$ で埋めていくことになる。</p>
-<h2 id="section-4d0fb049a3">注意点</h2>
+<h2 id="section-7f30376994">分割統治による畳み込み</h2>
+<p>$1$ 方向にのみ進んでいく $1$ 次元の動的計画法で、一部のマスで値の加工をしたい場合がある。<br>
+このとき、仮に $8$ マスだとして、一般には以下のように配るDPで考えて処理する。</p>
+<ul>
+<li>必要なら $0$ マス目の値を処理する
+</li>
+<li>$0$ マス目の値を、$1,2,3,4,5,6,7$ マス目に配る
+</li>
+<li>必要なら $1$ マス目の値を処理する
+</li>
+<li>$1$ マス目の値を、$2,3,4,5,6,7$ マス目に配る
+</li>
+<li>必要なら $2$ マス目の値を処理する
+</li>
+<li>$2$ マス目の値を、$3,4,5,6,7$ マス目に配る
+</li>
+<li>必要なら $3$ マス目の値を処理する
+</li>
+<li>$3$ マス目の値を、$4,5,6,7$ マス目に配る
+</li>
+<li>必要なら $4$ マス目の値を処理する
+</li>
+<li>$4$ マス目の値を、$5,6,7$ マス目に配る
+</li>
+<li>必要なら $5$ マス目の値を処理する
+</li>
+<li>$5$ マス目の値を、$6,7$ マス目に配る
+</li>
+<li>必要なら $6$ マス目の値を処理する
+</li>
+<li>$6$ マス目の値を、$7$ マス目に配る
+</li>
+<li>必要なら $7$ マス目の値を処理する
+</li>
+</ul>
+<p>この場合は、計算量が $O(N^2)$ かかる。</p>
+<p>この処理順は、以下の $2$ つを守っている限り、並べ替えてもよい。</p>
+<ul>
+<li>$i$ マス目を処理する前に、それより前の全マスから $i$ マス目へ配り終わっている
+</li>
+<li>$i$ マス目を処理する前に、$i$ マス目からそれ後ろへのマスへ配ることはない
+</li>
+</ul>
+<p>これを守る処理順として、以下のように組み替えることができる。</p>
+<ul>
+<li>必要なら $0$ マス目の値を処理する
+</li>
+<li>$0$ マス目の値を、$1$ マス目に配る
+</li>
+<li>必要なら $1$ マス目の値を処理する
+</li>
+<li>$0,1$ マス目の値を、$2,3$ マス目に配る
+</li>
+<li>必要なら $2$ マス目の値を処理する
+</li>
+<li>$2$ マス目の値を、$3$ マス目に配る
+</li>
+<li>必要なら $3$ マス目の値を処理する
+</li>
+<li>$0,1,2,3$ マス目の値を、$4,5,6,7$ マス目に配る
+</li>
+<li>必要なら $4$ マス目の値を処理する
+</li>
+<li>$4$ マス目の値を、$5$ マス目に配る
+</li>
+<li>必要なら $5$ マス目の値を処理する
+</li>
+<li>$4,5$ マス目の値を、$6,7$ マス目に配る
+</li>
+<li>必要なら $6$ マス目の値を処理する
+</li>
+<li>$6$ マス目の値を、$7$ マス目に配る
+</li>
+<li>必要なら $7$ マス目の値を処理する
+</li>
+</ul>
+<p>これも、愚直にやれば計算量が $O(N^2)$ かかる。<br>
+しかし、この形だと、配る処理を畳み込みでまとめて処理できる。<br>
+具体的には、$2^k$ 個から $2^k$ 個に配る場合、$O(k2^k)$ で処理できる。<br>
+結果として、全体の計算量が、$O(N\log^2 N)$ になり、高速化される。</p>
+<p>コード例は以下。<br>
+逆数のところで紹介した、AtCoder Libraryのconvolutionのラッパーを用いている。<br>
+また、DPテーブルの長さは $2$ の累乗になっている必要があることに注意。<br>
+<code>f</code> は、$k$ マス先への遷移のときに掛ける数を入れた配列。</p>
+<pre><code>// 0マス目の処理だけ先にする
+for (int i=1; i&lt;n; i++) {
+  int w = i&amp;-i;
+  vector&lt;long long&gt; left = vector(dp.begin()+i-w,dp.begin()+i);
+  vector&lt;long long&gt; transition = convolution_acl(left,f,2*w);
+  for (int j=0; j&lt;w; j++) {
+    dp.at(i+j) += transition.at(w+j);
+    dp.at(i+j) %= mod;
+  }
+  // iマス目の処理
+}</code></pre>
+<h2 id="section-4d0fb049a3">注意点 </h2>
 <p>特になし。</p>
 <h2 id="section-2773da9bff">関連知識</h2>
 <h3 id="section-f012b58781"><a href="permutation-and-combination.html">順列組み合わせ</a></h3>
