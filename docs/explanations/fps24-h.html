@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FPS24 H - ジャンプ</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>FPS24 H - ジャンプ</h1>
+      
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/fps-24/tasks/fps_24_h" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/fps-24/submissions/79330693" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-1">方針 $1$</a></li><li><a href="#section-2">方針 $2$</a></li></ul></li><li><a href="#section-1-2">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>方針が $2$ つある。<br>
+どちらでも手計算で答えが出る。</p>
+<h3 id="section-1">方針 $1$</h3>
+<p>$x$ 軸方向に移動しない操作をひとまとめにする。<br>
+$y$ 軸方向に正の整数 $k$ だけ移動するとき、間の距離 $1$ ごとに止まるか止まらないかの選択がある。<br>
+よって、その移動の仕方は $2^{k-1}$ 通りである。<br>
+また、移動しないのは $1$ 通りなので、母関数は以下のようになる。<br>
+$$<br>
+A(y) = 1+y+2y^2+4y^3+8y^4+\dots = 1+\dfrac{y}{1-2y} = \dfrac{1-y}{1-2y}<br>
+$$</p>
+<p>また、$x$ 軸方向への移動がある操作の母関数は、以下である。<br>
+$$<br>
+B(y) = 1+y+y^2+y^3+y^4+\dots = \dfrac{1}{1-y}<br>
+$$</p>
+<p>よって、$x$ 軸方向に $N$ 回移動する遷移の母関数は、以下のようになる。<br>
+$$<br>
+\{A(y)\}^{N+1}\{B(y)\}^N = \dfrac{1-y}{(1-2y)^{N+1}}<br>
+$$</p>
+<p>これの $y^M$ の係数を考えればいいが、分子が $1$ 次式なので、手計算で対応できる。<br>
+答えは ${}_{M+N}\mathrm{C}_{N}2^M-{}_{M+N-1}\mathrm{C}_{N}2^{M-1}$ である。<br>
+計算量は、二項係数の下準備が支配的で、$O(M+N)$ になる。</p>
+<h3 id="section-2">方針 $2$</h3>
+<p>$2$ 変数の形式的冪級数を考える。<br>
+$x$ 軸方向への移動に対応する文字を $x$、$y$ 軸方向への移動に対応する文字を $y$ とする。<br>
+1回の操作の母関数は、以下である。<br>
+$$<br>
+A(x) = (y+y^2+y^3+\dots)+x(1+y+y^2+\dots) = \dfrac{x+y}{1-y}<br>
+$$</p>
+<p>つまり、任意回の操作での母関数は、以下である。<br>
+$$<br>
+1+A(x)+\{A(x)\}^2+\{A(x)\}^3+\dots = \dfrac{1}{1-A(x)} = \dfrac{1-y}{1-x-2y}<br>
+$$</p>
+<p>この式の $x^Ny^M$ の係数が答え。<br>
+まず、$y$ を定数と思って $x^N$ の係数を考えると、$\dfrac{1-y}{(1-2y)^{N+1}}$ になる。</p>
+<p>これの $y^M$ の係数を考えればいいが、分子が $1$ 次式なので、手計算で対応できる。<br>
+答えは ${}_{M+N}\mathrm{C}_{N}2^M-{}_{M+N-1}\mathrm{C}_{N}2^{M-1}$ である。<br>
+計算量は、二項係数の下準備が支配的で、$O(M+N)$ になる。</p>
+<h2 id="section-1-2">入力例1での動作</h2>
+<p>$N=2,\ M=1$ である。</p>
+<p>求める値は以下。<br>
+$$<br>
+{}_{3}\mathrm{C}_{2}2^1-{}_{2}\mathrm{C}_{2}2^0<br>
+=3\times 2-1<br>
+=5<br>
+$$</p>
+<p>よって、答えは $5$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>二項係数は $998244353$ で割った余りを求めながら計算する。<br>
+階乗を用いて二項係数を求める際の除算には逆元を用い、逆元や $2$ の累乗は繰り返し二乗法で求める。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/fps-convolution.html">形式的冪級数</a>
+<a class="tag" href="../tags/binomial-coefficient.html">二項係数</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/binary-exponentiation.html">繰り返し二乗法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

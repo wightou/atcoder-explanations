@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>二項係数</title>
+<title>FPS24 I - スコア</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,42 +28,60 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>二項係数</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>FPS24 I - スコア</h1>
+      
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/fps-24/tasks/fps_24_i" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/fps-24/submissions/79330701" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>$\prod_{k}(1+a_kx)$ の展開結果の $x^K$ の係数の話であることは明らか。<br>
+$x^K$ より後ろを切り捨てながら、畳み込んでいけばよい。</p>
+<p>畳み込みは $2$ 個ずつ行うが、長いものを何度も扱うと計算量がかさんでしまう。<br>
+残っている中で短い方から $2$ つの積をとることを繰り返して計算量を抑えること。<br>
+実装的には、全てを <code>queue</code> にいれてから、前 $2$ つの畳み込みを後ろに入れるループでよい。</p>
+<p>この高速化をきちんとすれば、計算量は $O(N\log^2 N)$ である。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>$N=3,\ K=2,\ A=(2,3,5)$ である。</p>
+<p>まず、各 $a_i$ から $1+a_ix$ を作り、<code>queue</code> に入れる。<br>
+このとき、<code>queue</code> の中身は以下。<br>
+$$<br>
+[1+2x,\ 1+3x,\ 1+5x]<br>
+$$</p>
+<p>先頭の $2$ つを畳み込む。<br>
+$$<br>
+(1+2x)(1+3x)=1+5x+6x^2<br>
+$$</p>
+<p>これを <code>queue</code> の末尾に入れ、元の $2$ つを取り除く。<br>
+<code>queue</code> の中身は以下になる。<br>
+$$<br>
+[1+5x,\ 1+5x+6x^2]<br>
+$$</p>
+<p>再び先頭の $2$ つを畳み込む。<br>
+$x^K=x^2$ より後ろは切り捨てるので、以下になる。<br>
+$$<br>
+(1+5x)(1+5x+6x^2)=1+10x+31x^2<br>
+$$</p>
+<p>これを <code>queue</code> の末尾に入れ、元の $2$ つを取り除く。<br>
+最終的な <code>queue</code> の中身は以下。<br>
+$$<br>
+[1+10x+31x^2]<br>
+$$</p>
+<p>$x^2$ の係数は $31$ なので、答えは $31$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> その他数学系</p>
-      <p><strong>難易度:</strong> C問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li><a href="../knowledge/permutation-and-combination.html">順列組み合わせ</a></li><li><a href="../knowledge/modular-arithmetic.html">剰余類環</a></li><li><a href="../knowledge/binary-exponentiation.html">繰り返し二乗法</a></li><li><a href="../knowledge/factorial.html">階乗</a></li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc463-f.html">ABC463 F - Senshuraku</a></li>
-        <li><a href="../explanations/abc464-f.html">ABC464 F - Random Vault Heist</a></li>
-        <li><a href="../explanations/abc470-f.html">ABC470 F - Googol Swaps</a></li>
-        <li><a href="../explanations/abc471-e.html">ABC471 E - Sum of Square of Sum</a></li>
-        <li><a href="../explanations/arc223-b.html">ARC223 B - Valid Arrays by K-Divisible Swaps</a></li>
-        <li><a href="../explanations/arc223-d.html">ARC223 D - Xpectation of Cards in Hand with Laboratory</a></li>
-        <li><a href="../explanations/arc224-d.html">ARC224 D - Angst for All Pairs</a></li>
-        <li><a href="../explanations/edpc-y.html">EDPC Y - Grid 2</a></li>
-        <li><a href="../explanations/fps24-a.html">FPS24 A - お菓子</a></li>
-        <li><a href="../explanations/fps24-c.html">FPS24 C - 数列</a></li>
-        <li><a href="../explanations/fps24-d.html">FPS24 D - 数列 2</a></li>
-        <li><a href="../explanations/fps24-h.html">FPS24 H - ジャンプ</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/fps-convolution.html">形式的冪級数</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

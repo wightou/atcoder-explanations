@@ -29,7 +29,7 @@ window.MathJax = {
 <main class="page-layout">
   <article class="markdown-body">
     <h1>形式的冪級数</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a><ul><li><a href="#section-d2285c7d8a">形式的冪級数</a></li><li><a href="#section-a6d82952a6">通常型母関数</a></li><li><a href="#section-d94dccd6b7">分数型の母関数の級数展開</a></li><li><a href="#section-4f59605b60">畳み込み</a></li><li><a href="#section-fft">高速フーリエ変換（FFT）</a></li><li><a href="#section-ntt">数論変換（NTT）</a></li></ul></li><li><a href="#section-369acefbdf">コード例</a></li><li><a href="#section-aec54ceb12">使い方の応用</a><ul><li><a href="#section-181bb52b40">組み合わせ問題への適用</a></li><li><a href="#section-2">2変数の母関数の利用</a></li><li><a href="#section-1e8af79f51">指数型母関数の利用</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li><li><a href="#section-f78ac06c8c">アルゴリズム内容</a><ul><li><a href="#section-d2285c7d8a">形式的冪級数</a></li><li><a href="#section-a6d82952a6">通常型母関数</a></li><li><a href="#section-d94dccd6b7">分数型の母関数の級数展開</a></li><li><a href="#section-4f59605b60">畳み込み</a></li><li><a href="#section-fft">高速フーリエ変換（FFT）</a></li><li><a href="#section-ntt">数論変換（NTT）</a></li></ul></li><li><a href="#section-369acefbdf">コード例</a></li><li><a href="#section-aec54ceb12">使い方の応用</a><ul><li><a href="#section-181bb52b40">組み合わせ問題への適用</a></li><li><a href="#section-1e8af79f51">指数型母関数の利用</a></li><li><a href="#section-2">2変数の母関数の利用</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-2773da9bff">関連知識</a></li></ul></nav>
     <h2 id="section-7a52d716ff">概要</h2>
 <p>多項式の展開計算ルールを用いて、複雑な組み合わせの計算等を行う方法。<br>
 英語のFormal Power Seriesの頭文字を取ってFPSと呼ばれることもある。</p>
@@ -532,11 +532,64 @@ queueの先頭 $2$ つを取り出し、畳み込んで末尾に戻す。<br>
 これを、queueの長さが $1$ になるまで繰り返す。<br>
 $k$ 個の級数を掛ける場合、実質的にどのデータも $log k$ 回ずつしか扱われない。<br>
 長さ $2$ の級数 $k$ 個を掛けるのをFFT/NTTを用いて計算すると、計算量は $O(k \log^2k)$ となる。</p>
-<h3 id="section-2">2変数の母関数の利用</h3>
-<p>今後記述予定。</p>
 <h3 id="section-1e8af79f51">指数型母関数の利用</h3>
-<p>今後記述予定。</p>
+<p>通常型でない母関数を考えてみる。<br>
+すなわち、$a_n$ の値を、$x^n$ の係数ではなく、ある $d_n$ で割った $\dfrac{x^n}{d_n}$ の係数と思ってみる。<br>
+$$<br>
+A(x) = a_0\dfrac{x^0}{d_0} + a_1\dfrac{x^1}{d_1} + a_2\dfrac{x^2}{d_2} + a_3\dfrac{x^3}{d_3} + \dots + a_n\dfrac{x^n}{d_n} + \dots<br>
+$$</p>
+<p>同じように $b_n$ の母関数 $B(x)$ も用意して掛け算してみる。<br>
+すると、畳み込みの結果の $\dfrac{x^n}{d_n}$ の係数は、次のようになる。<br>
+$$<br>
+c_n = \dfrac{d_n}{d_0d_n}a_0b_n + \dfrac{d_n}{d_1d_{n-1}}a_1b_{n-1} + \dfrac{d_n}{d_2d_{n-2}}a_2b_{n-2} + \dots + \dfrac{d_n}{d_kd_{n-k}}a_kb_{n-k} + \dots + \dfrac{d_n}{d_nd_0}a_nb_0<br>
+$$</p>
+<p>つまり、畳み込む際に各数列の添字に応じた重みのようなものをつけることができる。<br>
+特に、$d_n=n!$ とした場合を指数型母関数と言い、畳み込み結果の係数が以下のようになる。<br>
+指数型というのは、全ての係数を $1$ としたときに、$A(x) = e^x$ と指数関数になるため。<br>
+$$<br>
+c_n = {}_n\mathrm{C}_0a_0b_n + {}_n\mathrm{C}_1a_1b_{n-1} + {}_n\mathrm{C}_2a_2b_{n-2} + \dots + {}_n\mathrm{C}_ka_kb_{n-k} + \dots + {}_n\mathrm{C}_na_nb_0<br>
+$$</p>
+<p>つまり、$a_i$ と $b_j$ の積に、$i$ 個の $a$ と $j$ 個の $b$ を並び替える個数を掛け算する形になる。<br>
+これは $2$ つの積だけでなく、$3$ つ以上の積でも成り立つ。</p>
+<p>この形は、以下のような問題で役に立つ。</p>
+<pre><code>7個のマスがあり、これらを赤、青、黄、緑の4色で塗り分ける。
+ただし、同じ色は3回までしか使えない。
+塗り方は何通りあるか。</code></pre>
+<p>この問題は、各色を使う個数を決めた後で、その並び順の個数を掛ける必要がある。<br>
+これが、指数型母関数の畳み込みのときにかかる数に都合よくなっているのである。<br>
+よって、$0$ 回から $3$ 回までの係数を $1$ として、指数型母関数は $A(x) = 1+x+\dfrac{1}{2}x^2+\dfrac{1}{6}x^3$ となる。<br>
+$4$ 色とも同じ母関数となるので、全体の母関数はその $4$ 乗で、以下となる。<br>
+$$<br>
+(1+x+\dfrac{1}{2}x^2+\dfrac{1}{6}x^3)^4 = 1+4x+8x^2+\dfrac{32}{3}x^3+\dfrac{21}{2}x^4+8x^5+\dfrac{29}{6}x^6+\dfrac{7}{3}x^7+O(x^8)<br>
+$$</p>
+<p>この級数の $\dfrac{x^7}{7!}$ の係数を考えて、$\dfrac{7}{3}\times7!=11760$ が答え。<br>
+このように、選んだあとで並べ替えがある組み合わせ計算では、個数を指数にする指数型母関数が役立つ。</p>
+<h3 id="section-2">2変数の母関数の利用</h3>
+<p>文字を複数使い、$2$ 変数の級数にすることもできる。<br>
+例えば、毎ターンの行動を以下から選べるとする。</p>
+<ul>
+<li>右へ $1$ マス移動する
+</li>
+<li>右へ $2$ マス移動する
+</li>
+<li>上へ $1$ マス移動する
+</li>
+<li>右上へ $1$ マス移動する
+</li>
+</ul>
+<p>このとき、右への移動を $x$、上への移動を $y$ に対応させると、母関数は以下のようになる。<br>
+$$<br>
+A(x,y) = x+x^2+y+xy<br>
+$$</p>
+<p>では、このような移動を $5$ ターン行って、右に $5$ マス上に $2$ マス行った位置まで移動するパターン数は？<br>
+答えは、これの $5$ 乗における $x^5y^2$ の係数である $100$ 通り。</p>
+<p>さて、数学的にはこれでいいとして、問題は畳み込みをどう行うか。<br>
+これは、十分大きな $k$ を用意して $y=x^k$ とおけばよい。<br>
+上の例では $5$ 乗した後での $x$ の指数は最大で $10$ である。<br>
+つまり $k=11$ として、$A(x) = x+x^2+x^{11}+x^{12}$ とすればよい。</p>
+<p>切り落としをしたい場合は、切り落とす先を頑張って $0$ で埋めていくことになる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
 <h2 id="section-2773da9bff">関連知識</h2>
 <h3 id="section-f012b58781"><a href="permutation-and-combination.html">順列組み合わせ</a></h3>
 <p>母関数では、組み合わせの数え上げを多項式の係数として表し、積や級数展開によって求める。</p>
@@ -572,6 +625,9 @@ $k$ 個の級数を掛ける場合、実質的にどのデータも $log k$ 回�
         <li><a href="../explanations/fps24-d.html">FPS24 D - 数列 2</a></li>
         <li><a href="../explanations/fps24-e.html">FPS24 E - 数列 3</a></li>
         <li><a href="../explanations/fps24-f.html">FPS24 F - 色紙</a></li>
+        <li><a href="../explanations/fps24-g.html">FPS24 G - 硬貨</a></li>
+        <li><a href="../explanations/fps24-h.html">FPS24 H - ジャンプ</a></li>
+        <li><a href="../explanations/fps24-i.html">FPS24 I - スコア</a></li>
       </ul>
     </section>
 
