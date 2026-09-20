@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC476 D - Automat</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC476 D - Automat</h1>
+      <p class="explanation-title-ja">自動販売機</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc476/tasks/abc476_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc476/submissions/79393943" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc476/submissions/79393947" target="_blank" rel="noopener noreferrer">別解</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>もし両方の販売機が両方の紙幣を受け付けるなら話は簡単。<br>
+貪欲に安い方から買っていけばいいだけである。</p>
+<p>しかしこの問題では、ドリンクの販売機が $1$ ドル札を受け付けないこと。<br>
+$1$ ドル札だけで十分な額を持っていても、$K$ ドル札が足りなければ買えないのである。</p>
+<p>とはいえ、ドリンク同士なら安いドリンクを買う貪欲法は成立する。<br>
+また、デザートの方も同様。</p>
+<p>ということで、概ね以下の手順で求められる。</p>
+<ul>
+<li>事前処理として、ひたすらドリンクだけを安い方から買った場合、最大いくつ買えるか求めておく
+</li>
+<li>その制限内でドリンクを $i$ 個買うとして、各 $i$ について以下を求める
+<ul>
+<li>ドリンクを安い方から $i$ 個買ったときの残金を求める
+</li>
+<li>その残金でデザートを安い方からいくつ買えるか求める
+</li>
+<li>個数の和が最大値記録だったら更新する
+</li>
+</ul>
+</li>
+</ul>
+<p>安い方からいくつ買うといくら、という情報は、事前に安い順にソートして累積和を求めておけばよい。<br>
+ドリンク個数の増加に対してデザートの個数が非増加なので、ツーポインタ法で高速化できる。<br>
+メイン部分の計算量は $O(M+N)$ だが、ソートで $O(N\log N + M\log M)$ かかってしまう。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 2
+m: 3
+k: 10
+x: 50
+y: 6
+a: {22, 30}
+b: {20, 12, 24}</code></pre>
+<p>デザートとドリンクをそれぞれ安い順に並べる。</p>
+<pre><code>a: {22, 30}
+b: {12, 20, 24}</code></pre>
+<p>各ドリンクを買うために必要な $K$ ドル札の枚数は、順に $2,2,3$ 枚である。<br>
+累積では $2,4,7$ 枚となるので、$K$ ドル札 $6$ 枚で買えるドリンクは最大 $2$ 個である。</p>
+<p>また、デザートとドリンクの価格の累積和は次のようになる。</p>
+<pre><code>sum_a: {0, 22, 52}
+sum_b: {0, 12, 32, 56}</code></pre>
+<p>最初の所持金の合計額は $50+6\times 10=110$ ドルである。</p>
+<p>ドリンクを $0$ 個買う場合、残金は $110$ ドルである。<br>
+デザートは $2$ 個とも買えるので、合計 $2$ 個となる。</p>
+<p>ドリンクを $1$ 個買う場合、残金は $110-12=98$ ドルである。<br>
+デザートは $2$ 個とも買えるので、合計 $3$ 個となる。</p>
+<p>ドリンクを $2$ 個買う場合、残金は $110-32=78$ ドルである。<br>
+デザートは $2$ 個とも買えるので、合計 $4$ 個となる。</p>
+<p>したがって、答えは $4$ である。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>$X$ は最大 $10^{15}$、$YK$ は最大 $10^{18}$ になる。<br>
+<code>long long</code> 型を用いること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>両方混ぜた貪欲法を成立させる方法もある。<br>
+データを、デザートとドリンクを混合で「値段、kドル札要求枚数」のpairで昇順ソートしておく。<br>
+安い方から順に、「残金、残 $k$ ドル札」と比較して、買えるなら買っていく。<br>
+このとき、デザートはあとから支払うとすることで、$1$ ドル札が計算上マイナスの枚数になってもよい。</p>
+<p>また、$1$ つ買えないドリンクがあったとしても、次のデザートは買える可能性がある。<br>
+途中で誤って処理を止めないこと。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/cumulative-sum.html">累積和</a>
+<a class="tag" href="../tags/two-pointer-method.html">ツーポインタ法</a>
+<a class="tag" href="../tags/greedy.html">貪欲法</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

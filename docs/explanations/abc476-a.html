@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>全探索</title>
+<title>ABC476 A - Appender</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,37 +28,47 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>全探索</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC476 A - Appender</h1>
+      <p class="explanation-title-ja">追加する人</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc476/tasks/abc476_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc476/submissions/79393923" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>入力は文字列が $1$ つなので、<code>string</code> 型の変数を $1$ つ用意し、<code>cin</code> で入力を受け取る。</p>
+<p>さて、末尾によってつける文字を変えるということだが、これは言い換えればこういうこと。</p>
+<ul>
+<li>まず、末尾が <code>e</code> でなければ、とりあえず <code>e</code> をつける
+</li>
+<li>その後、末尾に <code>r</code> をつける
+</li>
+</ul>
+<p>末尾の文字は <code>s.back()</code> で取り出せるので、if文で以下のように書けば、「末尾が <code>e</code> でなければ」になる。</p>
+<pre><code>if(s.back()!=&#x27;e&#x27;) {
+  // 処理
+}</code></pre>
+<p>末尾に文字を $1$ つくっつけるのは、<code>+= &#x27;e&#x27;</code> や <code>+= &#x27;r&#x27;</code> でよい。</p>
+<p>最後に、完成した文字列を出力しておしまい。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p><code>live</code> の末尾は <code>e</code> なので、<code>e</code> は追加しない。</p>
+<p>その後、末尾に <code>r</code> を追加すると <code>liver</code> になる。</p>
+<p>したがって、<code>liver</code> を出力する。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> データ探索系</p>
-      <p><strong>難易度:</strong> B問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc463-b.html">ABC463 B - Train Reservation</a></li>
-        <li><a href="../explanations/abc464-b.html">ABC464 B - Crop</a></li>
-        <li><a href="../explanations/abc468-a.html">ABC468 A - Maximal Value</a></li>
-        <li><a href="../explanations/abc468-b.html">ABC468 B - Corridor Watch</a></li>
-        <li><a href="../explanations/abc469-b.html">ABC469 B - Isolated Seats</a></li>
-        <li><a href="../explanations/abc472-b.html">ABC472 B - Break a Stick</a></li>
-        <li><a href="../explanations/abc476-b.html">ABC476 B - Wild Card</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/input-output.html">入出力</a>
+<a class="tag" href="../tags/string.html">string型</a>
+<a class="tag" href="../tags/char.html">char型</a>
+<a class="tag" href="../tags/if-statement.html">if分岐</a>
+      </div>
+      
     </section>
 
     <section class="side-card">

@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>全探索</title>
+<title>ABC476 C - Third Largest Number</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,37 +28,57 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>全探索</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC476 C - Third Largest Number</h1>
+      <p class="explanation-title-ja">第3位の数</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc476/tasks/abc476_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc476/submissions/79393932" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc476/submissions/79393938" target="_blank" rel="noopener noreferrer">解答例2</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>問題をよーく読むと、言っていることはゲームのランキングのようなものだとわかる。<br>
+データが $3$ つ以上ある場合に、その第 $3$ 位のところに表示する値を答えろ、ということである。</p>
+<p>そう考えると、一度 $4$ 位以下に落ちたデータは、捨ててしまってもよいことがわかる。</p>
+<p>実装方法はいくつかある。<br>
+解答例として、以下の $2$ パターンを作成してある。</p>
+<p>$1$ つめは、priority_queueを用いるもの。<br>
+小さい方を取り出すようにしたものに、順番にデータを入れていく。<br>
+もし中身が $4$ つ以上になっていたら、最も小さいものを捨てる。<br>
+中身が $3$ つになっていたら先頭にあるものが第 $3$ 位なので、それを結果とする。</p>
+<p>$2$ つめは、vectorを用いるもの。<br>
+データを追加して降順にソートし、$4$ 位であるものがあれば捨てる。<br>
+$3$ 番目が存在するなら、それが第 $3$ 位の値である。</p>
+<p>どちらも保持する要素数は高々 $4$ 個なので、それを定数とみなせば計算量は $O(N)$ である。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+a: {1, 2, 1, 2, 3}</code></pre>
+<p>左から順に値を追加しながら、大きい方から $3$ 個だけを残していく。</p>
+<p>最初の $3$ 個は $1,2,1$ である。<br>
+大きい順に並べると $2,1,1$ なので、第 $3$ 位は $1$ である。</p>
+<p>次に $2$ を追加すると、いったん $2,2,1,1$ の $4$ 個になる。<br>
+このうち第 $4$ 位の $1$ を削除すると、$2,2,1$ が残る。<br>
+したがって、第 $3$ 位は $1$ である。</p>
+<p>最後に $3$ を追加すると、いったん $3,2,2,1$ の $4$ 個になる。<br>
+このうち第 $4$ 位の $1$ を削除すると、$3,2,2$ が残る。<br>
+したがって、第 $3$ 位は $2$ である。</p>
+<p>したがって、順に</p>
+<pre><code>1
+1
+2</code></pre>
+<p>と出力する。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> データ探索系</p>
-      <p><strong>難易度:</strong> B問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc463-b.html">ABC463 B - Train Reservation</a></li>
-        <li><a href="../explanations/abc464-b.html">ABC464 B - Crop</a></li>
-        <li><a href="../explanations/abc468-a.html">ABC468 A - Maximal Value</a></li>
-        <li><a href="../explanations/abc468-b.html">ABC468 B - Corridor Watch</a></li>
-        <li><a href="../explanations/abc469-b.html">ABC469 B - Isolated Seats</a></li>
-        <li><a href="../explanations/abc472-b.html">ABC472 B - Break a Stick</a></li>
-        <li><a href="../explanations/abc476-b.html">ABC476 B - Wild Card</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <span class="muted">なし</span>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

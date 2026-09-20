@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>全探索</title>
+<title>ABC476 B - Wild Card</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,37 +28,60 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>全探索</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC476 B - Wild Card</h1>
+      <p class="explanation-title-ja">ワイルドカード</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc476/tasks/abc476_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc476/submissions/79393929" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>$S$ と $T$ で $1$ 文字ずつ比較し、以下のいずれかになっていることを確認すればよい。</p>
+<ul>
+<li>$T$ の方が <code>*</code> になっている
+</li>
+<li>$S$ と $T$ で同じ文字である
+</li>
+</ul>
+<p>最初に <code>true</code> なり <code>&quot;Yes&quot;</code> なりを用意しておいて、全探索を行う。<br>
+$1$ つでも例外があれば <code>false</code> や <code>&quot;No&quot;</code> に変えればよい。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 8
+s: &quot;chokudai&quot;
+t: &quot;**o*u*ai&quot;</code></pre>
+<p>同じ位置の文字を左から順に比較する。</p>
+<ul>
+<li>$1$ 文字目は、$T$ が <code>*</code> なのでよい。
+</li>
+<li>$2$ 文字目は、$T$ が <code>*</code> なのでよい。
+</li>
+<li>$3$ 文字目は、$S$ と $T$ がともに <code>o</code> なのでよい。
+</li>
+<li>$4$ 文字目は、$T$ が <code>*</code> なのでよい。
+</li>
+<li>$5$ 文字目は、$S$ と $T$ がともに <code>u</code> なのでよい。
+</li>
+<li>$6$ 文字目は、$T$ が <code>*</code> なのでよい。
+</li>
+<li>$7$ 文字目は、$S$ と $T$ がともに <code>a</code> なのでよい。
+</li>
+<li>$8$ 文字目は、$S$ と $T$ がともに <code>i</code> なのでよい。
+</li>
+</ul>
+<p>全ての位置で条件を満たすので、答えは <code>Yes</code> である。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> データ探索系</p>
-      <p><strong>難易度:</strong> B問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc463-b.html">ABC463 B - Train Reservation</a></li>
-        <li><a href="../explanations/abc464-b.html">ABC464 B - Crop</a></li>
-        <li><a href="../explanations/abc468-a.html">ABC468 A - Maximal Value</a></li>
-        <li><a href="../explanations/abc468-b.html">ABC468 B - Corridor Watch</a></li>
-        <li><a href="../explanations/abc469-b.html">ABC469 B - Isolated Seats</a></li>
-        <li><a href="../explanations/abc472-b.html">ABC472 B - Break a Stick</a></li>
-        <li><a href="../explanations/abc476-b.html">ABC476 B - Wild Card</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/brute-force.html">全探索</a>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">
