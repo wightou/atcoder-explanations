@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC230 A - Meeting on Tree</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ARC230 A - Meeting on Tree</h1>
+      <p class="explanation-title-ja">木上の会議</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc230/tasks/arc230_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc230/submissions/79411323" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-2">入力例2での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>まず、集合場所をどこにすべきかを考える。</p>
+<p>集合地点を仮にある頂点 $P$ とする。<br>
+各リスが木の辺を伝ってくる経路は $1$ つである。<br>
+このとき、集合地点に接続されたある辺 $Q\to P$ を参加リスの過半数が通るとしよう。<br>
+この場合、集合地点を $P$ から $Q$ に変更した方がコストが小さくなる。</p>
+<p>つまり、最善の集合地点とは、参加リスの過半数が通るような辺がなくなる地点である。<br>
+各辺、少ない側から多い側への一方通行としてそれに従ってみんな移動すればいいというわけである。<br>
+（ちょうど半数ずつだった場合は、どちらに決めてもコストは同じ）</p>
+<p>ということを考えると、最善の場合のコストは、辺ごとに計算するのがよさそう。<br>
+具体的には、選び方 $2^N-1$ 通りそれぞれ、辺から見て参加リス数の少ない方の合計を求めればよい。</p>
+<p>ということで、ある辺に注目し、少ない側に $L$ 匹いるとして、これを左側と呼ぶことにする。<br>
+多い側には $N-L$ 匹のリスがいて、これを右側と呼ぶことにする。<br>
+ちょうど半分なら、好きな方を左側にしてよい。<br>
+コード的には、この $L$ の値は単純な木DPで求まる。</p>
+<p>参加リスの選び方 $2^N-1$ 通り、左側からの参加リス数を合計すると、延べ $2^{N-1}L$ 匹。<br>
+これは、各リスの参加パターンが $2^{N-1}$ 通りであることからわかる。<br>
+ここから、実は右側の方が参加リス数が少ないパターンについて、差分を引けばよい。</p>
+<p>右側の方が参加リスが $k$ 匹少ないような選び方の総数は、以下のように求められる。<br>
+$$<br>
+\sum^{L-k}_{i=0} {}_L\mathrm{C}_{i+k} {}_{N-L}\mathrm{C}_{i}<br>
+= \sum^{L-k}_{i=0} {}_L\mathrm{C}_{L-i-k} {}_{N-L}\mathrm{C}_{i}<br>
+= {}_N\mathrm{C}_{L-k}<br>
+$$</p>
+<p>最後の変形は、ヴァンデルモンドの恒等式を用いた。<br>
+$L$ 個から $L-i-k$ 個、$N-L$ 個から $i$ 個選ぶ操作の総和は、ただ $N$ 個から $L-k$ 個選ぶだけである。</p>
+<p>よって、これに匹数の差をかけて和を取ることで差分合計が求められる。<br>
+$$<br>
+\begin{aligned}<br>
+\sum^{L}_{k=0} k {}_N\mathrm{C}_{L-k}<br>
+= \sum^{L}_{k=0} (L-k) {}_N\mathrm{C}_{k}<br>
+= L \sum^{L}_{k=0} {}_N\mathrm{C}_{k} - \sum^{L}_{k=0} k {}_N\mathrm{C}_{k}<br>
+\end{aligned}<br>
+$$</p>
+<p>後のコードの書きやすさのために、$L-k$ を $k$ に取り直した。<br>
+これら $2$ つの和は、$N$ の値は問題を通して一定であり、和の中身に $L$ が含まれない。<br>
+よって、階乗、二項係数、累積和、$L$ の値の $4$ つの前処理のもと、この値は辺 $1$ つあたり $O(1)$ で求まる。<br>
+この差分を前述の $2^{N-1}L$ から引けば、その辺を通る分のコスト合計である。</p>
+<p>$4$ つの事前処理は全て $O(N)$ ででき、その後 $O(1)$ 処理が $N-1$ 回なので、全体計算量は $O(N)$ である。</p>
+<h2 id="section-2">入力例2での動作</h2>
+<p>入力例2の木を頂点 $1$ を根として根付き木にする。<br>
+頂点 $1,2,3$ が順につながり、頂点 $3$ の子が頂点 $4,5$ となる。</p>
+<p>まず、$2^{N-1}=2^4=16$ である。<br>
+また、${}_5\mathrm{C}_0=1$, ${}_5\mathrm{C}_1=5$, ${}_5\mathrm{C}_2=10$ なので、必要な累積和は以下のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>$L$</th>
+<th class="table-align-right" style="text-align: right;">$\sum_{k=0}^{L}{}_5\mathrm{C}_k$</th>
+<th class="table-align-right" style="text-align: right;">$\sum_{k=0}^{L}k{}_5\mathrm{C}_k$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+<tr>
+<th scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$16$</td>
+<td class="table-align-right" style="text-align: right;">$25$</td>
+</tr>
+</tbody>
+</table></div>
+<p>葉から順に部分木の頂点数を求める。<br>
+頂点 $4,5$ の部分木サイズはそれぞれ $1$、頂点 $3$ は $3$、頂点 $2$ は $4$、頂点 $1$ は $5$ となる。</p>
+<p>各頂点と親を結ぶ辺について、辺を切ったときの少ない側のリスの総数 $L$ は以下のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>辺</th>
+<th class="table-align-right" style="text-align: right;">子側の部分木サイズ</th>
+<th class="table-align-right" style="text-align: right;">$L$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row">$1-2$</th>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th scope="row">$2-3$</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<th scope="row">$3-4$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th scope="row">$3-5$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+</tbody>
+</table></div>
+<p>$L=1$ の辺のコストへの寄与は $1\times 16-1\times 6+5=15$ となる。</p>
+<p>$L=2$ の辺のコストへの寄与は $2\times 16-2\times 16+25=25$ となる。</p>
+<p>したがって、$L=1$ の辺が $3$ 本、$L=2$ の辺が $1$ 本なので、答えは $15\times3+25=70$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>二項係数は $998244353$ を法として計算する。<br>
+加算・乗算のたびに剰余を取り、逆階乗を求めるための除算は逆元を用いる。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/tree-dp.html">木DP</a>
+<a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+<a class="tag" href="../tags/tree.html">木構造</a>
+<a class="tag" href="../tags/binomial-coefficient.html">二項係数</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/cumulative-sum.html">累積和</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/binary-exponentiation.html">繰り返し二乗法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

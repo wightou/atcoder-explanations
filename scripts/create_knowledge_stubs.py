@@ -141,7 +141,7 @@ STUBS: list[KnowledgeStub] = [
     k("complement", "補集合", "C問題相当", "その他数学系"),
     k("primality-test", "素数判定", "C問題相当", "その他数学系"),
     k("factorial", "階乗", "C問題相当", "その他数学系", aliases=["factorial"], related=["順列組み合わせ"]),
-    k("binomial-coefficient", "二項係数", "C問題相当", "その他数学系", aliases=["combination", "nCr", "nCk"], related=["階乗", "順列組み合わせ", "剰余類環", "繰り返し二乗法"]),
+    k("binomial-coefficient", "二項係数", "C問題相当", "その他数学系", aliases=["combination", "nCr", "nCk"], absorbs=["ヴァンデルモンドの恒等式"], related=["階乗", "順列組み合わせ", "剰余類環", "繰り返し二乗法"]),
     k("extended-euclidean", "拡張ユークリッドの互除法", "D問題相当", "その他数学系"),
     k("binary-exponentiation", "繰り返し二乗法", "C問題相当", "その他数学系"),
     k("binary-search", "二分探索", "C問題相当", "データ探索系", aliases=["binary search", "lower_bound", "upper_bound", "答えで二分探索"], absorbs=["lower_bound関数", "upper_bound関数", "解の二分探索"], related=["計算量の見積もり"]),
@@ -258,7 +258,6 @@ STUBS: list[KnowledgeStub] = [
     k("matroid", "マトロイド", "未分類", "未分類"),
     k("two-sat", "2-SAT", "未分類", "未分類"),
     k("zeckendorf-bruteforce", "Zeckendorf全探索", "未分類", "未分類"),
-    k("vandermonde-identity", "ヴァンデルモンドの恒等式", "未分類", "未分類"),
 ]
 
 

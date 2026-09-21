@@ -9,7 +9,8 @@ aliases:
   - combination
   - nCr
   - nCk
-absorbs: []
+absorbs:
+  - ヴァンデルモンドの恒等式
 related:
   - 階乗
   - 順列組み合わせ
