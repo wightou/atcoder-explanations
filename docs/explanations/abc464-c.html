@@ -36,8 +36,8 @@ window.MathJax = {
     <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>まず、愚直解を考えてみる。<br>
-現在の各鳥の色を管理する配列を用意し、<code>A</code> の中身をコピーする。<br>
-$i$ 日目には、配列 <code>D</code> を見て鳥の色を書き換えてから、全体を見て各色の登場回数をカウンティング。<br>
+現在の各鳥の色を管理する配列を用意し、$A$ の中身をコピーする。<br>
+$i$ 日目には、配列 $D$ を見て鳥の色を書き換えてから、全体を見て各色の登場回数をカウンティング。<br>
 答えは、数えたカウンタの中の $1$ 以上になっている個数である。<br>
 しかしこの解法は、二重ループを回すため、計算量が $O(MN)$ となってしまい、TLE。</p>
 <p>そこで、高速化を考える。<br>
@@ -46,7 +46,7 @@ $i$ 日目には、配列 <code>D</code> を見て鳥の色を書き換えてか
 ならば、真面目に数えるのは $0$ 日目だけにし、以降は変化部分だけ修正していくことで高速化できる。</p>
 <p>具体的には、以下のようになる。</p>
 <p>まず、$2$ つの下準備をしておく。<br>
-$1$ つめ、配列 <code>D</code> を見て、変色が早い順にデータを取り出す準備をしておく。<br>
+$1$ つめ、配列 $D$ を見て、変色が早い順にデータを取り出す準備をしておく。<br>
 これは、<code>vector</code> でソートするなり、<code>priority_queue</code> を用いるなり、どれでもよい。<br>
 $2$ つめ、$0$ 日目時点での各色の鳥の数をカウンティングし、何色いるかも取得する。<br>
 今の各鳥の色は、見ないので管理しない。</p>
@@ -60,7 +60,8 @@ $2$ つめ、$0$ 日目時点での各色の鳥の数をカウンティングし
 </li>
 </ul>
 <p>その日の処理を終えた後の種類数が、その日の答えとなる。<br>
-更新は全日程合計で鳥の羽数しか行われないため、計算量は $O(N+M)$ または $O(N \log N+M)$ となり、間に合う。<br>
+更新は全日程合計で鳥の羽数と同じ数しか行われない。<br>
+そのため、計算量は $O(N+M)$ または $O(N \log N+M)$ となり、間に合う。<br>
 （$\log N$ がつくかどうかは、イベントソートのやり方次第）</p>
 <h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
@@ -69,59 +70,167 @@ m: 7
 a: {1, 2, 5, 3, 4, 6}
 d: {3, 6, 5, 3, 1, 3}
 b: {2, 5, 1, 5, 6, 6}</code></pre>
-<p>答え用の変数 <code>result</code> を用意する。</p>
-<pre><code>result: {0, 0, 0, 0, 0, 0, 0}</code></pre>
-<p><code>priority_queue</code> に、色が変わる日と鳥の番号を入れておく。<br>
-（番兵として <code>(m+1,-1)</code> か何かを入れておいてもよい）<br>
-ここでは、データの入れ方の都合で、鳥番号は <code>0-indexed</code> で扱っている。</p>
-<pre><code>que: {(1,4) | (3,0), (6,1), (5,2), (3,3), (3,5)}</code></pre>
-<p>初期状態では、各鳥の色は <code>a</code> に入っている色である。<br>
-そのため、各色の鳥の数 <code>counters</code> と、$1$ 羽以上いる色の種類数 <code>kind</code> は次のようになる。<br>
-<code>counters.at(0)</code> は、添字がずれないようにするダミーデータ。</p>
-<pre><code>a: {1, 2, 5, 3, 4, 6}
-counters: {--, 1, 1, 1, 1, 1, 1}
-kind: 6</code></pre>
-<p>$1$ 日目を処理する。<br>
-<code>que</code> の先頭は <code>(1,4)</code> なので、鳥 $4$ の色を $4$ から $6$ に変える。<br>
-色 $4$ の鳥がいなくなったので、<code>kind</code> を $-1$ する。</p>
-<pre><code>que: {(3,0) | (6,1), (5,2), (3,3), (3,5)}
-counters: {--, 1, 1, 1, 0, 1, 2}
-kind: 5
-result: {5, 0, 0, 0, 0, 0, 0}</code></pre>
-<p>$2$ 日目を処理する。<br>
-<code>que</code> の先頭は <code>(3,0)</code> なので、$2$ 日目に色が変わる鳥はいない。</p>
-<pre><code>kind: 5
-result: {5, 5, 0, 0, 0, 0, 0}</code></pre>
-<p>$3$ 日目を処理する。<br>
-<code>que</code> の先頭に日付が $3$ のものが $3$ つあるので、鳥 $0$、鳥 $3$、鳥 $5$ の色を変える。<br>
-その色の鳥がいなくなったり新しく現れたりしたら、<code>kind</code> も適切に処理する。</p>
-<pre><code>que: {(5,2) | (6,1)}
-counters: {--, 0, 2, 0, 0, 2, 2}
-kind: 3
-result: {5, 5, 3, 0, 0, 0, 0}</code></pre>
-<p>$4$ 日目を処理する。<br>
-<code>que</code> の先頭は <code>(5,2)</code> なので、$4$ 日目に色が変わる鳥はいない。</p>
-<pre><code>que: {(5,2) | (6,1)}
-kind: 3
-result: {5, 5, 3, 3, 0, 0, 0}</code></pre>
-<p>$5$ 日目を処理する。<br>
-<code>que</code> の先頭は <code>(5,2)</code> なので、鳥 $2$ の色を <code>5</code> から <code>1</code> に変える。<br>
-色 $1$ の鳥が新しく現れたので、<code>kind</code> を $+1$ する。</p>
-<pre><code>que: {(6,1) | }
-counters: {--, 1, 2, 0, 0, 1, 2}
-kind: 4
-result: {5, 5, 3, 3, 4, 0, 0}</code></pre>
-<p>$6$ 日目を処理する。<br>
-<code>que</code> の先頭は <code>(6,1)</code> なので、鳥 $1$ の色を <code>2</code> から <code>5</code> に変える。</p>
-<pre><code>que: {  }
-counters: {--, 1, 1, 0, 0, 2, 2}
-kind: 4
-result: {5, 5, 3, 3, 4, 4, 0}</code></pre>
-<p>$7$ 日目を処理する。<br>
-<code>que</code> が空もしくは番兵なので、$7$ 日目に色が変わる鳥はいない。</p>
-<pre><code>que: {  }
-kind: 4
-result: {5, 5, 3, 3, 4, 4, 4}</code></pre>
+<p>変色する日が早い順に並べると、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">鳥番号</th>
+<th class="table-align-right" style="text-align: right;">変色する日</th>
+<th class="table-align-right" style="text-align: right;">元の色</th>
+<th class="table-align-right" style="text-align: right;">新しい色</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+</tbody>
+</table></div>
+<p>$0$ 日目では、各色の鳥の数は次のようになっている。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-left" style="text-align: left;">色</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$5$</th>
+<th class="table-align-right" style="text-align: right;">$6$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">鳥の数</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+</tbody>
+</table></div>
+<p>色の種類数は $6$ である。</p>
+<p>$1$ 日目には、鳥 $4$ が色 $4$ から色 $6$ に変わる。</p>
+<pre><code>色4: 1 -&gt; 0
+種類数: 6 -&gt; 5
+
+色6: 1 -&gt; 2
+種類数: 5</code></pre>
+<p>処理後は次の状態になる。</p>
+<pre><code>各色の鳥の数: {1, 1, 1, 0, 1, 2}
+種類数: 5</code></pre>
+<p>$2$ 日目に変色する鳥はいないので、状態は変わらない。</p>
+<p>$3$ 日目には、鳥 $0$、鳥 $3$、鳥 $5$ が変色する。</p>
+<p>鳥 $0$ は色 $1$ から色 $2$ に変わる。</p>
+<pre><code>色1: 1 -&gt; 0
+種類数: 5 -&gt; 4
+
+色2: 1 -&gt; 2
+種類数: 4</code></pre>
+<p>続いて、鳥 $3$ は色 $3$ から色 $5$ に変わる。</p>
+<pre><code>色3: 1 -&gt; 0
+種類数: 4 -&gt; 3
+
+色5: 1 -&gt; 2
+種類数: 3</code></pre>
+<p>鳥 $5$ は色 $6$ から色 $6$ に変わる。</p>
+<pre><code>色6: 2 -&gt; 1 -&gt; 2
+種類数: 3</code></pre>
+<p>$3$ 日目の処理後は次の状態になる。</p>
+<pre><code>各色の鳥の数: {0, 2, 0, 0, 2, 2}
+種類数: 3</code></pre>
+<p>残りの日も同様に処理すると、各日の処理後は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">日</th>
+<th class="table-align-left" style="text-align: left;">その日に処理する色の更新</th>
+<th class="table-align-left" style="text-align: left;">色 $1$ から色 $6$ までの鳥の数</th>
+<th class="table-align-right" style="text-align: right;">種類数</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-left" style="text-align: left;">$4 \to 6$</td>
+<td class="table-align-left" style="text-align: left;">$(1,1,1,0,1,2)$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">$(1,1,1,0,1,2)$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-left" style="text-align: left;">$1 \to 2,\ 3 \to 5,\ 6 \to 6$</td>
+<td class="table-align-left" style="text-align: left;">$(0,2,0,0,2,2)$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">$(0,2,0,0,2,2)$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$5$</th>
+<td class="table-align-left" style="text-align: left;">$5 \to 1$</td>
+<td class="table-align-left" style="text-align: left;">$(1,2,0,0,1,2)$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$6$</th>
+<td class="table-align-left" style="text-align: left;">$2 \to 5$</td>
+<td class="table-align-left" style="text-align: left;">$(1,1,0,0,2,2)$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$7$</th>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">$(1,1,0,0,2,2)$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、各日の答えは次のようになる。</p>
+<pre><code>5
+5
+3
+3
+4
+4
+4</code></pre>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

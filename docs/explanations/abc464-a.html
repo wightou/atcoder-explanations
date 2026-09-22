@@ -42,34 +42,41 @@ window.MathJax = {
 そして、$1$ 文字ごとに、それが <code>E</code> なら $-1$、<code>W</code> なら $+1$ をしていく。<br>
 最終的にカウンターが正の数なら西軍の方が多く、負の数なら東軍の方が多い。</p>
 <p>ということで、カウンターの値が $0$ より大きいなら <code>&quot;West&quot;</code>、そうでないなら <code>&quot;East&quot;</code> と答えればよい。<br>
-if文の中でcoutしてもいいし、出力用の変数を用意しておいてif文の外でcoutしてもいい。</p>
+if文の中で <code>cout</code> してもいいし、出力用の変数を用意しておいてif文の外で <code>cout</code> してもいい。</p>
 <h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>s: &quot;EEWEW&quot;</code></pre>
-<p>文字列の長さを取得する。</p>
-<pre><code>n: 5</code></pre>
-<p>答え用の変数 <code>result</code> を <code>&quot;East&quot;</code> で初期化する。</p>
-<pre><code>result: &quot;East&quot;</code></pre>
-<p><code>counter</code> を $0$ で初期化する。</p>
-<pre><code>counter: 0</code></pre>
-<p>$0$ 文字目をチェックする。<br>
-<code>&#x27;E&#x27;</code> なので <code>counter</code> を $1$ 減らす。</p>
-<pre><code>counter: -1</code></pre>
-<p>$1$ 文字目をチェックする。<br>
-<code>&#x27;E&#x27;</code> なので <code>counter</code> を $1$ 減らす。</p>
-<pre><code>counter: -2</code></pre>
-<p>$2$ 文字目をチェックする。<br>
-<code>&#x27;W&#x27;</code> なので <code>counter</code> を $1$ 増やす。</p>
-<pre><code>counter: -1</code></pre>
-<p>$3$ 文字目をチェックする。<br>
-<code>&#x27;E&#x27;</code> なので <code>counter</code> を $1$ 減らす。</p>
-<pre><code>counter: -2</code></pre>
-<p>$4$ 文字目をチェックする。<br>
-<code>&#x27;W&#x27;</code> なので <code>counter</code> を $1$ 増やす。</p>
-<pre><code>counter: -1</code></pre>
-<p>最終的に、<code>counter</code> は $0$ より大きくないので、<code>result</code> は <code>&quot;East&quot;</code> のままでよい。</p>
-<pre><code>result: &quot;East&quot;</code></pre>
-<p>最後に、<code>result</code> を出力すればよい。</p>
+<p><code>E</code> ならカウンターを $1$ 減らし、<code>W</code> なら $1$ 増やす。<br>
+カウンターを $0$ から始めると、次のように変化する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>読んだ文字</th>
+<th class="table-align-right" style="text-align: right;">カウンター</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row"><code>E</code></th>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
+</tr>
+<tr>
+<th scope="row"><code>E</code></th>
+<td class="table-align-right" style="text-align: right;">$-2$</td>
+</tr>
+<tr>
+<th scope="row"><code>W</code></th>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
+</tr>
+<tr>
+<th scope="row"><code>E</code></th>
+<td class="table-align-right" style="text-align: right;">$-2$</td>
+</tr>
+<tr>
+<th scope="row"><code>W</code></th>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
+</tr>
+</tbody>
+</table></div>
+<p>最後のカウンターは $-1$ で $0$ より大きくないので、<code>&quot;East&quot;</code> を出力する。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

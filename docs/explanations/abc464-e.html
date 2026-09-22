@@ -44,42 +44,26 @@ window.MathJax = {
 右下から左上方向に二次元累積最大値を取ることで、$(i以上,j以上)$ という範囲の最大値が $(i,j)$ に残る。</p>
 <p>これで、計算量が $O(HW+Q)$ で全てのマスの文字がわかる。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p>入力を受け取る。  <br>
+<p>入力を受け取る。<br>
 <code>r</code> と <code>c</code> は <code>0-indexed</code> に直しておく。</p>
 <pre><code>h: 2
 w: 3
 q: 3
-r: {1, 0, 1}
-c: {1, 2, 0}
-x: {&#x27;B&#x27;, &#x27;C&#x27;, &#x27;D&#x27;}</code></pre>
-<p>各マスに、最後に書き換えた操作番号を記録するための二次元配列を用意する。  <br>
-はじめは、どの操作でも書き換えられていないことを表す <code>-1</code> で初期化する。  <br>
-最右列と最下段に無意味なデータを $1$ 列/行だけ置いておくと、あとで累積最大値を取る処理が楽。<br>
-（以下の例には記載していない）</p>
-<pre><code>vec: {{-1, -1, -1},
-      {-1, -1, -1}}</code></pre>
-<p>操作 $i$ は、右下のマスが <code>(r[i], c[i])</code> である長方形を塗り替える。  <br>
-そのため、いったん <code>vec[r[i]][c[i]]</code> に $i$ を書き込んでおく。</p>
-<pre><code>vec: {{-1, -1,  1},
-      { 2,  0, -1}}</code></pre>
-<p>右下から順に見て、二次元累積最大値を取る。<br>
-具体的には、「自身、下のマス、右のマス」の最大値を求めていく。<br>
-更新順序の工夫により、各マスには結局、そのマスを含めた右下側にある最大値が入ることになる。</p>
-<pre><code>vec: {{ 2,  1,  1},
-      { 2,  0, -1}}</code></pre>
-<p>答え用の変数 <code>result</code> を、すべて <code>A</code> で初期化する。</p>
-<pre><code>result: {&quot;AAA&quot;,
-         &quot;AAA&quot;}</code></pre>
-<p>累積最大値を取った後の <code>vec[i][j]</code> は、マス $(i,j)$ を最後に塗り替える操作番号である。  <br>
-<code>-1</code> でなければ、対応する <code>x</code> の値を <code>result[i][j]</code> に書き込む。</p>
-<p>マス $(0,0)$ は、<code>vec[0][0]</code> が <code>2</code> なので、<code>x[2]</code> を使って <code>D</code> にする。  <br>
-マス $(0,1)$ は、<code>vec[0][1]</code> が <code>1</code> なので、<code>x[1]</code> を使って <code>C</code> にする。  <br>
-マス $(0,2)$ は、<code>vec[0][2]</code> が <code>1</code> なので、<code>x[1]</code> を使って <code>C</code> にする。  <br>
-マス $(1,0)$ は、<code>vec[1][0]</code> が <code>2</code> なので、<code>x[2]</code> を使って <code>D</code> にする。  <br>
-マス $(1,1)$ は、<code>vec[1][1]</code> が <code>0</code> なので、<code>x[0]</code> を使って <code>B</code> にする。  <br>
-マス $(1,2)$ は、<code>vec[1][2]</code> が <code>-1</code> なので、<code>A</code> のままでよい。</p>
-<pre><code>result: {&quot;DCC&quot;,
-         &quot;DBA&quot;}</code></pre>
+(r, c, x): {(1, 1, &#x27;B&#x27;), (0, 2, &#x27;C&#x27;), (1, 0, &#x27;D&#x27;)}</code></pre>
+<p>操作番号を $0,1,2$ とする。<br>
+各操作について、塗り替える長方形の右下のマスにだけ、その操作番号を記録する。<br>
+どの操作の右下でもないマスは $-1$ としておく。</p>
+<pre><code>-1 -1  1
+ 2  0 -1</code></pre>
+<p>次に、右下から左上へ向かって、「自身・下・右」の最大値を取る。<br>
+これにより、各マスには、そのマスを含む長方形を塗った操作のうち最後の操作番号が残る。</p>
+<pre><code>2 1  1
+2 0 -1</code></pre>
+<p>操作 $0$ の文字は <code>B</code>、操作 $1$ の文字は <code>C</code>、操作 $2$ の文字は <code>D</code> である。<br>
+また、$-1$ のマスは一度も塗り替えられていないので <code>A</code> のままとする。</p>
+<p>したがって、最終的な盤面は次のようになる。</p>
+<pre><code>DCC
+DBA</code></pre>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>
@@ -122,7 +106,7 @@ x: {&#x27;B&#x27;, &#x27;C&#x27;, &#x27;D&#x27;}</code></pre>
 </li>
 </ul>
 <p>その行から始まる上書きの探索については、事前に適当な方法を用いて開始行でソートしておけばよい。</p>
-<p>これで、 $O(HW\log W+Q\log Q\log W+上書きソート分)$ で解くことができる。<br>
+<p>これで、$O(HW\log W+Q\log Q\log W+上書きソート分)$ で解くことができる。<br>
 画面上部にあるリンク先の別解コードでは、左上の入力が来ないので、代わりに定数として処理している。<br>
 本当に左上もクエリで来る問題を解くには、その部分も書き換えること。</p>
   </article>
@@ -134,6 +118,7 @@ x: {&#x27;B&#x27;, &#x27;C&#x27;, &#x27;D&#x27;}</code></pre>
         <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
 <a class="tag" href="../tags/cumulative-sum.html">累積和</a>
 <a class="tag" href="../tags/two-dimensional-cumulative-sum.html">二次元累積和</a>
+<a class="tag" href="../tags/two-dimensional-imos.html">二次元imos法</a>
       </div>
       <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
     </section>

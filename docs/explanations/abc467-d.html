@@ -35,53 +35,46 @@ window.MathJax = {
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc467/tasks/abc467_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc467/submissions/77654287" target="_blank" rel="noopener noreferrer">解答例</a></div>
     <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
-<p>$P$ と $Q$ を両方通る円の中心は、必ず線分 $PQ$ の垂直二等分線上にある。<br>
-$R$ と $S$ についても同様。<br>
-よって、$PQ \nparallel RS$ であれば、垂直二等分線の交点を中心にすればよく、答えは <code>&quot;Yes&quot;</code>。</p>
-<p>さて、$PQ \parallel RS$ である場合はどうか。<br>
+<p>$\mathrm{P}$ と $\mathrm{Q}$ を両方通る円の中心は、必ず線分 $\mathrm{PQ}$ の垂直二等分線上にある。<br>
+$\mathrm{R}$ と $\mathrm{S}$ についても同様。<br>
+よって、$\mathrm{PQ} \nparallel \mathrm{RS}$ であれば、垂直二等分線の交点を中心にすればよく、答えは <code>&quot;Yes&quot;</code>。</p>
+<p>さて、$\mathrm{PQ} \parallel \mathrm{RS}$ である場合はどうか。<br>
 この場合は、垂直二等分線同士が平行になりそうに見えるが、同一直線になる場合だけは答えは <code>&quot;Yes&quot;</code>。<br>
-これは四角形 $PQRS$ または $PQSR$ が等脚台形になることを意味する。<br>
-したがって、$PR=QS$ かつ $PS=QR$ であるなら答えは <code>&quot;Yes&quot;</code>。</p>
-<p>まとめると、$PQ \nparallel RS$ または $(PR=QS$ かつ $PS=QR)$ なら <code>&quot;Yes&quot;</code> で、それ以外は <code>&quot;No&quot;</code>。</p>
+これは四角形 $\mathrm{PQRS}$ または $\mathrm{PQSR}$ が等脚台形になることを意味する。<br>
+したがって、$\mathrm{PR}=\mathrm{QS}$ かつ $\mathrm{PS}=\mathrm{QR}$ であるなら答えは <code>&quot;Yes&quot;</code>。</p>
+<p>まとめると、$\mathrm{PQ} \nparallel \mathrm{RS}$ または $(\mathrm{PR}=\mathrm{QS}$ かつ $\mathrm{PS}=\mathrm{QR})$ なら <code>&quot;Yes&quot;</code> で、それ以外は <code>&quot;No&quot;</code>。</p>
 <p>平行かどうかはベクトルの外積で判定でき、点と点の距離もベクトルの絶対値の $2$ 乗を用いればよい。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p>テストケース数を受け取る。</p>
-<pre><code>q: 3</code></pre>
-<p>$1$ つめのテストケースを受け取る。</p>
-<pre><code>p: (2, 0)
-q: (1, 1)
-r: (-1, 0)
-s: (1, 2)</code></pre>
-<p>答え用の変数 <code>result</code> を <code>&quot;Yes&quot;</code> で初期化する。</p>
-<pre><code>result: &quot;Yes&quot;</code></pre>
-<p>$\overrightarrow{PQ}=(-1,1)$、$\overrightarrow{RS}=(2,2)$ である。</p>
-<p>この $2$ つのベクトルの外積は $-4$ であり、$PQ$ と $RS$ は平行でない。</p>
-<p><code>result</code> は変更しない。</p>
-<pre><code>result: &quot;Yes&quot;</code></pre>
-<p>$2$ つめのテストケースを受け取る。</p>
-<pre><code>p: (1, 0)
-q: (-1, 0)
-r: (0, 1)
-s: (0, -1)</code></pre>
-<p>答え用の変数 <code>result</code> を <code>&quot;Yes&quot;</code> で初期化する。</p>
-<p>$\overrightarrow{PQ}=(-2,0)$、$\overrightarrow{RS}=(0,-2)$ である。</p>
-<p>この $2$ つのベクトルの外積は $4$ であり、$PQ$ と $RS$ は平行でない。</p>
-<p><code>result</code> は変更しない。</p>
-<pre><code>result: &quot;Yes&quot;</code></pre>
-<p>$3$ つめのテストケースを受け取る。</p>
-<pre><code>p: (4, 0)
-q: (3, 1)
-r: (2, 0)
-s: (1, 1)</code></pre>
-<p>答え用の変数 <code>result</code> を <code>&quot;Yes&quot;</code> で初期化する。</p>
-<p>$\overrightarrow{PQ}=(-1,1)$、$\overrightarrow{RS}=(-1,1)$ である。</p>
-<p>この $2$ つのベクトルの外積は $0$ であり、$PQ$ と $RS$ は平行である。</p>
-<p>次に、各ベクトルの長さの二乗を計算する。</p>
-<pre><code>(r-q).norm2(): 2
-(s-p).norm2(): 10</code></pre>
-<p>この $2$ つは等しくないので、<code>result</code> を <code>&quot;No&quot;</code> にする。</p>
-<pre><code>result: &quot;No&quot;</code></pre>
-<p>以上より、$3$ つのテストケースの答えは順に <code>&quot;Yes&quot;</code>、<code>&quot;Yes&quot;</code>、<code>&quot;No&quot;</code> である。</p>
+<p>テストケース数は $3$ である。</p>
+<p>$1$ つめのテストケースでは、</p>
+<pre><code>P: (2, 0)
+Q: (1, 1)
+R: (-1, 0)
+S: (1, 2)</code></pre>
+<p>となる。</p>
+<p>$\overrightarrow{\mathrm{PQ}}=(-1,1)$、$\overrightarrow{\mathrm{RS}}=(2,2)$ であり、<br>
+外積は $-4$ である。<br>
+したがって $\mathrm{PQ}$ と $\mathrm{RS}$ は平行でなく、答えは <code>Yes</code> となる。</p>
+<p>$2$ つめのテストケースでは、</p>
+<pre><code>P: (1, 0)
+Q: (-1, 0)
+R: (0, 1)
+S: (0, -1)</code></pre>
+<p>となる。</p>
+<p>$\overrightarrow{\mathrm{PQ}}=(-2,0)$、$\overrightarrow{\mathrm{RS}}=(0,-2)$ であり、<br>
+外積は $4$ である。<br>
+したがって、この場合も答えは <code>Yes</code> となる。</p>
+<p>$3$ つめのテストケースでは、</p>
+<pre><code>P: (4, 0)
+Q: (3, 1)
+R: (2, 0)
+S: (1, 1)</code></pre>
+<p>となる。</p>
+<p>$\overrightarrow{\mathrm{PQ}}=(-1,1)$、$\overrightarrow{\mathrm{RS}}=(-1,1)$ なので、<br>
+今度は $\mathrm{PQ}$ と $\mathrm{RS}$ が平行である。</p>
+<p>そこで距離を調べると、$\mathrm{QR}^2=2$、$\mathrm{PS}^2=10$ で一致しない。<br>
+よって等脚台形になる条件を満たさず、答えは <code>No</code> となる。</p>
+<p>以上より、出力は順に <code>Yes</code>、<code>Yes</code>、<code>No</code> となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>座標の差の二乗和や外積は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>

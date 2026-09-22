@@ -59,26 +59,71 @@ s: {&quot;.....&quot;,
     &quot;..#..&quot;,
     &quot;.###.&quot;,
     &quot;.....&quot;}</code></pre>
-<p>答え用の変数 <code>result</code> を空の状態で用意する。</p>
-<pre><code>result: {}</code></pre>
-<p>すべてのマスをチェックする。<br>
-黒いマスは、<code>0-indexed</code> で次の位置にある。</p>
-<pre><code>(1, 2), (2, 1), (2, 2), (2, 3)</code></pre>
-<p>黒いマスがある範囲を調べると、次のようになる。</p>
-<pre><code>l: 1
-r: 3
-u: 1
-d: 2</code></pre>
-<p>そのため、$1$ 行目から $2$ 行目までについて、$1$ 列目から $3$ 列目までを切り出せばよい。</p>
-<p>$1$ 行目を切り出す。</p>
-<pre><code>s[1]: &quot;..#..&quot;
-s[1].substr(1,3): &quot;.#.&quot;
-result: {&quot;.#.&quot;}</code></pre>
-<p>$2$ 行目を切り出す。</p>
-<pre><code>s[2]: &quot;.###.&quot;
-s[2].substr(1,3): &quot;###&quot;
-result: {&quot;.#.&quot;,
-         &quot;###&quot;}</code></pre>
+<p>全てのマスを順に見て、黒いマスを見つけるたびに上下左右の端を更新する。<br>
+黒いマスの位置と、その時点での上下左右の端は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-center" style="text-align: center;">見つけた黒いマス</th>
+<th class="table-align-right" style="text-align: right;">左端</th>
+<th class="table-align-right" style="text-align: right;">右端</th>
+<th class="table-align-right" style="text-align: right;">上端</th>
+<th class="table-align-right" style="text-align: right;">下端</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(1,2)$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(2,1)$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(2,2)$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(2,3)$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+</tbody>
+</table></div>
+<p>最終的に、黒いマスが存在する範囲は、上端が $1$、下端が $2$、左端が $1$、右端が $3$ となる。</p>
+<p>この範囲を各行から切り出す。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">行</th>
+<th class="table-align-center" style="text-align: center;">元の文字列</th>
+<th class="table-align-center" style="text-align: center;">切り出す部分</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-center" style="text-align: center;"><code>&quot;..#..&quot;</code></td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;.#.&quot;</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-center" style="text-align: center;"><code>&quot;.###.&quot;</code></td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;###&quot;</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、出力は次のようになる。</p>
+<pre><code>.#.
+###</code></pre>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

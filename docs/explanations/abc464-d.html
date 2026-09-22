@@ -39,11 +39,11 @@ window.MathJax = {
 天気を変えるか変えないかの $2$ 択を $N$ 回やるので、計算量が $O(2^N)$ になってしまう。</p>
 <p>しかし、最終日の $1$ 日前についての必要な情報が得られたら、簡単に答えが出せる。<br>
 最終日前が晴だった場合の中での最大嬉しさと、同じく雨だった場合のデータがあればよい。</p>
-<p>最終日が晴になる方として、晴→晴はそのまま、雨→晴の方には <code>Y</code> の値を足す。<br>
+<p>最終日が晴になる方として、晴→晴はそのまま、雨→晴の方には $Y$ の値を足す。<br>
 そのうち大きい方を採用する。<br>
 最終日が雨になる方として、晴→雨はそのまま、雨→雨もそのまま。<br>
 そのうち大きい方を採用する。<br>
-その後、元の天気と異なる方からは <code>X</code> の値を引く。<br>
+その後、元の天気と異なる方からは $X$ の値を引く。<br>
 そして、最終日が晴の場合と雨の場合のうち、嬉しさが大きい方を答えればよい。</p>
 <p>これで最終日の $1$ 日前の情報から最終日の答えを $O(1)$ で求めることができる。<br>
 そしてこの方法は、最終日以外でも前日の答えを利用して毎日の答えを $O(1)$ で求めるのに使える。<br>
@@ -56,34 +56,85 @@ n: 6
 s: &quot;SRRRSR&quot;
 x: {3, 1, 4, 1, 5, 9}
 y: {2, 6, 5, 3, 5}</code></pre>
-<p><code>dp_s[i]</code> を、$i$ 日目の天気を晴にしたときの、$i$ 日目までの嬉しさの最大値とする。<br>
-<code>dp_r[i]</code> を、$i$ 日目の天気を雨にしたときの、$i$ 日目までの嬉しさの最大値とする。<br>
-（ただし、日付は <code>0-indexed</code> で扱っている）</p>
-<pre><code>dp_s: {0, 0, 0, 0, 0, 0}
-dp_r: {0, 0, 0, 0, 0, 0}</code></pre>
-<p>$0$ 日目を処理する。<br>
-元の天気は晴なので、雨に変える場合だけ嬉しさが $3$ 減る。</p>
-<pre><code>dp_s: {0, 0, 0, 0, 0, 0}
-dp_r: {-3, 0, 0, 0, 0, 0}</code></pre>
-<p>$1$ 日目を処理する。<br>
-晴れる場合、前日が雨の場合に嬉しさ $2$ を加えても、前日晴だった場合の嬉しさより劣る。<br>
-したがって、晴れる場合の最大嬉しさは $0$。<br>
-雨の場合、前日の嬉しさが大きい方を引き継いで、最大嬉しさは $0$。<br>
-そこから、元の天気は雨なので、晴に変える場合だけ嬉しさが $1$ 減る。</p>
-<pre><code>dp_s: {0, -1, 0, 0, 0, 0}
-dp_r: {-3, 0, 0, 0, 0, 0}</code></pre>
-<p>$2$ 日目を処理する。<br>
-晴れる場合、前日が雨の場合に嬉しさ $6$ を加えると、前日晴だった場合の嬉しさに勝る。<br>
-したがって、晴れる場合の最大嬉しさは $6$。<br>
-雨の場合、前日の嬉しさが大きい方を引き継いで、最大嬉しさは $0$。<br>
-元の天気は雨なので、晴に変える場合だけ嬉しさが $4$ 減る。</p>
-<pre><code>dp_s: {0, -1, 2, 0, 0, 0}
-dp_r: {-3, 0, 0, 0, 0, 0}</code></pre>
-<p>$3$ 日目から $5$ 日目までを同様に処理する。</p>
-<pre><code>dp_s: {0, -1, 2, 4, 5, -4}
-dp_r: {-3, 0, 0, 2, -1, 5}</code></pre>
-<p>最後の日の天気はどちらでもよいので、<code>dp_s[n-1]</code> と <code>dp_r[n-1]</code> の大きい方が答えである。</p>
-<pre><code>result: 5</code></pre>
+<p>以下では、日付と配列の添字を <code>0-indexed</code> で扱う。<br>
+各日について、以下の $2$ つを持つ。</p>
+<ul>
+<li>その日を晴で終える場合の最大嬉しさ
+</li>
+<li>その日を雨で終える場合の最大嬉しさ
+</li>
+</ul>
+<p>$0$ 日目の元の天気は晴である。<br>
+そのまま晴にする場合の嬉しさは $0$、雨に変える場合は $X_0=3$ だけ減るので $-3$ となる。</p>
+<p>$1$ 日目の元の天気は雨である。<br>
+晴にする場合は、前日の天気ごとに次の値になる。</p>
+<ul>
+<li>前日が晴なら $0$
+</li>
+<li>前日が雨なら $-3+2=-1$
+</li>
+</ul>
+<p>大きい方の $0$ を選んでから $X_1=1$ を引くので、$-1$ となる。<br>
+雨にする場合は、前日の $0$ と $-3$ の大きい方を引き継ぐので $0$ となる。</p>
+<p>$2$ 日目の元の天気も雨である。<br>
+晴にする場合は、前日の天気ごとに次の値になる。</p>
+<ul>
+<li>前日が晴なら $-1$
+</li>
+<li>前日が雨なら $0+6=6$
+</li>
+</ul>
+<p>大きい方の $6$ を選んでから $X_2=4$ を引くので、$2$ となる。<br>
+雨にする場合は、前日の $-1$ と $0$ の大きい方を引き継ぐので $0$ となる。</p>
+<p>同様に最後まで処理すると、各日の最大嬉しさは次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">日</th>
+<th class="table-align-center" style="text-align: center;">元の天気</th>
+<th class="table-align-right" style="text-align: right;">晴で終える最大嬉しさ</th>
+<th class="table-align-right" style="text-align: right;">雨で終える最大嬉しさ</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-center" style="text-align: center;">晴</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$-3$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-center" style="text-align: center;">雨</td>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-center" style="text-align: center;">雨</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-center" style="text-align: center;">雨</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-center" style="text-align: center;">晴</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$5$</th>
+<td class="table-align-center" style="text-align: center;">雨</td>
+<td class="table-align-right" style="text-align: right;">$-4$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+</tbody>
+</table></div>
+<p>最後の日は晴でも雨でもよいので、$-4$ と $5$ の大きい方を選ぶ。<br>
+したがって、このテストケースの答えは $5$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>嬉しさの合計値は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>

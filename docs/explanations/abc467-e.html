@@ -72,47 +72,35 @@ $D_1=0$ のときの解の偶数番目の数、奇数番目の数をわけてソ
 m: 10
 a: {4, 6, 7}
 b: {5, 5}</code></pre>
-<p>先頭の値に $1$ すら足さない場合に、各値へ何回足すかを記録する配列 <code>d</code> を、すべて $0$ で初期化する。</p>
-<p><code>d</code> の奇数番目の要素を記録する <code>odd</code> は空、偶数番目の <code>even</code> には <code>d[0]</code> の値 $0$ を入れておく。</p>
-<pre><code>d: {0, 0, 0}
-odd: {}
-even: {0}</code></pre>
-<p>$i=1$ のとき、<code>b[0]-a[1]-a[0]-d[0]</code> の値は $5-6-4-0=-5$ である。</p>
-<p>これを $m=10$ で割った余りは $5$ なので、<code>d[1]=5</code> とする。</p>
-<p>$i$ は奇数なので、<code>d[1]</code> を <code>odd</code> に加える。</p>
-<pre><code>d: {0, 5, 0}
-odd: {5}
-even: {0}</code></pre>
-<p>$i=2$ のとき、<code>b[1]-a[2]-a[1]-d[1]</code> の値は $5-7-6-5=-13$ である。</p>
-<p>これを $m=10$ で割った余りは $7$ なので、<code>d[2]=7</code> とする。</p>
-<p>$i$ は偶数なので、<code>d[2]</code> を <code>even</code> に加える。</p>
-<pre><code>d: {0, 5, 7}
-odd: {5}
-even: {0, 7}</code></pre>
-<p><code>d</code> の要素の合計を <code>result</code> に入れておく。</p>
-<pre><code>result: 12</code></pre>
-<p><code>odd</code> と <code>even</code> をそれぞれソートする。</p>
+<p>まず $D_1=0$ として順に値を決めると、</p>
+<p>$$<br>
+(D_1,D_2,D_3)=(0,5,7)<br>
+$$</p>
+<p>となる。<br>
+このときの操作回数は $0+5+7=12$ 回である。</p>
+<p><code>0-indexed</code> で添字が奇数の値と偶数の値を分けると、次のようになる。</p>
 <pre><code>odd: {5}
 even: {0, 7}</code></pre>
-<p>節約できる操作回数の最大値 <code>dec</code> を $0$ で初期化する。</p>
-<pre><code>dec: 0</code></pre>
-<p><code>odd[0]=5</code> を $0$ に変える場合を調べる。</p>
-<p><code>even</code> には <code>m-odd[0]=5</code> 以上の要素が $1$ 個ある。</p>
-<p>節約できる操作回数は、$(1-0)\times10+5\times(1-2)=5$ となる。</p>
-<p><code>dec</code> を最大値更新する。</p>
-<pre><code>dec: 5</code></pre>
-<p><code>even[0]=0</code> を $0$ に変える場合を調べる。</p>
-<p><code>odd</code> には <code>m-even[0]=10</code> 以上の要素がない。</p>
-<p>節約できる操作回数は、$(0-0)\times10+0\times(2-1)=0$ となる。</p>
-<p><code>dec</code> は変更しない。</p>
-<pre><code>dec: 5</code></pre>
-<p><code>even[1]=7</code> を $0$ に変える場合を調べる。</p>
-<p><code>odd</code> には <code>m-even[1]=3</code> 以上の要素が $1$ 個ある。</p>
-<p>節約できる操作回数は、$(1-1)\times10+7\times(2-1)=7$ となる。</p>
-<p><code>dec</code> を最大値更新する。</p>
-<pre><code>dec: 7</code></pre>
-<p><code>result</code> から実際に <code>dec</code> を引けば答え。</p>
-<pre><code>result: 5</code></pre>
+<p>どちらも既に昇順である。</p>
+<p>次に、いずれかの $D_i$ が $0$ になる場合だけを調べる。</p>
+<p>$D_2=5$ を $0$ にする場合、反対側の <code>even</code> では<br>
+$10-5=5$ 以上の値が $1$ 個ある。<br>
+この場合、元の $12$ 回から $5$ 回節約できる。</p>
+<p>実際、操作回数は</p>
+<p>$$<br>
+(D_1,D_2,D_3)=(5,0,2)<br>
+$$</p>
+<p>となり、合計は $7$ 回である。</p>
+<p>$D_1=0$ の場合は最初の状態そのもので、節約できる回数は $0$ 回である。</p>
+<p>$D_3=7$ を $0$ にする場合、反対側の <code>odd</code> では<br>
+$10-7=3$ 以上の値が $1$ 個ある。<br>
+この場合、$7$ 回節約できる。</p>
+<p>実際、操作回数は</p>
+<p>$$<br>
+(D_1,D_2,D_3)=(3,2,0)<br>
+$$</p>
+<p>となり、合計は $5$ 回である。</p>
+<p>最大で $7$ 回節約できるので、答えは $12-7=5$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。<br>

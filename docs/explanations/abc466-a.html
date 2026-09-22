@@ -73,18 +73,38 @@ $1$ つでも「損しません」があれば、答えは <code>&quot;No&quot;<
 <p>入力を受け取る。</p>
 <pre><code>n: 4
 x: {2, 0, -1, 2}</code></pre>
-<p>答え用の変数 <code>result</code> を <code>&quot;Yes&quot;</code> で初期化する。</p>
-<pre><code>result: &quot;Yes&quot;</code></pre>
-<p><code>x</code> の要素を前から順に確認する。</p>
-<p><code>x[0]</code> は <code>2</code> であり、$0$ 以上なので、<code>result</code> を <code>&quot;No&quot;</code> にする。</p>
-<pre><code>result: &quot;No&quot;</code></pre>
-<p><code>x[1]</code> は <code>0</code> であり、$0$ 以上なので、<code>result</code> を <code>&quot;No&quot;</code> にする。</p>
-<pre><code>result: &quot;No&quot;</code></pre>
-<p><code>x[2]</code> は <code>-1</code> であり、$0$ 未満なので、<code>result</code> は変更しない。</p>
-<pre><code>result: &quot;No&quot;</code></pre>
-<p><code>x[3]</code> は <code>2</code> であり、$0$ 以上なので、<code>result</code> を <code>&quot;No&quot;</code> にする。</p>
-<pre><code>result: &quot;No&quot;</code></pre>
-<p>最後に、<code>result</code> を出力すればよい。</p>
+<p>各選択肢について、値が $-1$ 以下かを確認する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">選択肢</th>
+<th class="table-align-right" style="text-align: right;">値</th>
+<th class="table-align-center" style="text-align: center;">$-1$ 以下か</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;">×</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-center" style="text-align: center;">×</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
+<td class="table-align-center" style="text-align: center;">○</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;">×</td>
+</tr>
+</tbody>
+</table></div>
+<p>$0$ 以上の値が存在するため、全ての選択肢で損するわけではない。<br>
+したがって、答えは <code>No</code> となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

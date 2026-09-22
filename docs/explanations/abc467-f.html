@@ -54,263 +54,93 @@ $B$ の大きさが変わらないのだから、セグ木の $1$ ヶ所を書�
 計算量は、$O((N+Q)\log (N+Q))$。</p>
 <h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
-<p>クエリ内の宛先番号は、入力時に $1$ ずつ減らして <code>0-indexed</code> に直す。</p>
 <pre><code>n: 3
 q: 3
 a: {4, 6, 7}
 b: {4, 6, 7}
-type: {1, 2, 2}
-p: {1, 2, 2}
-x: {1, 7, 1}</code></pre>
-<p>初期状態の <code>b</code> と、タイプ $2$ のクエリで現れる変更後の <code>b</code> を <code>tmp</code> に入れる。</p>
-<p>各要素の <code>second</code> には、初期状態なら宛先番号、クエリなら <code>n</code> とクエリ番号の和を入れる。</p>
-<p><code>tmp</code> を降順にソートする。</p>
-<pre><code>tmp: {(7,4), (7,2), (6,1), (4,0), (1,5)}</code></pre>
-<p>セグ木上の位置を <code>pos</code> に記録する。</p>
-<pre><code>pos: {3, 2, 1, -1, 0, 4}</code></pre>
-<p>サイズ $5$ のsegment木を用意する。</p>
-<p>初期状態の各会社のデータを、<code>pos</code> が示す位置に入れる。</p>
+
+1 2 1
+2 3 7
+2 3 1</code></pre>
+<p>タイプ $2$ のクエリで現れる変更後の $B$ も含め、<br>
+$B$ の大きい順に使う位置をあらかじめ確保する。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th>0</th>
-<th>1</th>
-<th>2</th>
-<th>3</th>
-<th>4</th>
-<th>e</th>
-<th>e</th>
-<th>e</th>
+<th class="table-align-right" style="text-align: right;">位置</th>
+<th class="table-align-left" style="text-align: left;">用途</th>
+<th class="table-align-right" style="text-align: right;">$B$</th>
 </tr></thead>
 <tbody>
 <tr>
-<td>{17,21}</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-left" style="text-align: left;">$2$ つめのクエリ後の会社 $3$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
 </tr>
 <tr>
-<td>{17,21}</td>
-<td></td>
-<td></td>
-<td></td>
-<td>e</td>
-<td></td>
-<td></td>
-<td></td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-left" style="text-align: left;">初期状態の会社 $3$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
 </tr>
 <tr>
-<td>{7,14}</td>
-<td></td>
-<td>{10,14}</td>
-<td></td>
-<td>e</td>
-<td></td>
-<td>e</td>
-<td></td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-left" style="text-align: left;">会社 $2$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
 </tr>
 <tr>
-<td>e</td>
-<td>{7,14}</td>
-<td>{6,12}</td>
-<td>{4,8}</td>
-<td>e</td>
-<td>e</td>
-<td>e</td>
-<td>e</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-left" style="text-align: left;">会社 $1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-left" style="text-align: left;">$3$ つめのクエリ後の会社 $3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
 </tr>
 </tbody>
 </table></div>
-<p>$1$ つめのクエリは <code>1 2 1</code> である。</p>
-<p><code>p[0]=1</code> なので、<code>a[1]</code> を $1$ に変更する。</p>
-<p><code>b[1]</code> は変化しないので、セグ木上の位置は変更しない。</p>
-<pre><code>a: {4, 1, 7}
-b: {4, 6, 7}</code></pre>
-<p>位置 <code>2</code> の値を <code>{1,7}</code> に変更する。</p>
-<div class="markdown-table-scroll"><table>
-<thead><tr>
-<th>0</th>
-<th>1</th>
-<th>2</th>
-<th>3</th>
-<th>4</th>
-<th>e</th>
-<th>e</th>
-<th>e</th>
-</tr></thead>
-<tbody>
-<tr>
-<td>{12,16}</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>{12,16}</td>
-<td></td>
-<td></td>
-<td></td>
-<td>e</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>{7,14}</td>
-<td></td>
-<td>{5,9}</td>
-<td></td>
-<td>e</td>
-<td></td>
-<td>e</td>
-<td></td>
-</tr>
-<tr>
-<td>e</td>
-<td>{7,14}</td>
-<td>{1,7}</td>
-<td>{4,8}</td>
-<td>e</td>
-<td>e</td>
-<td>e</td>
-<td>e</td>
-</tr>
-</tbody>
-</table></div>
-<p><code>all_prod()</code> の <code>second</code> である $16$ が答え。</p>
-<pre><code>result: {16, 0, 0}</code></pre>
-<p>$2$ つめのクエリは <code>2 3 7</code> である。</p>
-<p><code>p[1]=2</code> なので、<code>b[2]</code> を $7$ に変更する。</p>
-<p>元から <code>b[2]=7</code> だが、コードでは、このクエリ用に確保した位置へデータを移動する。</p>
-<p>元の位置 <code>1</code> を単位元に戻し、<code>pos[4]=0</code> へ移動する。</p>
-<pre><code>a: {4, 1, 7}
-b: {4, 6, 7}
-pos[2]: 0</code></pre>
-<div class="markdown-table-scroll"><table>
-<thead><tr>
-<th>0</th>
-<th>1</th>
-<th>2</th>
-<th>3</th>
-<th>4</th>
-<th>e</th>
-<th>e</th>
-<th>e</th>
-</tr></thead>
-<tbody>
-<tr>
-<td>{12,16}</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>{12,16}</td>
-<td></td>
-<td></td>
-<td></td>
-<td>e</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>{7,14}</td>
-<td></td>
-<td>{5,9}</td>
-<td></td>
-<td>e</td>
-<td></td>
-<td>e</td>
-<td></td>
-</tr>
-<tr>
-<td>{7,14}</td>
-<td>e</td>
-<td>{1,7}</td>
-<td>{4,8}</td>
-<td>e</td>
-<td>e</td>
-<td>e</td>
-<td>e</td>
-</tr>
-</tbody>
-</table></div>
-<p><code>all_prod()</code> の <code>second</code> である $16$ が答え。</p>
-<pre><code>result: {16, 16, 0}</code></pre>
-<p>$3$ つめのクエリは <code>2 3 1</code> である。</p>
-<p><code>p[2]=2</code> なので、<code>b[2]</code> を $1$ に変更する。</p>
-<p>元の位置 <code>0</code> を単位元に戻し、<code>pos[5]=4</code> へ移動する。</p>
-<pre><code>a: {4, 1, 7}
-b: {4, 6, 1}
-pos[2]: 4</code></pre>
-<div class="markdown-table-scroll"><table>
-<thead><tr>
-<th>0</th>
-<th>1</th>
-<th>2</th>
-<th>3</th>
-<th>4</th>
-<th>e</th>
-<th>e</th>
-<th>e</th>
-</tr></thead>
-<tbody>
-<tr>
-<td>{12,13}</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>{5,9}</td>
-<td></td>
-<td></td>
-<td></td>
-<td>{7,8}</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>e</td>
-<td></td>
-<td>{5,9}</td>
-<td></td>
-<td>{7,8}</td>
-<td></td>
-<td>e</td>
-<td></td>
-</tr>
-<tr>
-<td>e</td>
-<td>e</td>
-<td>{1,7}</td>
-<td>{4,8}</td>
-<td>{7,8}</td>
-<td>e</td>
-<td>e</td>
-<td>e</td>
-</tr>
-</tbody>
-</table></div>
-<p><code>all_prod()</code> の <code>second</code> である $13$ が答え。</p>
-<pre><code>result: {16, 16, 13}</code></pre>
+<p>初期状態では、位置 $1,2,3$ に会社 $3,2,1$ の情報が入る。<br>
+各会社の葉の値は $\{A,A+B\}$ である。</p>
+<pre><code>位置0: e
+位置1: {7, 14}
+位置2: {6, 12}
+位置3: {4, 8}
+位置4: e</code></pre>
+<p>全体を結合すると <code>{17, 21}</code> となる。</p>
+<p>$1$ つめのクエリは <code>1 2 1</code> である。<br>
+会社 $2$ の $A$ が $6$ から $1$ に変わる。</p>
+<p>$B$ は $6$ のままなので位置 $2$ から動かず、<br>
+その場所の値だけ <code>{1, 7}</code> に変える。</p>
+<pre><code>位置0: e
+位置1: {7, 14}
+位置2: {1, 7}
+位置3: {4, 8}
+位置4: e</code></pre>
+<p>メールを書く順は会社 $3,2,1$ である。<br>
+書き終わる時刻は順に $7,8,12$、<br>
+返信が届く時刻は $14,14,16$ となる。</p>
+<p>よって、$1$ つめの答えは $16$ である。</p>
+<p>$2$ つめのクエリは <code>2 3 7</code> である。<br>
+会社 $3$ の $B$ は元から $7$ だが、<br>
+コードではこのクエリ用に確保した位置 $0$ へ移動する。</p>
+<pre><code>位置0: {7, 14}
+位置1: e
+位置2: {1, 7}
+位置3: {4, 8}
+位置4: e</code></pre>
+<p>順序としては変わらないので、答えは再び $16$ である。</p>
+<p>$3$ つめのクエリは <code>2 3 1</code> である。<br>
+会社 $3$ の $B$ が $7$ から $1$ に変わるので、<br>
+位置 $0$ から位置 $4$ へ移動する。</p>
+<pre><code>位置0: e
+位置1: e
+位置2: {1, 7}
+位置3: {4, 8}
+位置4: {7, 8}</code></pre>
+<p>今度の順序は会社 $2,1,3$ である。<br>
+書き終わる時刻は順に $1,5,12$、<br>
+返信が届く時刻は $7,9,13$ となる。</p>
+<p>したがって、$3$ つめの答えは $13$ である。</p>
+<p>以上より、各クエリの答えは順に $16,16,13$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは、<code>int</code> 型からはみ出る。<br>
 segment木で管理する値と答えには、<code>long long</code> 型を用いること。</p>

@@ -54,17 +54,36 @@ window.MathJax = {
 a: {1, 3, 5}
 b: {2, 6, 9}
 s: {&quot;keep&quot;, &quot;take&quot;, &quot;keep&quot;}</code></pre>
-<p>答え用の変数 <code>result</code> を <code>0</code> で初期化する。</p>
-<pre><code>result: 0</code></pre>
-<p>$i=0$ のとき、<code>s[0]</code> は <code>&quot;keep&quot;</code> である。</p>
-<p><code>b[0]-a[0]</code> は $2-1=1$ なので、<code>result</code> に <code>1</code> を加える。</p>
-<pre><code>result: 1</code></pre>
-<p>$i=1$ のとき、<code>s[1]</code> は <code>&quot;take&quot;</code> である。</p>
-<p><code>result</code> は変更しない。</p>
-<pre><code>result: 1</code></pre>
-<p>$i=2$ のとき、<code>s[2]</code> は <code>&quot;keep&quot;</code> である。</p>
-<p><code>b[2]-a[2]</code> は $9-5=4$ なので、<code>result</code> に <code>4</code> を加える。</p>
-<pre><code>result: 5</code></pre>
+<p>辞退したおつりを買い物ごとに確認する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">買い物</th>
+<th class="table-align-center" style="text-align: center;"><code>s[i]</code></th>
+<th class="table-align-right" style="text-align: right;">辞退したおつり</th>
+<th class="table-align-right" style="text-align: right;">合計</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;"><code>keep</code></td>
+<td class="table-align-right" style="text-align: right;">$2-1=1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;"><code>take</code></td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-center" style="text-align: center;"><code>keep</code></td>
+<td class="table-align-right" style="text-align: right;">$9-5=4$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、答えは $5$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

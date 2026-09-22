@@ -69,37 +69,56 @@ $N$ が最大 $500000$ まで対応しなければならないので、これで
 <p>入力を受け取る。</p>
 <pre><code>n: 5
 s: &quot;ooxoo&quot;</code></pre>
-<p>答え用の変数 <code>que</code> を空の状態で用意する。<br>
-また、反転状態を表す変数 <code>reversed</code> を <code>false</code> で初期化する。</p>
-<pre><code>que: {}
-reversed: false</code></pre>
-<p>$0$ 文字目を処理する。<br>
-<code>reversed</code> は <code>false</code> なので、<code>1</code> を後ろに追加する。<br>
-<code>s[0]</code> は <code>o</code> なので、<code>reversed</code> を反転する。</p>
-<pre><code>que: {1}
-reversed: true</code></pre>
-<p>$1$ 文字目を処理する。<br>
-<code>reversed</code> は <code>true</code> なので、<code>2</code> を前に追加する。<br>
-<code>s[1]</code> は <code>o</code> なので、<code>reversed</code> を反転する。</p>
-<pre><code>que: {2, 1}
-reversed: false</code></pre>
-<p>$2$ 文字目を処理する。<br>
-<code>reversed</code> は <code>false</code> なので、<code>3</code> を後ろに追加する。<br>
-<code>s[2]</code> は <code>x</code> なので、<code>reversed</code> はそのままである。</p>
-<pre><code>que: {2, 1, 3}
-reversed: false</code></pre>
-<p>$3$ 文字目を処理する。<br>
-<code>reversed</code> は <code>false</code> なので、<code>4</code> を後ろに追加する。<br>
-<code>s[3]</code> は <code>o</code> なので、<code>reversed</code> を反転する。</p>
-<pre><code>que: {2, 1, 3, 4}
-reversed: true</code></pre>
-<p>$4$ 文字目を処理する。<br>
-<code>reversed</code> は <code>true</code> なので、<code>5</code> を前に追加する。<br>
-<code>s[4]</code> は <code>o</code> なので、<code>reversed</code> を反転する。</p>
-<pre><code>que: {5, 2, 1, 3, 4}
-reversed: false</code></pre>
-<p>最後に、<code>reversed</code> は <code>false</code> なので、<code>que</code> を反転しない。</p>
-<p>よって、最終的な並びは <code>5 2 1 3 4</code> となり、これが答えである。</p>
+<p>最初は <code>deque</code> が空で、反転していない状態である。</p>
+<p>各文字を処理した後の状態は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$i$</th>
+<th class="table-align-center" style="text-align: center;"><code>s[i]</code></th>
+<th class="table-align-left" style="text-align: left;">追加</th>
+<th class="table-align-left" style="text-align: left;"><code>deque</code></th>
+<th class="table-align-center" style="text-align: center;">反転状態</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+<td class="table-align-left" style="text-align: left;">$1$ を後ろ</td>
+<td class="table-align-left" style="text-align: left;">$(1)$</td>
+<td class="table-align-center" style="text-align: center;">反転中</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+<td class="table-align-left" style="text-align: left;">$2$ を前</td>
+<td class="table-align-left" style="text-align: left;">$(2,1)$</td>
+<td class="table-align-center" style="text-align: center;">通常</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-left" style="text-align: left;">$3$ を後ろ</td>
+<td class="table-align-left" style="text-align: left;">$(2,1,3)$</td>
+<td class="table-align-center" style="text-align: center;">通常</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+<td class="table-align-left" style="text-align: left;">$4$ を後ろ</td>
+<td class="table-align-left" style="text-align: left;">$(2,1,3,4)$</td>
+<td class="table-align-center" style="text-align: center;">反転中</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+<td class="table-align-left" style="text-align: left;">$5$ を前</td>
+<td class="table-align-left" style="text-align: left;">$(5,2,1,3,4)$</td>
+<td class="table-align-center" style="text-align: center;">通常</td>
+</tr>
+</tbody>
+</table></div>
+<p>最後は通常状態なので、<code>deque</code> 全体を反転する必要はない。<br>
+したがって、答えは <code>5 2 1 3 4</code> となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

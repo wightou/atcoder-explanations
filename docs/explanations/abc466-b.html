@@ -61,21 +61,44 @@ $2$ 種類の意味の値が混在しているのにまとめて処理できる�
 m: 5
 c: {0, 1, 0, 3}
 s: {3, 10, 7, 9}</code></pre>
-<p>答え用の配列 <code>result</code> を、長さ $5$ の <code>-1</code> で初期化する。</p>
-<pre><code>result: {-1, -1, -1, -1, -1}</code></pre>
-<p>$1$ 個目のボールを見る。<br>
-色は <code>0</code>、大きさは <code>3</code> なので、<code>result[0]</code> を最大値更新する。</p>
-<pre><code>result: {3, -1, -1, -1, -1}</code></pre>
-<p>$2$ 個目のボールを見る。<br>
-色は <code>1</code>、大きさは <code>10</code> なので、<code>result[1]</code> を最大値更新する。</p>
-<pre><code>result: {3, 10, -1, -1, -1}</code></pre>
-<p>$3$ 個目のボールを見る。<br>
-色は <code>0</code>、大きさは <code>7</code> なので、<code>result[0]</code> を最大値更新する。</p>
-<pre><code>result: {7, 10, -1, -1, -1}</code></pre>
-<p>$4$ 個目のボールを見る。<br>
-色は <code>3</code>、大きさは <code>9</code> なので、<code>result[3]</code> を最大値更新する。</p>
-<pre><code>result: {7, 10, -1, 9, -1}</code></pre>
-<p>この <code>result</code> が答えである。</p>
+<p>最初は、各色の最大値を全て $-1$ としておく。</p>
+<pre><code>{-1, -1, -1, -1, -1}</code></pre>
+<p>ボールを前から順に見たとき、最大値は次のように変化する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">ボール</th>
+<th class="table-align-right" style="text-align: right;">色</th>
+<th class="table-align-right" style="text-align: right;">大きさ</th>
+<th class="table-align-left" style="text-align: left;">色ごとの最大値</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-left" style="text-align: left;">$\{3,-1,-1,-1,-1\}$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td class="table-align-left" style="text-align: left;">$\{3,10,-1,-1,-1\}$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-left" style="text-align: left;">$\{7,10,-1,-1,-1\}$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-left" style="text-align: left;">$\{7,10,-1,9,-1\}$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、各色の答えは <code>7 10 -1 9 -1</code> となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

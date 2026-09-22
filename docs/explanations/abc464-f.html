@@ -45,27 +45,27 @@ window.MathJax = {
 </tr></thead>
 <tbody>
 <tr>
-<th scope="row">${2,3,4}$</th>
+<th scope="row">$(2,3,4)$</th>
 <td class="table-align-right" style="text-align: right;">$(2+3+4)/6 = 3/2$</td>
 </tr>
 <tr>
-<th scope="row">${2,4,3}$</th>
+<th scope="row">$(2,4,3)$</th>
 <td class="table-align-right" style="text-align: right;">$(2+4+3)/6 = 3/2$</td>
 </tr>
 <tr>
-<th scope="row">${3,2,4}$</th>
+<th scope="row">$(3,2,4)$</th>
 <td class="table-align-right" style="text-align: right;">$(3+2+4)/6 = 3/2$</td>
 </tr>
 <tr>
-<th scope="row">${3,4}$</th>
+<th scope="row">$(3,4)$</th>
 <td class="table-align-right" style="text-align: right;">$(3+4)/6 = 7/6$</td>
 </tr>
 <tr>
-<th scope="row">${4,2,3}$</th>
+<th scope="row">$(4,2,3)$</th>
 <td class="table-align-right" style="text-align: right;">$(4+2+3)/6 = 3/2$</td>
 </tr>
 <tr>
-<th scope="row">${4,3}$</th>
+<th scope="row">$(4,3)$</th>
 <td class="table-align-right" style="text-align: right;">$(4+3)/6 = 7/6$</td>
 </tr>
 </tbody>
@@ -134,8 +134,10 @@ window.MathJax = {
 <p>それぞれの分子の和は、残っている金庫の総額である。<br>
 つまり、全金庫の総額から、既に開けた金庫の総額を引いて求められる。<br>
 分母は、「事前に開けたものがそうなった上で、次の $1$ 個で残りのそれぞれの金庫を開ける確率」の分母。</p>
-<p>つまり、今回の期待値は、以下で求まる。<br>
-$\dfrac{9-0}{{}_3\mathrm{C}_0 \times 3}+\dfrac{9-2}{{}_3\mathrm{C}_1 \times 2}+\dfrac{9-3}{{}_3\mathrm{C}_1 \times 2}+\dfrac{9-4}{{}_3\mathrm{C}_1 \times 2}+\dfrac{9-5}{{}_3\mathrm{C}_2 \times 1}+\dfrac{9-6}{{}_3\mathrm{C}_2 \times 1} = \dfrac{25}{3}$</p>
+<p>つまり、今回の期待値は、以下で求まる。</p>
+<p>$$<br>
+\frac{9-0}{{}_3\mathrm{C}_0 \times 3}+\frac{9-2}{{}_3\mathrm{C}_1 \times 2}+\frac{9-3}{{}_3\mathrm{C}_1 \times 2}+\frac{9-4}{{}_3\mathrm{C}_1 \times 2}+\frac{9-5}{{}_3\mathrm{C}_2 \times 1}+\frac{9-6}{{}_3\mathrm{C}_2 \times 1}=\frac{25}{3}<br>
+$$</p>
 <p>これは、各項ごとに、選んだ金庫の組の個数と合計額のみから $O(1)$ で高速に計算できる。<br>
 （逆数に毎回繰り返し二乗法を用いなくて済むように、階乗や各種逆数を事前計算しておく）<br>
 つまり、以下のようなデータを高速に構築できれば、$7$ 未満のデータだけ拾うことで $O(2^N)$ で解ける。</p>
@@ -246,16 +248,16 @@ $\dfrac{9-0}{{}_3\mathrm{C}_0 \times 3}+\dfrac{9-2}{{}_3\mathrm{C}_1 \times 2}+\
 あとは、$1$ つずつ分数計算をすればよい。<br>
 以上が、$N \leq 20$ の場合に $O(2^N)$ で解く方法である。</p>
 <p>さて、ここまでは前座で、この問題はここからが本番である。<br>
-$N \leq 40$ の場合には $O(2^N)$ では間に合わず、$O(N 2^{N/2})$ くらいでどうにかしなければならない。 </p>
+$N \leq 40$ の場合には $O(2^N)$ では間に合わず、$O(N 2^{N/2})$ くらいでどうにかしなければならない。</p>
 <p>まず、$2^40$ 通りの列挙は絶対に無理なので、半分全列挙で前後半それぞれの $2^20$ 通りずつ全列挙する。<br>
 そして、前半から $i$ 個、後半から $j$ 個とるパターンごとにまとめて処理していく。<br>
 これらの寄与を計算するときの分母は、${}_N\mathrm{C}_{i+j} \times (N-i-j)$ でよい。</p>
 <p>分子側は前半から $i$ 個とるデータの配列と、後半から $j$ 個とるデータの配列を見て求める。<br>
 前者の値と後者の値の和が $X$ 未満になるような全組について、「全総額-その値」の総和を出せばよい。<br>
 これは、後者のインデックスを進めながら前者のインデックスを戻すツーポインタ法で求められる。<br>
-前者側の累積和も事前に取っておけば、$O(両配列の長さの和)$ で求まる。<br>
+前者側の累積和も事前に取っておけば、両配列の長さの和に比例する時間で求まる。<br>
 これを $i$ と $j$ 全ての組について実行して全ての和をとればよい。</p>
-<p>半分全列挙のために <code>A</code> を分けたときに、左側に $l$ 個、右側に $r$ 個あったとする。<br>
+<p>半分全列挙のために $A$ を分けたときに、左側に $l$ 個、右側に $r$ 個あったとする。<br>
 すると、ツーポインタ法の二重ループ全体で $O(l2^r+r2^l)$ 回かかる。<br>
 これは $l$ と $r$ を均等に分けたら $O(N 2^{N/2})$。<br>
 他にこれより計算量が膨らむところはないので、全体の計算量も $O(N 2^{N/2})$。<br>
@@ -266,193 +268,96 @@ $N \leq 40$ の場合には $O(2^N)$ では間に合わず、$O(N 2^{N/2})$ く�
 <pre><code>n: 11
 x: 60
 a: {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31}</code></pre>
-<p>配列 <code>a</code> を前半と後半に分ける。</p>
-<pre><code>b: {2, 3, 5, 7, 11}
-c: {13, 17, 19, 23, 29, 31}</code></pre>
-<p>前半から $k$ 個取ったときの合計を、$k$ ごとに列挙する。</p>
-<p>最初は、$0$ 個取った合計だけがある。</p>
-<pre><code>result[0]: {0}
-result[1]: {}
-result[2]: {}
-result[3]: {}
-result[4]: {}
-result[5]: {}</code></pre>
-<p>値 <code>2</code> を処理すると、<code>2</code> を取る場合が追加される。</p>
-<pre><code>result[0]: {0}
-result[1]: {2}</code></pre>
-<p>次に値 <code>3</code> を処理すると、<code>3</code> を取る場合と、<code>2</code> と <code>3</code> の両方を取る場合が追加される。</p>
-<pre><code>result[0]: {0}
-result[1]: {2, 3}
-result[2]: {5}</code></pre>
-<p>次に値 <code>5</code> を処理すると、例えば、$1$ 個取る合計に <code>5</code> が追加される。<br>
-また、$2$ 個取る合計には <code>2+5=7</code> と <code>3+5=8</code> が追加される。<br>
-各配列が昇順になるようにマージソートしながら追加する。</p>
-<pre><code>result[0]: {0}
-result[1]: {2, 3, 5}
-result[2]: {5, 7, 8}
-result[3]: {10}</code></pre>
-<p>以下同様に繰り返すと、前半側の列挙結果は次のようになる。</p>
-<pre><code>vv1[0]: {0}
-vv1[1]: {2, 3, 5, 7, 11}
-vv1[2]: {5, 7, 8, 9, 10, 12, 13, 14, 16, 18}
-vv1[3]: {10, 12, 14, 15, 16, 18, 19, 20, 21, 23}
-vv1[4]: {17, 21, 23, 25, 26}
-vv1[5]: {28}</code></pre>
-<p>後半側も同様に列挙する。<br>
-今回の二重ループの説明では、後半から $2$ 個取る場合だけを見る。</p>
-<pre><code>vv2[2]: {30, 32, 36, 36, 40, 42, 42, 44, 46, 48, 48, 50, 52, 54, 60}</code></pre>
-<p>また、<code>a</code> 全体の合計値を取得する。</p>
-<pre><code>sum_all: 160</code></pre>
-<p>ここから、前半から $2$ 個、後半から $2$ 個取る場合の寄与の計算だけ例示する。</p>
-<pre><code>vv1[2]: {5, 7, 8, 9, 10, 12, 13, 14, 16, 18}
-vv2[2]: {30, 32, 36, 36, 40, 42, 42, 44, 46, 48, 48, 50, 52, 54, 60}</code></pre>
-<p>まず、<code>vv1[2]</code> の累積和 <code>sum1[2]</code> を作る。<br>
-<code>sum1[2][t]</code> は、<code>vv1[2]</code> の先頭 $t$ 個の和である。</p>
-<pre><code>vv1[2]:  {5, 7, 8, 9, 10, 12, 13, 14, 16, 18}
-sum1[2]: {0, 5, 12, 20, 29, 39, 51, 64, 78, 94, 112}</code></pre>
-<p><code>vv2[2]</code> の値を $1$ つずつ見る。<br>
-最初に、後半から取った合計が <code>30</code> の場合を考える。</p>
-<p>このとき、前半から取った合計が $60-30=30$ 未満なら、すでに盗んだ集合 $S$ の合計が $X$ 未満である。<br>
-<code>vv1[2]</code> の値はすべて <code>30</code> 未満なので、<code>id</code> は <code>10</code> となる。</p>
-<pre><code>k: 30
-x-k: 30
-id: 10</code></pre>
-<p>条件を満たす前半側の合計は、次の $10$ 個である。</p>
-<pre><code>5, 7, 8, 9, 10, 12, 13, 14, 16, 18</code></pre>
-<p>そのため、条件を満たす前半側の合計の総和は、<code>sum1[2][10]</code> を使って $112$ と求められる。</p>
-<pre><code>sum1[2][id]: 112</code></pre>
-<p>この <code>k=30</code> について、次に盗む金額の期待値の分子部分をまとめると、次の値になる。</p>
-<pre><code>(sum_all-k)*id-sum1[2][id]
-= (160-30)*10-112
-= 1188</code></pre>
-<p>同様に、<code>vv2[2]</code> の各値について処理すると次のようになる。<br>
-例えば <code>k=42</code> の場合は、前半側の合計が $18$ 未満のものだけを使うので、<code>id</code> は <code>9</code> となる。</p>
+<p>半分全列挙をするため、$A$ を前半と後半に分ける。</p>
+<pre><code>前半: {2, 3, 5, 7, 11}
+後半: {13, 17, 19, 23, 29, 31}</code></pre>
+<p>まず、前半について、選ぶ個数ごとに部分集合和を昇順で列挙する。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th>後半側の合計 <code>k</code></th>
-<th class="table-align-right" style="text-align: right;"><code>x-k</code></th>
-<th class="table-align-right" style="text-align: right;"><code>id</code></th>
-<th class="table-align-right" style="text-align: right;"><code>sum1[2][id]</code></th>
-<th class="table-align-right" style="text-align: right;"><code>(sum_all-k)*id-sum1[2][id]</code></th>
+<th class="table-align-right" style="text-align: right;">選ぶ個数</th>
+<th class="table-align-left" style="text-align: left;">前半の部分集合和</th>
 </tr></thead>
 <tbody>
 <tr>
-<th scope="row">30</th>
-<td class="table-align-right" style="text-align: right;">30</td>
-<td class="table-align-right" style="text-align: right;">10</td>
-<td class="table-align-right" style="text-align: right;">112</td>
-<td class="table-align-right" style="text-align: right;">1188</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-left" style="text-align: left;">$0$</td>
 </tr>
 <tr>
-<th scope="row">32</th>
-<td class="table-align-right" style="text-align: right;">28</td>
-<td class="table-align-right" style="text-align: right;">10</td>
-<td class="table-align-right" style="text-align: right;">112</td>
-<td class="table-align-right" style="text-align: right;">1168</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-left" style="text-align: left;">$2,3,5,7,11$</td>
 </tr>
 <tr>
-<th scope="row">36</th>
-<td class="table-align-right" style="text-align: right;">24</td>
-<td class="table-align-right" style="text-align: right;">10</td>
-<td class="table-align-right" style="text-align: right;">112</td>
-<td class="table-align-right" style="text-align: right;">1128</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-left" style="text-align: left;">$5,7,8,9,10,12,13,14,16,18$</td>
 </tr>
 <tr>
-<th scope="row">36</th>
-<td class="table-align-right" style="text-align: right;">24</td>
-<td class="table-align-right" style="text-align: right;">10</td>
-<td class="table-align-right" style="text-align: right;">112</td>
-<td class="table-align-right" style="text-align: right;">1128</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-left" style="text-align: left;">$10,12,14,15,16,18,19,20,21,23$</td>
 </tr>
 <tr>
-<th scope="row">40</th>
-<td class="table-align-right" style="text-align: right;">20</td>
-<td class="table-align-right" style="text-align: right;">10</td>
-<td class="table-align-right" style="text-align: right;">112</td>
-<td class="table-align-right" style="text-align: right;">1088</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-left" style="text-align: left;">$17,21,23,25,26$</td>
 </tr>
 <tr>
-<th scope="row">42</th>
-<td class="table-align-right" style="text-align: right;">18</td>
-<td class="table-align-right" style="text-align: right;">9</td>
-<td class="table-align-right" style="text-align: right;">94</td>
-<td class="table-align-right" style="text-align: right;">968</td>
-</tr>
-<tr>
-<th scope="row">42</th>
-<td class="table-align-right" style="text-align: right;">18</td>
-<td class="table-align-right" style="text-align: right;">9</td>
-<td class="table-align-right" style="text-align: right;">94</td>
-<td class="table-align-right" style="text-align: right;">968</td>
-</tr>
-<tr>
-<th scope="row">44</th>
-<td class="table-align-right" style="text-align: right;">16</td>
-<td class="table-align-right" style="text-align: right;">8</td>
-<td class="table-align-right" style="text-align: right;">78</td>
-<td class="table-align-right" style="text-align: right;">850</td>
-</tr>
-<tr>
-<th scope="row">46</th>
-<td class="table-align-right" style="text-align: right;">14</td>
-<td class="table-align-right" style="text-align: right;">7</td>
-<td class="table-align-right" style="text-align: right;">64</td>
-<td class="table-align-right" style="text-align: right;">734</td>
-</tr>
-<tr>
-<th scope="row">48</th>
-<td class="table-align-right" style="text-align: right;">12</td>
-<td class="table-align-right" style="text-align: right;">5</td>
-<td class="table-align-right" style="text-align: right;">39</td>
-<td class="table-align-right" style="text-align: right;">521</td>
-</tr>
-<tr>
-<th scope="row">48</th>
-<td class="table-align-right" style="text-align: right;">12</td>
-<td class="table-align-right" style="text-align: right;">5</td>
-<td class="table-align-right" style="text-align: right;">39</td>
-<td class="table-align-right" style="text-align: right;">521</td>
-</tr>
-<tr>
-<th scope="row">50</th>
-<td class="table-align-right" style="text-align: right;">10</td>
-<td class="table-align-right" style="text-align: right;">4</td>
-<td class="table-align-right" style="text-align: right;">29</td>
-<td class="table-align-right" style="text-align: right;">411</td>
-</tr>
-<tr>
-<th scope="row">52</th>
-<td class="table-align-right" style="text-align: right;">8</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">12</td>
-<td class="table-align-right" style="text-align: right;">204</td>
-</tr>
-<tr>
-<th scope="row">54</th>
-<td class="table-align-right" style="text-align: right;">6</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">5</td>
-<td class="table-align-right" style="text-align: right;">101</td>
-</tr>
-<tr>
-<th scope="row">60</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$5$</th>
+<td class="table-align-left" style="text-align: left;">$28$</td>
 </tr>
 </tbody>
 </table></div>
-<p>これらの合計は $10978$ である。</p>
-<pre><code>1188+1168+1128+1128+1088+968+968+850+734+521+521+411+204+101+0 = 10978</code></pre>
-<p>今回は前半から $2$ 個、後半から $2$ 個取っているので、すでに盗んだ金庫の個数は $4$ 個である。<br>
-「その $4$ 個が先頭に来る確率」は、二項係数の逆数を用いて処理する。</p>
-<pre><code>comb_inv(11,4): 674571184　（実際の分数の値は 1/330）</code></pre>
-<p>また、次に盗む金庫は残り $11-4=7$ 個から一様ランダムに選ばれる。<br>
-よって、さらに $1/7=855638017$ をかける。</p>
-<p>したがって、この場合に結果に加算する値は、剰余類環上では $10978 * 674571184 * 855638017$ である。</p>
-<p>同様の処理を、前半から取る個数 <code>i</code> と後半から取る個数 <code>j</code> のすべての組み合わせについて行う。<br>
-最後に、結果が負になっていれば $998244353$ を足してから出力する。</p>
+<p>後半についても同様に列挙する。<br>
+以下では、前半から $2$ 個、後半から $2$ 個を既に開けた場合を例として追う。<br>
+後半から $2$ 個選んだ部分集合和は次の通りである。</p>
+<pre><code>30, 32, 36, 36, 40, 42, 42, 44, 46, 48, 48, 50, 52, 54, 60</code></pre>
+<p>前半から $2$ 個選んだ部分集合和と、その累積和は次のようになる。</p>
+<pre><code>部分集合和: {5, 7, 8, 9, 10, 12, 13, 14, 16, 18}
+累積和:     {0, 5, 12, 20, 29, 39, 51, 64, 78, 94, 112}</code></pre>
+<p>全金庫の総額は $160$ である。<br>
+後半側の部分集合和を $k$ とする。<br>
+前半側の部分集合和が $60-k$ 未満のものだけが、既に盗んだ合計が $X=60$ 未満という条件を満たす。</p>
+<p>例えば、いくつかの $k$ について計算すると次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">後半側 $k$</th>
+<th class="table-align-right" style="text-align: right;">上限 $60-k$</th>
+<th class="table-align-right" style="text-align: right;">前半側の個数</th>
+<th class="table-align-right" style="text-align: right;">前半側の合計</th>
+<th class="table-align-right" style="text-align: right;">分子部分</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$30$</th>
+<td class="table-align-right" style="text-align: right;">$30$</td>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td class="table-align-right" style="text-align: right;">$112$</td>
+<td class="table-align-right" style="text-align: right;">$(160-30)\times10-112=1188$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$42$</th>
+<td class="table-align-right" style="text-align: right;">$18$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$94$</td>
+<td class="table-align-right" style="text-align: right;">$(160-42)\times9-94=968$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$60$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+</tbody>
+</table></div>
+<p>後半から $2$ 個選ぶ場合について、全て同様に計算する。<br>
+この組み合わせでの分子部分の合計は $10978$ となる。</p>
+<p>前半から $2$ 個、後半から $2$ 個の合計 $4$ 個を既に開けている。<br>
+その $4$ 個の集合が最初に開けられる確率は $1/{}_{11}\mathrm{C}_4$ である。<br>
+次の金庫は残り $7$ 個から一様ランダムに選ばれる。<br>
+したがって、この場合の期待値への寄与は次の値である。</p>
+<p>$$<br>
+10978 \times \frac{1}{{}_{11}\mathrm{C}_4} \times \frac{1}{7}<br>
+$$</p>
+<p>前半から選ぶ個数と、後半から選ぶ個数の全ての組み合わせについて同じ処理を行う。<br>
+それぞれの寄与を剰余類環上で加算すると、最終的な答えは $525950964$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p><code>A_i</code>、<code>X</code>、部分集合の合計値は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>

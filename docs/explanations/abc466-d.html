@@ -57,48 +57,59 @@ window.MathJax = {
 m: 6
 r: {1, 1, 3, 3, 1, 1}
 c: {1, 2, 3, 2, 3, 3}</code></pre>
-<p><code>vec_r[i]</code> には、$i$ 行目にコマがある列番号を記録する。<br>
-<code>vec_c[i]</code> には、$i$ 列目にコマがある行番号を記録する。<br>
-コマがない場合は、<code>-1</code> を記録する。</p>
 <p>最初は、どのマスにもコマがない。</p>
-<pre><code>vec_r: {-1, -1, -1, -1}
-vec_c: {-1, -1, -1, -1}</code></pre>
-<p>$1$ 回目の操作は $(1,1)$ である。<br>
-$1$ 行目と $1$ 列目にはコマがないので、そのままマス $(1,1)$ にコマを置く。</p>
-<pre><code>vec_r: {-1, 1, -1, -1}
-vec_c: {-1, 1, -1, -1}</code></pre>
-<p>$2$ 回目の操作は $(1,2)$ である。<br>
-<code>vec_r[1]=1</code> なので、$1$ 行目にあるマス $(1,1)$ のコマを削除する。<br>
-そのため、<code>vec_c[1]</code> と <code>vec_r[1]</code> を <code>-1</code> にする。</p>
-<p>$2$ 列目にはコマがない。<br>
-その後、マス $(1,2)$ にコマを置く。</p>
-<pre><code>vec_r: {-1, 2, -1, -1}
-vec_c: {-1, -1, 1, -1}</code></pre>
-<p>$3$ 回目の操作は $(3,3)$ である。<br>
-$3$ 行目と $3$ 列目にはコマがないので、そのままマス $(3,3)$ にコマを置く。</p>
-<pre><code>vec_r: {-1, 2, -1, 3}
-vec_c: {-1, -1, 1, 3}</code></pre>
-<p>$4$ 回目の操作は $(3,2)$ である。<br>
-<code>vec_r[3]=3</code> なので、$3$ 行目にあるマス $(3,3)$ のコマを削除する。<br>
-そのため、<code>vec_c[3]</code> と <code>vec_r[3]</code> を <code>-1</code> にする。</p>
-<p>次に、<code>vec_c[2]=1</code> なので、$2$ 列目にあるマス $(1,2)$ のコマを削除する。<br>
-そのため、<code>vec_r[1]</code> と <code>vec_c[2]</code> を <code>-1</code> にする。</p>
-<p>その後、マス $(3,2)$ にコマを置く。</p>
-<pre><code>vec_r: {-1, -1, -1, 2}
-vec_c: {-1, -1, 3, -1}</code></pre>
-<p>$5$ 回目の操作は $(1,3)$ である。<br>
-$1$ 行目と $3$ 列目にはコマがないので、そのままマス $(1,3)$ にコマを置く。</p>
-<pre><code>vec_r: {-1, 3, -1, 2}
-vec_c: {-1, -1, 3, 1}</code></pre>
-<p>$6$ 回目の操作は $(1,3)$ である。<br>
-<code>vec_r[1]=3</code> なので、$1$ 行目にあるマス $(1,3)$ のコマを削除する。<br>
-そのため、<code>vec_c[3]</code> と <code>vec_r[1]</code> を <code>-1</code> にする。</p>
-<p>この時点で <code>vec_c[3]=-1</code> なので、$3$ 列目から削除するコマはない。<br>
-最後に、マス $(1,3)$ にコマを置き直す。</p>
-<pre><code>vec_r: {-1, 3, -1, 2}
-vec_c: {-1, -1, 3, 1}</code></pre>
-<p>最後に、<code>vec_r</code> のうち、<code>-1</code> でない要素の個数を数える。</p>
-<pre><code>result: 2</code></pre>
+<p>各操作で削除されるコマと、操作後に残るコマは次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-center" style="text-align: center;">操作</th>
+<th class="table-align-left" style="text-align: left;">行側で削除</th>
+<th class="table-align-left" style="text-align: left;">列側で削除</th>
+<th class="table-align-left" style="text-align: left;">操作後のコマ</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(1,1)$</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">$\{(1,1)\}$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(1,2)$</td>
+<td class="table-align-left" style="text-align: left;">$(1,1)$</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">$\{(1,2)\}$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(3,3)$</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">$\{(1,2),(3,3)\}$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(3,2)$</td>
+<td class="table-align-left" style="text-align: left;">$(3,3)$</td>
+<td class="table-align-left" style="text-align: left;">$(1,2)$</td>
+<td class="table-align-left" style="text-align: left;">$\{(3,2)\}$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(1,3)$</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">$\{(1,3),(3,2)\}$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(1,3)$</td>
+<td class="table-align-left" style="text-align: left;">$(1,3)$</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">$\{(1,3),(3,2)\}$</td>
+</tr>
+</tbody>
+</table></div>
+<p>$4$ 回目の操作では、まず $3$ 行目から $(3,3)$ を削除する。<br>
+その後、$2$ 列目から $(1,2)$ を削除してから $(3,2)$ を置く。</p>
+<p>$6$ 回目の操作では、$1$ 行目の $(1,3)$ を一度削除する。<br>
+この時点で $3$ 列目にはコマがないので、列側では何も削除せず、最後に $(1,3)$ を置き直す。</p>
+<p>最終的に残るコマは $(1,3)$ と $(3,2)$ の $2$ 個なので、答えは $2$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

@@ -50,56 +50,65 @@ window.MathJax = {
 <p>インタラクティブ問題は、動作テストが難しい。<br>
 一度、普通の <code>vector</code> でテストをしながら尺取法を書き、最後に問い合わせ部分を書き換えるとよい。</p>
 <h2 id="section-72986c8568">具体例での動作</h2>
-<p>$N=5$ で、点 $1$ から点 $5$ までの座標が、次のようになっている場合を考える。<br>
+<p>$N=5$ で、点 $1$ から点 $5$ までの座標が次のようになっている場合を考える。<br>
 これらの座標自体は、プログラムには入力されない。</p>
 <pre><code>点1: 0
 点2: 0.4
 点3: 0.8
 点4: 1.5
 点5: 3</code></pre>
-<p>最初は、<code>l=1</code>、<code>result=0</code> である。</p>
-<p><code>r=1</code> のとき、<code>l=r</code> なので、実際には問い合わせずに <code>true</code> として扱う。<br>
-<code>r-l=0</code> を <code>result</code> に加える。</p>
-<pre><code>l: 1
-r: 1
-result: 0</code></pre>
-<p><code>r=2</code> のとき、<code>? 1 2</code> と問い合わせる。<br>
-点 $1$ と点 $2$ の距離は $0.4$ なので、返答は <code>Yes</code> である。<br>
-<code>r-l=1</code> を <code>result</code> に加える。</p>
-<pre><code>l: 1
-r: 2
-result: 1</code></pre>
-<p><code>r=3</code> のとき、<code>? 1 3</code> と問い合わせる。<br>
-点 $1$ と点 $3$ の距離は $0.8$ なので、返答は <code>Yes</code> である。<br>
-<code>r-l=2</code> を <code>result</code> に加える。</p>
-<pre><code>l: 1
-r: 3
-result: 3</code></pre>
-<p><code>r=4</code> のとき、まず <code>? 1 4</code> と問い合わせる。<br>
-点 $1$ と点 $4$ の距離は $1.5$ なので、返答は <code>No</code> である。<br>
-そこで、<code>l</code> を $1$ 増やす。</p>
-<p>次に、<code>? 2 4</code> と問い合わせる。<br>
-点 $2$ と点 $4$ の距離は $1.1$ なので、返答は <code>No</code> である。<br>
-再び、<code>l</code> を $1$ 増やす。</p>
-<p>次に、<code>? 3 4</code> と問い合わせる。<br>
-点 $3$ と点 $4$ の距離は $0.7$ なので、返答は <code>Yes</code> である。<br>
-<code>r-l=1</code> を <code>result</code> に加える。</p>
-<pre><code>l: 3
-r: 4
-result: 4</code></pre>
-<p><code>r=5</code> のとき、まず <code>? 3 5</code> と問い合わせる。<br>
-点 $3$ と点 $5$ の距離は $2.2$ なので、返答は <code>No</code> である。<br>
-そこで、<code>l</code> を $1$ 増やす。</p>
-<p>次に、<code>? 4 5</code> と問い合わせる。<br>
-点 $4$ と点 $5$ の距離は $1.5$ なので、返答は <code>No</code> である。<br>
-再び、<code>l</code> を $1$ 増やす。</p>
-<p><code>l=r=5</code> になったので、実際には問い合わせずに <code>true</code> として扱う。<br>
-<code>r-l=0</code> を <code>result</code> に加える。</p>
-<pre><code>l: 5
-r: 5
-result: 4</code></pre>
-<p>最後に、<code>! 4</code> と出力すればよい。</p>
-<p>実際に行った問い合わせは $7$ 回であり、上限の $2N=10$ 回以下である。</p>
+<p>最初は左端を点 $1$ とする。<br>
+右端を点 $1$ から順に動かすと、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">右端</th>
+<th class="table-align-left" style="text-align: left;">問い合わせ</th>
+<th class="table-align-right" style="text-align: right;">最終的な左端</th>
+<th class="table-align-right" style="text-align: right;">加える個数</th>
+<th class="table-align-right" style="text-align: right;">合計</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-left" style="text-align: left;"><code>? 1 2</code> → <code>Yes</code></td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-left" style="text-align: left;"><code>? 1 3</code> → <code>Yes</code></td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-left" style="text-align: left;"><code>? 1 4</code> → <code>No</code>、<code>? 2 4</code> → <code>No</code>、<code>? 3 4</code> → <code>Yes</code></td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-left" style="text-align: left;"><code>? 3 5</code> → <code>No</code>、<code>? 4 5</code> → <code>No</code></td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+</tr>
+</tbody>
+</table></div>
+<p>右端が点 $5$ のときは、左端も点 $5$ まで進む。<br>
+同じ点同士については問い合わせず、条件を満たすものとして扱う。</p>
+<p>実際に行った問い合わせは $7$ 回であり、上限の $2N=10$ 回以下である。<br>
+したがって、最後に <code>! 4</code> と出力する。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>うっかり、<code>&quot;? 3 3&quot;</code> のような質問を投げないこと。<br>
 これは不正な質問である。<br>
