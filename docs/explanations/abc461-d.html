@@ -118,7 +118,48 @@ s: {&quot;1001&quot;,
 </tbody>
 </table></div>
 <p>この行の範囲では、条件を満たす部分長方形が $2$ 個ある。</p>
-<p>全ての上下の境界の組について同じ処理を行うと、答えは $8$ となる。</p>
+<p>他の上下の境界についても同様に処理する。<br>
+それぞれで作られる <code>diff</code> と、条件を満たす部分長方形の個数は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-left" style="text-align: left;">使用する行</th>
+<th class="table-align-left" style="text-align: left;"><code>diff</code></th>
+<th class="table-align-right" style="text-align: right;">条件を満たす個数</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-left" style="text-align: left;">$1$ 行目</td>
+<td class="table-align-left" style="text-align: left;">$\{0,1,1,1,2\}$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<td class="table-align-left" style="text-align: left;">$1$ 行目から $2$ 行目</td>
+<td class="table-align-left" style="text-align: left;">$\{0,2,3,3,5\}$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<td class="table-align-left" style="text-align: left;">$1$ 行目から $3$ 行目</td>
+<td class="table-align-left" style="text-align: left;">$\{0,2,4,5,7\}$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<td class="table-align-left" style="text-align: left;">$2$ 行目</td>
+<td class="table-align-left" style="text-align: left;">$\{0,1,2,2,3\}$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td class="table-align-left" style="text-align: left;">$2$ 行目から $3$ 行目</td>
+<td class="table-align-left" style="text-align: left;">$\{0,1,3,4,5\}$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<td class="table-align-left" style="text-align: left;">$3$ 行目</td>
+<td class="table-align-left" style="text-align: left;">$\{0,0,1,2,2\}$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、条件を満たす部分長方形の個数は $0+3+2+1+2+0=8$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>最大グリッドを全部 $0$ で埋めて $K=0$ とすると、答えは、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
