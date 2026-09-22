@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC230 C - Buildings</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ARC230 C - Buildings</h1>
+      <p class="explanation-title-ja">建物</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc230/tasks/arc230_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc230/submissions/79428502" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>まず、なんでもいいから $1$ つ構成せよという問題だったと思って考えてみる。</p>
+<p>一番低いビルから順に考えてみる。<br>
+そのビルの左右の区画は、その一番低いビルをどちら側に見るかが違うだけで、全く同じビルの組を見る。<br>
+ということは、そこの両サイドは $C$ の値は等しいはずである。<br>
+その $2$ 区間をマージして $C$ の値を $1$ だけ減らした問題を解ければ、元の問題も解ける。</p>
+<p>つまり、概ね、再帰的処理として以下のように考えればよい。</p>
+<ul>
+<li>一番左のビルより左に立った場合に見えるビル数を設定する
+</li>
+<li>一番右も同様にする
+</li>
+<li>以下を、可能な限り繰り返す
+<ul>
+<li>連続する $2$ つの区間で同じ値であれば、それをマージして $1$ つ小さい値にする
+</li>
+</ul>
+</li>
+<li>最終的に <code>0</code> という長さ $1$ の数列にならなかったら、構築不可能
+</li>
+<li><code>0</code> になるなら、マージした順に区間境界に低いビルを割り当てる
+</li>
+</ul>
+<p>さて、本来の問題を解く上では、以下のようにいくつか問題がある。</p>
+<ul>
+<li>左右端の値をどのように適切に設定するのか
+</li>
+<li>同じ値があるところを貪欲にマージして問題ないのか
+</li>
+<li>同じ値が $3$ つ以上並んでいる場合はどうするべきなのか
+</li>
+<li>そもそも $1$ つ構築する問題ではなく、構築パターン数を求める問題である
+</li>
+</ul>
+<p>$1$ つずつ解決していこう。</p>
+<p>まず、$1$ つめの「左右端の値をどのように適切に設定するのか」問題。<br>
+これは不変量を用いる考察で解決する。<br>
+値 $k$ に対して $2^{-k}$ という評価を対応させる。<br>
+評価値合計はマージによって不変であるので、その値は $2^0$ ぴったりでなければならない。</p>
+<p>ということで、以下のようにして求められる。<br>
+まず、未決定の左右端を除いた範囲で、どの値がいくつあるかカウンティングする。<br>
+最大値の個数が奇数であれば、その値が $1$ つ不足していると判断し、$1$ つ追加する。<br>
+その後、最大値を $2$ 個 $1$ セットで $1$ つ小さい値に変換する。<br>
+最終的に $0$ が $2$ 個以上になってしまった場合は、そもそも不可能。<br>
+また、途中追加した数が $0$ 個である、または $3$ 個以上である場合も不可能。<br>
+$2$ 個だった場合は、その片方を左端に、片方を右端に設定し、両パターンを調査する。<br>
+$1$ 個だった場合は、それより $1$ 大きい値を両サイドともに設定する。<br>
+これで解決。</p>
+<p>次に、$2$ つめの「同じ値があるところを貪欲にマージして問題ないのか」問題。<br>
+これは、最も大きいところを貪欲に選んでよい。<br>
+なぜなら、最も大きいところは、どれだけ待っても別の処理方法が選べるようにはならないから。</p>
+<p>そして、$3$ つめの「同じ値が $3$ つ以上並んでいる場合はどうするべきなのか」問題。<br>
+これは、大きい値から貪欲にという前提であれば、話は簡単になる。<br>
+つまり、$2$ 個 $1$ セットにした結果、マージに使われないものが残ったら失敗である。<br>
+奇数個並んでいる場合には失敗判定でよい。<br>
+偶数個並んでいる場合には、端から順に $2$ 個ずつマージするパターンのみ考えればよい。</p>
+<p>この $2$ 個目と $3$ 個目の話をあわせると、少し効率のいい処理ができる。<br>
+左から順にstackに積んでいき、「積む前にstackのトップとマージ可能ならマージしてから積む」でよい。<br>
+$2$ 連続の $k$ を即合成して困るのは、左右両方から合成で $k$ が奇数個ずつ生まれる場合のみである。<br>
+このstack戦略では、それは絶対に発生しない。</p>
+<p>最後に $4$ つめの「そもそも $1$ つ構築する問題ではなく、構築パターン数を求める問題である」問題。<br>
+これは、stackに、その区間の長さと、その区間だけ埋める割り当てパターン数を合わせて持たせればよい。<br>
+長さ $L$ の区間と長さ $R$ の区間をマージするとしよう。<br>
+まず、境界にその範囲で一番高いビルを置くとして、残り $L+R-2$ 個の数を左右に振り分ける。<br>
+$L+R-2$ 個のうちどの $L-1$ 個を左に使うかは ${}_{L+R-2}\mathrm{C}_{L-1}$ 通り。<br>
+その後の、それぞれの範囲内の並べ替え個数は、既に求まっている。<br>
+これら $3$ つの数の積が、マージ後の割り当てのパターン数である。</p>
+<p>以上で $4$ つの問題は全て解消され、解ける。<br>
+計算量は、二項係数の事前準備のもとで、$O(N)$ である。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力例1では $N=4$、$C_1,C_2,C_3=(2,2,3)$ である。</p>
+<p>まず、左右端を除いた値をカウンティングする。<br>
+$2$ が $2$ 個、$3$ が $1$ 個ある。</p>
+<p>最大値の $3$ は奇数個なので、不足分として $3$ を $1$ 個追加する。<br>
+すると $3$ が $2$ 個になり、これらを合成して $2$ が $1$ 個増えるので、$2$ は $3$ 個になる。</p>
+<p>次に $2$ は奇数個なので、不足分として $2$ を $1$ 個追加する。<br>
+すると $2$ が $4$ 個になり、これらを合成して $1$ が $2$ 個になる。<br>
+さらに $1$ が $2$ 個あるので合成すると、$0$ が $1$ 個になる。</p>
+<p>したがって、不足分は $3$ と $2$ の $2$ 個であり、左右端の候補は次の $2$ 通りになる。</p>
+<pre><code>3 2 2 3 2
+2 2 2 3 3</code></pre>
+<p>まず、<code>3 2 2 3 2</code> を左から stack に積んでいく。<br>
+先頭の $3$ と、その後の $2$ は合成できず、最後まで全体を深さ $0$ の $1$ 要素にまとめることができない。<br>
+よって、この候補から作れる順列は $0$ 通りである。</p>
+<p>次に、<code>2 2 2 3 3</code> を処理する。<br>
+各要素について、<code>[区間長, パターン数]</code> もあわせて持つことにする。</p>
+<p>最初の $2$ を積むと、stack は <code>2[1,1]</code> となる。<br>
+次の $2$ は同じ深さなので合成され、<code>1[2,1]</code> となる。<br>
+次の $2$ は合成できないので、そのまま積む。<br>
+さらに最初の $3$ もそのまま積むので、ここまでで次の状態になる。</p>
+<pre><code>1[2,1], 2[1,1], 3[1,1]</code></pre>
+<p>最後の $3$ を積もうとすると、まず直前の $3$ と合成して <code>2[2,1]</code> となる。<br>
+これはさらに直前の <code>2[1,1]</code> と合成できるので、<code>1[3,1]</code> となる。<br>
+このとき二項係数は ${}_{1}\mathrm{C}_{0}=1$ なので、パターン数は $1$ のままである。</p>
+<p>さらに <code>1[2,1]</code> と <code>1[3,1]</code> を合成する。<br>
+区間長は $5$ となり、パターン数は次のようになる。</p>
+<p>$1\times1\times{}_{3}\mathrm{C}_{1}=3$</p>
+<p>よって最終状態は <code>0[5,3]</code> となり、この候補から作れる順列は $3$ 通りである。</p>
+<p>以上より、答えは $3$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>二項係数は $998244353$ を法として計算する。<br>
+逆階乗を求めるための除算は逆元を用いる。</p>
+<p>剰余を取る前の乗算は <code>int</code> 型からはみ出るため、<code>long long</code> 型を用いること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/greedy.html">貪欲法</a>
+<a class="tag" href="../tags/binomial-coefficient.html">二項係数</a>
+<a class="tag" href="../tags/factorial.html">階乗</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+<a class="tag" href="../tags/binary-exponentiation.html">繰り返し二乗法</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
