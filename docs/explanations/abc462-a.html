@@ -56,31 +56,54 @@ window.MathJax = {
 <h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>s: &quot;abc462&quot;</code></pre>
-<p>$0$ 文字目をチェックする。<br>
-<code>&#x27;a&#x27;</code> は数字でないので何もしない。</p>
-<pre><code>s: &quot;abc462&quot;
-result: &quot;&quot;</code></pre>
-<p>$1$ 文字目をチェックする。<br>
-<code>&#x27;b&#x27;</code> は数字でないので何もしない。</p>
-<pre><code>s: &quot;abc462&quot;
-result: &quot;&quot;</code></pre>
-<p>$2$ 文字目をチェックする。<br>
-<code>&#x27;c&#x27;</code> は数字でないので何もしない。</p>
-<pre><code>s: &quot;abc462&quot;
-result: &quot;&quot;</code></pre>
-<p>$3$ 文字目をチェックする。<br>
-<code>&#x27;4&#x27;</code> は数字なので答え用の文字列に加える。</p>
-<pre><code>s: &quot;abc462&quot;
-result: &quot;4&quot;</code></pre>
-<p>$4$ 文字目をチェックする。<br>
-<code>&#x27;6&#x27;</code> は数字なので答え用の文字列に加える。</p>
-<pre><code>s: &quot;abc462&quot;
-result: &quot;46&quot;</code></pre>
-<p>$5$ 文字目をチェックする。<br>
-<code>&#x27;2&#x27;</code> は数字なので答え用の文字列に加える。</p>
-<pre><code>s: &quot;abc462&quot;
-result: &quot;462&quot;</code></pre>
-<p>最終的に、<code>result</code> を出力すればよい。</p>
+<p>左から $1$ 文字ずつ見て、数字である文字だけを取り出していく。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">位置</th>
+<th class="table-align-center" style="text-align: center;">文字</th>
+<th class="table-align-left" style="text-align: left;">判定</th>
+<th class="table-align-left" style="text-align: left;">ここまでに取り出した数字</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-center" style="text-align: center;"><code>&#x27;a&#x27;</code></td>
+<td class="table-align-left" style="text-align: left;">数字ではない</td>
+<td class="table-align-left" style="text-align: left;"><code>&quot;&quot;</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;"><code>&#x27;b&#x27;</code></td>
+<td class="table-align-left" style="text-align: left;">数字ではない</td>
+<td class="table-align-left" style="text-align: left;"><code>&quot;&quot;</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;"><code>&#x27;c&#x27;</code></td>
+<td class="table-align-left" style="text-align: left;">数字ではない</td>
+<td class="table-align-left" style="text-align: left;"><code>&quot;&quot;</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-center" style="text-align: center;"><code>&#x27;4&#x27;</code></td>
+<td class="table-align-left" style="text-align: left;">数字</td>
+<td class="table-align-left" style="text-align: left;"><code>&quot;4&quot;</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-center" style="text-align: center;"><code>&#x27;6&#x27;</code></td>
+<td class="table-align-left" style="text-align: left;">数字</td>
+<td class="table-align-left" style="text-align: left;"><code>&quot;46&quot;</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-center" style="text-align: center;"><code>&#x27;2&#x27;</code></td>
+<td class="table-align-left" style="text-align: left;">数字</td>
+<td class="table-align-left" style="text-align: left;"><code>&quot;462&quot;</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>数字だけを元の順序で並べると <code>&quot;462&quot;</code> になるので、これを出力する。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

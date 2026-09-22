@@ -49,62 +49,47 @@ window.MathJax = {
 k: 3
 l: {1, 2, 5, 9, 10, 15}
 r: {12, 7, 9, 13, 18, 20}</code></pre>
-<p>各布について、「右端、左端」の形にして、右端が小さい順に並べる。</p>
-<pre><code>vec: {(7,2), (9,5), (12,1), (13,9), (18,10), (20,15)}</code></pre>
+<p>布を右端が小さい順に並べると、次の順になる。</p>
+<pre><code>[2, 7], [5, 9], [1, 12], [9, 13], [10, 18], [15, 20]</code></pre>
 <p>スコア $x$ を達成できるかを二分探索する。<br>
-達成できる値の下限 <code>inside</code> を $0$、達成できない値の上限 <code>outside</code> を $20-2 = 18$ で初期化する。</p>
-<pre><code>inside: 0
-outside: 18</code></pre>
-<p>各 $x$ について、右端が小さい布から貪欲に選ぶ。<br>
-$1$ 枚選んだ後は、その布の右端に $x$ を足した値を <code>border</code> とする。<br>
-そして、左端が <code>border</code> 以上である最初の布を次に選ぶ。</p>
-<p>二分探索中の処理は次のようになる。</p>
+判定では、右端の小さい順に布を見ていく。<br>
+最初の $1$ 枚は選び、それ以降は直前に選んだ布との距離が $x$ 以上なら選ぶ。</p>
+<p>二分探索中の判定は次のようになる。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
 <th class="table-align-right" style="text-align: right;">$x$</th>
-<th>貪欲に選ばれる布</th>
-<th><code>border</code> の推移</th>
-<th class="table-align-right" style="text-align: right;">枚数</th>
-<th>判定</th>
-<th>更新後 <code>(inside, outside)</code></th>
+<th class="table-align-left" style="text-align: left;">貪欲に選ばれる布</th>
+<th class="table-align-right" style="text-align: right;">選べる枚数</th>
+<th class="table-align-center" style="text-align: center;">$3$ 枚選べるか</th>
 </tr></thead>
 <tbody>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">9</th>
-<td><code>(7,2)</code></td>
-<td>$16$</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td>x</td>
-<td><code>(0, 9)</code></td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-left" style="text-align: left;">$[2,7]$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;">できない</td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">4</th>
-<td><code>(7,2), (20,15)</code></td>
-<td>$11 \to 24$</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td>x</td>
-<td><code>(0, 4)</code></td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-left" style="text-align: left;">$[2,7],[15,20]$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;">できない</td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">2</th>
-<td><code>(7,2), (13,9), (20,15)</code></td>
-<td>$9 \to 15 \to 22$</td>
-<td class="table-align-right" style="text-align: right;">3</td>
-<td>o</td>
-<td><code>(2, 4)</code></td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-left" style="text-align: left;">$[2,7],[9,13],[15,20]$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-center" style="text-align: center;">できる</td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">3</th>
-<td><code>(7,2), (18,10)</code></td>
-<td>$10 \to 21$</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td>x</td>
-<td><code>(2, 3)</code></td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-left" style="text-align: left;">$[2,7],[10,18]$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;">できない</td>
 </tr>
 </tbody>
 </table></div>
-<p><code>inside</code> と <code>outside</code> の差が $1$ になったので、二分探索を終了する。<br>
-達成できる最大のスコアは <code>inside</code> の $2$ である。</p>
+<p>したがって、達成できる最大のスコアは $2$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

@@ -46,26 +46,36 @@ x: &#x27;A&#x27;
 s: {&quot;xoxox&quot;,
     &quot;xxooo&quot;,
     &quot;oxxxx&quot;}</code></pre>
-<p>答えを表す変数 <code>result</code> を <code>&quot;No&quot;</code> で初期化する。</p>
-<pre><code>result: &quot;No&quot;</code></pre>
-<p>それぞれの列車について、<code>x-&#x27;A&#x27;</code>、つまり $0$ 番目の文字を確認していく。</p>
-<p>$1$ 本目の列車を見る。<br>
-$0$ 番目の文字は <code>&#x27;x&#x27;</code> なので、指定された列に空席はない。</p>
-<pre><code>str: &quot;xoxox&quot;
-str[x-&#x27;A&#x27;]: &#x27;x&#x27;
-result: &quot;No&quot;</code></pre>
-<p>$2$ 本目の列車を見る。<br>
-$0$ 番目の文字は <code>&#x27;x&#x27;</code> なので、指定された列に空席はない。</p>
-<pre><code>str: &quot;xxooo&quot;
-str[x-&#x27;A&#x27;]: &#x27;x&#x27;
-result: &quot;No&quot;</code></pre>
-<p>$3$ 本目の列車を見る。<br>
-$0$ 番目の文字は <code>&#x27;o&#x27;</code> なので、指定された列に空席がある。<br>
-そのため、答えを <code>&quot;Yes&quot;</code> に変更する。</p>
-<pre><code>str: &quot;oxxxx&quot;
-str[x-&#x27;A&#x27;]: &#x27;o&#x27;
-result: &quot;Yes&quot;</code></pre>
-<p>最終的な答えは <code>&quot;Yes&quot;</code> である。</p>
+<p><code>&#x27;A&#x27;</code> は $0$ 番目の列に対応するので、各列車の $0$ 番目の文字を順に確認する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">列車</th>
+<th class="table-align-center" style="text-align: center;">座席情報</th>
+<th class="table-align-center" style="text-align: center;">A列の文字</th>
+<th class="table-align-center" style="text-align: center;">空席があるか</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;xoxox&quot;</code></td>
+<td class="table-align-center" style="text-align: center;"><code>&#x27;x&#x27;</code></td>
+<td class="table-align-center" style="text-align: center;">ない</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;xxooo&quot;</code></td>
+<td class="table-align-center" style="text-align: center;"><code>&#x27;x&#x27;</code></td>
+<td class="table-align-center" style="text-align: center;">ない</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;oxxxx&quot;</code></td>
+<td class="table-align-center" style="text-align: center;"><code>&#x27;o&#x27;</code></td>
+<td class="table-align-center" style="text-align: center;">ある</td>
+</tr>
+</tbody>
+</table></div>
+<p>$3$ 本目の列車の A 列に空席があるので、答えは <code>&quot;Yes&quot;</code> となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

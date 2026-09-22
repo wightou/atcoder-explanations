@@ -47,25 +47,66 @@ window.MathJax = {
 <h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 3
-(x,y): {(2,1), (1,3), (3,2)}</code></pre>
-<p><code>x</code> が小さい順に、<code>y</code> の値を並べなおす。</p>
-<pre><code>vec: {3, 1, 2}</code></pre>
-<p>最小値記録用変数と、カウンターを用意する。</p>
-<pre><code>mn : INF
-result: 0</code></pre>
-<p>$0$ 番目を見る。最小値記録更新なので、カウントを $1$ 進める。</p>
-<pre><code>vec: {3, 1, 2}
-mn : 3
-result: 1</code></pre>
-<p>$1$ 番目を見る。最小値記録更新なので、カウントを $1$ 進める。</p>
-<pre><code>vec: {3, 1, 2}
-mn : 1
-result: 2</code></pre>
-<p>$2$ 番目を見る。最小値記録ではないので、何もしない。</p>
-<pre><code>vec: {3, 1, 2}
-mn : 1
-result: 2</code></pre>
-<p>カウンターの値が答え。</p>
+(x, y): {(2, 1), (1, 3), (3, 2)}</code></pre>
+<p>$X$ が小さい順に点を並べると、次の順になる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$X$</th>
+<th class="table-align-right" style="text-align: right;">$Y$</th>
+<th class="table-align-right" style="text-align: right;">元の点番号</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+</tbody>
+</table></div>
+<p>左から順に見て、これまでに見た $Y$ の最小値より小さい点を数える。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$X$</th>
+<th class="table-align-right" style="text-align: right;">$Y$</th>
+<th class="table-align-right" style="text-align: right;">それ以前の $Y$ の最小値</th>
+<th class="table-align-center" style="text-align: center;">条件を満たすか</th>
+<th class="table-align-right" style="text-align: right;">ここまでの個数</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">なし</td>
+<td class="table-align-center" style="text-align: center;">満たす</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-center" style="text-align: center;">満たす</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;">満たさない</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+</tbody>
+</table></div>
+<p>条件を満たすのは元の点 $1,2$ の $2$ 個なので、答えは $2$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>
@@ -76,7 +117,7 @@ result: 2</code></pre>
     <section class="side-card">
       <h2>タグ</h2>
       <div class="tags">
-        <span class="muted">なし</span>
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
       </div>
       <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
     </section>

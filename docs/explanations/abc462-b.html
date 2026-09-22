@@ -35,25 +35,25 @@ window.MathJax = {
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc462/tasks/abc462_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc462/submissions/76685466" target="_blank" rel="noopener noreferrer">解答例</a></div>
     <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
-<p>不定長の二次元vectorを扱えるか、という問題。</p>
+<p>不定長の二次元 <code>vector</code> を扱えるか、という問題。</p>
 <p>まず、入力を受け取るのが難しい。<br>
 方法は以下。</p>
 <ul>
-<li>$N$ 個の空配列をもっている二次元vectorを作っておく。
+<li>$N$ 個の空配列をもっている二次元 <code>vector</code> を作っておく。
 </li>
 <li>以下をループする
 <ul>
 <li>$K$ の値を受け取ったら、<code>.resize()</code> を使って <code>a.at(i)</code> の大きさを $K$ に変更する。
 </li>
-<li>$K$ 個分、通常のvectorと同じように入力を受け取っていく。
+<li>$K$ 個分、通常の <code>vector</code> と同じように入力を受け取っていく。
 </li>
 </ul>
 </li>
 </ul>
 <p>それができたら、今度は答えを作っていく。<br>
-再び $N$ 個の空配列をもっている二次元vectorを作っておく。<br>
+再び $N$ 個の空配列をもっている二次元 <code>vector</code> を作っておく。<br>
 そして、人 $i$ から人 $j$ にギフトを送るなら、人 $j$ は人 $i$ からギフトを受け取るということ。<br>
-これを、<code>.emplace_back()</code> で答え用の二次元vectorに入れていく。<br>
+これを、<code>.emplace_back()</code> で答え用の二次元 <code>vector</code> に入れていく。<br>
 $i$ が小さい順に処理することで、自然と結果が昇順に並ぶ。</p>
 <p>実際には <code>0-indexed</code> と <code>1-indexed</code> の変換をしなくてはいけないことに注意。<br>
 すなわち、<code>a.at(i)</code> のデータに <code>j</code> とあるなら、<code>result.at(j-1)</code> に <code>i+1</code> を入れることになる。</p>
@@ -65,7 +65,7 @@ AtCoderでは改行前に余計な半角スペースがあっても無視して�
 実はこれは有向グラフの隣接リストにおいて、すべての辺の向きを逆転する方法そのものである。<br>
 今後もっと難しい問題で使用することになるので、覚えておきたい。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p>入力を受けとる。</p>
+<p>入力を受け取る。</p>
 <pre><code>n: 4
 a: {
      {2},
@@ -73,47 +73,82 @@ a: {
      {2},
      {1, 2, 3}
    }</code></pre>
-<p>人数分の要素を持つ、空の二次元vectorを用意する。</p>
-<pre><code>result: {
-          {},
-          {},
-          {},
-          {}
-        }</code></pre>
-<p><code>a[0]</code> のデータを見て、$1$ 人目から受け取る人のデータを更新。<br>
-<code>a[i]</code> のデータに <code>j</code> とあるなら、<code>result[j-1]</code> に <code>i+1</code> を入れる。</p>
-<pre><code>a[0]: {2}
-result: {
-          {},
-          {1},
-          {},
-          {}
-        }</code></pre>
-<p><code>a[1]</code> のデータを見て、$2$ 人目から受け取る人のデータを更新。</p>
-<pre><code>a[1]: {3}
-result: {
-          {},
-          {1},
-          {2},
-          {}
-        }</code></pre>
-<p><code>a[2]</code> のデータを見て、$3$ 人目から受け取る人のデータを更新。</p>
-<pre><code>a[2]: {2}
-result: {
-          {},
-          {1, 3},
-          {2},
-          {}
-        }</code></pre>
-<p><code>a[3]</code> のデータを見て、$4$ 人目から受け取る人のデータを更新。</p>
-<pre><code>a[3]: {1, 2, 3}
-result: {
-          {4},
-          {1, 3, 4},
-          {2, 4},
-          {}
-        }</code></pre>
-<p>最終的に、<code>result</code> を指示に合わせた形式で出力すればよい。</p>
+<p>人 $1$ から順に、ギフトを送った相手を見ていく。<br>
+相手ごとに「誰からギフトを受け取ったか」を追加していく。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">処理した人</th>
+<th class="table-align-left" style="text-align: left;">送った相手</th>
+<th class="table-align-left" style="text-align: left;">人 $1$ の送り手</th>
+<th class="table-align-left" style="text-align: left;">人 $2$ の送り手</th>
+<th class="table-align-left" style="text-align: left;">人 $3$ の送り手</th>
+<th class="table-align-left" style="text-align: left;">人 $4$ の送り手</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-left" style="text-align: left;">$\{2\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{1\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{\}$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-left" style="text-align: left;">$\{3\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{1\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{2\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{\}$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-left" style="text-align: left;">$\{2\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{1,3\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{2\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{\}$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-left" style="text-align: left;">$\{1,2,3\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{4\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{1,3,4\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{2,4\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{\}$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、各人にギフトを送った人は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">人</th>
+<th class="table-align-right" style="text-align: right;">ギフトを送った人数</th>
+<th class="table-align-left" style="text-align: left;">ギフトを送った人</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-left" style="text-align: left;">$\{4\}$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-left" style="text-align: left;">$\{1,3,4\}$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-left" style="text-align: left;">$\{2,4\}$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-left" style="text-align: left;">$\{\}$</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

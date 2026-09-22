@@ -4,7 +4,7 @@ problem: A
 problem_title: "Armor"
 problem_title_ja: "鎧"
 problem_url: https://atcoder.jp/contests/abc461/tasks/abc461_a
-submission_url: https://atcoder.jp/contests/abc461/submissions/76604367
+submission_url: https://atcoder.jp/contests/abc461/submissions/79429783
 tags:
   - 入出力
   - int型
@@ -17,7 +17,8 @@ tag_note:
 入力は整数が $2$ つなので、`int` 型の変数を $2$ つ用意し、`cin` で入力を受け取る。
 
 この防具は、威力 $D$ 以下の攻撃を防ぐ。
-よって、威力 $A$ の攻撃を防げるかどうかは、 $A \leq D$ であるかを判定すればよい。
+よって、威力 $A$ の攻撃を防げるかどうかは、$A \leq D$ であるかを判定すればよい。
+
 ```cpp
 if (a<=d) {
   // a<=dであるときの処理（`Yes` と答える）
@@ -31,15 +32,14 @@ if文の中で直接 `cout` してもいいし、事前に出力用文字列を�
 ## 入力例1での動作
 
 入力を受け取る。
-```
+
+```text
 a: 4
 d: 5
 ```
 
-`4` は `5` 以下なので、答えは `"Yes"`。
-```
-result: "Yes"
-```
+$4 \leq 5$ なので、この攻撃は防ぐことができる。
+したがって、`Yes` を出力する。
 
 ## 注意点
 

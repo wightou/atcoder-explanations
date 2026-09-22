@@ -96,26 +96,43 @@ $(0,0)$ から $(X,0)$ までに $X$ 軸上の点の中に通らない点があ�
 <p>以上から、「可能な限り斜め移動した後で横移動」という経路を貪欲に選んでコストを計算すればよい。<br>
 同じ操作はまとめて計算することで、テストケースあたり $O(1)$ で答えられる。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p>$5$ つめのテストケースのみ。</p>
+<p>入力例1の $5$ つめのテストケースで動作を確認する。</p>
 <p>入力を受け取る。</p>
 <pre><code>a: 31
 b: 9
 x: -74
 y: -60</code></pre>
-<p><code>x</code> と <code>y</code> を絶対値に変更する。<br>
-その後、$x&gt;y$ になっているので入れ替えは行わない。</p>
-<pre><code>a: 31
-b: 9
-x: 74
-y: 60</code></pre>
-<p>縦横交互移動を $60$ 回分繰り返し、コストに $\min(31,9) \times 120 = 1080$ を加算する。</p>
-<pre><code>x: 14
-y: 0
-result: 1080</code></pre>
-<p>偶数→奇数は $7$ 回あり、$\min(31,3 \times 9) = 27$ ずつコストがかかる<br>
-奇数→偶数は $7$ 回あり、$\min(9,3 \times 31) = 9$ ずつコストがかかる<br>
-よって、$27 \times 7 + 9 \times 7 = 252$ をコストに加算する。</p>
-<pre><code>result: 1332</code></pre>
+<p>対称性を利用して、目標地点の座標をともに非負にする。<br>
+今回は $|X|=74$, $|Y|=60$ で $X \geq Y$ なので、縦横の入れ替えは必要ない。</p>
+<p>まず、横移動と縦移動を $1$ 回ずつ行う $2$ 手を $60$ 回繰り返し、$(0,0)$ から $(60,60)$ まで進む。<br>
+各 $2$ 手は、安い方のコストを両方の移動に使える順序を選べるので、$2\times \min(31,9)=18$ かかる。</p>
+<p>したがって、ここまでのコストは $18 \times 60=1080$ である。<br>
+残りは、$(60,60)$ から $(74,60)$ まで横に $14$ マス進めばよい。</p>
+<p>横に $1$ マス進む最小コストは、移動前のパリティによって次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-left" style="text-align: left;">移動</th>
+<th class="table-align-right" style="text-align: right;">回数</th>
+<th class="table-align-right" style="text-align: right;">$1$ 回あたりの最小コスト</th>
+<th class="table-align-right" style="text-align: right;">小計</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-left" style="text-align: left;">偶数→奇数</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-right" style="text-align: right;">$\min(31,3 \times 9)=27$</td>
+<td class="table-align-right" style="text-align: right;">$189$</td>
+</tr>
+<tr>
+<td class="table-align-left" style="text-align: left;">奇数→偶数</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-right" style="text-align: right;">$\min(9,3 \times 31)=9$</td>
+<td class="table-align-right" style="text-align: right;">$63$</td>
+</tr>
+</tbody>
+</table></div>
+<p>残り $14$ マスに必要なコストは $189+63=252$ である。<br>
+よって、最小コストは $1080+252=1332$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>コストの値が大きいと、総和はあっさり <code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>

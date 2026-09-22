@@ -46,467 +46,115 @@ window.MathJax = {
 $1$ 人ごとに <code>vector</code> を広く見る必要がなくなり、$O(N+T_{max})$ で完了する。</p>
 <p>これが済んだら、時刻ごとに ${}_{加担可能人数}\mathrm{C}_2$ を求めて、その総和を答えればよい。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p>入力を受け取る。</p>
+<p>入力を受け取る。<br>
+時刻は受け取った値から $1$ を引いて <code>0-indexed</code> にしておく。</p>
 <pre><code>n: 3
 d: 2
-(s,t): {(9,17), (10,12), (13,20)}</code></pre>
-<p><code>t</code> の最大値が <code>20</code> なので、各時刻の人数データを長さ <code>22</code> で用意する。<br>
-今は階差数列になっている。</p>
+(s, t): {(8, 16), (9, 11), (12, 19)}</code></pre>
+<p>それぞれの人について、犯行開始から $D=2$ 単位時間ずっと館にいられる開始時刻を求める。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th></th>
-<th class="table-align-right" style="text-align: right;">0</th>
-<th class="table-align-right" style="text-align: right;">1</th>
-<th class="table-align-right" style="text-align: right;">2</th>
-<th class="table-align-right" style="text-align: right;">3</th>
-<th class="table-align-right" style="text-align: right;">4</th>
-<th class="table-align-right" style="text-align: right;">5</th>
-<th class="table-align-right" style="text-align: right;">6</th>
-<th class="table-align-right" style="text-align: right;">7</th>
-<th class="table-align-right" style="text-align: right;">8</th>
-<th class="table-align-right" style="text-align: right;">9</th>
-<th class="table-align-right" style="text-align: right;">10</th>
-<th class="table-align-right" style="text-align: right;">11</th>
-<th class="table-align-right" style="text-align: right;">12</th>
-<th class="table-align-right" style="text-align: right;">13</th>
-<th class="table-align-right" style="text-align: right;">14</th>
-<th class="table-align-right" style="text-align: right;">15</th>
-<th class="table-align-right" style="text-align: right;">16</th>
-<th class="table-align-right" style="text-align: right;">17</th>
-<th class="table-align-right" style="text-align: right;">18</th>
-<th class="table-align-right" style="text-align: right;">19</th>
-<th class="table-align-right" style="text-align: right;">20</th>
-<th class="table-align-right" style="text-align: right;">21</th>
+<th class="table-align-right" style="text-align: right;">人</th>
+<th class="table-align-right" style="text-align: right;">入館時刻</th>
+<th class="table-align-right" style="text-align: right;">退館時刻</th>
+<th class="table-align-left" style="text-align: left;">加担できる犯行開始時刻</th>
 </tr></thead>
 <tbody>
 <tr>
-<th scope="row">p</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td class="table-align-right" style="text-align: right;">$16$</td>
+<td class="table-align-left" style="text-align: left;">$8$ 以上 $14$ 以下</td>
 </tr>
 <tr>
-<th scope="row">本来の値</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$11$</td>
+<td class="table-align-left" style="text-align: left;">$9$ のみ</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$12$</td>
+<td class="table-align-right" style="text-align: right;">$19$</td>
+<td class="table-align-left" style="text-align: left;">$12$ 以上 $17$ 以下</td>
 </tr>
 </tbody>
 </table></div>
-<p><code>(s,t)</code> の <code>(9,17)</code> を見て、$9$ 番目から $17-2=15$ 番目に $1$ を足す。</p>
+<p>各範囲へ $1$ を加えるため、階差数列では範囲の先頭で $+1$、範囲の直後で $-1$ とする。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th></th>
-<th class="table-align-right" style="text-align: right;">0</th>
-<th class="table-align-right" style="text-align: right;">1</th>
-<th class="table-align-right" style="text-align: right;">2</th>
-<th class="table-align-right" style="text-align: right;">3</th>
-<th class="table-align-right" style="text-align: right;">4</th>
-<th class="table-align-right" style="text-align: right;">5</th>
-<th class="table-align-right" style="text-align: right;">6</th>
-<th class="table-align-right" style="text-align: right;">7</th>
-<th class="table-align-right" style="text-align: right;">8</th>
-<th class="table-align-right" style="text-align: right;">9</th>
-<th class="table-align-right" style="text-align: right;">10</th>
-<th class="table-align-right" style="text-align: right;">11</th>
-<th class="table-align-right" style="text-align: right;">12</th>
-<th class="table-align-right" style="text-align: right;">13</th>
-<th class="table-align-right" style="text-align: right;">14</th>
-<th class="table-align-right" style="text-align: right;">15</th>
-<th class="table-align-right" style="text-align: right;">16</th>
-<th class="table-align-right" style="text-align: right;">17</th>
-<th class="table-align-right" style="text-align: right;">18</th>
-<th class="table-align-right" style="text-align: right;">19</th>
-<th class="table-align-right" style="text-align: right;">20</th>
-<th class="table-align-right" style="text-align: right;">21</th>
+<th class="table-align-right" style="text-align: right;">人</th>
+<th class="table-align-right" style="text-align: right;">$+1$ する時刻</th>
+<th class="table-align-right" style="text-align: right;">$-1$ する時刻</th>
 </tr></thead>
 <tbody>
 <tr>
-<th scope="row">p</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">-1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td class="table-align-right" style="text-align: right;">$15$</td>
 </tr>
 <tr>
-<th scope="row">本来の値</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$12$</td>
+<td class="table-align-right" style="text-align: right;">$18$</td>
 </tr>
 </tbody>
 </table></div>
-<p><code>(s,t)</code> の <code>(10,12)</code> を見て、$10$ 番目から $12-2=10$ 番目に $1$ を足す。</p>
+<p>変化がある付近だけを見ると、階差数列と、それを累積和で戻した加担可能人数は次のようになる。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th></th>
-<th class="table-align-right" style="text-align: right;">0</th>
-<th class="table-align-right" style="text-align: right;">1</th>
-<th class="table-align-right" style="text-align: right;">2</th>
-<th class="table-align-right" style="text-align: right;">3</th>
-<th class="table-align-right" style="text-align: right;">4</th>
-<th class="table-align-right" style="text-align: right;">5</th>
-<th class="table-align-right" style="text-align: right;">6</th>
-<th class="table-align-right" style="text-align: right;">7</th>
-<th class="table-align-right" style="text-align: right;">8</th>
-<th class="table-align-right" style="text-align: right;">9</th>
-<th class="table-align-right" style="text-align: right;">10</th>
-<th class="table-align-right" style="text-align: right;">11</th>
-<th class="table-align-right" style="text-align: right;">12</th>
-<th class="table-align-right" style="text-align: right;">13</th>
-<th class="table-align-right" style="text-align: right;">14</th>
-<th class="table-align-right" style="text-align: right;">15</th>
-<th class="table-align-right" style="text-align: right;">16</th>
-<th class="table-align-right" style="text-align: right;">17</th>
-<th class="table-align-right" style="text-align: right;">18</th>
-<th class="table-align-right" style="text-align: right;">19</th>
-<th class="table-align-right" style="text-align: right;">20</th>
-<th class="table-align-right" style="text-align: right;">21</th>
+<th class="table-align-left" style="text-align: left;"></th>
+<th class="table-align-right" style="text-align: right;">$8$</th>
+<th class="table-align-right" style="text-align: right;">$9$</th>
+<th class="table-align-right" style="text-align: right;">$10$</th>
+<th class="table-align-right" style="text-align: right;">$11$</th>
+<th class="table-align-right" style="text-align: right;">$12$</th>
+<th class="table-align-right" style="text-align: right;">$13$</th>
+<th class="table-align-right" style="text-align: right;">$14$</th>
+<th class="table-align-right" style="text-align: right;">$15$</th>
+<th class="table-align-right" style="text-align: right;">$16$</th>
+<th class="table-align-right" style="text-align: right;">$17$</th>
+<th class="table-align-right" style="text-align: right;">$18$</th>
 </tr></thead>
 <tbody>
 <tr>
-<th scope="row">p</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">-1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">-1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
+<th class="table-align-left" style="text-align: left;" scope="row">階差</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
 </tr>
 <tr>
-<th scope="row">本来の値</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
+<th class="table-align-left" style="text-align: left;" scope="row">加担可能人数</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
 </tr>
 </tbody>
 </table></div>
-<p><code>(s,t)</code> の <code>(13,20)</code> を見て、$13$ 番目から $20-2=18$ 番目に $1$ を足す。</p>
-<div class="markdown-table-scroll"><table>
-<thead><tr>
-<th></th>
-<th class="table-align-right" style="text-align: right;">0</th>
-<th class="table-align-right" style="text-align: right;">1</th>
-<th class="table-align-right" style="text-align: right;">2</th>
-<th class="table-align-right" style="text-align: right;">3</th>
-<th class="table-align-right" style="text-align: right;">4</th>
-<th class="table-align-right" style="text-align: right;">5</th>
-<th class="table-align-right" style="text-align: right;">6</th>
-<th class="table-align-right" style="text-align: right;">7</th>
-<th class="table-align-right" style="text-align: right;">8</th>
-<th class="table-align-right" style="text-align: right;">9</th>
-<th class="table-align-right" style="text-align: right;">10</th>
-<th class="table-align-right" style="text-align: right;">11</th>
-<th class="table-align-right" style="text-align: right;">12</th>
-<th class="table-align-right" style="text-align: right;">13</th>
-<th class="table-align-right" style="text-align: right;">14</th>
-<th class="table-align-right" style="text-align: right;">15</th>
-<th class="table-align-right" style="text-align: right;">16</th>
-<th class="table-align-right" style="text-align: right;">17</th>
-<th class="table-align-right" style="text-align: right;">18</th>
-<th class="table-align-right" style="text-align: right;">19</th>
-<th class="table-align-right" style="text-align: right;">20</th>
-<th class="table-align-right" style="text-align: right;">21</th>
-</tr></thead>
-<tbody>
-<tr>
-<th scope="row">p</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">-1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">-1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">-1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-</tr>
-<tr>
-<th scope="row">本来の値</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table></div>
-<p>累積和をとって、本来の値にする。</p>
-<div class="markdown-table-scroll"><table>
-<thead><tr>
-<th></th>
-<th class="table-align-right" style="text-align: right;">0</th>
-<th class="table-align-right" style="text-align: right;">1</th>
-<th class="table-align-right" style="text-align: right;">2</th>
-<th class="table-align-right" style="text-align: right;">3</th>
-<th class="table-align-right" style="text-align: right;">4</th>
-<th class="table-align-right" style="text-align: right;">5</th>
-<th class="table-align-right" style="text-align: right;">6</th>
-<th class="table-align-right" style="text-align: right;">7</th>
-<th class="table-align-right" style="text-align: right;">8</th>
-<th class="table-align-right" style="text-align: right;">9</th>
-<th class="table-align-right" style="text-align: right;">10</th>
-<th class="table-align-right" style="text-align: right;">11</th>
-<th class="table-align-right" style="text-align: right;">12</th>
-<th class="table-align-right" style="text-align: right;">13</th>
-<th class="table-align-right" style="text-align: right;">14</th>
-<th class="table-align-right" style="text-align: right;">15</th>
-<th class="table-align-right" style="text-align: right;">16</th>
-<th class="table-align-right" style="text-align: right;">17</th>
-<th class="table-align-right" style="text-align: right;">18</th>
-<th class="table-align-right" style="text-align: right;">19</th>
-<th class="table-align-right" style="text-align: right;">20</th>
-<th class="table-align-right" style="text-align: right;">21</th>
-</tr></thead>
-<tbody>
-<tr>
-<th scope="row">p</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table></div>
-<p>${}_{各値}\mathrm{C}_2$ の総和を求める</p>
-<div class="markdown-table-scroll"><table>
-<thead><tr>
-<th></th>
-<th class="table-align-right" style="text-align: right;">0</th>
-<th class="table-align-right" style="text-align: right;">1</th>
-<th class="table-align-right" style="text-align: right;">2</th>
-<th class="table-align-right" style="text-align: right;">3</th>
-<th class="table-align-right" style="text-align: right;">4</th>
-<th class="table-align-right" style="text-align: right;">5</th>
-<th class="table-align-right" style="text-align: right;">6</th>
-<th class="table-align-right" style="text-align: right;">7</th>
-<th class="table-align-right" style="text-align: right;">8</th>
-<th class="table-align-right" style="text-align: right;">9</th>
-<th class="table-align-right" style="text-align: right;">10</th>
-<th class="table-align-right" style="text-align: right;">11</th>
-<th class="table-align-right" style="text-align: right;">12</th>
-<th class="table-align-right" style="text-align: right;">13</th>
-<th class="table-align-right" style="text-align: right;">14</th>
-<th class="table-align-right" style="text-align: right;">15</th>
-<th class="table-align-right" style="text-align: right;">16</th>
-<th class="table-align-right" style="text-align: right;">17</th>
-<th class="table-align-right" style="text-align: right;">18</th>
-<th class="table-align-right" style="text-align: right;">19</th>
-<th class="table-align-right" style="text-align: right;">20</th>
-<th class="table-align-right" style="text-align: right;">21</th>
-</tr></thead>
-<tbody>
-<tr>
-<th scope="row">p</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-</tr>
-<tr>
-<th scope="row">${}_p\mathrm{C}_2$</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table></div>
-<pre><code>result: 4</code></pre>
+<p>加担可能人数が $2$ の時刻では、犯人の選び方は ${}_2\mathrm{C}_2=1$ 通りである。<br>
+該当する時刻は $9,12,13,14$ の $4$ 個なので、合計は $4$ 通りとなる。</p>
+<p><code>0-indexed</code> 化する前の時刻に戻すと、犯行開始時刻は $10,13,14,15$ であり、公式例の $4$ 通りと一致する。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>$N$ の値が大きいと、${}_N\mathrm{C}_2$ が大きくなり、<code>int</code> 型からはみ出る。<br>
 結果用変数には <code>long long</code> 型を用いること。</p>

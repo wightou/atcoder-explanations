@@ -95,7 +95,8 @@ window.MathJax = {
 自分が勝つ確率は $\frac{1}{2}$ である。</p>
 <p><code>ts+to</code> 個の試合のうち、<code>t</code> 側が勝つ試合数が $i$ 個であるとする。<br>
 このような結果は ${}_{\mathrm{ts}+\mathrm{to}}\mathrm{C}_{i}$ 通りある。</p>
-<p>このとき、$W+1$ の優勝候補者は、<code>tt</code> の各試合の勝者と、<code>ts</code>・<code>to</code> のうち <code>t</code> 側が勝った選手なので、合計で $\mathrm{tt}+i$ 人である。<br>
+<p>このとき、$W+1$ の優勝候補者は、<code>tt</code> の各試合の勝者と、<code>ts</code>・<code>to</code> のうち <code>t</code> 側が勝った選手。<br>
+合計で $\mathrm{tt}+i$ 人である。<br>
 よって、その中からこの選手が優勝者として選ばれる確率は $\frac{1}{\mathrm{tt}+i}$ である。</p>
 <p>したがって、<code>ptt</code> は次のように計算できる。</p>
 <p>$$<br>
@@ -226,43 +227,92 @@ $$</p>
 <p>入力を受け取る。</p>
 <pre><code>n: 4
 a: {1, 2, 3, 4, 2, 3, 1, 4}</code></pre>
-<p>最後の $N$ 試合の前での最大勝利数 <code>mx</code> を求める。</p>
-<pre><code>mx: 4</code></pre>
-<p>選手を <code>t</code>、<code>s</code>、<code>o</code> に分類する。</p>
-<pre><code>選手 1: o
-選手 2: o
-選手 3: s
-選手 4: t
-選手 5: o
-選手 6: s
-選手 7: o
-選手 8: t</code></pre>
-<p>各試合を分類する。</p>
-<pre><code>第1試合: 選手1 vs 選手2 -&gt; o 同士
-第2試合: 選手3 vs 選手4 -&gt; s と t
-第3試合: 選手5 vs 選手6 -&gt; o と s
-第4試合: 選手7 vs 選手8 -&gt; o と t</code></pre>
-<p>したがって、各種類の試合数は次のようになる。</p>
-<pre><code>tt: 0
-ts: 1
-ss: 0
-to: 1
-so: 1</code></pre>
-<p>各選手がどの種類の優勝確率を使うかを、<code>result</code> に仮の値として記録する。</p>
-<pre><code>result: {0, 0, -3, -2, 0, -6, 0, -5}</code></pre>
-<p>ここで、仮の値は次を表す。</p>
-<pre><code>-1: ptt
--2: pts
--3: pst
--4: pss
--5: pto
--6: pso</code></pre>
-<p>まず、<code>ptt</code> を計算する。<br>
-この入力例では <code>tt=0</code> なので、<code>ptt</code> を使う選手はいない。</p>
-<p><code>ptt</code> は <code>0</code>（実際の値は $0$）である。</p>
-<p>次に、<code>pts</code> を計算する。<br>
-これは、<code>ts</code> の <code>t</code> 側の選手、つまり選手 $4$ の優勝確率である。</p>
-<p>選手 $4$ が自分の試合に勝ち、勝利数 $W+1$ で優勝候補者になる場合の寄与は、次のようになる。</p>
+<p>最大勝利数は $W=4$ なので、各選手を <code>t</code>、<code>s</code>、<code>o</code> に分類する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">選手</th>
+<th class="table-align-right" style="text-align: right;">現在の勝利数</th>
+<th class="table-align-center" style="text-align: center;">分類</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-center" style="text-align: center;"><code>s</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-center" style="text-align: center;"><code>t</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-center" style="text-align: center;"><code>s</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-center" style="text-align: center;"><code>t</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>最後の $4$ 試合を分類すると、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">試合</th>
+<th class="table-align-left" style="text-align: left;">対戦</th>
+<th class="table-align-center" style="text-align: center;">分類</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-left" style="text-align: left;">選手 $1$ vs 選手 $2$</td>
+<td class="table-align-center" style="text-align: center;"><code>oo</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-left" style="text-align: left;">選手 $3$ vs 選手 $4$</td>
+<td class="table-align-center" style="text-align: center;"><code>ts</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-left" style="text-align: left;">選手 $5$ vs 選手 $6$</td>
+<td class="table-align-center" style="text-align: center;"><code>so</code></td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-left" style="text-align: left;">選手 $7$ vs 選手 $8$</td>
+<td class="table-align-center" style="text-align: center;"><code>to</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、<code>tt=0</code>、<code>ts=1</code>、<code>ss=0</code>、<code>to=1</code>、<code>so=1</code> である。</p>
+<p>この入力例では <code>tt</code> と <code>ss</code> の試合は存在しない。<br>
+優勝確率を求める必要がある立場は <code>pts</code>、<code>pst</code>、<code>pto</code>、<code>pso</code> の $4$ 種類である。</p>
+<p><code>pts</code> は、<code>ts</code> の <code>t</code> 側である選手 $4$ の優勝確率である。<br>
+自分が勝って勝利数 $5$ になる場合を考える。<br>
+この場合の寄与は次のようになる。</p>
 <p>$$<br>
 \frac{1}{1}\times{}_{1}\mathrm{C}_{0}\times\left(\frac{1}{2}\right)^2<br>
 +<br>
@@ -270,7 +320,8 @@ so: 1</code></pre>
 =<br>
 \frac{3}{8}<br>
 $$</p>
-<p>また、選手 $4$ が自分の試合に負け、勝利数 $W$ で優勝候補者になる場合の寄与は、次のようになる。</p>
+<p>自分が負けて勝利数 $4$ のまま優勝候補になる場合を考える。<br>
+この場合の寄与は次のようになる。</p>
 <p>$$<br>
 \frac{1}{3}\times{}_{1}\mathrm{C}_{0}\times\left(\frac{1}{2}\right)^3<br>
 +<br>
@@ -278,12 +329,10 @@ $$</p>
 =<br>
 \frac{7}{96}<br>
 $$</p>
-<p>よって、<code>pts</code> は次の値になる。</p>
-<p><code>pts</code> は <code>883862188</code>（実際の値は $\frac{43}{96}$）である。</p>
-<p>次に、<code>pst</code> を計算する。<br>
-これは、<code>ts</code> の <code>s</code> 側の選手、つまり選手 $3$ の優勝確率である。</p>
-<p><code>pst</code> の選手は、自分の試合に勝った場合だけ勝利数 $W$ で優勝候補者になりうる。<br>
-この入力例では、寄与は次の値になる。</p>
+<p>したがって、選手 $4$ の優勝確率は $\frac{43}{96}$、剰余表現では <code>883862188</code> である。</p>
+<p><code>pst</code> は、<code>ts</code> の <code>s</code> 側である選手 $3$ の優勝確率である。<br>
+自分が勝ち、かつ勝利数 $5$ の選手が生まれない場合だけ候補になる。<br>
+この場合の寄与は次のようになる。</p>
 <p>$$<br>
 \frac{1}{3}\times{}_{1}\mathrm{C}_{0}\times\left(\frac{1}{2}\right)^3<br>
 +<br>
@@ -291,30 +340,21 @@ $$</p>
 =<br>
 \frac{7}{96}<br>
 $$</p>
-<p>したがって、<code>pst</code> は次の値になる。</p>
-<p><code>pst</code> は <code>259959467</code>（実際の値は $\frac{7}{96}$）である。</p>
-<p>次に、<code>pss</code> を計算する。<br>
-この入力例では <code>ss=0</code> なので、<code>pss</code> を使う選手はいない。</p>
-<p><code>pss</code> は <code>0</code>（実際の値は $0$）である。</p>
-<p>次に、<code>pto</code> を計算する。<br>
-これは、<code>to</code> の <code>t</code> 側の選手、つまり選手 $8$ の優勝確率である。</p>
-<p>この入力例では、<code>pto</code> は <code>pts</code> と同じ値になる。</p>
-<p><code>pto</code> は <code>883862188</code>（実際の値は $\frac{43}{96}$）である。</p>
-<p>次に、<code>pso</code> を計算する。<br>
-これは、<code>so</code> の <code>s</code> 側の選手、つまり選手 $6$ の優勝確率である。</p>
-<p>選手 $6$ が優勝候補者になるには、自分の試合に勝つ必要がある。<br>
-この入力例では、寄与は次の値になる。</p>
+<p>剰余表現では <code>259959467</code> である。</p>
+<p><code>pto</code> は、<code>to</code> の <code>t</code> 側である選手 $8$ の優勝確率である。<br>
+この入力例では <code>pts</code> と同じ式になるので、$\frac{43}{96}$、剰余表現では <code>883862188</code> である。</p>
+<p><code>pso</code> は、<code>so</code> の <code>s</code> 側である選手 $6$ の優勝確率である。<br>
+自分が勝ち、かつ勝利数 $5$ の選手が生まれない場合だけ候補になる。<br>
+この場合の寄与は次のようになる。</p>
 <p>$$<br>
 \frac{1}{4}\times{}_{0}\mathrm{C}_{0}\times\left(\frac{1}{2}\right)^3<br>
 =<br>
 \frac{3}{96}<br>
 $$</p>
-<p>したがって、<code>pso</code> は次の値になる。</p>
-<p><code>pso</code> は <code>967049217</code>（実際の値は $\frac{3}{96}$）である。</p>
-<p>最後に、<code>result</code> の仮の値を実際の優勝確率に置き換える。</p>
-<pre><code>result: {0, 0, 259959467, 883862188, 0, 967049217, 0, 883862188}</code></pre>
-<p>実際の値は、順に $0,0,\frac{7}{96},\frac{43}{96},0,\frac{3}{96},0,\frac{43}{96}$ である。</p>
-<p>よって、<code>0 0 259959467 883862188 0 967049217 0 883862188</code> を出力する。</p>
+<p>剰余表現では <code>967049217</code> である。</p>
+<p><code>o</code> の選手の優勝確率は $0$ である。<br>
+選手 $1$ から $8$ までの優勝確率は順に次のようになる。</p>
+<pre><code>0 0 259959467 883862188 0 967049217 0 883862188</code></pre>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 何か足し算や掛け算をするたびに結果を <code>% 998244353</code> し、割り算は $998244353-2$ 乗したものを掛ける。<br>

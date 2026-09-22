@@ -67,34 +67,83 @@ $K+2$ ブロックなのは、追加で作った個数が $0$ から $K$ 個ま�
 <p>こういうデータの持ち方をすると、元々 <code>&quot;ABC&quot;</code> だったところを通過した場合の処理が簡単になる。<br>
 つまり、新たに <code>&quot;ABC&quot;</code> を作るかどうかの処理をしたのち、全データを $1$ ブロック分前に移動すればよい。<br>
 ブロック数の余剰は、このとき $K$ 回のデータが一時的に $K+1$ 回相当のブロックにはみ出るためのケア。</p>
-<p>最後の文字まで処理が終わったら、全文字使って $K$ 回追加で作るコストを答えればよい。</p>
+<p>最後の文字まで処理が終わったら、全文字使って $K$ 回追加で作るコストを答えればよい。<br>
+あるいは、不可能だったら $-1$ を答える。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p>$1$ つめのテストケースのみ。</p>
+<p>入力例1の $1$ つめのテストケースで動作を確認する。</p>
 <p>入力を受け取る。</p>
 <pre><code>s: &quot;ATCABC&quot;
 k: 1</code></pre>
-<p><code>s</code> の後ろ $2$ 文字以外について、そこから始まる <code>&quot;ABC&quot;</code> を作るのに必要な置換数を求める。</p>
-<pre><code>vec: {1, 3, 3, 0} </code></pre>
-<p>$3$ 個セットを $(k+2)$ ブロック、DPテーブルとして用意する。<br>
-最初のブロックを <code>0</code> で初期化、残りは <code>INF</code> にする。<br>
-縦棒はブロック境を見やすくするために入れてある。</p>
-<pre><code>dp: {0, 0, 0, |INF, INF, INF, |INF, INF, INF} </code></pre>
-<p><code>vec[0] = 1</code> を見て、データを更新する。<br>
-自身と $1$ つ前の小さい方を新しい値とするが、ブロック境を超えて移動する数には <code>1</code> を足す。</p>
-<pre><code>dp: {0, 0, 0, |1, INF, INF, |INF, INF, INF} </code></pre>
-<p><code>vec[1] = 3</code> を見て、データを更新する。<br>
-自身と $1$ つ前の小さい方を新しい値とするが、ブロック境を超えて移動する数には <code>3</code> を足す。</p>
-<pre><code>dp: {0, 0, 0, |1, 1, INF, |INF, INF, INF} </code></pre>
-<p><code>vec[2] = 3</code> を見て、データを更新する。<br>
-自身と $1$ つ前の小さい方を新しい値とするが、ブロック境を超えて移動する数には <code>3</code> を足す。</p>
-<pre><code>dp: {0, 0, 0, |1, 1, 1, |INF, INF, INF} </code></pre>
-<p><code>vec[3] = 0</code> を見て、データを更新する。<br>
-自身と $1$ つ前の小さい方を新しい値とするが、ブロック境を超えて移動する数には <code>0</code> を足す。<br>
-<code>0</code> ということは元から <code>&quot;ABC&quot;</code> だったということなので、その後 $1$ ブロック分前に移動する。<br>
-（先頭はこれ以上左にいかないので <code>0</code> のまま、末尾ブロックは <code>INF</code> を入れる）</p>
-<pre><code>dp: {0, 0, 0, |0, 1, 1, |1, INF, INF} </code></pre>
-<pre><code>dp: {0, 1, 1, |1, INF, INF, |INF, INF, INF} </code></pre>
-<p>（<code>0-indexed</code> で）$k$ 番目のブロックの先頭の値が答え。</p>
+<p>各位置から始まる長さ $3$ の部分文字列を <code>&quot;ABC&quot;</code> にするために必要な置換数を求める。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">開始位置</th>
+<th class="table-align-center" style="text-align: center;">部分文字列</th>
+<th class="table-align-right" style="text-align: right;">必要な置換数</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;ATC&quot;</code></td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;TCA&quot;</code></td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;CAB&quot;</code></td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;ABC&quot;</code></td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+</tbody>
+</table></div>
+<p>動的計画法では、追加した <code>&quot;ABC&quot;</code> の個数ごとに $3$ つの値を持つ。<br>
+左から順に、以下の場合の最小置換数を表す。</p>
+<ul>
+<li>間隔について制約なし
+</li>
+<li>直前 $1$ つの開始位置では新しく <code>&quot;ABC&quot;</code> を作っていない
+</li>
+<li>直前 $2$ つの開始位置では新しく <code>&quot;ABC&quot;</code> を作っていない
+</li>
+</ul>
+<p>新しく <code>&quot;ABC&quot;</code> を作れるのは、直前 $2$ つの開始位置で作っていない状態からだけである。</p>
+<p>最初はまだ何も処理していないので、追加個数 $0$ の $3$ 状態を $0$ とする。</p>
+<pre><code>追加0個: {0, 0, 0}
+追加1個: {∞, ∞, ∞}
+追加2個: {∞, ∞, ∞}</code></pre>
+<p>開始位置 $0$ の <code>&quot;ATC&quot;</code> を処理する。<br>
+ここに <code>&quot;ABC&quot;</code> を作るなら $1$ 回の置換が必要になる。</p>
+<pre><code>追加0個: {0, 0, 0}
+追加1個: {1, ∞, ∞}
+追加2個: {∞, ∞, ∞}</code></pre>
+<p>開始位置 $1$ の <code>&quot;TCA&quot;</code> を処理する。</p>
+<pre><code>追加0個: {0, 0, 0}
+追加1個: {1, 1, ∞}
+追加2個: {∞, ∞, ∞}</code></pre>
+<p>開始位置 $2$ の <code>&quot;CAB&quot;</code> を処理する。</p>
+<pre><code>追加0個: {0, 0, 0}
+追加1個: {1, 1, 1}
+追加2個: {∞, ∞, ∞}</code></pre>
+<p>開始位置 $3$ は元から <code>&quot;ABC&quot;</code> であり、置換数 $0$ で <code>&quot;ABC&quot;</code> を作れる。<br>
+通常の更新をすると、一時的に次の状態になる。</p>
+<pre><code>追加0個: {0, 0, 0}
+追加1個: {0, 1, 1}
+追加2個: {1, ∞, ∞}</code></pre>
+<p>ただし、この <code>&quot;ABC&quot;</code> は元から存在していた $1$ 個であり、「追加した個数」には数えない。<br>
+そこで、追加個数の基準を $1$ 個分ずらす。</p>
+<pre><code>追加0個: {0, 1, 1}
+追加1個: {1, ∞, ∞}
+追加2個: {∞, ∞, ∞}</code></pre>
+<p>全ての開始位置を処理した。<br>
+<code>&quot;ABC&quot;</code> をちょうど $1$ 個追加する状態の最小置換数は $1$ なので、答えは $1$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>
