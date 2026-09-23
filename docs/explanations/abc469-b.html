@@ -51,21 +51,75 @@ for ループで座席を $1$ つずつ見て、条件を満たしていれば $
 <p>入力を受け取る。</p>
 <pre><code>n: 8
 s: &quot;xxoxxxox&quot;</code></pre>
-<p>条件を満たす椅子の個数を数える変数 <code>result</code> を $0$ で初期化する。</p>
-<pre><code>result: 0</code></pre>
-<p>各位置 <code>i</code> を順に調べる。</p>
-<p><code>i=0</code> では、自身の <code>s[0]</code> と右の <code>s[1]</code> はどちらも <code>&#x27;x&#x27;</code> であり、左の席は存在しない。<br>
-条件を満たすので、<code>result</code> に $1$ 加える。</p>
-<pre><code>result: 1</code></pre>
-<p><code>i=1</code> では、右の <code>s[2]</code> が <code>&#x27;o&#x27;</code> なので、条件を満たさない。</p>
-<p><code>i=2</code> では、自身の <code>s[2]</code> が <code>&#x27;o&#x27;</code> なので、条件を満たさない。</p>
-<p><code>i=3</code> では、左の <code>s[2]</code> が <code>&#x27;o&#x27;</code> なので、条件を満たさない。</p>
-<p><code>i=4</code> では、左の <code>s[3]</code>、自身の <code>s[4]</code>、右の <code>s[5]</code> がすべて <code>&#x27;x&#x27;</code> であるので、<code>result</code> に $1$ 加える。</p>
-<pre><code>result: 2</code></pre>
-<p><code>i=5</code> では、右の <code>s[6]</code> が <code>&#x27;o&#x27;</code> なので、条件を満たさない。</p>
-<p><code>i=6</code> では、自身の <code>s[6]</code> が <code>&#x27;o&#x27;</code> なので、条件を満たさない。</p>
-<p><code>i=7</code> では、左の <code>s[6]</code> が <code>&#x27;o&#x27;</code> なので、条件を満たさない。</p>
-<p>すべての位置を調べ終えたとき、<code>result</code> は $2$ となり、これが答えである。</p>
+<p>各位置について、左・自身・右に <code>&#x27;o&#x27;</code> がないか確認する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$i$</th>
+<th class="table-align-center" style="text-align: center;">左</th>
+<th class="table-align-center" style="text-align: center;">自身</th>
+<th class="table-align-center" style="text-align: center;">右</th>
+<th class="table-align-center" style="text-align: center;">条件を満たす</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;">はい</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;">はい</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$5$</th>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$6$</th>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$7$</th>
+<td class="table-align-center" style="text-align: center;"><code>o</code></td>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+</tr>
+</tbody>
+</table></div>
+<p>条件を満たすのは $i=0,4$ の $2$ か所なので、答えは $2$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

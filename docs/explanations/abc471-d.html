@@ -45,58 +45,69 @@ window.MathJax = {
 クエリ $2$ が来た時には、初期残量に $t$ を加えてから $V$ 以上なら $V$ に丸める処理をすればよい。</p>
 <p>計算量は $O(Q\log Q)$ である。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p>$V=100$ とする。<br>
-<code>que</code> には、「時刻 $0$ 時点での残量」とみなした値 $w-t$ を大きい順に入れる。</p>
+<p>入力を受け取る。</p>
+<pre><code>q: 7
+v: 100
+
+1 15 60
+1 25 80
+2 30
+1 45 0
+2 60
+2 70
+2 80</code></pre>
+<p>バッテリーを追加するときは、時刻 $0$ 時点での残量とみなした $w-t$ を管理する。<br>
+値が大きいものから取り出せるようにしておく。</p>
 <p>各クエリは次のように処理される。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
 <th>クエリ</th>
 <th>処理</th>
-<th>処理後の <code>que</code></th>
+<th>管理している値</th>
 <th class="table-align-right" style="text-align: right;">このクエリの答え</th>
 </tr></thead>
 <tbody>
 <tr>
 <th scope="row"><code>1 15 60</code></th>
 <td>$60-15=45$ を追加</td>
-<td><code>45</code></td>
+<td>$45$</td>
 <td class="table-align-right" style="text-align: right;"></td>
 </tr>
 <tr>
 <th scope="row"><code>1 25 80</code></th>
 <td>$80-25=55$ を追加</td>
-<td><code>55, 45</code></td>
+<td>$55,45$</td>
 <td class="table-align-right" style="text-align: right;"></td>
 </tr>
 <tr>
 <th scope="row"><code>2 30</code></th>
 <td>$\min(100,55+30)=85$ のバッテリーを排出</td>
-<td><code>45</code></td>
-<td class="table-align-right" style="text-align: right;">85</td>
+<td>$45$</td>
+<td class="table-align-right" style="text-align: right;">$85$</td>
 </tr>
 <tr>
 <th scope="row"><code>1 45 0</code></th>
 <td>$0-45=-45$ を追加</td>
-<td><code>45, -45</code></td>
+<td>$45,-45$</td>
 <td class="table-align-right" style="text-align: right;"></td>
 </tr>
 <tr>
 <th scope="row"><code>2 60</code></th>
 <td>$\min(100,45+60)=100$ のバッテリーを排出</td>
-<td><code>-45</code></td>
-<td class="table-align-right" style="text-align: right;">100</td>
+<td>$-45$</td>
+<td class="table-align-right" style="text-align: right;">$100$</td>
 </tr>
 <tr>
 <th scope="row"><code>2 70</code></th>
 <td>$\min(100,-45+70)=25$ のバッテリーを排出</td>
 <td>空</td>
-<td class="table-align-right" style="text-align: right;">25</td>
+<td class="table-align-right" style="text-align: right;">$25$</td>
 </tr>
 <tr>
 <th scope="row"><code>2 80</code></th>
-<td><code>que</code> が空なので排出できない</td>
+<td>バッテリーがない</td>
 <td>空</td>
-<td class="table-align-right" style="text-align: right;">-1</td>
+<td class="table-align-right" style="text-align: right;">$-1$</td>
 </tr>
 </tbody>
 </table></div>
@@ -111,7 +122,7 @@ window.MathJax = {
     <section class="side-card">
       <h2>タグ</h2>
       <div class="tags">
-        <a class="tag" href="../tags/priority-queue.html">priority_queue</a>
+        <span class="muted">なし</span>
       </div>
       <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
     </section>

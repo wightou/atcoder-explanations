@@ -62,9 +62,10 @@ $1$ にした石の分だけ見ると、その種類数は $10^5$ より小さ�
 したがって、必ず高橋君の方が重くなっている。</p>
 <p>以上、証明終わり。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p>入力は次の通り。</p>
-<pre><code>A: {4, 7, 4}
-B: {5, 5, 5}</code></pre>
+<p>入力を受け取る。</p>
+<pre><code>n: 3
+a: {4, 7, 4}
+b: {5, 5, 5}</code></pre>
 <p>各種類について、高橋君の方が多く持っているかを確認する。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
@@ -75,19 +76,19 @@ B: {5, 5, 5}</code></pre>
 </tr></thead>
 <tbody>
 <tr>
-<td>$1$</td>
+<th scope="row">$1$</th>
 <td class="table-align-right" style="text-align: right;">$4$</td>
 <td class="table-align-right" style="text-align: right;">$5$</td>
 <td class="table-align-right" style="text-align: right;">$1$</td>
 </tr>
 <tr>
-<td>$2$</td>
+<th scope="row">$2$</th>
 <td class="table-align-right" style="text-align: right;">$7$</td>
 <td class="table-align-right" style="text-align: right;">$5$</td>
 <td class="table-align-right" style="text-align: right;">$10^{18}$</td>
 </tr>
 <tr>
-<td>$3$</td>
+<th scope="row">$3$</th>
 <td class="table-align-right" style="text-align: right;">$4$</td>
 <td class="table-align-right" style="text-align: right;">$5$</td>
 <td class="table-align-right" style="text-align: right;">$1$</td>
@@ -96,7 +97,7 @@ B: {5, 5, 5}</code></pre>
 </table></div>
 <p>$2$ 種類目では高橋君の方が多く持っているので、$10^{18}$ にした石が $1$ つ以上ある。<br>
 したがって、条件を満たす構築が以下のように可能である。</p>
-<pre><code>W: {1, 1000000000000000000, 1}</code></pre>
+<pre><code>w: {1, 1000000000000000000, 1}</code></pre>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>この方法で作ったものが本当に条件を満たすか確認すると、<code>long long</code> 型でもオーバーフロー。<br>
 手作業で証明して、コードには構築方法だけを書くこと。</p>

@@ -46,15 +46,15 @@ $$</p>
 すなわち、$\triangle\mathrm{ABC}$ の符号付き面積を $S$ とすると、以下のようになる。</p>
 <p>$$<br>
 \begin{aligned}<br>
-\text{分母} &amp;= \rho S = \rho\overrightarrow{AB}\times\overrightarrow{AC}/2 \\<br>
-g_x\text{ の分子} &amp;= (A_x+B_x+C_x)\rho S/3 \\<br>
-g_y\text{ の分子} &amp;= (A_y+B_y+C_y)\rho S/3<br>
+\text{分母} &amp;= \rho S = \rho\overrightarrow{\mathrm{AB}}\times\overrightarrow{\mathrm{AC}}/2 \\<br>
+g_x\text{ の分子} &amp;= (\mathrm{A}_x+\mathrm{B}_x+\mathrm{C}_x)\rho S/3 \\<br>
+g_y\text{ の分子} &amp;= (\mathrm{A}_y+\mathrm{B}_y+\mathrm{C}_y)\rho S/3<br>
 \end{aligned}<br>
 $$</p>
 <p>さらに、複数の物体の合体の場合、この積分値を分子分母それぞれ（約分せずに）足した値にすればよい。<br>
 切り落としの場合は同様に引けばよい。<br>
 ということは、多角形を大量の三角形に分割し、上記の公式と合体による総和で積分は回避可能。</p>
-<p><code>0-indexed</code> で、$P$ の $i$ 番目の頂点を $\mathrm{A}_i$ と書くことにする。<br>
+<p><code>0-indexed</code> で、$\mathrm{P}$ の $i$ 番目の頂点を $\mathrm{A}_i$ と書くことにする。<br>
 $i=1,2,\dots,N-1$ に対し、$\triangle\mathrm{A}_{N-1}\mathrm{A}_{i-1}\mathrm{A}_i$ を求めておく。<br>
 （$i=N-1$ の場合は明らかに $0$ だが）</p>
 <p>まず、$u&lt;v$ である場合。（これらも <code>0-indexed</code> に直してあるとする）<br>
@@ -65,11 +65,25 @@ $i=1,2,\dots,N-1$ に対し、$\triangle\mathrm{A}_{N-1}\mathrm{A}_{i-1}\mathrm{
 <p>$u&gt;v$ である場合は、同じ計算をすると、扱いたい図形の逆側が負符号で出てくる。<br>
 よって、そこに図形全体の値を加算することで、意図した値となる。</p>
 <p>……というのを累積和で処理することによって、$O(N)$ の事前処理のもと、各クエリが $O(1)$ で解ける。<br>
-よって、計算量は $O(N+Q)$ となる。 </p>
+よって、計算量は $O(N+Q)$ となる。</p>
 <p>なお、小数を扱うのは望ましくないため、分母は $2$ 倍、分子は $6$ 倍した値で扱うとよい。<br>
 すべて整数で扱え、しかも <code>long long</code> 型の範囲から溢れることも起こらない。<br>
 また、$\rho$ の値はどうせ最終的に約分で消えるだけの値なので、$1$ としてしまってよい。</p>
 <h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+q: 4
+p:
+(4, 1)
+(1, 3)
+(-3, 2)
+(-1, -2)
+(2, -1)
+queries:
+(2, 4)
+(5, 3)
+(1, 4)
+(4, 2)</code></pre>
 <p>頂点は <code>0-indexed</code> で $\mathrm{A}_0=(4,1)$, $\mathrm{A}_1=(1,3)$, $\mathrm{A}_2=(-3,2)$, $\mathrm{A}_3=(-1,-2)$, $\mathrm{A}_4=(2,-1)$ である。</p>
 <p>$\mathrm{A}_4$ を基準に、$\triangle\mathrm{A}_4\mathrm{A}_{i-1}\mathrm{A}_i$ を順に足していく。<br>
 各三角形について、分母の $2$ 倍と、$g_x,g_y$ の分子の $6$ 倍を求め、それぞれ累積和を取る。<br>

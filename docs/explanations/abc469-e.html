@@ -79,10 +79,9 @@ $2$ 点を選んだ時に、それらから以下の情報が得られる。</p>
 <pre><code>n: 10
 k: 4
 s: &quot;oxooxoxxox&quot;</code></pre>
-<p>先頭からの試合数を $x$ 座標、勝利数を $y$ 座標とする。<br>
-各時点の座標を、累積点 <code>tmp</code> として記録する。</p>
-<pre><code>tmp:
-(0, 0)
+<p>$0$ 試合時点も含めて、<br>
+各時点を（試合数、勝利数）の点で表すと次のようになる。</p>
+<pre><code>(0, 0)
 (1, 1)
 (2, 1)
 (3, 2)
@@ -93,68 +92,66 @@ s: &quot;oxooxoxxox&quot;</code></pre>
 (8, 4)
 (9, 5)
 (10, 5)</code></pre>
-<p><code>result</code> を $0$ で初期化する。<br>
-<code>l1=0</code>, <code>l2=0</code> とし、下側凸包 <code>d</code> は空の状態から始める。</p>
-<pre><code>result: 0
-d: {}</code></pre>
-<p><code>r=0</code> から <code>r=5</code> までは、<code>tmp[r]</code> の $y$ 座標が $4$ 未満である。<br>
-したがって、$y$ 座標の差が $k=4$ 以上になる左端候補は存在しない。<br>
-<code>d</code> は空のままである。</p>
-<p><code>r=6</code> では、<code>tmp[6]=(6,4)</code> となる。<br>
-<code>tmp[0]=(0,0)</code> との $y$ 座標の差が $4$ なので、<code>tmp[0]</code> を <code>d</code> に追加する。<br>
-<code>l1</code> は $1$ まで進む。</p>
-<pre><code>d: {(0, 0)}
-l1: 1</code></pre>
-<p><code>d</code> の点は $1$ 個だけなので、<code>l2=0</code> のままである。<br>
-<code>tmp[6]</code> と <code>d[0]</code> を結ぶ直線の傾きは、次のようになる。</p>
-<p>$$<br>
-\frac{4-0}{6-0}=\frac{2}{3}<br>
-$$</p>
-<p>これは、第 $1$ 試合から第 $6$ 試合までを選んだときの勝率に対応する。<br>
-この値で <code>result</code> を更新する。</p>
-<pre><code>result: 2/3</code></pre>
-<p><code>r=7</code> では、<code>tmp[7]=(7,4)</code> となる。<br>
-<code>tmp[1]=(1,1)</code> との $y$ 座標の差は $3$ である。<br>
-新しい左端候補は追加されない。<br>
-<code>tmp[7]</code> と <code>d[0]</code> を結ぶ直線の傾きは、次のようになる。</p>
-<p>$$<br>
-\frac{4-0}{7-0}=\frac{4}{7}<br>
-$$</p>
-<p>この値は $2/3$ より小さいので、<code>result</code> は更新しない。</p>
-<p><code>r=8</code> でも、新しい左端候補は追加されない。<br>
-<code>tmp[8]=(8,4)</code> と <code>d[0]</code> を結ぶ直線の傾きは、次のようになる。</p>
-<p>$$<br>
-\frac{4-0}{8-0}=\frac{1}{2}<br>
-$$</p>
-<p>この値も $2/3$ より小さいので、<code>result</code> は更新しない。</p>
-<p><code>r=9</code> では、<code>tmp[9]=(9,5)</code> となる。<br>
-<code>tmp[1]=(1,1)</code> との $y$ 座標の差が $4$ なので、<code>tmp[1]</code> を <code>d</code> に追加する。</p>
-<pre><code>d: {(0, 0), (1, 1)}</code></pre>
-<p>続いて、<code>tmp[2]=(2,1)</code> との $y$ 座標の差も $4$ なので、<code>tmp[2]</code> を追加する。<br>
-このとき、<code>tmp[1]</code> は下側凸包上に残らないので、<code>d</code> から削除する。</p>
-<pre><code>d: {(0, 0), (2, 1)}
-l1: 3</code></pre>
-<p>次に、<code>l2</code> が示す点を調べる。<br>
-<code>tmp[9]</code> と <code>d[0]=(0,0)</code> を結ぶ直線の傾きは、次のようになる。</p>
-<p>$$<br>
-\frac{5-0}{9-0}=\frac{5}{9}<br>
-$$</p>
-<p><code>tmp[9]</code> と <code>d[1]=(2,1)</code> を結ぶ直線の傾きは、次のようになる。</p>
-<p>$$<br>
-\frac{5-1}{9-2}=\frac{4}{7}<br>
-$$</p>
-<p>$5/9&lt;4/7$ なので、<code>l2</code> を $0$ から $1$ へ進める。</p>
-<pre><code>l2: 1</code></pre>
-<p>このときの傾き $4/7$ は、現在の <code>result</code> である $2/3$ より小さい。<br>
-そのため、<code>result</code> は更新しない。</p>
-<p><code>r=10</code> では、<code>tmp[10]=(10,5)</code> となる。<br>
-新しい左端候補は追加されず、<code>d</code> と <code>l2</code> は変わらない。<br>
-<code>tmp[10]</code> と <code>d[1]=(2,1)</code> を結ぶ直線の傾きは、次のようになる。</p>
-<p>$$<br>
-\frac{5-1}{10-2}=\frac{1}{2}<br>
-$$</p>
-<p>この値も $2/3$ より小さいので、<code>result</code> は更新しない。<br>
-すべての <code>r</code> を調べ終えたとき、最大の傾きは $2/3=0.666666\dots$ であり、これが答えである。</p>
+<p>右側の点を左から順に動かし、<br>
+勝利数の差が $4$ 以上になる点を左端候補へ追加していく。</p>
+<p>右側が $(0,0)$ から $(5,3)$ までの間は、<br>
+勝利数の差が $4$ 以上になる左端候補は存在しない。</p>
+<p>$(6,4)$ 以降の状態は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-center" style="text-align: center;">右側の点</th>
+<th class="table-align-center" style="text-align: center;">新しく使える左端</th>
+<th class="table-align-left" style="text-align: left;">更新後の下側凸包</th>
+<th class="table-align-center" style="text-align: center;">選ばれる左端</th>
+<th class="table-align-center" style="text-align: center;">傾き</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(6,4)$</td>
+<td class="table-align-center" style="text-align: center;">$(0,0)$</td>
+<td class="table-align-left" style="text-align: left;">$\{(0,0)\}$</td>
+<td class="table-align-center" style="text-align: center;">$(0,0)$</td>
+<td class="table-align-center" style="text-align: center;">$\dfrac{4}{6}=\dfrac{2}{3}$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(7,4)$</td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-left" style="text-align: left;">$\{(0,0)\}$</td>
+<td class="table-align-center" style="text-align: center;">$(0,0)$</td>
+<td class="table-align-center" style="text-align: center;">$\dfrac{4}{7}$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(8,4)$</td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-left" style="text-align: left;">$\{(0,0)\}$</td>
+<td class="table-align-center" style="text-align: center;">$(0,0)$</td>
+<td class="table-align-center" style="text-align: center;">$\dfrac{4}{8}=\dfrac{1}{2}$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(9,5)$</td>
+<td class="table-align-center" style="text-align: center;">$(1,1),(2,1)$</td>
+<td class="table-align-left" style="text-align: left;">$\{(0,0),(2,1)\}$</td>
+<td class="table-align-center" style="text-align: center;">$(2,1)$</td>
+<td class="table-align-center" style="text-align: center;">$\dfrac{4}{7}$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(10,5)$</td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-left" style="text-align: left;">$\{(0,0),(2,1)\}$</td>
+<td class="table-align-center" style="text-align: center;">$(2,1)$</td>
+<td class="table-align-center" style="text-align: center;">$\dfrac{4}{8}=\dfrac{1}{2}$</td>
+</tr>
+</tbody>
+</table></div>
+<p>$(9,5)$ を見るときは、$(1,1)$ と $(2,1)$ が新しく左端候補になる。<br>
+$(1,1)$ を追加した後に $(2,1)$ を追加すると、<br>
+$(1,1)$ は下側凸包上に残らないため削除される。</p>
+<p>また、$(9,5)$ から見た傾きは、<br>
+左端が $(0,0)$ なら $5/9$、$(2,1)$ なら $4/7$ である。<br>
+$5/9&lt;4/7$ なので、$(2,1)$ の方を選ぶ。</p>
+<p>各右端について得られる傾きの最大値を比べると、<br>
+全体で最大なのは $(0,0)$ と $(6,4)$ を選んだときの $2/3$ である。</p>
+<p>したがって、答えは $2/3=0.666666\ldots$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>外積や傾きの比較に用いる積は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>

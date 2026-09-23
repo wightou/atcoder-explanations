@@ -46,11 +46,43 @@ window.MathJax = {
 <p>入力を受け取る。</p>
 <pre><code>n: 5
 s: &quot;oxoxo&quot;</code></pre>
-<p>文字列を左から調べ、<code>x</code> が現れる位置を <code>1-indexed</code> で <code>result</code> に入れる。</p>
-<p><code>x</code> は左から $2$ 文字目と $4$ 文字目にあるので、次のようになる。</p>
-<pre><code>result: {2, 4}</code></pre>
-<p><code>result</code> の要素数が $N$ 個になるまで、最後の位置を表す $5$ で埋める。</p>
-<pre><code>result: {2, 4, 5, 5, 5}</code></pre>
+<p><code>x</code> は左から $2$ 文字目と $4$ 文字目にある。</p>
+<p>最初に持つ袋の個数 $k$ ごとの答えは次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$k$</th>
+<th class="table-align-center" style="text-align: center;">前から $k$ 番目の <code>x</code></th>
+<th class="table-align-right" style="text-align: right;">答え</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-center" style="text-align: center;">$2$ 文字目</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-center" style="text-align: center;">$4$ 文字目</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-center" style="text-align: center;">存在しない</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-center" style="text-align: center;">存在しない</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$5$</th>
+<td class="table-align-center" style="text-align: center;">存在しない</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、出力する列は <code>2 4 5 5 5</code> となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>問題文中の位置は <code>1-indexed</code> だが、文字列 <code>s</code> の添字は <code>0-indexed</code> である。<br>
 コード中で両者が入り混じるので、丁寧に確認しながら書く。</p>

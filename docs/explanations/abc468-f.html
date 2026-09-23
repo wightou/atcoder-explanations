@@ -65,19 +65,57 @@ window.MathJax = {
 <h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 5
-p: {4, 3, 1, 2, 5}
-result: 0</code></pre>
-<p>先頭から見て、それまでの最大値を更新する要素を数える。<br>
-<code>4</code> と <code>5</code> が該当するので、<code>result=2</code> となる。<br>
-また、この $2$ 要素を <code>n+1=6</code> に書き換える。</p>
-<pre><code>p: {6, 3, 1, 2, 6}
-result: 2</code></pre>
-<p>末尾に <code>n+1=6</code> を追加する。</p>
-<pre><code>p: {6, 3, 1, 2, 6, 6}</code></pre>
+p: {4, 3, 1, 2, 5}</code></pre>
+<p>先頭から見て、それまでの最大値を更新する要素を確認する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">位置</th>
+<th class="table-align-right" style="text-align: right;">値</th>
+<th class="table-align-right" style="text-align: right;">ここまでの最大値</th>
+<th class="table-align-center" style="text-align: center;">$x$ の更新に使うか</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-center" style="text-align: center;">はい</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-center" style="text-align: center;">はい</td>
+</tr>
+</tbody>
+</table></div>
+<p>$4$ と $5$ の $2$ 個を $x$ の更新に使う。<br>
+この $2$ 要素を $n+1=6$ に書き換えると、次のようになる。</p>
+<pre><code>{6, 3, 1, 2, 6}</code></pre>
+<p>さらに末尾に $6$ を追加する。</p>
+<pre><code>{6, 3, 1, 2, 6, 6}</code></pre>
 <p>この配列の最長増加部分列の長さは $3$ である。<br>
-例えば、<code>1, 2, 6</code> を選べる。<br>
-末尾に追加した <code>6</code> の分を除いた $2$ を <code>result</code> に加える。</p>
-<pre><code>result: 4</code></pre>
+例えば、$1,2,6$ を選べる。</p>
+<p>最後の $6$ は追加した番兵の分なので、残った数から $y$ の更新に使えるのは $3-1=2$ 個である。<br>
+したがって、最大値を更新できる回数は $2+2=4$ 回となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>好きな単調増加列を $2$ つ取ることはできない。<br>
 例えば、 <code>5 3 4 1 2</code> の答えは $4$ ではなく $3$ である。<br>

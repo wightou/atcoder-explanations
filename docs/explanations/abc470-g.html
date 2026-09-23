@@ -66,47 +66,82 @@ window.MathJax = {
 </ul>
 <p>これで計算量は、$1$ 回の処理が $O(\log N)$ で済み、全体で $O(N\log N)$ となる。</p>
 <h2 id="section-2">入力例2での動作</h2>
-<p>入力は次の通りである。</p>
-<pre><code>6
-2 1 0 2 1 4</code></pre>
+<p>入力を受け取る。</p>
+<pre><code>n: 6
+a: {2, 1, 0, 2, 1, 4}</code></pre>
 <p>まず、右端を $6$ 番目に固定する。<br>
-各数が右端以前で登場する位置は、$0$ を番兵として次のようになる。</p>
-<pre><code>0: 0 3
-1: 0 2 5
-2: 0 1 4
-3: 0
-4: 0 6
-5: 0
-6: 0</code></pre>
-<p>これらの末尾の累積最小値を segment木の $0$ から $6$ の葉に持つと、次のようになる。</p>
-<pre><code>3 3 3 0 0 0 0</code></pre>
-<p>それぞれ、$0$ 以下、$1$ 以下、$2$ 以下、$\dots$、$6$ 以下の数を全て含む区間の個数を表している。<br>
-合計は $3+3+3=9$ なので、<code>result</code> に $9$ を加える。</p>
-<pre><code>result: 9</code></pre>
-<p>次に、右端を $1$ つ戻すため、$A$ の末尾の $4$ を取り除く。<br>
-$4$ の最終登場位置は $6$ から番兵の $0$ に変わる。<br>
-$4$ 以降の累積最小値は元々全て $0$ なので、segment木は変化しない。<br>
-右端が $5$ 番目のときも累積最小値の合計は $9$ なので、<code>result</code> に $9$ を加える。</p>
-<pre><code>result: 18</code></pre>
-<p>続いて末尾の $1$ を取り除く。<br>
-$1$ の最終登場位置は $5$ から $2$ に変わる。<br>
-segment木では、$1$ 以降で累積最小値が $2$ より大きい範囲は $1$ から $2$ まで。<br>
-よって、この範囲を $2$ に更新する。</p>
-<pre><code>3 2 2 0 0 0 0</code></pre>
-<p>右端が $4$ 番目のときの累積最小値の合計は $3+2+2=7$ なので、<code>result</code> に $7$ を加える。</p>
-<pre><code>result: 25</code></pre>
-<p>続いて末尾の $2$ を取り除く。<br>
-$2$ の最終登場位置は $4$ から $1$ に変わる。<br>
-segment木では、$2$ 以降で累積最小値が $1$ より大きい範囲は $2$ のみ。<br>
-よって、そこを $1$ に更新する。</p>
-<pre><code>3 2 1 0 0 0 0</code></pre>
-<p>右端が $3$ 番目のときの累積最小値の合計は $3+2+1=6$ なので、<code>result</code> に $6$ を加える。</p>
-<pre><code>result: 31</code></pre>
-<p>続いて末尾の $0$ を取り除くと、$0$ の最終登場位置は $3$ から番兵の $0$ に変わる。<br>
-segment木では、$0$ 以降で累積最小値が $0$ より大きい範囲を全て $0$ に更新する。</p>
-<pre><code>0 0 0 0 0 0 0</code></pre>
-<p>以降は累積最小値の合計が $0$ のままである。<br>
-したがって、最終的に <code>result=31</code> となり、答えは $31$ である。</p>
+各値の登場位置を <code>1-indexed</code> で並べ、番兵として先頭に $0$ を入れると次のようになる。</p>
+<pre><code>0: {0, 3}
+1: {0, 2, 5}
+2: {0, 1, 4}
+3: {0}
+4: {0, 6}
+5: {0}
+6: {0}</code></pre>
+<p>各値の最終登場位置の累積最小値を、segment木の $0$ から $6$ の葉に持つ。<br>
+右端が $6$ 番目のときは次の状態になる。</p>
+<pre><code>{3, 3, 3, 0, 0, 0, 0}</code></pre>
+<p>この $7$ 個の値の和 $9$ が、右端を $6$ 番目に固定した区間の mex の総和である。</p>
+<p>右端を後ろから $1$ つずつ戻すと、葉の状態と加算する値は次のように変化する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">右端</th>
+<th class="table-align-center" style="text-align: center;">直前に取り除いた値</th>
+<th class="table-align-left" style="text-align: left;">葉 $0$ から $6$</th>
+<th class="table-align-right" style="text-align: right;">この右端での寄与</th>
+<th class="table-align-right" style="text-align: right;">累積</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$6$</th>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-left" style="text-align: left;">$(3,3,3,0,0,0,0)$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$5$</th>
+<td class="table-align-center" style="text-align: center;">$4$</td>
+<td class="table-align-left" style="text-align: left;">$(3,3,3,0,0,0,0)$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$18$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-center" style="text-align: center;">$1$</td>
+<td class="table-align-left" style="text-align: left;">$(3,2,2,0,0,0,0)$</td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-right" style="text-align: right;">$25$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-center" style="text-align: center;">$2$</td>
+<td class="table-align-left" style="text-align: left;">$(3,2,1,0,0,0,0)$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$31$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-center" style="text-align: center;">$0$</td>
+<td class="table-align-left" style="text-align: left;">$(0,0,0,0,0,0,0)$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$31$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-center" style="text-align: center;">$1$</td>
+<td class="table-align-left" style="text-align: left;">$(0,0,0,0,0,0,0)$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$31$</td>
+</tr>
+</tbody>
+</table></div>
+<p>例えば、右端を $5$ 番目から $4$ 番目へ戻すときは、位置 $5$ にある値 $1$ を取り除く。<br>
+値 $1$ の最終登場位置は $5$ から $2$ に変わるので、葉 $1$ 以降で値が $2$ より大きい部分を $2$ に更新する。<br>
+その結果、葉は $(3,2,2,0,0,0,0)$ となる。</p>
+<p>同様に右端を $3$ 番目から $2$ 番目へ戻すときは、値 $0$ の最終登場位置が $3$ から $0$ になる。<br>
+累積最小値も全て $0$ になり、それ以降の寄与は $0$ である。</p>
+<p>したがって、全ての右端についての総和は $31$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えや segment木で持つ区間和は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>

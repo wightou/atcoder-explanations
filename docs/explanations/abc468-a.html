@@ -54,23 +54,37 @@ window.MathJax = {
 <p>入力を受け取る。</p>
 <pre><code>n: 6
 a: {3, 1, 4, 1, 5, 2}</code></pre>
-<p>個数を数える変数 <code>result</code> を $0$ で初期化する。</p>
-<pre><code>result: 0</code></pre>
-<p>$i=0$ のとき、<code>a[0]</code> からの $3$ つは $3,1,4$ である。<br>
-$3&lt;1$ ではないので、条件を満たさない。<br>
-<code>result</code> は変更しない。</p>
-<p>$i=1$ のとき、<code>a[1]</code> からの $3$ つは $1,4,1$ である。<br>
-$1&lt;4$ かつ $4&gt;1$ なので、条件を満たす。<br>
-<code>result</code> に $1$ 加える。</p>
-<pre><code>result: 1</code></pre>
-<p>$i=2$ のとき、<code>a[2]</code> からの $3$ つは $4,1,5$ である。<br>
-$4&lt;1$ ではないので、条件を満たさない。<br>
-<code>result</code> は変更しない。</p>
-<p>$i=3$ のとき、<code>a[3]</code> からの $3$ つは $1,5,2$ である。<br>
-$1&lt;5$ かつ $5&gt;2$ なので、条件を満たす。<br>
-<code>result</code> に $1$ 加える。</p>
-<pre><code>result: 2</code></pre>
-<p>最後に、<code>result</code> を出力すればよい。</p>
+<p>$i=0,1,2,3$ について、連続する $3$ 要素を確認する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$i$</th>
+<th class="table-align-center" style="text-align: center;">$a[i],a[i+1],a[i+2]$</th>
+<th class="table-align-left" style="text-align: left;">条件</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-center" style="text-align: center;">$(3,1,4)$</td>
+<td class="table-align-left" style="text-align: left;">$3&lt;1$ でないので満たさない</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-center" style="text-align: center;">$(1,4,1)$</td>
+<td class="table-align-left" style="text-align: left;">$1&lt;4$ かつ $4&gt;1$ なので満たす</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-center" style="text-align: center;">$(4,1,5)$</td>
+<td class="table-align-left" style="text-align: left;">$4&lt;1$ でないので満たさない</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-center" style="text-align: center;">$(1,5,2)$</td>
+<td class="table-align-left" style="text-align: left;">$1&lt;5$ かつ $5&gt;2$ なので満たす</td>
+</tr>
+</tbody>
+</table></div>
+<p>条件を満たすのは $i=1,3$ の $2$ 個なので、答えは $2$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>問題文では $A_{i}&lt;A_{i+1}&gt;A_{i+2}$ と $1$ つの不等式にまとめて書いてある。<br>
 しかし、C++ではこの書き方はできない。<br>

@@ -52,59 +52,70 @@ window.MathJax = {
 <p>入力を受け取る。</p>
 <pre><code>s: &quot;ababa&quot;
 n: 5</code></pre>
-<p>個数を数える変数 <code>result</code> を $0$ で初期化する。</p>
-<pre><code>result: 0</code></pre>
-<p>まず <code>d=0</code> とし、奇数長の部分文字列を調べる。<br>
-このとき、<code>i</code> が部分文字列の中心になる。</p>
-<p>$i=0$ のとき、最初は $j=0$ である。<br>
-<code>s[0]</code> と <code>s[0]</code> は等しいので、<code>counter</code> は $0$ のままである。<br>
-条件を満たす部分文字列 <code>&quot;a&quot;</code> を数え、<code>result</code> に $1$ 加える。</p>
-<pre><code>result: 1</code></pre>
-<p>$i=1$ のとき、まず $j=0$ で <code>s[1]</code> と <code>s[1]</code> を比較する。<br>
-等しいので、部分文字列 <code>&quot;b&quot;</code> を数える。<br>
-次に $j=1$ で <code>s[0]</code> と <code>s[2]</code> を比較する。<br>
-どちらも <code>a</code> なので、部分文字列 <code>&quot;aba&quot;</code> も数える。</p>
-<pre><code>result: 3</code></pre>
-<p>$i=2$ のとき、中心から順に、</p>
-<ul>
-<li>$j=0$ で <code>s[2]</code> と <code>s[2]</code>
-</li>
-<li>$j=1$ で <code>s[1]</code> と <code>s[3]</code>
-</li>
-<li>$j=2$ で <code>s[0]</code> と <code>s[4]</code>
-</li>
-</ul>
-<p>を比較する。<br>
-どの組も等しいので、部分文字列 <code>&quot;a&quot;</code>、<code>&quot;bab&quot;</code>、<code>&quot;ababa&quot;</code> を数える。</p>
-<pre><code>result: 6</code></pre>
-<p>$i=3$ のとき、部分文字列 <code>&quot;b&quot;</code> と <code>&quot;aba&quot;</code> を数える。</p>
-<pre><code>result: 8</code></pre>
-<p>$i=4$ のとき、部分文字列 <code>&quot;a&quot;</code> を数える。</p>
-<pre><code>result: 9</code></pre>
-<p>次に <code>d=1</code> とし、偶数長の部分文字列を調べる。<br>
-このとき、<code>i</code> と <code>i+1</code> の間が部分文字列の中心になる。</p>
-<p>$i=0$ のとき、$j=0$ で <code>s[0]</code> と <code>s[1]</code> を比較する。<br>
-<code>a</code> と <code>b</code> で異なるので、<code>counter</code> に $1$ 加える。<br>
-<code>counter</code> は $1$ 以下なので、$1$ 文字の書き換えで回文にできる部分文字列 <code>&quot;ab&quot;</code> を数える。</p>
-<pre><code>result: 10</code></pre>
-<p>$i=1$ のとき、まず $j=0$ で <code>s[1]</code> と <code>s[2]</code> を比較する。<br>
-<code>b</code> と <code>a</code> で異なるので、<code>counter</code> は $1$ となる。<br>
-部分文字列 <code>&quot;ba&quot;</code> は条件を満たすので数える。</p>
-<p>次に $j=1$ で <code>s[0]</code> と <code>s[3]</code> を比較する。<br>
-<code>a</code> と <code>b</code> で異なるので、<code>counter</code> は $2$ となる。<br>
-部分文字列 <code>&quot;abab&quot;</code> は $1$ 文字の書き換えでは回文にできないため数えない。<br>
-<code>counter&gt;1</code> となった時点で、この中心についての調査を終了する。</p>
-<pre><code>result: 11</code></pre>
-<p>$i=2$ のとき、$j=0$ で <code>s[2]</code> と <code>s[3]</code> を比較する。<br>
-<code>a</code> と <code>b</code> で異なるので、部分文字列 <code>&quot;ab&quot;</code> を数える。</p>
-<p>次に $j=1$ で <code>s[1]</code> と <code>s[4]</code> を比較する。<br>
-<code>b</code> と <code>a</code> で異なり、<code>counter</code> が $2$ となる。<br>
-部分文字列 <code>&quot;baba&quot;</code> は数えず、この中心についての調査を終了する。</p>
-<pre><code>result: 12</code></pre>
-<p>$i=3$ のとき、$j=0$ で <code>s[3]</code> と <code>s[4]</code> を比較する。<br>
-<code>b</code> と <code>a</code> で異なるので、部分文字列 <code>&quot;ba&quot;</code> を数える。</p>
-<pre><code>result: 13</code></pre>
-<p>$i=4$ のときは、右側の添字 <code>i+j+d</code> が最初から $n$ 以上になるため、調べる部分文字列はない。</p>
+<p>まず、奇数長の部分文字列を中心から外側へ広げて調べる。<br>
+この入力では、どの比較でも左右の文字が一致する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">中心</th>
+<th class="table-align-left" style="text-align: left;">数える部分文字列</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-left" style="text-align: left;"><code>&quot;a&quot;</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-left" style="text-align: left;"><code>&quot;b&quot;</code>, <code>&quot;aba&quot;</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-left" style="text-align: left;"><code>&quot;a&quot;</code>, <code>&quot;bab&quot;</code>, <code>&quot;ababa&quot;</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-left" style="text-align: left;"><code>&quot;b&quot;</code>, <code>&quot;aba&quot;</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-left" style="text-align: left;"><code>&quot;a&quot;</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>奇数長では $9$ 個を数える。</p>
+<p>次に、偶数長の部分文字列を調べる。<br>
+左右の不一致が $1$ 組までなら数え、$2$ 組になった時点でその中心についての調査を終了する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-center" style="text-align: center;">中心</th>
+<th class="table-align-left" style="text-align: left;">外側へ広げたときの比較</th>
+<th class="table-align-left" style="text-align: left;">数える部分文字列</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$0$ と $1$ の間</th>
+<td class="table-align-left" style="text-align: left;"><code>a != b</code></td>
+<td class="table-align-left" style="text-align: left;"><code>&quot;ab&quot;</code></td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$1$ と $2$ の間</th>
+<td class="table-align-left" style="text-align: left;"><code>b != a</code>, <code>a != b</code> で不一致が $2$ 組になる</td>
+<td class="table-align-left" style="text-align: left;"><code>&quot;ba&quot;</code></td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$2$ と $3$ の間</th>
+<td class="table-align-left" style="text-align: left;"><code>a != b</code>, <code>b != a</code> で不一致が $2$ 組になる</td>
+<td class="table-align-left" style="text-align: left;"><code>&quot;ab&quot;</code></td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$3$ と $4$ の間</th>
+<td class="table-align-left" style="text-align: left;"><code>b != a</code></td>
+<td class="table-align-left" style="text-align: left;"><code>&quot;ba&quot;</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>偶数長では $4$ 個を数える。</p>
+<p>したがって、条件を満たす部分文字列は全部で $9+4=13$ 個となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

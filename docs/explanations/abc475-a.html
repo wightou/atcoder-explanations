@@ -48,16 +48,16 @@ window.MathJax = {
 そこで、<code>&#x27;o&#x27;</code> の追加はif文で「最後じゃなかったら追加する」ようにすればよい。</p>
 <p>最後に忘れずに、作った答え用の文字列を <code>cout</code> で出力しておしまい。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p><code>S=&quot;mtr&quot;</code> を受け取る。<br>
-<code>result</code> は空文字列で初期化する。</p>
-<p>1文字ずつ順に見ていく。</p>
+<p>入力を受け取る。</p>
+<pre><code>s: &quot;mtr&quot;</code></pre>
+<p>$1$ 文字ずつ順に見ていく。</p>
 <p>$i=0$ では、<code>s[0]=&#x27;m&#x27;</code> を追加して <code>result=&quot;m&quot;</code> となる。<br>
 最後の文字ではないので、さらに <code>&#x27;o&#x27;</code> を追加して <code>result=&quot;mo&quot;</code> となる。</p>
 <p>$i=1$ では、<code>s[1]=&#x27;t&#x27;</code> を追加して <code>result=&quot;mot&quot;</code> となる。<br>
 最後の文字ではないので、さらに <code>&#x27;o&#x27;</code> を追加して <code>result=&quot;moto&quot;</code> となる。</p>
 <p>$i=2$ では、<code>s[2]=&#x27;r&#x27;</code> を追加して <code>result=&quot;motor&quot;</code> となる。<br>
 最後の文字なので、<code>&#x27;o&#x27;</code> は追加しない。</p>
-<p>最後に、<code>result</code> の <code>motor</code> を出力する。</p>
+<p>したがって、答えは <code>motor</code> となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

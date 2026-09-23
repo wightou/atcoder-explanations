@@ -38,7 +38,7 @@ window.MathJax = {
 <p>タイトル通り、ババ抜き。<br>
 最初から $N$ 枚持っている設定になっているが、$1$ 枚ずつ加えていくと思う方が考えやすい。</p>
 <p>数の集合を扱える <code>set</code> を使って、今の手札を管理する。<br>
-setでは同じカードを $2$ 枚持つことが難しいが、今回なら何も影響がない。<br>
+<code>set</code> では同じカードを $2$ 枚持つことが難しいが、今回なら何も影響がない。<br>
 $1$ 枚ずつ手札に加えていくようにしたおかげで、同じカードを複数持つ状況がないため。</p>
 <p>ということで、カードを1枚ずつ見て、ループで以下を行う。</p>
 <ul>
@@ -53,8 +53,11 @@ $1$ 枚ずつ手札に加えていくようにしたおかげで、同じカー�
 </ul>
 <p>全てのカードを処理したら、手札に残っているカードに書かれた数を合計すればよい。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p><code>a={2,7,1,8,2,8,1,8}</code> を前から順に見ていく。</p>
-<p>最初、手札を表す <code>set</code> は空である。</p>
+<p>入力を受け取る。</p>
+<pre><code>n: 8
+a: {2, 7, 1, 8, 2, 8, 1, 8}</code></pre>
+<p>最初、手札を表す <code>set</code> は空である。<br>
+カードを前から順に見ると、次のように変化する。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
 <th class="table-align-right" style="text-align: right;">見るカード</th>
@@ -64,60 +67,56 @@ $1$ 枚ずつ手札に加えていくようにしたおかげで、同じカー�
 </tr></thead>
 <tbody>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
 <td class="table-align-center" style="text-align: center;">ない</td>
 <td>$2$ を追加</td>
 <td><code>{2}</code></td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$7$</th>
+<td class="table-align-right" style="text-align: right;">$7$</td>
 <td class="table-align-center" style="text-align: center;">ない</td>
 <td>$7$ を追加</td>
 <td><code>{2,7}</code></td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
 <td class="table-align-center" style="text-align: center;">ない</td>
 <td>$1$ を追加</td>
 <td><code>{1,2,7}</code></td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$8$</th>
+<td class="table-align-right" style="text-align: right;">$8$</td>
 <td class="table-align-center" style="text-align: center;">ない</td>
 <td>$8$ を追加</td>
 <td><code>{1,2,7,8}</code></td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
 <td class="table-align-center" style="text-align: center;">ある</td>
 <td>$2$ を削除</td>
 <td><code>{1,7,8}</code></td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$8$</th>
+<td class="table-align-right" style="text-align: right;">$8$</td>
 <td class="table-align-center" style="text-align: center;">ある</td>
 <td>$8$ を削除</td>
 <td><code>{1,7}</code></td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
 <td class="table-align-center" style="text-align: center;">ある</td>
 <td>$1$ を削除</td>
 <td><code>{7}</code></td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$8$</th>
+<td class="table-align-right" style="text-align: right;">$8$</td>
 <td class="table-align-center" style="text-align: center;">ない</td>
 <td>$8$ を追加</td>
 <td><code>{7,8}</code></td>
 </tr>
 </tbody>
 </table></div>
-<p>最後に手札へ残っているカードは $7$ と $8$ なので、その合計</p>
-<p>$$<br>
-7+8=15<br>
-$$</p>
-<p>を出力する。</p>
+<p>最後に手札へ残っているカードは $7$ と $8$ なので、答えは $7+8=15$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

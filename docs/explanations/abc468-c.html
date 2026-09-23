@@ -51,21 +51,75 @@ $-1$ は、$P$ そのものの分である。</p>
 <pre><code>n: 3
 p: {1, 3, 2}
 q: {3, 1, 2}</code></pre>
-<p>$P$ が何番目の順列かを計算する。</p>
-<p>先頭の $1$ より小さい未使用の数はない。</p>
-<p>次の $3$ より小さい未使用の数は $2$ の $1$ 個である。<br>
-残り $1$ 個の並べ方は $1!=1$ 通りなので、$1$ を加える。</p>
-<p>最後の $2$ より小さい未使用の数はない。</p>
-<p>よって、$P$ より辞書順で小さい順列は $1$ 個である。</p>
-<pre><code>calc(p): 1</code></pre>
-<p>$Q$ が何番目の順列かを計算する。</p>
-<p>先頭の $3$ より小さい未使用の数は $1,2$ の $2$ 個である。<br>
-残り $2$ 個の並べ方は $2!=2$ 通りなので、$2\times2=4$ を加える。</p>
-<p>次の $1$ より小さい未使用の数はない。</p>
-<p>最後の $2$ より小さい未使用の数もない。</p>
-<p>よって、$Q$ より辞書順で小さい順列は $4$ 個である。</p>
-<pre><code>calc(q): 4</code></pre>
-<p>したがって、$P$ と $Q$ の間にある順列の個数は $4-1-1=2$ である。</p>
+<p>まず、$P=(1,3,2)$ より辞書順で小さい順列の個数を求める。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">位置</th>
+<th class="table-align-right" style="text-align: right;">値</th>
+<th class="table-align-center" style="text-align: center;">その値より小さい未使用の数</th>
+<th class="table-align-right" style="text-align: right;">残りの並べ方</th>
+<th class="table-align-right" style="text-align: right;">加える個数</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-right" style="text-align: right;">$2!$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-center" style="text-align: center;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1!$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-right" style="text-align: right;">$0!$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、$P$ より辞書順で小さい順列は $1$ 個である。</p>
+<p>次に、$Q=(3,1,2)$ について同様に求める。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">位置</th>
+<th class="table-align-right" style="text-align: right;">値</th>
+<th class="table-align-center" style="text-align: center;">その値より小さい未使用の数</th>
+<th class="table-align-right" style="text-align: right;">残りの並べ方</th>
+<th class="table-align-right" style="text-align: right;">加える個数</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-center" style="text-align: center;">$1,2$</td>
+<td class="table-align-right" style="text-align: right;">$2!$</td>
+<td class="table-align-right" style="text-align: right;">$2\times2!=4$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-right" style="text-align: right;">$1!$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-right" style="text-align: right;">$0!$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、$Q$ より辞書順で小さい順列は $4$ 個である。</p>
+<p>よって、$P$ と $Q$ の間にある順列の個数は $4-1-1=2$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

@@ -47,15 +47,19 @@ $M+1$ 日目から先は、それに加えて判定前にちょうど $M$ 日前
 <p>食べなかったという情報の持ち方は様々ある。<br>
 食べなかった時には <code>A</code> を $0$ に書き換えて $0$ カロリー食べたことにしてしまうのが、分岐が減って楽。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p>$N=5$, $M=3$, $K=83$ で、$A=(48,73,59,90,21)$ である。<br>
-<code>sum</code> は、今日の判定直前に「直前 $M-1$ 日で実際に食べたおやつのカロリー合計」を表す。</p>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+m: 3
+k: 83
+a: {48, 73, 59, 90, 21}</code></pre>
+<p>判定前には、直前 $M-1$ 日で実際に食べたおやつのカロリー合計を持っておく。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
 <th class="table-align-right" style="text-align: right;">日</th>
-<th class="table-align-right" style="text-align: right;">判定前の <code>sum</code></th>
+<th class="table-align-right" style="text-align: right;">判定前の合計</th>
 <th class="table-align-right" style="text-align: right;">今日を食べると</th>
 <th>判定</th>
-<th class="table-align-right" style="text-align: right;">判定後の <code>sum</code></th>
+<th class="table-align-right" style="text-align: right;">判定後の合計</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -95,8 +99,8 @@ $M+1$ 日目から先は、それに加えて判定前にちょうど $M$ 日前
 </tr>
 </tbody>
 </table></div>
-<p>処理後の <code>A</code> は $(48,0,0,0,21)$ となる。<br>
-正の値なら <code>Yes</code>、$0$ なら <code>No</code> なので、各クエリの答えは順に <code>Yes</code>, <code>No</code>, <code>No</code>, <code>No</code>, <code>Yes</code> となる。</p>
+<p>処理後の $A$ は $(48,0,0,0,21)$ となる。<br>
+正の値なら <code>Yes</code>、$0$ なら <code>No</code> なので、各日の答えは順に <code>Yes</code>, <code>No</code>, <code>No</code>, <code>No</code>, <code>Yes</code> となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>$K$ と、直前の日々で食べたおやつのカロリー合計は、<code>int</code> 型からはみ出る場合がある。<br>
 <code>long long</code> 型を用いること。</p>

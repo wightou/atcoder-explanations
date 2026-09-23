@@ -27,6 +27,13 @@ $1$ 文字ずつ見て、`isupper(c)` で大文字かどうか判定し、`c += 
 
 ## 入力例1での動作
 
+入力を受け取る。
+
+```text
+n: 7
+s: {"ARC", "abc", "ahc", "ABC", "beginner", "AbC", "ahc"}
+```
+
 回答を順に小文字化すると、次のようになる。
 
 <!-- table-row-header: true -->

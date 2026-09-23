@@ -88,36 +88,22 @@ window.MathJax = {
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 s: &quot;oxo&quot;</code></pre>
-<p>先頭と末尾はどちらも <code>o</code> であり、$n=1$ でもないので、DP の処理へ進む。<br>
-<code>result</code> は $1$ で初期化されている。</p>
-<pre><code>result: 1</code></pre>
-<p>まず、$0$ と $1$ の並べ方は、</p>
+<p>先頭と末尾はどちらも <code>o</code> なので、DP で必要な値を求める。</p>
+<p>$0$ と $1$ の並べ方は、</p>
 <pre><code>0 1
 1 0</code></pre>
-<p>の $2$ 通りである。<br>
-どちらも $0$ と $1$ が連続しているので、初期値は次のようになる。</p>
-<pre><code>dp[1][1]: 2</code></pre>
-<p>次に、<code>i=2</code> の場合を求める。<br>
-$0,1,2$ の並べ方は全部で $3!=6$ 通りなので、まず次のように初期化する。</p>
-<pre><code>dp[2][2]: 6</code></pre>
-<p>この中から、$0$ 番目の次に初めて <code>o</code> となるのが $1$ 番目である並べ方を除く。</p>
-<p>$0$ と $1$ の内部の並べ方は <code>dp[1][1]=2</code> 通りである。<br>
-さらに、$0$ と $1$ のまとまりブロックと $2$ の並べ方は $2!=2$ 通りである。<br>
-したがって、該当する並べ方は、$\mathrm{dp}[1][1]\times 2! = 2\times 2 = 4$ 通りである。<br>
-これを引いて、$\mathrm{dp}[2][2]=3!-\mathrm{dp}[1][1]\times 2!=6-4=2$ となる。</p>
-<pre><code>dp[2][2]: 2</code></pre>
-<p>DP テーブルを作り終えたら、文字列 <code>s</code> を先頭の次から見る。<br>
-<code>counter</code> は、直前の <code>o</code> から何文字進んだかを表し、最初は $0$ である。</p>
-<p>$i=1$ では、まず <code>counter</code> に $1$ 加える。</p>
-<pre><code>counter: 1</code></pre>
-<p><code>s[1]</code> は <code>x</code> なので、まだ <code>result</code> には何も掛けず、次へ進む。</p>
-<p>$i=2$ では、さらに <code>counter</code> に $1$ 加える。</p>
-<pre><code>counter: 2</code></pre>
-<p><code>s[2]</code> は <code>o</code> である。<br>
-直前の <code>o</code> である <code>s[0]</code> からの距離は $2$ である。<br>
-よって、この区間に対応する並べ方の個数 <code>dp[2][2]=2</code> を <code>result</code> に掛ける。</p>
-<pre><code>result: 2
-counter: 0</code></pre>
+<p>の $2$ 通りなので、$\mathrm{dp}[1][1]=2$ である。</p>
+<p>次に $i=2$ を求める。<br>
+$0$ 番目の次に初めて <code>o</code> となるのが $1$ 番目である並べ方は、<br>
+$0$ と $1$ のまとまりと $2$ を並べることで、<br>
+$\mathrm{dp}[2][1]=\mathrm{dp}[1][1]\times2!=2\times2=4$ 通りとなる。</p>
+<p>$0,1,2$ の並べ方は全部で $3!=6$ 通りなので、<code>o</code> が先頭と末尾だけになる並べ方は、<br>
+$\mathrm{dp}[2][2]=6-4=2$ 通りである。</p>
+<p>入力 <code>&quot;oxo&quot;</code> では、<code>o</code> は位置 $0$ と $2$ にある。<br>
+したがって、この区間に対応する $\mathrm{dp}[2][2]=2$ がそのまま答えとなる。</p>
+<p>実際、条件を満たす順列は次の $2$ 通りである。</p>
+<pre><code>1 3 2
+2 3 1</code></pre>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>階乗や DP の掛け算の途中結果は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>

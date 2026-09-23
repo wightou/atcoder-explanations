@@ -47,20 +47,21 @@ for (int i=0; i&lt;n; i++) {
 $n$ は偶数なので、$n/2$ の切り上げ切り捨ては心配する必要がない。</p>
 <p>最後に、忘れずに <code>cout</code> で答えを出力しておしまい。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p>$n=8$、<code>a={1,3,7,8,4,2,5,6}</code> を受け取る。<br>
-<code>result</code> は $0$ で初期化する。</p>
-<p>$n/2=8/2=4$ なので、0-indexed で <code>a[4]</code> から順に足していく。</p>
+<p>入力を受け取る。</p>
+<pre><code>n: 8
+a: {1, 3, 7, 8, 4, 2, 5, 6}</code></pre>
+<p>$n/2=8/2=4$ なので、<code>0-indexed</code> で <code>a[4]</code> から順に足していく。</p>
 <ul>
-<li>$i=4$ では、<code>a[4]=4</code> なので、<code>result</code> は $0+4=4$ となる。
+<li>$i=4$ では、<code>a[4]=4</code> なので、合計は $0+4=4$ となる。
 </li>
-<li>$i=5$ では、<code>a[5]=2</code> なので、<code>result</code> は $4+2=6$ となる。
+<li>$i=5$ では、<code>a[5]=2</code> なので、合計は $4+2=6$ となる。
 </li>
-<li>$i=6$ では、<code>a[6]=5</code> なので、<code>result</code> は $6+5=11$ となる。
+<li>$i=6$ では、<code>a[6]=5</code> なので、合計は $6+5=11$ となる。
 </li>
-<li>$i=7$ では、<code>a[7]=6</code> なので、<code>result</code> は $11+6=17$ となる。
+<li>$i=7$ では、<code>a[7]=6</code> なので、合計は $11+6=17$ となる。
 </li>
 </ul>
-<p>ループが終わったら、<code>result</code> の $17$ を出力する。</p>
+<p>したがって、答えは $17$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

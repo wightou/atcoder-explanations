@@ -61,24 +61,24 @@ window.MathJax = {
 <p>入力を受け取る。</p>
 <pre><code>n: 3
 a: {4, 6, 12}</code></pre>
-<p>各 <code>a[i]</code> の約数を列挙し、その約数を持つ頂点番号を <code>vec</code> に記録する。<br>
-空でない <code>vec[i]</code> の内容は、次のようになる。</p>
-<pre><code>vec[1]: {0, 1, 2}
-vec[2]: {0, 1, 2}
-vec[3]: {1, 2}
-vec[4]: {0, 2}
-vec[6]: {1, 2}
-vec[12]: {2}</code></pre>
+<p>各値の約数ごとに、その約数を持つ頂点をまとめる。<br>
+空でないものは次のようになる。</p>
+<pre><code>1: {0, 1, 2}
+2: {0, 1, 2}
+3: {1, 2}
+4: {0, 2}
+6: {1, 2}
+12: {2}</code></pre>
 <p>最大全域木を作るため、約数を大きい順に調べる。</p>
-<p>$i=6$ のとき、<code>6</code> を約数に持つ頂点は <code>1</code>, <code>2</code> である。<br>
-この $2$ 頂点はまだ連結でないので、UnionFind木で連結し、<code>result</code> に $6$ を加える。</p>
-<pre><code>result: 6</code></pre>
-<p>$i=4$ のとき、<code>4</code> を約数に持つ頂点は <code>0</code>, <code>2</code> である。<br>
-この $2$ 頂点はまだ連結でないので、UnionFind木で連結し、<code>result</code> に $4$ を加える。</p>
-<pre><code>result: 10</code></pre>
-<p>これで全頂点が連結になる。<br>
-それより小さい約数では新しい連結は行われない。</p>
-<p><code>result</code> の値である $10$ が答えである。</p>
+<p>$12$ を約数に持つのは頂点 $2$ だけなので、まだ何も連結しない。</p>
+<p>次に $6$ を約数に持つ頂点は $1,2$ である。<br>
+この $2$ 頂点はまだ別の連結成分なので、重み $6$ の辺として連結する。<br>
+この時点での重みの合計は $6$ である。</p>
+<p>次に $4$ を約数に持つ頂点は $0,2$ である。<br>
+この $2$ 頂点もまだ別の連結成分なので、重み $4$ の辺として連結する。<br>
+重みの合計は $6+4=10$ となる。</p>
+<p>これで $3$ 頂点すべてが連結した。<br>
+以降の小さい約数では新しい連結は発生しないので、答えは $10$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
@@ -90,8 +90,7 @@ vec[12]: {2}</code></pre>
     <section class="side-card">
       <h2>タグ</h2>
       <div class="tags">
-        <a class="tag" href="../tags/divisors-and-multiples.html">約数と倍数</a>
-<a class="tag" href="../tags/union-find.html">UnionFind木</a>
+        <a class="tag" href="../tags/union-find.html">UnionFind木</a>
 <a class="tag" href="../tags/minimum-spanning-tree.html">最小全域木</a>
       </div>
       <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
