@@ -51,58 +51,68 @@ window.MathJax = {
 $1$ 文字から順に、「その文字数差の位置が全て同じ文字の組になっているか」を確認する。<br>
 初めて全て同じ文字の組になっていた文字数が周期長である。<br>
 最終的に $N$ 文字は絶対に判定を通るため、この探索は必ず終了する。<br>
-$N$ を周期長で割った商が周期の反復回数であり、それが $1$ つめに答えるべき $K$ である。 </p>
+$N$ を周期長で割った商が周期の反復回数であり、それが $1$ つめに答えるべき $K$ である。</p>
 <p>次に、合流までの操作列を作る。<br>
 これは、まず $S$ のうち $1$ 周期分だけ取り出し、$N$ の値もそれに揃える。<br>
-島 $N$ にいる人 $F$ と、島 $1$ にいる人 $B$ を用意する。<br>
-$F$ が $1$ マスずつしか進まないように指示を出し、両者の移動をシミュレーションする。<br>
-$F$ と $B$ が同じマスに来るまで繰り返すと、$N(N-1)$ 回以内に操作が終わる。<br>
+島 $N$ にいる人と、島 $1$ にいる人を用意する。<br>
+島 $N$ にいる人が $1$ マスずつしか進まないように指示を出し、両者の移動をシミュレーションする。<br>
+両者が同じマスに来るまで繰り返すと、$N(N-1)$ 回以内に操作が終わる。<br>
 こうしてできた文字列の長さが $2$ つめに答える値で、文字列そのものが $3$ つめに答えるもの。</p>
 <p>計算量は $O(N^2)$ である。</p>
 <h2 id="section-72986c8568">具体例での動作</h2>
 <p>次の例を考える。</p>
 <pre><code>n: 12
-s: axabxbaxabxb</code></pre>
+s: &quot;axabxbaxabxb&quot;</code></pre>
 <p>まず、文字列の最短周期を調べる。</p>
 <p>$l=1$ では、位置 $0$ と $1$ の文字が <code>a</code> と <code>x</code> で異なるため、周期ではない。</p>
 <p>$l=2$ では、位置 $1$ と $3$ の文字が <code>x</code> と <code>b</code> で異なるため、周期ではない。</p>
 <p>$l=3$ では、位置 $0$ と $3$ の文字が <code>a</code> と <code>b</code> で異なるため、周期ではない。</p>
-<p>$l=4$ は $12$ の約数ではないため、候補にならない。</p>
-<p>$l=5$ も $12$ の約数ではないため、候補にならない。</p>
+<p>$l=4,5$ は $12$ の約数ではないため、候補にならない。</p>
 <p>$l=6$ では、$6$ 文字差の位置同士が全て同じ文字になっている。</p>
 <p>よって、最短周期は <code>axabxb</code> の $6$ 文字である。<br>
 周期の反復回数は $12/6=2$ なので、$K=2$ となる。</p>
 <p>以後は $1$ 周期分だけを取り出し、次の状態で操作列を構築する。</p>
 <pre><code>n: 6
-s: axabxb</code></pre>
-<p><code>0-indexed</code> で、最前を行く <code>f</code> を $5$、最後尾を行く <code>b</code> を $0$ とする。</p>
-<p>まず <code>f</code> を $1$ 進めて $6$ とする。<br>
-位置 $6\bmod6=0$ の文字は <code>a</code> なので、最初の操作では <code>a</code> を選ぶ。<br>
-<code>b</code> は位置 $0$ から次に <code>a</code> が現れる位置 $2$ まで進む。</p>
-<pre><code>f: 6
-b: 2
-result2: a</code></pre>
-<p>次に <code>f</code> を $1$ 進めて $7$ とする。<br>
-位置 $7\bmod6=1$ の文字は <code>x</code> なので、次の操作では <code>x</code> を選ぶ。<br>
-<code>b</code> は位置 $2$ から次に <code>x</code> が現れる位置 $4$ まで進む。</p>
-<pre><code>f: 7
-b: 4
-result2: ax</code></pre>
-<p>次に <code>f</code> を $1$ 進めて $8$ とする。<br>
-位置 $8\bmod6=2$ の文字は <code>a</code> なので、次の操作では <code>a</code> を選ぶ。<br>
-<code>b</code> は位置 $4$ から次に <code>a</code> が現れる位置 $6$ まで進む。</p>
-<pre><code>f: 8
-b: 6
-result2: axa</code></pre>
-<p>次に <code>f</code> を $1$ 進めて $9$ とする。<br>
-位置 $9\bmod6=3$ の文字は <code>b</code> なので、次の操作では <code>b</code> を選ぶ。<br>
-<code>b</code> は位置 $6$ から次に <code>b</code> が現れる位置 $9$ まで進む。</p>
-<pre><code>f: 9
-b: 9
-result2: axab</code></pre>
-<p><code>f</code> と <code>b</code> が同じ位置になった。<br>
+s: &quot;axabxb&quot;</code></pre>
+<p><code>0-indexed</code> で、最前を行く人の位置を $5$、最後尾を行く人の位置を $0$ とする。</p>
+<p>最前を行く人を $1$ マスだけ進めるように文字を選び、その文字まで最後尾の人も進める。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">操作</th>
+<th class="table-align-center" style="text-align: center;">選ぶ文字</th>
+<th class="table-align-right" style="text-align: right;">最前を行く人の位置</th>
+<th class="table-align-right" style="text-align: right;">最後尾を行く人の位置</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-center" style="text-align: center;"><code>a</code></td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-center" style="text-align: center;"><code>x</code></td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-center" style="text-align: center;"><code>a</code></td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-center" style="text-align: center;"><code>b</code></td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+</tr>
+</tbody>
+</table></div>
+<p>$4$ 回目の操作で両者が同じ位置になった。<br>
 人同士の追い抜きは発生しないため、この時点で $1$ 周期分の人が同じ島に集合している。</p>
-<p>よって、$K=2$、操作回数 $4$、操作列 <code>axab</code> を出力すればよい。</p>
+<p>したがって、$K=2$、操作回数は $4$、操作列は <code>axab</code> となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

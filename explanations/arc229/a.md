@@ -18,7 +18,7 @@ tag_note: 簡単なレベルの内容は省略。
 
 例えば、`ARCRARCARC` の場合、操作ごとに以下のようになり、$4$ 回である。
 
-```txt
+```text
 ARCRARCARC
 CRARARCARC
 CRARCRAARC
@@ -57,27 +57,27 @@ $A$ を置くことで、残りの $C$ の個数分だけ操作数を稼げる�
 $X=7$ の場合を考える。
 
 まず、$i=\lfloor\sqrt{7}\rfloor+1=3$ とする。
-構築する文字列 `result` は空文字列から始める。
+構築する文字列は空文字列から始める。
 
 $i=3$ のとき、残りの操作数は $7$ なので、後ろに $3$ 個の `C` がある `A` を $2$ 個置ける。
 `AR` を $2$ 回追加して残りを $1$ とし、その後 `CR` を追加する。
 
 ```text
-result: ARARCR
+文字列: ARARCR
 残り: 1
 ```
 
 $i=2$ のとき、残りは $1$ なので `A` は追加せず、`CR` だけを追加する。
 
 ```text
-result: ARARCRCR
+文字列: ARARCRCR
 残り: 1
 ```
 
 $i=1$ のとき、残りは $1$ なので `AR` を $1$ 回追加して残りを $0$ とし、その後 `CR` を追加する。
 
 ```text
-result: ARARCRCRARCR
+文字列: ARARCRCRARCR
 残り: 0
 ```
 

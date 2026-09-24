@@ -71,16 +71,16 @@ $A$ を置くことで、残りの $C$ の個数分だけ操作数を稼げる�
 <h2 id="section-72986c8568">具体例での動作</h2>
 <p>$X=7$ の場合を考える。</p>
 <p>まず、$i=\lfloor\sqrt{7}\rfloor+1=3$ とする。<br>
-構築する文字列 <code>result</code> は空文字列から始める。</p>
+構築する文字列は空文字列から始める。</p>
 <p>$i=3$ のとき、残りの操作数は $7$ なので、後ろに $3$ 個の <code>C</code> がある <code>A</code> を $2$ 個置ける。<br>
 <code>AR</code> を $2$ 回追加して残りを $1$ とし、その後 <code>CR</code> を追加する。</p>
-<pre><code>result: ARARCR
+<pre><code>文字列: ARARCR
 残り: 1</code></pre>
 <p>$i=2$ のとき、残りは $1$ なので <code>A</code> は追加せず、<code>CR</code> だけを追加する。</p>
-<pre><code>result: ARARCRCR
+<pre><code>文字列: ARARCRCR
 残り: 1</code></pre>
 <p>$i=1$ のとき、残りは $1$ なので <code>AR</code> を $1$ 回追加して残りを $0$ とし、その後 <code>CR</code> を追加する。</p>
-<pre><code>result: ARARCRCRARCR
+<pre><code>文字列: ARARCRCRARCR
 残り: 0</code></pre>
 <p>最後の <code>R</code> は不要なので削除し、<code>ARARCRCRARC</code> となる。</p>
 <p><code>R</code> を省くと <code>AACCAC</code> である。<br>

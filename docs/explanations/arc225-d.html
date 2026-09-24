@@ -72,58 +72,51 @@ window.MathJax = {
 <p>したがって、$S_0$ そのものが答えである。</p>
 <p>計算量は、$O(N)$ である。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p>入力を受け取り、<code>a</code> の各要素から $1$ を引いて <code>0-indexed</code> に直す。</p>
+<p>入力を受け取り、各要素から $1$ を引いて <code>0-indexed</code> に直す。</p>
 <pre><code>n: 6
-a: 5 1 2 4 3 0</code></pre>
-<p><code>result</code> を $0$ で初期化する。<br>
-各 <code>i</code> について、<code>max(0,a[i]-i)</code> を <code>result</code> に加える。</p>
+a: {5, 1, 2, 4, 3, 0}</code></pre>
+<p>各位置について、本来もっと右にあるべき値の移動距離を求める。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th class="table-align-right" style="text-align: right;"><code>i</code></th>
-<th class="table-align-right" style="text-align: right;"><code>a[i]</code></th>
-<th class="table-align-right" style="text-align: right;"><code>max(0,a[i]-i)</code></th>
-<th class="table-align-right" style="text-align: right;">加算後の <code>result</code></th>
+<th class="table-align-right" style="text-align: right;">$i$</th>
+<th class="table-align-right" style="text-align: right;">$a[i]$</th>
+<th class="table-align-right" style="text-align: right;">$\max(0,a[i]-i)$</th>
 </tr></thead>
 <tbody>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">0</th>
-<td class="table-align-right" style="text-align: right;">5</td>
-<td class="table-align-right" style="text-align: right;">5</td>
-<td class="table-align-right" style="text-align: right;">5</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">1</th>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">5</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">2</th>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">5</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">3</th>
-<td class="table-align-right" style="text-align: right;">4</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">6</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">4</th>
-<td class="table-align-right" style="text-align: right;">3</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">6</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
 </tr>
 <tr>
-<th class="table-align-right" style="text-align: right;" scope="row">5</th>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">0</td>
-<td class="table-align-right" style="text-align: right;">6</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$5$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
 </tr>
 </tbody>
 </table></div>
-<p>以上より、答えは $6$ である。</p>
+<p>これらの合計は $5+1=6$ である。<br>
+したがって、答えは $6$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>

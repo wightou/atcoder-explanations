@@ -50,25 +50,21 @@ window.MathJax = {
 <h2 id="section-1">入力例1での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>n: 2
-a: 1100
-b: 1010
-c: 0011</code></pre>
-<p>各文字列について、<code>1</code> の位置を <code>0-indexed</code> で拾い出す。</p>
-<pre><code>vec_a: {0, 1}
-vec_b: {0, 2}
-vec_c: {2, 3}</code></pre>
-<p>はじめ、距離の和 <code>result</code> を $0$、構築する文字列 <code>result2</code> を <code>0000</code> としておく。</p>
-<p>まず $0$ 個目の <code>1</code> を考える。<br>
-$3$ つの位置は $0,0,2$ なので、最小値は $0$、中央値は $0$、最大値は $2$ である。<br>
-中央値の位置 $0$ に <code>1</code> を置き、距離の和に $2-0=2$ を加える。</p>
-<pre><code>result: 2
-result2: 1000</code></pre>
-<p>次に $1$ 個目の <code>1</code> を考える。<br>
-$3$ つの位置は $1,2,3$ なので、最小値は $1$、中央値は $2$、最大値は $3$ である。<br>
-中央値の位置 $2$ に <code>1</code> を置き、距離の和に $3-1=2$ を加える。</p>
-<pre><code>result: 4
-result2: 1010</code></pre>
-<p>よって、最小値として $4$、よい文字列として <code>1010</code> を出力する。</p>
+a: &quot;1100&quot;
+b: &quot;1010&quot;
+c: &quot;0011&quot;</code></pre>
+<p>各文字列の <code>1</code> の位置を <code>0-indexed</code> で見ると、次のようになる。</p>
+<pre><code>A: {0, 1}
+B: {0, 2}
+C: {2, 3}</code></pre>
+<p>$0$ 個目の <code>1</code> の位置は $0,0,2$ で、中央値は $0$ である。<br>
+したがって、構築する文字列では位置 $0$ を <code>1</code> にする。<br>
+この組の移動距離の合計は $2-0=2$ である。</p>
+<p>$1$ 個目の <code>1</code> の位置は $1,2,3$ で、中央値は $2$ である。<br>
+したがって、位置 $2$ も <code>1</code> にする。<br>
+この組の移動距離の合計は $3-1=2$ である。</p>
+<p>よって、構築する文字列は <code>1010</code> となる。<br>
+移動距離の合計は $2+2=4$ なので、最小値は $4$ である。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>距離の和は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>

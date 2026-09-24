@@ -58,44 +58,57 @@ window.MathJax = {
 うまく実装すれば、$N=2$ のときや合成数のときも奇素数の場合のコードに任せて問題なくなる。</p>
 <h2 id="section-1">入力例1での動作</h2>
 <p>$3$ つ目のテストケースのみ考える。</p>
-<p>入力を受け取る。  <br>
+<p>入力を受け取る。<br>
 <code>a</code> はソートしておく。</p>
 <pre><code>n: 5
 a: {11, 22, 33, 44, 55}</code></pre>
-<p>$n=5$ は素数なので、処理を続ける。  <br>
-剰余類環の法を $5$ に設定する。</p>
-<p>$n/2=2$ なので、$(n/2)! = 2! = 2$ である。  <br>
-これを $n$ 乗して、仮の結果としておく。  <br>
-すなわち、仮の結果は $2^5 \% 5 = 2$ となる。</p>
-<p>前から順に、$5$ で割った余りを確認していく。</p>
-<p>まず、$11$ を見る。  <br>
-$11 \% 5 = 1$ である。<br>
-余り $1$ はまだ出ていないので、処理を続ける。<br>
-余り $2$ または $3$ のものはこれまでに $0$ 個出ているので、結果に $(-1)^0$ をかける。<br>
-余り $1$ が出たことを記録する。</p>
-<p>次に、$22$ を見る。  <br>
-$22 \% 5 = 2$ である。  <br>
-余り $2$ はまだ出ていないので、処理を続ける。  <br>
-余り $3$ または $4$ のものはこれまでに $0$ 個出ているので、結果に $(-1)^0$ をかける。<br>
-余り $2$ が出たことを記録する。</p>
-<p>次に、$33$ を見る。  <br>
-$33 \% 5 = 3$ である。  <br>
-余り $3$ はまだ出ていないので、処理を続ける。  <br>
-余り $4$ または $0$ のものはこれまでに $0$ 個出ているので、結果に $(-1)^0$ をかける。<br>
-余り $3$ が出たことを記録する。</p>
-<p>次に、$44$ を見る。  <br>
-$44 \% 5 = 4$ である。  <br>
-余り $4$ はまだ出ていないので、処理を続ける。  <br>
-余り $0$ または $1$ のものはこれまでに $1$ 個出ているので、結果に $(-1)^1$ をかける。  <br>
-仮の結果は $-2$ になる。  <br>
-余り $4$ が出たことを記録する。</p>
-<p>最後に、$55$ を見る。  <br>
-$55 \% 5 = 0$ である。  <br>
-余り $0$ はまだ出ていないので、処理を続ける。  <br>
-余り $1$ または $2$ のものはこれまでに $2$ 個出ているので、結果に $(-1)^2$ をかける。  <br>
-余り $0$ が出たことを記録する。</p>
-<p>以上より、仮の結果は $-2$ である。  <br>
-$5$ で割った余りとして正の値に直すと、答えは $3$ である。</p>
+<p>$n=5$ は素数なので、処理を続ける。<br>
+$n/2=2$ なので、$(n/2)!=2!=2$ である。<br>
+符号を考えない積は $2^5\bmod 5=2$ となる。</p>
+<p>前から順に、$5$ で割った余りを確認する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">値</th>
+<th class="table-align-right" style="text-align: right;">余り</th>
+<th>負の符号になる過去の余り</th>
+<th class="table-align-right" style="text-align: right;">個数</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$11$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td>$2,3$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$22$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td>$3,4$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$33$</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td>$4,0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$44$</th>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td>$0,1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$55$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td>$1,2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+</tbody>
+</table></div>
+<p>負の数をかける回数は合計 $3$ 回で奇数である。<br>
+したがって、符号を含めた積は $-2$ となる。</p>
+<p>$5$ で割った余りとして非負の値に直すと、答えは $3$ である。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>$N$ が素数の場合は、法 $N$ の剰余類環で計算する。<br>
 符号も含めて管理する必要がある。</p>

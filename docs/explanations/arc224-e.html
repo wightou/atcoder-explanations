@@ -59,26 +59,49 @@ window.MathJax = {
 <h2 id="section-1">入力例1での動作</h2>
 <p>$1$ つ目のテストケースのみ考える。</p>
 <p>入力を受け取る。</p>
-<pre><code>s: CAABCB</code></pre>
-<p><code>s</code> を右から見て、残る予定の文字列を逆順に <code>t</code> に入れていく。</p>
-<p>まず、右端の <code>B</code> を <code>t</code> に移す。</p>
-<pre><code>s: CAABC
-t: B</code></pre>
-<p>次に、<code>C</code>, <code>B</code> を順に <code>t</code> に移す。</p>
-<pre><code>s: CAA
-t: BCB</code></pre>
-<p>次に、<code>A</code> を <code>t</code> に移す。<br>
-<code>t</code> の末尾から <code>A</code>, <code>B</code>, <code>C</code> と並んでいるので、これらを削除する。</p>
-<pre><code>s: CA
-t: B</code></pre>
-<p>次の <code>A</code> を <code>t</code> に移す。<br>
-<code>t</code> の末尾から <code>A</code>, <code>B</code> と並んでいるので、これらを削除する。</p>
-<pre><code>s: C
-t:</code></pre>
-<p>最後に、<code>C</code> を <code>t</code> に移す。</p>
-<pre><code>s:
-t: C</code></pre>
-<p>最終的な <code>t</code> の長さは $1$ なので、答えは $1$ である。</p>
+<pre><code>s: &quot;CAABCB&quot;</code></pre>
+<p>右端から順に文字を見て、削除されずに残る文字列を逆順で管理する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th>見た文字</th>
+<th>逆順で管理する残り文字列</th>
+<th>処理</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row"><code>B</code></th>
+<td><code>B</code></td>
+<td>そのまま残す</td>
+</tr>
+<tr>
+<th scope="row"><code>C</code></th>
+<td><code>BC</code></td>
+<td>そのまま残す</td>
+</tr>
+<tr>
+<th scope="row"><code>B</code></th>
+<td><code>BCB</code></td>
+<td>そのまま残す</td>
+</tr>
+<tr>
+<th scope="row"><code>A</code></th>
+<td><code>B</code></td>
+<td><code>ABC</code> を削除する</td>
+</tr>
+<tr>
+<th scope="row"><code>A</code></th>
+<td>空</td>
+<td><code>AB</code> を削除する</td>
+</tr>
+<tr>
+<th scope="row"><code>C</code></th>
+<td><code>C</code></td>
+<td>そのまま残す</td>
+</tr>
+</tbody>
+</table></div>
+<p>最後に残る文字は <code>C</code> の $1$ 文字だけである。</p>
+<p>したがって、答えは $1$ である。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

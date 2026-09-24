@@ -101,10 +101,10 @@ b: {0, 1, 0, 1, 1, 0, 1}</code></pre>
 <p><code>a</code> と <code>b</code> それぞれについて、$1$ つ飛ばしで <code>0</code> と <code>1</code> を反転する。</p>
 <pre><code>a: {0, 0, 1}
 b: {0, 0, 0, 0, 1, 1, 1}</code></pre>
-<p>これをランレングス圧縮し、長さだけを取り出す。</p>
-<pre><code>a_vec: {2, 1}
-b_vec: {4, 3}</code></pre>
-<p><code>a_vec</code> と <code>b_vec</code> の要素数はどちらも $2$ なので、処理を続ける。</p>
+<p>これをランレングス圧縮し、各ブロックの長さだけを取り出す。</p>
+<pre><code>A側のブロック長: {2, 1}
+B側のブロック長: {4, 3}</code></pre>
+<p>ブロック数はどちらも $2$ なので、処理を続ける。</p>
 <p>DP テーブルの意味は、以下のようにする。</p>
 <ul>
 <li><code>dp[i][0]</code>: $i$ 番目までを、増設なしの状態で作れるか
@@ -117,12 +117,12 @@ b_vec: {4, 3}</code></pre>
 <p>初期状態は以下である。</p>
 <pre><code>dp[0]: {true, false, false}</code></pre>
 <p>まず、$i=0$ を見る。<br>
-<code>a_vec[0]=2</code>、<code>b_vec[0]=4</code> である。<br>
+A側のブロック長は $2$、B側のブロック長は $4$ である。<br>
 差は $2$ なので、$2$ 以上の偶数である。<br>
 処理後、以下のようになる。</p>
 <pre><code>dp[1]: {true, false, true}</code></pre>
 <p>次に、$i=1$ を見る。<br>
-<code>a_vec[1]=1</code>、<code>b_vec[1]=3</code> である。<br>
+A側のブロック長は $1$、B側のブロック長は $3$ である。<br>
 差は $2$ なので、$2$ 以上の偶数である。<br>
 処理後、以下のようになる。</p>
 <pre><code>dp[2]: {true, false, true}</code></pre>

@@ -78,83 +78,34 @@ window.MathJax = {
 <p>入力を受け取り、辺の両端を <code>0-indexed</code> に直す。</p>
 <pre><code>n: 4
 m: 5
-k: 2</code></pre>
-<div class="markdown-table-scroll"><table>
-<thead><tr>
-<th class="table-align-right" style="text-align: right;"><code>i</code></th>
-<th class="table-align-right" style="text-align: right;"><code>a[i]</code></th>
-<th class="table-align-right" style="text-align: right;"><code>b[i]</code></th>
-<th class="table-align-right" style="text-align: right;"><code>c[i]</code></th>
-</tr></thead>
-<tbody>
-<tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
-<td class="table-align-right" style="text-align: right;">$0$</td>
-<td class="table-align-right" style="text-align: right;">$1$</td>
-<td class="table-align-right" style="text-align: right;">$0$</td>
-</tr>
-<tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
-<td class="table-align-right" style="text-align: right;">$0$</td>
-<td class="table-align-right" style="text-align: right;">$2$</td>
-<td class="table-align-right" style="text-align: right;">$0$</td>
-</tr>
-<tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
-<td class="table-align-right" style="text-align: right;">$1$</td>
-<td class="table-align-right" style="text-align: right;">$2$</td>
-<td class="table-align-right" style="text-align: right;">$0$</td>
-</tr>
-<tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
-<td class="table-align-right" style="text-align: right;">$3$</td>
-<td class="table-align-right" style="text-align: right;">$1$</td>
-<td class="table-align-right" style="text-align: right;">$1$</td>
-</tr>
-<tr>
-<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
-<td class="table-align-right" style="text-align: right;">$3$</td>
-<td class="table-align-right" style="text-align: right;">$2$</td>
-<td class="table-align-right" style="text-align: right;">$1$</td>
-</tr>
-</tbody>
-</table></div>
-<p>$2$ つの Union-Find木 を作る。<br>
-重み $0$ の辺だけを加えた <code>d0</code> と、重み $1$ の辺だけを加えた <code>d1</code> を作る。<br>
-それぞれの連結成分は次のようになる。</p>
-<pre><code>d0: {0, 1, 2}, {3}
-d1: {0}, {1, 2, 3}</code></pre>
-<p><img src="arc225/c1.png" alt="d0とd1を作った状態"></p>
-<p>左のグラフが <code>d0</code>、中央のグラフが <code>d1</code>、右のグラフが最終結果用の <code>d</code> である。<br>
-また、赤い辺が重み $0$ の辺、青い辺が重み $1$ の辺である。</p>
-<p><code>d0</code> の連結成分数が $2$ なので、重み $1$ の辺が最低 $1$ 本必要。<br>
-<code>d1</code> の連結成分数が $2$ なので、重み $0$ の辺が最低 $1$ 本必要。<br>
-よって、全域木を作る $3$ 本の辺の重み合計は、$1$ 以上 $2$ 以下となる。<br>
-今回は $2$ であるため、作成可能ということになる。</p>
-<p>重み $0$ の辺の残り本数を <code>count0</code> $=1$、重み $1$ の辺の残り本数を <code>count1</code> $=2$ とする。</p>
-<p>最終結果用の Union-Find木 <code>d</code> を作る。</p>
-<p>まず、最低限必要な辺を確保する。</p>
-<p>辺 $0$ は重み $0$ であり、<code>d1</code> では頂点 $0$ と頂点 $1$ が連結でないので採用する。<br>
-<code>result</code> に $0$ を追加し、<code>count0</code> $=0$ とする。<br>
-<code>d</code> と <code>d1</code> で、頂点 $0$ と頂点 $1$ を連結させる。</p>
-<p>辺 $1$ と $2$ は、重み $0$ で、<code>d1</code> 上で既に連結になっているので見送る。</p>
-<p>辺 $3$ は重み $1$ であり、<code>d0</code> では頂点 $3$ と頂点 $1$ が連結でないので採用する。<br>
-<code>result</code> に $3$ を追加し、<code>count1</code> $=1$ とする。<br>
-<code>d</code> と <code>d0</code> で、頂点 $3$ と頂点 $1$ を連結させる。</p>
-<p>辺 $4$ は、重み $1$ で、<code>d0</code> 上で既に連結になっているので見送る。</p>
-<p>この時点で、目的の木を管理する <code>d</code> の連結成分は次のようになる。</p>
-<pre><code>d: {0, 1, 3}, {2}</code></pre>
-<p><img src="arc225/c2.png" alt="d0とd1を連結にした状態"></p>
-<p>次に、各重みの残り本数を見ながら、残りの連結成分をつなぐ。</p>
-<p>辺 $0$ は採用済。</p>
-<p>辺 $1$ と $2$ は重み $0$ の残り本数が $0$ なので、見送る。</p>
-<p>辺 $3$ は採用済。</p>
-<p>辺 $4$ は重み $1$ であり、<code>d</code> では頂点 $3$ と頂点 $2$ が連結でない。<br>
-<code>count1</code> $=1$ なのでこの辺を採用し、<code>result</code> に $4$ を追加して <code>count1</code> $=0$ とする。<br>
-これにより、<code>d</code> の全頂点が連結になる。</p>
-<p><img src="arc225/c3.png" alt="dを連結にした状態"></p>
-<p><code>result</code> には $0$, $3$, $4$ が入っている。<br>
-<code>1-indexed</code> に直して $1\ 4\ 5$ を出力する。</p>
+k: 2
+edges:
+0: (0, 1, 0)
+1: (0, 2, 0)
+2: (1, 2, 0)
+3: (3, 1, 1)
+4: (3, 2, 1)</code></pre>
+<p>重み $0$ の辺だけで見た連結成分は $\{0,1,2\},\{3\}$ である。<br>
+したがって、重み $1$ の辺が最低 $1$ 本必要である。</p>
+<p>重み $1$ の辺だけで見た連結成分は $\{0\},\{1,2,3\}$ である。<br>
+したがって、重み $0$ の辺も最低 $1$ 本必要である。</p>
+<p><img src="arc225/c1.png" alt="各重みだけで見た連結成分"></p>
+<p>全域木は $3$ 本の辺からなる。<br>
+よって、その重みの合計は $1$ 以上 $2$ 以下にできる。<br>
+今回は $K=2$ なので構築可能である。</p>
+<p>まず、各重みで最低限必要な辺を確保する。</p>
+<p>重み $0$ の辺では、辺 $0$ が重み $1$ の辺だけでは別成分の頂点 $0,1$ を結ぶ。<br>
+よって、辺 $0$ を採用する。</p>
+<p>重み $1$ の辺では、辺 $3$ が重み $0$ の辺だけでは別成分の頂点 $3,1$ を結ぶ。<br>
+よって、辺 $3$ を採用する。</p>
+<p>この時点で採用した辺は $0,3$ で、連結成分は $\{0,1,3\},\{2\}$ である。<br>
+重み $0$ の辺は必要な $1$ 本を使い切り、重み $1$ の辺はあと $1$ 本使う必要がある。</p>
+<p><img src="arc225/c2.png" alt="最低限必要な辺を採用した状態"></p>
+<p>残りの成分を、重み $1$ の辺で結ぶ。<br>
+辺 $4$ は頂点 $3,2$ を結ぶので採用できる。<br>
+これで全頂点が連結になり、採用した辺は $0,3,4$ となる。</p>
+<p><img src="arc225/c3.png" alt="全頂点を連結にした状態"></p>
+<p>辺番号を <code>1-indexed</code> に戻すと、$1,4,5$ を出力すればよい。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>
