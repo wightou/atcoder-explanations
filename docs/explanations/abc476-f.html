@@ -32,7 +32,7 @@ window.MathJax = {
       <h1>ABC476 F - Chebyshev Cafe</h1>
       <p class="explanation-title-ja">チェス盤喫茶</p>
     </div>
-    <div class="auto-links"><a href="https://atcoder.jp/contests/abc476/tasks/abc476_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc476/submissions/79398247" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc476/tasks/abc476_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc476/submissions/79398247" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc476/submissions/79473879" target="_blank" rel="noopener noreferrer">別解</a></div>
     <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>各マスの人口に規則性があるように見えて、$\bmod$ 計算が入るせいで有効な規則はない。<br>
@@ -107,7 +107,19 @@ b: {3, 4, 4, 10}</code></pre>
 <p>$f(i,j)$ や途中計算の値は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
 <h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
+<p>値を配るのではなく、もらう方針で考えると別の解き方もできる。</p>
+<p>まず、$2\times\max(|a|,|b|) = |a+b|+|a-b|$ という公式を用いて、式から $\max$ を消す。<br>
+つまり、交通費の $2$ 倍は、$|s_r+s_c-t_r-t_c|+|s_r-s_c-t_r+t_c|$ である。</p>
+<p>$(t_r,t_c)$ を決めたときに、全 $(s_r,s_c)$ からの寄与を合計したい。<br>
+これを、前後にわけて考える。</p>
+<p>$|s_r+s_c-t_r-t_c|$ については、$t_r+t_c$ の値ごとに求めておけば、$2N-1$ 個の値を求めるだけで済む。<br>
+$C$ の値を $s_r+s_c$ の値ごとに事前集計すれば、$(2N-1)\times(2N-1)$ 通りの $O(N^2)$ で求まる。<br>
+もしくは、累積和と差分更新を使って $O(N)$ でやってもよい。<br>
+（別解コードでは、その方針を取っている）</p>
+<p>$|s_r-s_c-t_r+t_c|$ も同様。<br>
+ここまでくれば、それらを用いて $f(i,j)$ を求めるのは $O(1)$ でできるので、あとは単純な処理だけ。<br>
+絶対値を足した後で $2$ で割るのを忘れないように注意。</p>
+<p>計算量は $O(N^2)$ である。</p>
   </article>
 
   <aside class="sidebar">

@@ -5,6 +5,9 @@ problem_title: "Chebyshev Cafe"
 problem_title_ja: "チェス盤喫茶"
 problem_url: https://atcoder.jp/contests/abc476/tasks/abc476_f
 submission_url: https://atcoder.jp/contests/abc476/submissions/79398247
+alternative_submission_urls:
+  - label: 別解
+    url: https://atcoder.jp/contests/abc476/submissions/79473879
 tags:
   - 距離
   - 累積和
@@ -113,4 +116,21 @@ $f(i,j)$ や途中計算の値は、`int` 型からはみ出る。
 
 ## 別解
 
-特になし。
+値を配るのではなく、もらう方針で考えると別の解き方もできる。
+
+まず、$2\times\max(|a|,|b|) = |a+b|+|a-b|$ という公式を用いて、式から $\max$ を消す。
+つまり、交通費の $2$ 倍は、$|s_r+s_c-t_r-t_c|+|s_r-s_c-t_r+t_c|$ である。
+
+$(t_r,t_c)$ を決めたときに、全 $(s_r,s_c)$ からの寄与を合計したい。
+これを、前後にわけて考える。
+
+$|s_r+s_c-t_r-t_c|$ については、$t_r+t_c$ の値ごとに求めておけば、$2N-1$ 個の値を求めるだけで済む。
+$C$ の値を $s_r+s_c$ の値ごとに事前集計すれば、$(2N-1)\times(2N-1)$ 通りの $O(N^2)$ で求まる。
+もしくは、累積和と差分更新を使って $O(N)$ でやってもよい。
+（別解コードでは、その方針を取っている）
+
+$|s_r-s_c-t_r+t_c|$ も同様。
+ここまでくれば、それらを用いて $f(i,j)$ を求めるのは $O(1)$ でできるので、あとは単純な処理だけ。
+絶対値を足した後で $2$ で割るのを忘れないように注意。
+
+計算量は $O(N^2)$ である。
