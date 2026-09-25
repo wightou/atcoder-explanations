@@ -53,23 +53,40 @@ $0$ 以上と $1$ 以上の補正は、$0$ が必ず条件を満たすことか�
 <p>入力を受け取る。</p>
 <pre><code>k: 30
 d: 4</code></pre>
-<p>まず <code>k</code> に $1$ を足す。<br>
-これにより、$0$ 以上 $31$ 未満の数を数え、最後に <code>0</code> の分を引く形にしている。</p>
-<pre><code>k: 31</code></pre>
-<p><code>free[i][j]</code> を、<code>i</code> 桁目より後ろを自由に決めたとき、桁和を $d$ で割った余りが <code>j</code> になるものの数とする。</p>
-<p>最下位桁より後ろには何もないので、次の状態から始まる。</p>
-<pre><code>free[1]: {1, 0, 0, 0}</code></pre>
-<p>下の桁を $1$ 桁自由に決めると、<code>0</code> から <code>9</code> の $10$ 通りになる。</p>
-<pre><code>free[0]: {3, 3, 2, 2}</code></pre>
-<p>上から $1$ 桁目で、<code>3</code> より小さい <code>0,1,2</code> を置く場合を数える。</p>
-<pre><code>0 を置く: free[0][0] = 3
-1 を置く: free[0][3] = 2
-2 を置く: free[0][2] = 2</code></pre>
-<p>ここまでで $7$ 通りである。<br>
-次の桁で <code>1</code> より小さい <code>0</code> を置く場合は、残り桁がないため追加は $0$ 通りである。</p>
-<p>最後に <code>0</code> の分を引く。</p>
-<pre><code>7 - 1 = 6</code></pre>
-<p>よって答えは $6$ である。</p>
+<p>$1$ 以上 $30$ 以下を数える代わりに、$0$ 以上 $31$ 未満を数えてから $0$ の分を引く。</p>
+<p>まず、下 $1$ 桁を自由に決める場合を考える。<br>
+$0$ から $9$ までについて、$4$ で割った余りごとの個数は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">余り</th>
+<th class="table-align-right" style="text-align: right;">$0$</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">個数</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+</tbody>
+</table></div>
+<p>$31$ 未満なので、十の位が $3$ より小さい場合を考える。</p>
+<p>十の位が $0$ のとき、一の位の余りは $0$ であればよい。<br>
+該当する一の位は $0,4,8$ の $3$ 通りである。</p>
+<p>十の位が $1$ のとき、一の位の余りは $3$ であればよい。<br>
+該当する一の位は $3,7$ の $2$ 通りである。</p>
+<p>十の位が $2$ のとき、一の位の余りは $2$ であればよい。<br>
+該当する一の位は $2,6$ の $2$ 通りである。</p>
+<p>ここまでで $3+2+2=7$ 通りである。</p>
+<p>十の位を $3$ と同じにする場合、$31$ 未満にするには一の位は $0$ しか選べない。<br>
+しかし、$3+0$ は $4$ の倍数ではないので追加はない。</p>
+<p>したがって、$0$ 以上 $31$ 未満では $7$ 通りである。<br>
+ここから $0$ の $1$ 通りを引く。</p>
+<p>答えは $7-1=6$ である。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは $10^9+7$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 足し算をするたびに結果を <code>% 1000000007</code> する。</p>

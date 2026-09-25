@@ -66,22 +66,38 @@ f:
 猫 $0$ と猫 $1$ の幸福度は $2$ なので、更新後は次のようになる。</p>
 <pre><code>dp: {2, 0, 0}</code></pre>
 <p>次に猫 $2$ を追加する。<br>
-最初の <code>sum</code> は、猫 $2$ とそれ以前の猫との幸福度の合計である。</p>
-<pre><code>sum = 3 + (-10) = -7</code></pre>
-<p>$j=0$ では、それまでの最大値 $2$ に <code>sum</code> を足す。</p>
-<pre><code>dp[0] = 2 + (-7) = -5</code></pre>
-<p>その後、猫 $0$ との幸福度 $3$ を <code>sum</code> から外す。</p>
-<pre><code>sum = -10</code></pre>
-<p>$j=1$ では、それまでの最大値は引き続き $2$ なので、</p>
-<pre><code>dp[1] = 2 + (-10) = -8</code></pre>
-<p>となる。<br>
-さらに猫 $1$ との幸福度 $-10$ を <code>sum</code> から外すと、<code>sum = 0</code> となる。</p>
-<p>$j=2$ では、</p>
-<pre><code>dp[2] = 2 + 0 = 2</code></pre>
-<p>となる。<br>
-よって、最終的な DP テーブルは次のようになる。</p>
+各 $j$ について、更新前の <code>dp[0]</code> から <code>dp[j]</code> までの最大値と、猫 $2$ から猫 $j$ 以降への幸福度の合計を足す。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$j$</th>
+<th class="table-align-right" style="text-align: right;">更新前の最大値</th>
+<th class="table-align-right" style="text-align: right;">猫 $2$ との幸福度の合計</th>
+<th class="table-align-right" style="text-align: right;">更新後の値</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3+(-10)=-7$</td>
+<td class="table-align-right" style="text-align: right;">$2-7=-5$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$-10$</td>
+<td class="table-align-right" style="text-align: right;">$2-10=-8$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、最終的な DP テーブルは次のようになる。</p>
 <pre><code>dp: {-5, -8, 2}</code></pre>
-<p>最大値は $2$。<br>
+<p>最大値は $2$ である。<br>
 DP テーブルではスコアの半分を持っているので、$2$ 倍した $4$ が答え。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>

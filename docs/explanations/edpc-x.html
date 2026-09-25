@@ -81,10 +81,10 @@ window.MathJax = {
   (2, 2, 20)
   (2, 1, 30)
   (3, 1, 40)</code></pre>
-<p>各ブロックについて $w+s$ を求め、$w+s$ が小さい順にソートする。</p>
+<p>各ブロックの $w+s$ を求め、小さい順に上から使う順序へ並べる。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th>並び順</th>
+<th class="table-align-right" style="text-align: right;">順番</th>
 <th class="table-align-right" style="text-align: right;">$w+s$</th>
 <th class="table-align-right" style="text-align: right;">$w$</th>
 <th class="table-align-right" style="text-align: right;">$s$</th>
@@ -92,49 +92,56 @@ window.MathJax = {
 </tr></thead>
 <tbody>
 <tr>
-<th scope="row">1</th>
-<td class="table-align-right" style="text-align: right;">3</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">30</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$30$</td>
 </tr>
 <tr>
-<th scope="row">2</th>
-<td class="table-align-right" style="text-align: right;">4</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">2</td>
-<td class="table-align-right" style="text-align: right;">20</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$20$</td>
 </tr>
 <tr>
-<th scope="row">3</th>
-<td class="table-align-right" style="text-align: right;">4</td>
-<td class="table-align-right" style="text-align: right;">3</td>
-<td class="table-align-right" style="text-align: right;">1</td>
-<td class="table-align-right" style="text-align: right;">40</td>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$40$</td>
 </tr>
 </tbody>
 </table></div>
-<p><code>dp[j]</code> を、総重量 $j$ での最大価値とする。<br>
-重さ上限は $w+s$ の最大値でよいので、今回は <code>dp[0]</code> から <code>dp[4]</code> までを用意する。<br>
-重量 $0$ の場合を $0$ で初期化しておく。</p>
-<pre><code>dp: {0, -INF, -INF, -INF, -INF}</code></pre>
-<p>$1$ 個目のブロック $(w,s,v)=(2,1,30)$ を見る。<br>
-このブロックの上に載る総重量 $j$ は、$0$ 以上 $1$ 以下でなければならない。</p>
-<p>$j=1$ の場合、<code>dp[1]</code> が <code>-INF</code> なので更新されない。<br>
-$j=0$ の場合、<code>dp[0]</code> が $0$ なので、<code>dp[2]</code> を $0+30=30$ に更新する。</p>
-<pre><code>dp: {0, -INF, 30, -INF, -INF}</code></pre>
-<p>$2$ 個目のブロック $(w,s,v)=(2,2,20)$ を見る。<br>
-このブロックの上に載る総重量 $j$ は、$0$ 以上 $2$ 以下でなければならない。</p>
-<p>$j=2$ の場合、<code>dp[2]</code> が $30$ なので、<code>dp[4]</code> を $30+20=50$ に更新する。<br>
-$j=1$ の場合、<code>dp[1]</code> が <code>-INF</code> なので更新されない。<br>
-$j=0$ の場合、<code>dp[0]</code> が $0$ なので、<code>dp[2]</code> は $\max(30,0+20)=30$ のまま。</p>
-<pre><code>dp: {0, -INF, 30, -INF, 50}</code></pre>
-<p>$3$ 個目のブロック $(w,s,v)=(3,1,40)$ を見る。<br>
-このブロックの上に載る総重量 $j$ は、$0$ 以上 $1$ 以下でなければならない。</p>
-<p>$j=1$ の場合、<code>dp[1]</code> が <code>-INF</code> なので更新されない。<br>
-$j=0$ の場合、<code>dp[0]</code> が $0$ なので、<code>dp[3]</code> を $0+40=40$ に更新する。</p>
-<pre><code>dp: {0, -INF, 30, 40, 50}</code></pre>
-<p>テーブル内の最大値 $50$ が答え。</p>
+<p>この順番を崩さずに、使うブロックだけを選ぶ。</p>
+<p>状態として、現在の塔の総重量ごとに最大価値を持つ。<br>
+総重量がちょうど $j$ の状態から、次のブロックを塔の下へ追加すると考える。</p>
+<p>重さ $w$、丈夫さ $s$ のブロックを追加できるのは、現在の塔の総重量が $s$ 以下の場合だけである。</p>
+<p>最初は空の塔だけなので、総重量 $0$、価値 $0$ の状態だけがある。</p>
+<pre><code>重さ 0: 価値 0</code></pre>
+<p>最初のブロックは $(w,s,v)=(2,1,30)$ である。</p>
+<p>空の塔の重さは $0\leq1$ なので、このブロックを下に追加できる。<br>
+総重量 $2$、価値 $30$ の状態ができる。</p>
+<pre><code>重さ 0: 価値 0
+重さ 2: 価値 30</code></pre>
+<p>次のブロックは $(2,2,20)$ である。</p>
+<p>総重量 $2$ の塔の下には置ける。<br>
+追加すると、総重量 $4$、価値 $50$ になる。</p>
+<p>空の塔の下に置く場合は、総重量 $2$、価値 $20$ になる。<br>
+しかし同じ総重量 $2$ には価値 $30$ の状態が既にあるので、こちらは採用しない。</p>
+<pre><code>重さ 0: 価値 0
+重さ 2: 価値 30
+重さ 4: 価値 50</code></pre>
+<p>最後のブロックは $(3,1,40)$ である。</p>
+<p>このブロックの上に載せられる重さは $1$ 以下である。<br>
+現在ある状態では、空の塔だけが条件を満たす。</p>
+<p>したがって、総重量 $3$、価値 $40$ の状態が増える。</p>
+<pre><code>重さ 0: 価値 0
+重さ 2: 価値 30
+重さ 3: 価値 40
+重さ 4: 価値 50</code></pre>
+<p>最も大きい価値は $50$ なので、答えは $50$。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <h3 id="section-int">答えは <code>int</code> 型からはみ出る</h3>
 <p>答えは、<code>int</code> 型からはみ出る。<br>

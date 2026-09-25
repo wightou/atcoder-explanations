@@ -65,19 +65,16 @@ window.MathJax = {
 <h2 id="section-2">入力例2での動作</h2>
 <p>入力を受け取る。</p>
 <pre><code>s: iwiwwwiiiwiwiwiiwii</code></pre>
-<p>番兵として末尾に <code>ww</code> を追加する。</p>
-<pre><code>s: iwiwwwiiiwiwiwiiwiiww</code></pre>
-<p>前から $1$ 文字ずつ見て、<code>&#x27;i&#x27;</code> の個数と、<code>&#x27;i&#x27;</code> の直後にある <code>&#x27;w&#x27;</code> の個数を数える。<br>
-<code>&#x27;w&#x27;</code> の直後にある <code>&#x27;w&#x27;</code> に到達したら、直前の <code>&#x27;w&#x27;</code> 分を差し引いて、$1$ つのブロックとして処理する。</p>
-<p>前から文字数を数えていくと、$5$ 文字目で <code>&quot;ww&quot;</code> に遭遇する。<br>
-$4$ 文字目の <code>&#x27;w&#x27;</code> を差し引くと、このブロックの <code>&#x27;i&#x27;</code> は $2$ 個、<code>&#x27;w&#x27;</code> は $1$ 個となる。<br>
-よって、このブロックから削除できる <code>&quot;iwi&quot;</code> の最大個数は、$\min(1,\lfloor 2/2\rfloor)=1$ である。</p>
-<p>次は、$6$ 文字目で <code>&quot;ww&quot;</code> に遭遇する。<br>
-ここではブロックの文字がないので、 <code>&quot;iwi&quot;</code> は取り除けない。</p>
-<p>そして、$21$ 文字目で <code>&quot;ww&quot;</code> に遭遇する。<br>
-$20$ 文字目の <code>&#x27;w&#x27;</code> を差し引くと、このブロックの <code>&#x27;i&#x27;</code> は $9$ 個、<code>&#x27;w&#x27;</code> は $4$ 個となる。<br>
-よって、このブロックから削除できる <code>&quot;iwi&quot;</code> の最大個数は、$\min(4,\lfloor 9/2\rfloor)=4$ である。</p>
-<p>したがって、削除できる <code>iwi</code> の最大個数は $1+4=5$ となる。</p>
+<p>中央の <code>&quot;www&quot;</code> は <code>&quot;iwi&quot;</code> の削除に使えない境界となる。<br>
+先頭・末尾に余分な <code>&#x27;w&#x27;</code> があれば、同様に除いて考える。<br>
+削除に関係する非空ブロックは次の $2$ つになる。</p>
+<pre><code>iwi
+iiiwiwiwiiwii</code></pre>
+<p>最初のブロックには <code>&#x27;i&#x27;</code> が $2$ 個、<code>&#x27;w&#x27;</code> が $1$ 個ある。<br>
+したがって、このブロックから削除できる <code>&quot;iwi&quot;</code> の最大個数は $\min(1,\lfloor 2/2\rfloor)=1$ である。</p>
+<p>次のブロックには <code>&#x27;i&#x27;</code> が $9$ 個、<code>&#x27;w&#x27;</code> が $4$ 個ある。<br>
+したがって、このブロックから削除できる <code>&quot;iwi&quot;</code> の最大個数は $\min(4,\lfloor 9/2\rfloor)=4$ である。</p>
+<p>よって、削除できる <code>&quot;iwi&quot;</code> の最大個数は $1+4=5$ となる。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

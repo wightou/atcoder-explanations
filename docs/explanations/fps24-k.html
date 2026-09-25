@@ -52,7 +52,8 @@ $$</p>
 具体的な求め方は「<a href="../knowledge/fps-convolution.html">形式的冪級数</a>」の記事参照。<br>
 計算量は $O(N\log N)$ である。</p>
 <h2 id="section-1">入力例1での動作</h2>
-<p>$N=3$ である。</p>
+<p>入力を受け取る。</p>
+<pre><code>n: 3</code></pre>
 <p>$3$ 次まで考えると、$1+A(x)$ は以下になる。<br>
 $$<br>
 1+A(x)=1+x+2x^2+6x^3<br>
@@ -62,7 +63,7 @@ $$<br>
 \dfrac{1}{1+A(x)}<br>
 =1-x-x^2-3x^3+O(x^4)<br>
 $$</p>
-<p>したがって、<br>
+<p>したがって、次の式になる。<br>
 $$<br>
 1-\dfrac{1}{1+A(x)}<br>
 =x+x^2+3x^3+O(x^4)<br>

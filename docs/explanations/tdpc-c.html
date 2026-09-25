@@ -61,18 +61,32 @@ r: {2000, 2500, 2300, 2700, 2100, 2400, 2600, 2200}</code></pre>
 <p>そして、第 $2$ ラウンド第 $1$ 試合。<br>
 片方の山は、人 $1$ から順に $\{0.053240\ldots,0.946760\ldots\}$ という山。<br>
 片方の山は、人 $3$ から順に $\{0.090909\ldots,0.909091\ldots\}$ という山。</p>
-<p>ここからそれぞれの人の勝率を求めると、</p>
-<ul>
-<li>人 $1$：$0.053240\ldots \times (0.090909\ldots \times \frac{1}{1+10^{(2300-2000)/400}} + 0.909091\ldots \times \frac{1}{1+10^{(2700-2000)/400}})=0.001576\ldots$
-</li>
-<li>人 $2$：$0.946760\ldots \times (0.090909\ldots \times \frac{1}{1+10^{(2300-2500)/400}} + 0.909091\ldots \times \frac{1}{1+10^{(2700-2500)/400}})=0.272174\ldots$
-</li>
-<li>人 $3$：$0.090909\ldots \times (0.053240\ldots \times \frac{1}{1+10^{(2000-2300)/400}} + 0.946760\ldots \times \frac{1}{1+10^{(2500-2300)/400}})=0.024788\ldots$
-</li>
-<li>人 $4$：$0.909091\ldots \times (0.053240\ldots \times \frac{1}{1+10^{(2000-2700)/400}} + 0.946760\ldots \times \frac{1}{1+10^{(2500-2700)/400}})=0.701462\ldots$
-</li>
-</ul>
-<p>となるので、この山のデータは、人 $1$ から順に $\{0.001576\ldots,0.272174\ldots,0.024788\ldots,0.701462\ldots\}$</p>
+<p>ここから、それぞれの人がこの山を勝ち上がる確率を求める。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">人</th>
+<th class="table-align-left" style="text-align: left;">勝ち上がる確率</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-left" style="text-align: left;">$0.053240\ldots \times (0.090909\ldots \times \frac{1}{1+10^{(2300-2000)/400}} + 0.909091\ldots \times \frac{1}{1+10^{(2700-2000)/400}})=0.001576\ldots$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-left" style="text-align: left;">$0.946760\ldots \times (0.090909\ldots \times \frac{1}{1+10^{(2300-2500)/400}} + 0.909091\ldots \times \frac{1}{1+10^{(2700-2500)/400}})=0.272174\ldots$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-left" style="text-align: left;">$0.090909\ldots \times (0.053240\ldots \times \frac{1}{1+10^{(2000-2300)/400}} + 0.946760\ldots \times \frac{1}{1+10^{(2500-2300)/400}})=0.024788\ldots$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-left" style="text-align: left;">$0.909091\ldots \times (0.053240\ldots \times \frac{1}{1+10^{(2000-2700)/400}} + 0.946760\ldots \times \frac{1}{1+10^{(2500-2700)/400}})=0.701462\ldots$</td>
+</tr>
+</tbody>
+</table></div>
+<p>この山のデータは、人 $1$ から順に $\{0.001576\ldots,0.272174\ldots,0.024788\ldots,0.701462\ldots\}$ となる。</p>
 <p>同様に決勝まで各山を統合すると、各選手がそれぞれのラウンドを勝ち上がる確率は次のようになる。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>

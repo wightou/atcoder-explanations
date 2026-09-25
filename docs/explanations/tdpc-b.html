@@ -63,17 +63,12 @@ $$</p>
 m: 5
 a: {2, 4, 5, 4, 2}
 b: {2, 8, 3, 4, 5}</code></pre>
-<p>後ろ側から DP を組み立てるため、<code>a</code> と <code>b</code> を反転する。</p>
-<pre><code>a: {2, 4, 5, 4, 2}
-b: {5, 4, 3, 8, 2}</code></pre>
-<p>説明用に、<code>dp[i][j]</code> を、反転後の <code>a</code> の先頭 $i$ 個と <code>b</code> の先頭 $j$ 個からなる状態での<br>
-「現在の手番の人の得点 $-$ 相手の得点」の最大値とする。<br>
-この DP は $1$ 行分だけを配列に持ってインプレース更新してもよい。<br>
-（書きやすさのために、二次元で実装してもよい）</p>
+<p><code>dp[i][j]</code> を、A が $i$ 個、B が $j$ 個残っている状態の値とする。<br>
+値は「現在の手番の人の得点 $-$ 相手の得点」の最大値とする。</p>
 <p>DP テーブルは次のようになる。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th><code>a</code> の個数＼<code>b</code> の個数</th>
+<th>A の残り個数＼B の残り個数</th>
 <th>$0$</th>
 <th>$1$</th>
 <th>$2$</th>

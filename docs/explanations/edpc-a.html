@@ -127,26 +127,75 @@ $1$ から $2$ と $3$ を経由して $4$ へ行くルートの $20+10+20=50$�
 <p>入力を受け取る。</p>
 <pre><code>n: 4
 h: {10, 30, 40, 20}</code></pre>
-<p><code>dp[i]</code> を、足場 <code>i</code> までの最小コストとする。<br>
-コード上では <code>0-indexed</code> なので、足場 $1$ が <code>dp[0]</code>、足場 $2$ が <code>dp[1]</code> などと対応する。</p>
-<p>まず、<code>dp</code> の初期値を用意する。<br>
-スタートの足場までのコストは $0$ なので、<code>dp[0]</code> は $0$ である。<br>
-足場 $2$ へは足場 $1$ から来るしかないので、<code>dp[1]</code> は $|30-10|=20$ である。</p>
-<pre><code>h : {10, 30, 40, 20}
-dp: {0, 20, ?, ?}</code></pre>
-<p>足場 $3$ への最小コストを求める。<br>
-足場 $2$ から来る場合は、<code>dp[1]+abs(h[1]-h[2])</code> $= 20+|40-30| = 30$。<br>
-足場 $1$ から来る場合は、<code>dp[0]+abs(h[0]-h[2])</code> $= 0+|40-10| = 30$。<br>
-小さい方を採用して、<code>dp[2]</code> は $30$ となる。</p>
-<pre><code>h : {10, 30, 40, 20}
-dp: {0, 20, 30, ?}</code></pre>
-<p>足場 $4$ への最小コストを求める。<br>
-足場 $3$ から来る場合は、<code>dp[2]+abs(h[2]-h[3])</code> $= 30+|20-40| = 50$。<br>
-足場 $2$ から来る場合は、<code>dp[1]+abs(h[1]-h[3])</code> $= 20+|20-30| = 30$。<br>
-小さい方を採用して、<code>dp[3]</code> は $30$ となる。</p>
-<pre><code>h : {10, 30, 40, 20}
-dp: {0, 20, 30, 30}</code></pre>
-<p>最後の足場の値、つまり <code>dp</code> の最後尾の値が答え。</p>
+<p>各足場までの最小コストを、前から順に求める。</p>
+<p>足場 $1$ はスタート地点なので、最小コストは $0$ である。</p>
+<p>足場 $2$ へは、足場 $1$ から移動するしかない。<br>
+移動コストは $|30-10|=20$ である。<br>
+よって、最小コストは $20$ となる。</p>
+<p>ここまでで、各足場までの最小コストは次のようになっている。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">足場</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">最小コスト</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$20$</td>
+<td class="table-align-right" style="text-align: right;">未計算</td>
+<td class="table-align-right" style="text-align: right;">未計算</td>
+</tr>
+</tbody>
+</table></div>
+<p>足場 $3$ へは、足場 $2$ または足場 $1$ から来る。</p>
+<p>足場 $2$ から来る場合のコストは $20+|40-30|=30$ である。<br>
+足場 $1$ から来る場合のコストも $0+|40-10|=30$ である。</p>
+<p>よって、足場 $3$ までの最小コストは $30$ となる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">足場</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">最小コスト</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$20$</td>
+<td class="table-align-right" style="text-align: right;">$30$</td>
+<td class="table-align-right" style="text-align: right;">未計算</td>
+</tr>
+</tbody>
+</table></div>
+<p>足場 $4$ へは、足場 $3$ または足場 $2$ から来る。</p>
+<p>足場 $3$ から来る場合のコストは $30+|20-40|=50$ である。<br>
+足場 $2$ から来る場合のコストは $20+|20-30|=30$ である。</p>
+<p>よって、足場 $4$ までの最小コストは $30$ となる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">足場</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">最小コスト</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$20$</td>
+<td class="table-align-right" style="text-align: right;">$30$</td>
+<td class="table-align-right" style="text-align: right;">$30$</td>
+</tr>
+</tbody>
+</table></div>
+<p>最後の足場までの最小コスト $30$ が答え。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <h3 id="section-dp">範囲のはみだしに注意（もらうDPの場合）</h3>
 <p>足場 $1$ だけでなく、足場 $2$ も特別扱いしないといけない。<br>

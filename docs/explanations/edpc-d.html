@@ -49,26 +49,97 @@ window.MathJax = {
 m: 8
 w: {3, 4, 5}
 v: {30, 50, 60}</code></pre>
-<p><code>dp[j]</code> を、総重量 $j$ 以下での最大価値とする。<br>
-今回は <code>dp[0]</code> から <code>dp[8]</code> までを用意する。</p>
-<p>何も品物を見ていない状態では、どの重さ上限でも価値は $0$ である。</p>
-<pre><code>dp: {0, 0, 0, 0, 0, 0, 0, 0, 0}</code></pre>
-<p>$1$ 個目の品物 $(w,v)=(3,30)$ を見る。<br>
-重さ上限 $3$ 以上であれば、この品物を入れられる。</p>
-<pre><code>dp: {0, 0, 0, 30, 30, 30, 30, 30, 30}</code></pre>
-<p>$2$ 個目の品物 $(w,v)=(4,50)$ を見る。<br>
-重さ上限 $4$ 以上であれば、この品物を入れられる。</p>
-<p>例えば、重さ上限 $8$ では、すでにある価値 $30$ と、<br>
-$1$ 個目と $2$ 個目を両方入れた価値 $30+50=80$ を比較する。<br>
-よって、<code>dp[8]</code> は $80$ になる。</p>
-<pre><code>dp: {0, 0, 0, 30, 50, 50, 50, 80, 80}</code></pre>
-<p>$3$ 個目の品物 $(w,v)=(5,60)$ を見る。<br>
-重さ上限 $5$ 以上であれば、この品物を入れられる。</p>
-<p>例えば、重さ上限 $8$ では、すでにある価値 $80$ と、<br>
-$1$ 個目と $3$ 個目を入れた価値 $30+60=90$ を比較する。<br>
-よって、<code>dp[8]</code> は $90$ になる。</p>
-<pre><code>dp: {0, 0, 0, 30, 50, 60, 60, 80, 90}</code></pre>
-<p>DP テーブルの一番後ろの値、つまり <code>dp[8]</code> の $90$ が答え。</p>
+<p>重さ上限ごとに、得られる価値の最大値を持つ。<br>
+何も品物を見ていない間は、どの重さ上限でも価値は $0$ である。</p>
+<p>$1$ 個目は重さ $3$、価値 $30$ である。<br>
+重さ上限が $3$ 以上なら、この品物を入れられる。<br>
+そのため、価値の最大値は $30$ になる。</p>
+<p>$2$ 個目は重さ $4$、価値 $50$ である。<br>
+例えば、重さ上限 $8$ の場合を考える。<br>
+それまでの最大値は $30$ である。<br>
+$1$ 個目と $2$ 個目を入れると、価値は $30+50=80$ になる。<br>
+よって、最大値を $80$ に更新する。</p>
+<p>$3$ 個目は重さ $5$、価値 $60$ である。<br>
+再び、重さ上限 $8$ の場合を考える。<br>
+それまでの最大値は $80$ である。<br>
+$1$ 個目と $3$ 個目を入れると、価値は $30+60=90$ になる。<br>
+よって、最大値を $90$ に更新する。</p>
+<p>各品物まで処理した時点での状態は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">重さ上限</th>
+<th class="table-align-right" style="text-align: right;">初期状態</th>
+<th class="table-align-right" style="text-align: right;">$1$ 個目まで</th>
+<th class="table-align-right" style="text-align: right;">$2$ 個目まで</th>
+<th class="table-align-right" style="text-align: right;">$3$ 個目まで</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$30$</td>
+<td class="table-align-right" style="text-align: right;">$30$</td>
+<td class="table-align-right" style="text-align: right;">$30$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$30$</td>
+<td class="table-align-right" style="text-align: right;">$50$</td>
+<td class="table-align-right" style="text-align: right;">$50$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$5$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$30$</td>
+<td class="table-align-right" style="text-align: right;">$50$</td>
+<td class="table-align-right" style="text-align: right;">$60$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$6$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$30$</td>
+<td class="table-align-right" style="text-align: right;">$50$</td>
+<td class="table-align-right" style="text-align: right;">$60$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$7$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$30$</td>
+<td class="table-align-right" style="text-align: right;">$80$</td>
+<td class="table-align-right" style="text-align: right;">$80$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$8$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$30$</td>
+<td class="table-align-right" style="text-align: right;">$80$</td>
+<td class="table-align-right" style="text-align: right;">$90$</td>
+</tr>
+</tbody>
+</table></div>
+<p>重さ上限 $8$ での最大価値 $90$ が答え。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>価値の和は、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>

@@ -65,21 +65,85 @@ window.MathJax = {
 <p>入力を受け取る。</p>
 <pre><code>n: 4
 s: &lt;&gt;&lt;</code></pre>
-<p><code>dp[i]</code> を、条件を満たす順列のうち、末尾が <code>i</code> であるものの数とする。</p>
-<p>最初は、長さ $1$ の順列だけなので次の状態である。</p>
-<pre><code>dp: {1}</code></pre>
-<p>$1$ 文字目は <code>&#x27;&lt;&#x27;</code> である。<br>
-先頭に <code>0</code> を足してから、前から累積和を取る。</p>
-<pre><code>dp: {0, 1}</code></pre>
-<p>$2$ 文字目は <code>&#x27;&gt;&#x27;</code> である。<br>
-末尾に <code>0</code> を足してから、後ろから累積和を取る。</p>
-<pre><code>dp: {1, 1, 0}</code></pre>
-<p>$3$ 文字目は <code>&#x27;&lt;&#x27;</code> である。<br>
-先頭に <code>0</code> を足してから、前から累積和を取る。</p>
-<pre><code>dp: {0, 1, 2, 2}</code></pre>
-<p>全体の和を取る。</p>
-<pre><code>0 + 1 + 2 + 2 = 5</code></pre>
-<p>よって答えは $5$ である。</p>
+<p>長さごとに、条件を満たす順列を末尾の値で分類して数える。</p>
+<p>長さ $1$ では順列は $1$ つだけである。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">末尾の値</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">個数</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+</tbody>
+</table></div>
+<p>最初の条件は $&lt;$ である。</p>
+<p>新しい末尾が $j$ の順列は、それまでの末尾が $j$ 未満だった順列から作れる。<br>
+したがって、左からの累積和を使う。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">新しい末尾</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">それまでの末尾が小さいものの合計</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+</tbody>
+</table></div>
+<p>長さ $2$ では次の状態になる。</p>
+<pre><code>{0, 1}</code></pre>
+<p>次の条件は $&gt;$ である。</p>
+<p>新しい末尾が $j$ の順列は、それまでの末尾が $j$ 以上だった順列から作れる。<br>
+今度は右からの累積和を使う。</p>
+<p>長さ $2$ の状態 $\{0,1\}$ から求めると、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">新しい末尾</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">それまでの末尾が $j$ 以上の合計</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、長さ $3$ の状態は次のようになる。</p>
+<pre><code>{1, 1, 0}</code></pre>
+<p>最後の条件は $&lt;$ である。<br>
+再び左からの累積和を使う。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">新しい末尾</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">それまでの末尾が小さいものの合計</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+</tbody>
+</table></div>
+<p>長さ $4$ の状態は次のようになる。</p>
+<pre><code>{0, 1, 2, 2}</code></pre>
+<p>全ての末尾について足すと、$0+1+2+2=5$ となる。<br>
+したがって、答えは $5$。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは $10^9+7$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 足し算をするたびに結果を <code>% 1000000007</code> する。</p>

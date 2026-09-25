@@ -48,45 +48,71 @@ window.MathJax = {
 <pre><code>n: 3
 k: 4
 a: {1, 2, 3}</code></pre>
-<p><code>dp[i]</code> を、ここまで見た子供たちに合計 <code>i</code> 個の飴を配る方法数とする。</p>
-<p>最初は、誰にも配っていないので、飴 $0$ 個を配る方法が $1$ 通りである。</p>
-<pre><code>dp: {1, 0, 0, 0, 0}</code></pre>
-<p>$1$ 人目の子供には、飴を $0$ 個以上 $1$ 個以下渡せる。<br>
-（ほとんど $0$ で意味のある更新の様子がよく見られないので省略）</p>
-<pre><code>dp: {1, 1, 0, 0, 0}</code></pre>
-<p>$2$ 人目の子供には、飴を $0$ 個以上 $2$ 個以下渡せる。<br>
-（ほとんど $0$ で意味のある更新の様子がよく見られないので省略）</p>
-<pre><code>dp: {1, 2, 2, 1, 0}</code></pre>
-<p>$3$ 人目の子供には、飴を $0$ 個以上 $3$ 個以下渡せる。<br>
-更新前の DP テーブルは次の状態である。</p>
-<pre><code>dp: {1, 2, 2, 1, 0}</code></pre>
-<p><code>dp[i]</code> 自身はそのまま残し、<code>sum</code> に <code>dp[i-3]</code> から <code>dp[i-1]</code> までの和を持たせて足す。<br>
-そして、$i$ を $1$ つ減らすたびに、その区間を $1$ つ左へずらす。</p>
-<p>まず、$i=4$ のときは、<code>sum</code> に次の和を持たせている。</p>
-<pre><code>sum = dp[1] + dp[2] + dp[3]
-    = 2 + 2 + 1
-    = 5</code></pre>
-<p>したがって、<code>dp[4]</code> は次のように更新される。</p>
-<pre><code>dp[4] = 0 + 5
-      = 5</code></pre>
-<p>次に、$i=3$ の計算へ移るため、窓を $1$ つ左へずらす。<br>
-今まで窓に入っていた <code>dp[3]</code> を取り除き、新しく <code>dp[0]</code> を加える。</p>
-<pre><code>sum = 5 - dp[3] + dp[0]
-    = 5 - 1 + 1
-    = 5</code></pre>
-<p>この <code>sum</code> は、<code>dp[0] + dp[1] + dp[2]</code> に対応する。<br>
-よって、<code>dp[3]</code> は次のように更新される。</p>
-<pre><code>dp[3] = 1 + 5
-      = 6</code></pre>
-<p>同じように窓を左へずらしながら処理すると、次のようになる。</p>
-<pre><code>i=2: sum = 3, dp[2] = 2 + 3 = 5
-i=1: sum = 1, dp[1] = 2 + 1 = 3
-i=0: sum = 0, dp[0] = 1 + 0 = 1</code></pre>
-<p>ここで参照している <code>dp</code> の値は更新前のものである。<br>
-右から左へ処理しているので、必要な値はまだ上書きされていない。</p>
-<p>実際に全体を更新すると、次のようになる。</p>
-<pre><code>dp: {1, 3, 5, 6, 5}</code></pre>
-<p><code>dp[4]</code> の $5$ が答え。</p>
+<p>合計 $0$ 個から $4$ 個までについて、ここまでの子供たちへの配り方の数を考える。</p>
+<p>まだ誰にも配っていないときは、合計 $0$ 個だけが $1$ 通りである。</p>
+<pre><code>{1, 0, 0, 0, 0}</code></pre>
+<p>$1$ 人目には $0$ 個または $1$ 個を渡せる。</p>
+<pre><code>{1, 1, 0, 0, 0}</code></pre>
+<p>$2$ 人目には $0$ 個以上 $2$ 個以下を渡せる。</p>
+<p>例えば合計 $2$ 個にするには、それまでの合計が $2,1,0$ 個の場合が使える。<br>
+方法数は $0+1+1=2$ 通りである。</p>
+<p>全て求めると、次のようになる。</p>
+<pre><code>{1, 2, 2, 1, 0}</code></pre>
+<p>$3$ 人目には $0$ 個以上 $3$ 個以下を渡せる。</p>
+<p>更新前の、合計 $0$ 個から $4$ 個までの方法数を $1,2,2,1,0$ とする。</p>
+<p>合計 $x$ 個にする方法数は、更新前の合計 $x,x-1,x-2,x-3$ 個の方法数の和である。</p>
+<p>これを毎回最初から足すと時間がかかるので、重なっている部分を sliding window で使い回す。</p>
+<p>例えば合計 $4$ 個について、$3$ 人目に $1$ 個以上 $3$ 個以下を渡す場合の和は $2+2+1=5$ である。<br>
+$0$ 個渡す場合の $0$ 通りも加えて、合計 $5$ 通りとなる。</p>
+<p>次に合計 $3$ 個を考える。<br>
+先ほどの和 $5$ から、合計 $3$ 個の $1$ 通りを外す。<br>
+代わりに、合計 $0$ 個の $1$ 通りを加えると $5-1+1=5$ となる。</p>
+<p>$0$ 個渡す場合の $1$ 通りも加えるので、合計 $6$ 通りとなる。</p>
+<p>同じように窓をずらすと、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">配る飴の合計</th>
+<th class="table-align-right" style="text-align: right;">$0$ 個渡す場合</th>
+<th class="table-align-right" style="text-align: right;">$1$～$3$ 個渡す場合</th>
+<th class="table-align-right" style="text-align: right;">更新後</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+</tbody>
+</table></div>
+<p>更新後は次のようになる。</p>
+<pre><code>{1, 3, 5, 6, 5}</code></pre>
+<p>飴を合計 $4$ 個配る方法は $5$ 通りである。<br>
+したがって、答えは $5$。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは $10^9+7$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 足し算や引き算をするたびに結果を <code>% 1000000007</code> する。<br>

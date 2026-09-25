@@ -59,34 +59,59 @@ window.MathJax = {
 <pre><code>n: 2
 k: 7
 a: {2, 3}</code></pre>
-<p><code>dp[i]</code> を、石が <code>i</code> 個ある状態が先手必勝かどうかとする。</p>
-<p>最初は、全て後手必勝として初期化されている。</p>
-<pre><code>dp: {false, false, false, false, false, false, false, false}</code></pre>
-<p>石の数が $0$ 個の場合、返す選択肢がないので、後手の勝ちである。</p>
-<pre><code>dp[0]: false</code></pre>
-<p>石の数が $1$ 個の場合も、返す選択肢がないので、後手の勝ちである。</p>
-<pre><code>dp[1]: false</code></pre>
-<p>石の数が $2$ 個の場合、石を $2$ 個取れば <code>dp[0]</code> の状態にできる。<br>
-これは後手勝ち状態で返す選択肢なので、先手の勝ちである。</p>
-<pre><code>dp[2]: true</code></pre>
-<p>石の数が $3$ 個の場合、石を $2$ 個取れば <code>dp[1]</code> の状態にできる。<br>
-これは後手勝ち状態で返す選択肢なので、先手の勝ちである。</p>
-<pre><code>dp[3]: true</code></pre>
-<p>石の数が $4$ 個の場合、石を $3$ 個取れば <code>dp[1]</code> の状態にできる。<br>
-これは後手勝ち状態で返す選択肢なので、先手の勝ちである。</p>
-<pre><code>dp[4]: true</code></pre>
-<p>石の数が $5$ 個の場合、石を $2$ 個取っても <code>dp[3]</code>、石を $3$ 個取っても <code>dp[2]</code> の状態になる。<br>
-どちらも先手勝ち状態なので、後手の勝ちである。</p>
-<pre><code>dp[5]: false</code></pre>
-<p>石の数が $6$ 個の場合、石を $2$ 個取っても <code>dp[4]</code>、石を $3$ 個取っても <code>dp[3]</code> の状態になる。<br>
-どちらも先手勝ち状態なので、後手の勝ちである。</p>
-<pre><code>dp[6]: false</code></pre>
-<p>石の数が $7$ 個の場合、石を $2$ 個取れば <code>dp[5]</code> の状態にできる。<br>
-これは後手勝ち状態で返す選択肢なので、先手の勝ちである。</p>
-<pre><code>dp[7]: true</code></pre>
-<p>最終的に、DP テーブルは次のようになる。</p>
-<pre><code>dp: {false, false, true, true, true, false, false, true}</code></pre>
-<p><code>dp[7]</code> は <code>true</code> なので、答えは <code>First</code>。</p>
+<p>石の数が少ない方から、手番側が勝てるかを決める。<br>
+$1$ 回で取れる石の数は $2$ 個か $3$ 個である。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">石の数</th>
+<th class="table-align-center" style="text-align: center;">手番側</th>
+<th class="table-align-left" style="text-align: left;">理由</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-center" style="text-align: center;">負け</td>
+<td class="table-align-left" style="text-align: left;">石を取れない</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-center" style="text-align: center;">負け</td>
+<td class="table-align-left" style="text-align: left;">石を取れない</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-center" style="text-align: center;">勝ち</td>
+<td class="table-align-left" style="text-align: left;">$2$ 個取ると、石が $0$ 個の負け状態になる</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-center" style="text-align: center;">勝ち</td>
+<td class="table-align-left" style="text-align: left;">$2$ 個取ると、石が $1$ 個の負け状態になる</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-center" style="text-align: center;">勝ち</td>
+<td class="table-align-left" style="text-align: left;">$3$ 個取ると、石が $1$ 個の負け状態になる</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$5$</th>
+<td class="table-align-center" style="text-align: center;">負け</td>
+<td class="table-align-left" style="text-align: left;">$2$ 個取っても $3$ 個取っても、相手を勝ち状態にする</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$6$</th>
+<td class="table-align-center" style="text-align: center;">負け</td>
+<td class="table-align-left" style="text-align: left;">$2$ 個取っても $3$ 個取っても、相手を勝ち状態にする</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$7$</th>
+<td class="table-align-center" style="text-align: center;">勝ち</td>
+<td class="table-align-left" style="text-align: left;">$2$ 個取ると、石が $5$ 個の負け状態になる</td>
+</tr>
+</tbody>
+</table></div>
+<p>石が $7$ 個ある初期状態では手番側が勝てる。<br>
+したがって、答えは <code>First</code>。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

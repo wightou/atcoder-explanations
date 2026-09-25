@@ -158,34 +158,91 @@ DPスタート部分は、$1$ 日目だけデータをそのまま入れる。<b
 a: {10, 20, 30}
 b: {40, 50, 60}
 c: {70, 80, 90}</code></pre>
-<p><code>dp</code> の中身は以下とする。</p>
-<ul>
-<li><code>dp[0]</code> は「その日に A をする場合の幸福度最大値」
-</li>
-<li><code>dp[1]</code> は「その日に B をする場合の幸福度最大値」
-</li>
-<li><code>dp[2]</code> は「その日に C をする場合の幸福度最大値」
-</li>
-</ul>
-<p>初日分で <code>dp</code> を初期化する。</p>
-<pre><code>dp: {10, 40, 70}</code></pre>
-<p>$2$ 日目の分を更新する。</p>
-<p>$2$ 日目に A をする場合、$1$ 日目は B または C。<br>
-よって、<code>max(dp[1], dp[2])+a[1]</code> $= \max(40,70)+20 = 90$。<br>
-$2$ 日目に B をする場合、$1$ 日目は A または C。<br>
-よって、<code>max(dp[0], dp[2])+b[1]</code> $= \max(10,70)+50 = 120$。<br>
-$2$ 日目に C をする場合、$1$ 日目は A または B。<br>
-よって、<code>max(dp[0], dp[1])+c[1]</code> $= \max(10,40)+80 = 120$。</p>
-<pre><code>dp: {90, 120, 120}</code></pre>
-<p>$3$ 日目の分を更新する。</p>
-<p>$3$ 日目に A をする場合、$2$ 日目は B または C。<br>
-よって、<code>max(dp[1], dp[2])+a[2]</code> $= \max(120,120)+30 = 150$。<br>
-$3$ 日目に B をする場合、$2$ 日目は A または C。<br>
-よって、<code>max(dp[0], dp[2])+b[2]</code> $= \max(90,120)+60 = 180$。<br>
-$3$ 日目に C をする場合、$2$ 日目は A または B。<br>
-よって、<code>max(dp[0], dp[1])+c[2]</code> $= \max(90,120)+90 = 210$。</p>
-<pre><code>dp: {150, 180, 210}</code></pre>
-<p>最終日には何をやってもいいので、<code>dp</code> の最大値 $210$ が答え。</p>
+<p>各日について、そこまでの幸福度の最大値を求める。<br>
+その日に A・B・C のどれをしたかで、状態を分けて持つ。</p>
+<p>$1$ 日目は、それぞれの行動をそのまま選ぶので次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">日</th>
+<th class="table-align-right" style="text-align: right;">A で終わる</th>
+<th class="table-align-right" style="text-align: right;">B で終わる</th>
+<th class="table-align-right" style="text-align: right;">C で終わる</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$ 日目</th>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td class="table-align-right" style="text-align: right;">$40$</td>
+<td class="table-align-right" style="text-align: right;">$70$</td>
+</tr>
+</tbody>
+</table></div>
+<p>$2$ 日目に A をする場合、$1$ 日目は B または C である。<br>
+最大値は $\max(40,70)+20=90$ となる。</p>
+<p>B をする場合は、A または C から遷移する。<br>
+最大値は $\max(10,70)+50=120$ となる。</p>
+<p>C をする場合は、A または B から遷移する。<br>
+最大値は $\max(10,40)+80=120$ となる。</p>
+<p>$2$ 日目まで求めると、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">日</th>
+<th class="table-align-right" style="text-align: right;">A で終わる</th>
+<th class="table-align-right" style="text-align: right;">B で終わる</th>
+<th class="table-align-right" style="text-align: right;">C で終わる</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$ 日目</th>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td class="table-align-right" style="text-align: right;">$40$</td>
+<td class="table-align-right" style="text-align: right;">$70$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$ 日目</th>
+<td class="table-align-right" style="text-align: right;">$90$</td>
+<td class="table-align-right" style="text-align: right;">$120$</td>
+<td class="table-align-right" style="text-align: right;">$120$</td>
+</tr>
+</tbody>
+</table></div>
+<p>$3$ 日目も同様に計算する。</p>
+<p>A で終わる場合を考える。<br>
+最大値は $\max(120,120)+30=150$ である。<br>
+B で終わる場合を考える。<br>
+最大値は $\max(90,120)+60=180$ である。<br>
+C で終わる場合を考える。<br>
+最大値は $\max(90,120)+90=210$ である。</p>
+<p>最終的には次の状態になる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">日</th>
+<th class="table-align-right" style="text-align: right;">A で終わる</th>
+<th class="table-align-right" style="text-align: right;">B で終わる</th>
+<th class="table-align-right" style="text-align: right;">C で終わる</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$ 日目</th>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td class="table-align-right" style="text-align: right;">$40$</td>
+<td class="table-align-right" style="text-align: right;">$70$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$ 日目</th>
+<td class="table-align-right" style="text-align: right;">$90$</td>
+<td class="table-align-right" style="text-align: right;">$120$</td>
+<td class="table-align-right" style="text-align: right;">$120$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$ 日目</th>
+<td class="table-align-right" style="text-align: right;">$150$</td>
+<td class="table-align-right" style="text-align: right;">$180$</td>
+<td class="table-align-right" style="text-align: right;">$210$</td>
+</tr>
+</tbody>
+</table></div>
+<p>最終日はどの行動で終わってもよいので、最大値 $210$ が答え。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>

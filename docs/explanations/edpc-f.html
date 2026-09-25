@@ -44,12 +44,13 @@ window.MathJax = {
 <p>入力を受け取る。</p>
 <pre><code>s: axyb
 t: abyxb</code></pre>
-<p><code>dp[i][j]</code> を、<code>s</code> の先頭 $i$ 文字と <code>t</code> の先頭 $j$ 文字での最長共通部分列の長さとする。</p>
-<p>DP テーブルを埋めると、次のようになる。</p>
+<p>$S$ と $T$ の各接頭辞について考える。<br>
+各組の最長共通部分列の長さを求める。<br>
+表を埋めると次のようになる。</p>
 <div class="markdown-table-scroll"><table>
 <thead><tr>
-<th><code>s</code> ＼ <code>t</code></th>
-<th class="table-align-right" style="text-align: right;"><code>空</code></th>
+<th>$S$ ＼ $T$</th>
+<th class="table-align-right" style="text-align: right;">空文字</th>
 <th class="table-align-right" style="text-align: right;"><code>a</code></th>
 <th class="table-align-right" style="text-align: right;"><code>ab</code></th>
 <th class="table-align-right" style="text-align: right;"><code>aby</code></th>
@@ -58,7 +59,7 @@ t: abyxb</code></pre>
 </tr></thead>
 <tbody>
 <tr>
-<th scope="row"><code>空</code></th>
+<th scope="row">空文字</th>
 <td class="table-align-right" style="text-align: right;">0</td>
 <td class="table-align-right" style="text-align: right;">0</td>
 <td class="table-align-right" style="text-align: right;">0</td>
@@ -104,13 +105,23 @@ t: abyxb</code></pre>
 </tr>
 </tbody>
 </table></div>
-<p>最後に、右下からバックトレースする。</p>
-<p>まず、<code>s[3]</code> と <code>t[4]</code> はどちらも <code>b</code> なので、答えに <code>b</code> を追加する。<br>
-その後、<code>s[2]</code> と <code>t[3]</code> は異なるので、DP テーブルの値を保てる方へ戻る。</p>
-<p>次に、<code>s[1]</code> と <code>t[3]</code> はどちらも <code>x</code> なので、答えに <code>x</code> を追加する。<br>
-その後、<code>s[0]</code> と <code>t[2]</code>、<code>s[0]</code> と <code>t[1]</code> は異なるので、DP テーブルの値を保てる方へ戻る。</p>
-<p>最後に、<code>s[0]</code> と <code>t[0]</code> はどちらも <code>a</code> なので、答えに <code>a</code> を追加する。</p>
-<p>この時点で、後ろから見た答えは <code>bxa</code> である。<br>
+<p>右下から表を逆向きにたどり、実際の最長共通部分列を復元する。</p>
+<p>まず、<code>axyb</code> と <code>abyxb</code> を見る。<br>
+末尾はどちらも <code>b</code> なので、<code>b</code> を採用する。<br>
+両方の末尾を取り除き、<code>axy</code> と <code>abyx</code> へ移る。</p>
+<p>末尾の <code>y</code> と <code>x</code> は異なる。<br>
+<code>axy</code> の末尾を取り除いても、長さ $2$ を保てる。<br>
+そのため、<code>ax</code> と <code>abyx</code> の組へ移る。</p>
+<p>この組では、末尾がどちらも <code>x</code> である。<br>
+<code>x</code> を採用して、両方の末尾を取り除く。<br>
+次は <code>a</code> と <code>aby</code> を見る。</p>
+<p>末尾の <code>a</code> と <code>y</code> は異なる。<br>
+<code>aby</code> の末尾を取り除いても、長さ $1$ を保てる。<br>
+そのため、<code>a</code> と <code>ab</code> の組へ移る。<br>
+同様に、<code>a</code> と <code>a</code> の組まで移る。</p>
+<p>最後は、末尾がどちらも <code>a</code> である。<br>
+<code>a</code> を採用する。</p>
+<p>逆向きに採用した文字列は <code>bxa</code> となる。<br>
 これを反転した <code>axb</code> が答え。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>特になし。</p>
