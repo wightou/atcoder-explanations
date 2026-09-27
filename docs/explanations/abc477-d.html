@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC477 D - Masking Tape</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC477 D - Masking Tape</h1>
+      <p class="explanation-title-ja">マスキング</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc477/tasks/abc477_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc477/submissions/79571539" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>愚直にやると、$O(NQ)$ で明らかにTLE。<br>
+よって、高速化が必要。<br>
+そして「それまでの状況を見ることもなく破棄してこうする」系問題には、バックトレースが有効。<br>
+すなわち、逆再生の中で最初に塗られたときを考えればいい。</p>
+<p>とはいえ、最後にタイルがあるかないかは普通にシミュレーションしないとわからない。<br>
+よって、順方向 $\to$ 逆方向と $2$ 回シミュレーションする。</p>
+<p>最初にクエリ $1$ のみシミュレーションをし、最後のタイルの様子を求める。<br>
+そこから $1$ つずつ巻き戻していく。<br>
+クエリ $1$ は、普通にタイルの反転処理をする。<br>
+クエリ $2$ は、一度も塗ったことがなくタイルがないところを全て塗る。<br>
+これを実装するには、以下の $2$ つのデータを <code>set</code> か何かで持つとよい。</p>
+<ul>
+<li>一度も塗ったことがなく、タイルがあるマス一覧
+</li>
+<li>一度も塗ったことがなく、タイルがないマス一覧
+</li>
+</ul>
+<p>バックトレース終了まで一度も塗られなかったマスは、<code>&#x27;a&#x27;</code> を書き込む。</p>
+<p>計算量は $O((N+Q)\log N)$ である。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 3
+q: 5
+
+queries:
+1 2
+2 b
+1 1
+1 2
+2 c</code></pre>
+<p>最初にクエリ $1$ だけを順方向に処理して、最後のタイルの状態を求める。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-left" style="text-align: left;">処理</th>
+<th class="table-align-center" style="text-align: center;">タイルがあるマス</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">開始時</th>
+<td class="table-align-center" style="text-align: center;">なし</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row"><code>1 2</code></th>
+<td class="table-align-center" style="text-align: center;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row"><code>1 1</code></th>
+<td class="table-align-center" style="text-align: center;">$1,2$</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row"><code>1 2</code></th>
+<td class="table-align-center" style="text-align: center;">$1$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、全クエリ終了時にはマス $1$ にだけタイルがある。<br>
+ここからクエリを逆順に処理する。</p>
+<p>色がまだ確定していないマスだけについて、タイルがあるかないかを管理する。<br>
+開始時は、タイルがある未確定マスが $\{1\}$、タイルがない未確定マスが $\{2,3\}$ である。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-center" style="text-align: center;">逆向きに見るクエリ</th>
+<th class="table-align-center" style="text-align: center;">タイルありの未確定マス</th>
+<th class="table-align-center" style="text-align: center;">タイルなしの未確定マス</th>
+<th class="table-align-left" style="text-align: left;">確定した色</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">開始時</th>
+<td class="table-align-center" style="text-align: center;">$\{1\}$</td>
+<td class="table-align-center" style="text-align: center;">$\{2,3\}$</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>2 c</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1\}$</td>
+<td class="table-align-center" style="text-align: center;">$\{\}$</td>
+<td class="table-align-left" style="text-align: left;">$2,3$ が <code>c</code></td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>1 2</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1\}$</td>
+<td class="table-align-center" style="text-align: center;">$\{\}$</td>
+<td class="table-align-left" style="text-align: left;">$2,3$ が <code>c</code></td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>1 1</code></th>
+<td class="table-align-center" style="text-align: center;">$\{\}$</td>
+<td class="table-align-center" style="text-align: center;">$\{1\}$</td>
+<td class="table-align-left" style="text-align: left;">$2,3$ が <code>c</code></td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>2 b</code></th>
+<td class="table-align-center" style="text-align: center;">$\{\}$</td>
+<td class="table-align-center" style="text-align: center;">$\{\}$</td>
+<td class="table-align-left" style="text-align: left;">$1$ が <code>b</code>、$2,3$ が <code>c</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>最後に、バックトレース終了まで一度も塗られなかったマスがないか確認する。<br>
+この入力では、該当するマスはない。</p>
+<p>全てのマスの色が確定し、最終的な文字列は <code>bcc</code> となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/simulation.html">シミュレーション</a>
+<a class="tag" href="../tags/backtrace.html">バックトレース</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

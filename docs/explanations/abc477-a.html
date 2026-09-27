@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>二次元累積和</title>
+<title>ABC477 A - Traffic Light</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,35 +28,44 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>二次元累積和</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC477 A - Traffic Light</h1>
+      <p class="explanation-title-ja">信号機</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc477/tasks/abc477_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc477/submissions/79571511" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>入力は文字が $1$ つなので、<code>char</code> 型の変数を $1$ つ用意し、<code>cin</code> で入力を受け取る。<br>
+もしくは、今回の場合は <code>string</code> 型で、長さが $1$ 文字の文字列として受け取っても問題ない。</p>
+<p>if文で $3$ つの動作を分けたいので、以下のように記述する。</p>
+<pre><code>if (c==&#x27;B&#x27;) {
+  // &#x27;B&#x27;だったときの動作
+} else if (c==&#x27;Y&#x27;) {
+  // &#x27;Y&#x27;だったときの動作
+} else if (c==&#x27;R&#x27;) {
+  // &#x27;R&#x27;だったときの動作
+}</code></pre>
+<p>中身は、直接文字を <code>cout</code> してもいいし、事前に用意した出力用変数を書き換えてもよい。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>c: &#x27;B&#x27;</code></pre>
+<p><code>c==&#x27;B&#x27;</code> が <code>true</code> なので、次の信号機の色である <code>&#x27;Y&#x27;</code> を出力する。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 高速化系</p>
-      <p><strong>難易度:</strong> D問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li><a href="../knowledge/cumulative-sum.html">累積和</a></li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-d.html">ABC461 D - Count Subgrid Sum = K</a></li>
-        <li><a href="../explanations/abc464-e.html">ABC464 E - Fill-Rect Query</a></li>
-        <li><a href="../explanations/abc465-f.html">ABC465 F - Sjeltzer?</a></li>
-        <li><a href="../explanations/abc476-f.html">ABC476 F - Chebyshev Cafe</a></li>
-        <li><a href="../explanations/abc477-f.html">ABC477 F - Count Cells in a Window</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/input-output.html">入出力</a>
+<a class="tag" href="../tags/char.html">char型</a>
+<a class="tag" href="../tags/string.html">string型</a>
+<a class="tag" href="../tags/if-statement.html">if分岐</a>
+      </div>
+      
     </section>
 
     <section class="side-card">

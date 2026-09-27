@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC477 C - Range Search Query</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC477 C - Range Search Query</h1>
+      <p class="explanation-title-ja">範囲検索クエリ</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc477/tasks/abc477_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc477/submissions/79571524" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc477/submissions/79571531" target="_blank" rel="noopener noreferrer">別解</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>まず、愚直にやるのは簡単。<br>
+ただし、それでは計算量が $O(QN|T|)$ となりTLEする。</p>
+<p>そこで、メモ化を行う。<br>
+つまり、事前に $T$ の文字列がある位置の先頭を全て愚直な全探索で拾っておく。<br>
+すると、$L$ 以上 $R-|T|+1$ 以下の数がこの中にあるかどうかという問題になる。</p>
+<p>これは、該当位置を $1$、そうでない位置を $0$ とする数列の累積和を利用することで、毎回 $O(1)$ で求まる。</p>
+<p>よって、全体の計算量 $O(N|T|+Q)$ で解ける。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>q: 3
+s: &quot;abcdabc&quot;
+t: &quot;bc&quot;</code></pre>
+<p>$S$ の中で $T$ が始まる位置を調べる。<br>
+$|T|=2$ なので、スタート位置として調べるのは $1$ 文字目から $6$ 文字目までである。</p>
+<p>各スタート位置から $2$ 文字を取り出し、$T$ と一致するかを確認する。<br>
+一致するなら $1$、そうでなければ $0$ とする。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">スタート位置</th>
+<th class="table-align-center" style="text-align: center;">$1$</th>
+<th class="table-align-center" style="text-align: center;">$2$</th>
+<th class="table-align-center" style="text-align: center;">$3$</th>
+<th class="table-align-center" style="text-align: center;">$4$</th>
+<th class="table-align-center" style="text-align: center;">$5$</th>
+<th class="table-align-center" style="text-align: center;">$6$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$S$ の部分文字列</th>
+<td class="table-align-center" style="text-align: center;"><code>&quot;ab&quot;</code></td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;bc&quot;</code></td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;cd&quot;</code></td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;da&quot;</code></td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;ab&quot;</code></td>
+<td class="table-align-center" style="text-align: center;"><code>&quot;bc&quot;</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$T$ と一致するか</th>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+<td class="table-align-center" style="text-align: center;">はい</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+<td class="table-align-center" style="text-align: center;">はい</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">値</th>
+<td class="table-align-center" style="text-align: center;">$0$</td>
+<td class="table-align-center" style="text-align: center;">$1$</td>
+<td class="table-align-center" style="text-align: center;">$0$</td>
+<td class="table-align-center" style="text-align: center;">$0$</td>
+<td class="table-align-center" style="text-align: center;">$0$</td>
+<td class="table-align-center" style="text-align: center;">$1$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、$T$ が始まる位置に対応する列は $0,1,0,0,0,1$ となる。</p>
+<p>この列の先頭に $0$ を $1$ つ置き、左から累積和を取る。<br>
+先頭から $k$ 個の合計は、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$k$</th>
+<th class="table-align-right" style="text-align: right;">$0$</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$5$</th>
+<th class="table-align-right" style="text-align: right;">$6$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$k$ 文字目の値</th>
+<td class="table-align-right" style="text-align: right;">-</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">先頭 $k$ 個の累積和</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+</tbody>
+</table></div>
+<p>例えば、スタート位置 $2$ 以上 $5$ 以下にある $1$ の個数を考える。<br>
+先頭 $5$ 個の累積和から、先頭 $1$ 個の累積和を引けばよい。<br>
+この場合は $1-0=1$ となり、範囲内に $T$ のスタート位置があるとわかる。</p>
+<p>各クエリについて、$T$ のスタート位置として使える範囲を確認する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-center" style="text-align: center;">クエリ</th>
+<th class="table-align-center" style="text-align: center;">スタート位置の範囲</th>
+<th class="table-align-center" style="text-align: center;">累積和の差</th>
+<th class="table-align-center" style="text-align: center;">答え</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$[2,6]$</th>
+<td class="table-align-center" style="text-align: center;">$[2,5]$</td>
+<td class="table-align-center" style="text-align: center;">$1-0=1$</td>
+<td class="table-align-center" style="text-align: center;"><code>Yes</code></td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$[3,5]$</th>
+<td class="table-align-center" style="text-align: center;">$[3,4]$</td>
+<td class="table-align-center" style="text-align: center;">$1-1=0$</td>
+<td class="table-align-center" style="text-align: center;"><code>No</code></td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$[3,7]$</th>
+<td class="table-align-center" style="text-align: center;">$[3,6]$</td>
+<td class="table-align-center" style="text-align: center;">$2-1=1$</td>
+<td class="table-align-center" style="text-align: center;"><code>Yes</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、出力は順に <code>Yes</code>, <code>No</code>, <code>Yes</code> となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>添字範囲がかなり複雑になる。</p>
+<p>$T$ のスタート位置として採用可能なのは、$N$ 番目までではなく、$N-|T|+1$ 番目の文字までである。<br>
+このこと自体がややこしい上に、$N-|T|$ ではなく $+1$ が必要なのがさらにややこしい。<br>
+しかも、$T$ が $S$ より長い可能性すら、制約では否定されていない。</p>
+<p>加えて、クエリで来る $L$ や $R$ が、どうみても $L$ の後ろや $R$ の前に $|T|$ 文字ない場合もある。<br>
+これらを全て例外処理しなければならないので、かなり大変。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>本来はD問題レベルなのだが、二分探索を使った方が、気を使うところが少なくて簡単。<br>
+スタート範囲は気をつけなければいけないが、それ以外は全て注意点を無視できる。</p>
+<p>しかも累積和を取らなくてもよいのもうれしい。<br>
+「別解」のコード参照。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/memoization.html">メモ化</a>
+<a class="tag" href="../tags/cumulative-sum.html">累積和</a>
+<a class="tag" href="../tags/binary-search.html">二分探索</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

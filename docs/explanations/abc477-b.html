@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>二次元累積和</title>
+<title>ABC477 B - Standing Outliers</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,35 +28,65 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>二次元累積和</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC477 B - Standing Outliers</h1>
+      <p class="explanation-title-ja">一線を画す</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc477/tasks/abc477_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc477/submissions/79571517" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>素直に二重ループの全探索でよい。</p>
+<p>$i$ 番の人を見るとき、$i$ 番以外の全ての $j$ 番の人との距離が全て $D$ 以上であればよい。<br>
+これは、最初に <code>bool</code> 型の <code>true</code> を用意して、$1$ 人でも距離 $D$ 未満の人がいたら <code>false</code> にする。<br>
+全員見終わっても <code>true</code> のままだったら、$i$ 番の人は「一線を画す」人である。</p>
+<p>これを、全ての $i$ について調査し、配列に記録していけばよい。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 3
+d: 3
+x: {1, 5, 7}</code></pre>
+<p>各人について、自分以外の人との距離を確認する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">人</th>
+<th class="table-align-center" style="text-align: center;">自分以外の人との距離</th>
+<th class="table-align-center" style="text-align: center;">全て $D=3$ 以上か</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-center" style="text-align: center;">$4,6$</td>
+<td class="table-align-center" style="text-align: center;">はい</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-center" style="text-align: center;">$4,2$</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-center" style="text-align: center;">$6,2$</td>
+<td class="table-align-center" style="text-align: center;">いいえ</td>
+</tr>
+</tbody>
+</table></div>
+<p>条件を満たすのは人 $1$ だけである。<br>
+したがって、「一線を画す」人の人数は $1$ 人で、番号は $1$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> 高速化系</p>
-      <p><strong>難易度:</strong> D問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li><a href="../knowledge/cumulative-sum.html">累積和</a></li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc461-d.html">ABC461 D - Count Subgrid Sum = K</a></li>
-        <li><a href="../explanations/abc464-e.html">ABC464 E - Fill-Rect Query</a></li>
-        <li><a href="../explanations/abc465-f.html">ABC465 F - Sjeltzer?</a></li>
-        <li><a href="../explanations/abc476-f.html">ABC476 F - Chebyshev Cafe</a></li>
-        <li><a href="../explanations/abc477-f.html">ABC477 F - Count Cells in a Window</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/brute-force.html">全探索</a>
+<a class="tag" href="../tags/nested-loop.html">多重ループ</a>
+<a class="tag" href="../tags/absolute-value.html">絶対値</a>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">

@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC477 E - Wheel Distance</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC477 E - Wheel Distance</h1>
+      <p class="explanation-title-ja">車輪の距離</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc477/tasks/abc477_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc477/submissions/79571545" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>グラフの形は、タイトルのように車輪の形である。<br>
+つまり、中心に頂点 $N+1$ があり、残りの $N$ 点が円周上にあると思うことができる。</p>
+<p>この場合、円周上の $2$ 点 $P,Q$ 間の最短経路は、以下の $3$ つのいずれかである。</p>
+<ul>
+<li>$P$ から $Q$ まで、円周を時計周りに移動する
+</li>
+<li>$P$ から $Q$ まで、円周を反時計周りに移動する
+</li>
+<li>$P$ から中心までの最短経路を通った後、中心から $Q$ までの最短経路を通る
+</li>
+</ul>
+<p>上の $2$ つは、円周上の距離の累積和を事前に求めておけば、$O(1)$ で処理できる。<br>
+最後のものは、中心から各点までの最短距離をDijkstra法で求めておけば、やはり $O(1)$ で処理できる。</p>
+<p>また、片方が中心だった場合も、中心から各点までの最短距離を求めておけばそれを答えるだけ。</p>
+<p>ということで、累積和とDijkstra法の事前処理のもと、どんなクエリでも $O(1)$ で処理できる。</p>
+<p>事前処理分も含めて、全体として $O(N\log N+Q)$ である。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+q: 3
+a: {1, 3, 4, 2, 5}
+b: {5, 2, 4, 3, 7}
+queries:
+2 5
+5 6
+1 4</code></pre>
+<p>円周上の辺の距離 <code>a</code> の累積和は、次のようになる。</p>
+<pre><code>sum: {0, 1, 4, 8, 10, 15}</code></pre>
+<p>次に、中心の頂点 $6$ から Dijkstra法を行う。<br>
+各頂点までの最短距離と、その最短経路の一例は次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-left" style="text-align: left;">頂点</th>
+<th class="table-align-right" style="text-align: right;">$1$</th>
+<th class="table-align-right" style="text-align: right;">$2$</th>
+<th class="table-align-right" style="text-align: right;">$3$</th>
+<th class="table-align-right" style="text-align: right;">$4$</th>
+<th class="table-align-right" style="text-align: right;">$5$</th>
+<th class="table-align-right" style="text-align: right;">$6$</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">最短距離</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">最短経路の一例</th>
+<td class="table-align-right" style="text-align: right;">$6\to2\to1$</td>
+<td class="table-align-right" style="text-align: right;">$6\to2$</td>
+<td class="table-align-right" style="text-align: right;">$6\to3$</td>
+<td class="table-align-right" style="text-align: right;">$6\to4$</td>
+<td class="table-align-right" style="text-align: right;">$6\to4\to5$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+</tr>
+</tbody>
+</table></div>
+<p>この $2$ つの前処理を使って、各クエリの候補を求める。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-center" style="text-align: center;">クエリ</th>
+<th class="table-align-center" style="text-align: center;">時計回り</th>
+<th class="table-align-center" style="text-align: center;">反時計回り</th>
+<th class="table-align-center" style="text-align: center;">中心経由・中心まで</th>
+<th class="table-align-right" style="text-align: right;">最短距離</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>2 5</code></th>
+<td class="table-align-center" style="text-align: center;">$10-1=9$</td>
+<td class="table-align-center" style="text-align: center;">$(15-10)+1=6$</td>
+<td class="table-align-center" style="text-align: center;">$2+5=7$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>5 6</code></th>
+<td class="table-align-center" style="text-align: center;">-</td>
+<td class="table-align-center" style="text-align: center;">-</td>
+<td class="table-align-center" style="text-align: center;">$5$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>1 4</code></th>
+<td class="table-align-center" style="text-align: center;">$8-0=8$</td>
+<td class="table-align-center" style="text-align: center;">$(15-8)+0=7$</td>
+<td class="table-align-center" style="text-align: center;">$3+3=6$</td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、$3$ つのクエリの答えは順に $6,5,6$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>円周上の距離の累積和や最短距離は、<code>int</code> 型からはみ出る可能性がある。<br>
+<code>long long</code> 型を用いること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/cumulative-sum.html">累積和</a>
+<a class="tag" href="../tags/dijkstra.html">Dijkstra法</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
