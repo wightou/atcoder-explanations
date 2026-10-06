@@ -207,6 +207,7 @@ STUBS: list[KnowledgeStub] = [
     k("lcs", "最長共通部分列", "E問題相当", "典型問題集", aliases=["LCS"], related=["動的計画法"]),
     k("bellman-ford", "Bellman-Ford法", "E問題相当", "グラフ理論系"),
     k("warshall-floyd", "Warshall-Floyd法", "E問題相当", "グラフ理論系", aliases=["Floyd-Warshall"]),
+    k("scc", "強連結成分分解", "E問題相当", "グラフ理論系", aliases=["SCC"]),
     k("argument-sort", "偏角ソート", "E問題相当", "幾何学系"),
 
     # F問題相当
@@ -246,7 +247,6 @@ STUBS: list[KnowledgeStub] = [
 
     # 未分類
     k("balanced-binary-search-tree", "平衡二分探索木", "未分類", "未分類"),
-    k("scc", "強連結成分分解", "未分類", "未分類", aliases=["SCC"]),
     k("persistent-data-structure", "永続データ構造", "未分類", "未分類"),
     k("heavy-light-decomposition", "Heavy-Light Decomposition", "未分類", "未分類", aliases=["HLD"]),
     k("link-cut-tree", "Link-Cut Tree", "未分類", "未分類"),

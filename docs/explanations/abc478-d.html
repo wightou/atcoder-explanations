@@ -3,9 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>強連結成分分解</title>
+<title>ABC478 D - Range Set Insertion Query</title>
 <link rel="stylesheet" href="../style.css">
-
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 
@@ -18,31 +28,69 @@
 
 <main class="page-layout">
   <article class="markdown-body">
-    <h1>強連結成分分解</h1>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-7a52d716ff">概要</a></li></ul></nav>
-    <h2 id="section-7a52d716ff">概要</h2>
-<p>今後記述予定。</p>
+    <div class="explanation-heading">
+      <h1>ABC478 D - Range Set Insertion Query</h1>
+      <p class="explanation-title-ja">範囲集合挿入</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc478/tasks/abc478_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc478/submissions/79819477" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>愚直にやるのは簡単だが、計算量が $O(NQ\log Q)$ でTLE。<br>
+そこで高速化を考える。</p>
+<p>最終的にどんな値が入っているかは要求されない。<br>
+そこで、集合に数を挿入するのではなく、挿入範囲に $1$ 個増えたという情報をもたせればよさそう。<br>
+これは $X$ の値がすべて異なる場合には有効な方法。<br>
+階差数列に情報をまとめてから累積和を利用することで $O(N+Q)$ で済む。</p>
+<p>ただし、実際には同じ $X$ の値が同じ集合に入れられる場合がある。<br>
+この場合、重複カウントをしないようにする必要がある。<br>
+そこで、集合への挿入順を変えてしまう。</p>
+<p>操作順序を変えても最終結果は変わらない。<br>
+そこで、最初に $X$ の値ごとに操作を分類してしまう。<br>
+さらに同じ $X$ の中で $L$ の値が小さい順にソートして、区間重複分は $L$ や $R$ を削り落とせばよい。<br>
+そうすれば、同じ $X$ があっても、前述の方法で解決できる。<br>
+ソートが必要な分、計算量は $O(N+Q\log Q)$ になる。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 8
+q: 5
+
+queries:
+2 5 1
+1 4 2
+7 8 1
+3 6 3
+2 5 2</code></pre>
+<p>まず、操作を $X$ ごとに分類する。</p>
+<pre><code>X=1: [2,5], [7,8]
+X=2: [1,4], [2,5]
+X=3: [3,6]</code></pre>
+<p>同じ $X$ の区間について、重複する部分をまとめる。<br>
+$X=2$ の $[1,4]$ と $[2,5]$ は重複しているので、$[1,5]$ にまとめられる。</p>
+<p>したがって、各 $X$ について残る区間は次のようになる。</p>
+<pre><code>X=1: [2,5], [7,8]
+X=2: [1,5]
+X=3: [3,6]</code></pre>
+<p>この各区間について、その範囲の集合の要素数が $1$ 増えるものとして階差数列に記録する。<br>
+$1$ から $9$ までの位置について変化量を並べると、次のようになる。</p>
+<pre><code>位置:   1  2  3  4  5  6  7  8  9
+変化量: 1  1  1  0  0 -2  0  0 -1</code></pre>
+<p>これを左から累積和すると、位置 $1$ から位置 $8$ までの値は次のようになる。</p>
+<pre><code>1 2 3 3 3 1 1 1</code></pre>
+<p>したがって、答えは <code>1 2 3 3 3 1 1 1</code> である。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
   </article>
 
   <aside class="sidebar">
     <section class="side-card">
-      <h2>知識情報</h2>
-      <p><strong>分野:</strong> グラフ理論系</p>
-      <p><strong>難易度:</strong> E問題相当</p>
-    </section>
-
-    <section class="side-card">
-      <h2>関連知識</h2>
-      <ul class="side-links">
-        <li class="muted">なし</li>
-      </ul>
-    </section>
-
-    <section class="side-card">
-      <h2>この知識を使う解説</h2>
-      <ul class="side-links">
-        <li><a href="../explanations/abc478-e.html">ABC478 E - lt and le</a></li>
-      </ul>
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/difference-array.html">階差数列</a>
+<a class="tag" href="../tags/cumulative-sum.html">累積和</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
     </section>
 
     <section class="side-card">
