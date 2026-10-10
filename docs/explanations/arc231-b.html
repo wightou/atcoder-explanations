@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARC231 B - Three Mex</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ARC231 B - Three Mex</h1>
+      <p class="explanation-title-ja">3つのmex</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/arc231/tasks/arc231_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc231/submissions/79886940" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>まず、$X$ には $A$ 未満の、$Y$ には $B$ 未満の非負整数を全て入れる必要がある。<br>
+この時点で $X$ の要素の $Y$ の要素の $\mathrm{XOR}$ で $C$ ができる場合、不可能。</p>
+<p>以下、そうではなかった場合を考える。<br>
+$X$ と $Y$ にいくつかの要素を付け足して、$\mathrm{mex(Z)}=C$ を満たすようにする。</p>
+<p>ポイントは、$A,B,C$ の上限は $1000$ なのに使える数の上限が $2026$ である点。<br>
+一見 $1023$ まででよさそうなのに、$1024$ 以上が使えるというのは、何か意図があるはずである。</p>
+<p>それは、$1024+i$ と $1024+j$ の $\mathrm{XOR}$ で $i$ と $j$ の $\mathrm{XOR}$ を作れること。<br>
+しかも、$1024+i$ と $j(&lt;1024)$ の $\mathrm{XOR}$ は、$1024$ 以上になるので、$C$ に絶対にならない。<br>
+よって、$X$ 側に $1024$ を、$Y$ 側に $1024$ から $1024+C-1$ までを追加すれば、よい。<br>
+$\mathrm{XOR}$ で $C$ 未満が全部作れるようになるし、誤って $C$ ができることもない。<br>
+そして、$C$ は最大でも $1000$ なので、$1024+C-1$ は $2026$ 以下である。</p>
+<p>よって、これで構築できた。<br>
+計算量は、$+1024$ は定数として $O(AB+A+B+C)$ である。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>q: 4
+(a, b, c):
+(2, 3, 6)
+(1, 1, 0)
+(0, 0, 1)
+(0, 0, 0)</code></pre>
+<p>まず、$1$ 番目のテストケースを考える。<br>
+$A=2$, $B=3$, $C=6$ である。<br>
+$X$ に $0,1$、$Y$ に $0,1,2$ を入れる。<br>
+これらの要素同士の $\mathrm{XOR}$ で作れる値は $\{0,1,2,3\}$ であり、$6$ は作れない。</p>
+<p>次に、$X$ に $1024$、$Y$ に $1024,1025,1026,1027,1028,1029$ を追加する。<br>
+$1024$ とこれらの値の XOR により、$0,1,2,3,4,5$ が作れる。<br>
+この段階で $1024$ 未満の XOR の結果は $\{0,1,2,3,4,5\}$ となり、$6$ は作れない。<br>
+したがって、$\mathrm{mex}(Z)=6$ が成立するので <code>Yes</code> と、次の集合を出力する。</p>
+<pre><code>X: {0, 1, 1024}
+Y: {0, 1, 2, 1024, 1025, 1026, 1027, 1028, 1029}</code></pre>
+<p>$2$ 番目のテストケースでは、$A=1$, $B=1$, $C=0$ である。<br>
+$X,Y$ に必ず含まれる $0$ 同士の XOR で $0$ が作れる。<br>
+よって $\mathrm{mex}(Z)=0$ にできず、<code>No</code> を出力する。</p>
+<p>$3$ 番目のテストケースでは、$A=0$, $B=0$, $C=1$ である。<br>
+最初に $X,Y$ に入れるべき数はない。<br>
+$X$ と $Y$ にそれぞれ $1024$ を追加すると、$Z=\{0\}$ となる。<br>
+これにより $\mathrm{mex}(X)=\mathrm{mex}(Y)=0$, $\mathrm{mex}(Z)=1$ を満たすので <code>Yes</code> を出力する。</p>
+<p>$4$ 番目のテストケースでは、$A=0$, $B=0$, $C=0$ である。<br>
+$X$ に $1024$ を追加するが、$Y$ に追加する要素はない。<br>
+したがって $Y$ と $Z$ はともに空集合であり、$\mathrm{mex}(X)=\mathrm{mex}(Y)=\mathrm{mex}(Z)=0$ となる。<br>
+よって、<code>Yes</code> を出力する。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/constructive-problem.html">構築問題</a>
+      </div>
+      <p class="tag-note">※ 簡単なレベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
