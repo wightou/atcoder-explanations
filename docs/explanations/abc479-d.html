@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC479 D - Back and Forth Distance</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC479 D - Back and Forth Distance</h1>
+      <p class="explanation-title-ja">前後運動</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc479/tasks/abc479_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc479/submissions/79975040" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>クエリに対して、取れる選択肢は無数にあるが、ほとんどが無駄なものである。</p>
+<p>例えば、同じ方向に $2$ 回続けて移動するのは意味がない。<br>
+$3 \to 5 \to 8$ と同じ方向に $2$ 回移動するなら、直接 $3 \to 8$ でいい。</p>
+<p>また、ターンしても元の位置まで戻らないのも同様。<br>
+$3 \to 8 \to 5$ とターンして途中下車するなら、直接 $3 \to 5$ でいい。</p>
+<p>さらに、$3$ 回以上の移動も意味がない。<br>
+前述の内容から毎回直前にいたところを通り過ぎるターンだけ確認すればよい。<br>
+これは $3 \to 5 \to 2 \to 8$ のような移動になるわけだが、直接 $3 \to 8$ でいい。</p>
+<p>ということで、価値がある移動は以下の $2$ つしかない。</p>
+<ul>
+<li>$1$ 回だけ移動する
+</li>
+<li>$2$ 回移動し、$2$ 回目の移動は $1$ 回目と反対向きでスタート地点を素通りする
+</li>
+</ul>
+<p>今回の問題にあわせて実装しやすく書き直すと、以下である。</p>
+<ul>
+<li>右に移動したい場合
+<ul>
+<li>右に $1$ 回移動して到着
+</li>
+<li>$1$ 回目で左に向かい、$2$ 回目で右に移動して到着
+</li>
+</ul>
+</li>
+<li>左に移動したい場合
+<ul>
+<li>左に $1$ 回移動して到着
+</li>
+<li>$1$ 回目で右に向かい、$2$ 回目で左に移動して到着
+</li>
+</ul>
+</li>
+</ul>
+<p>それぞれの後者はたくさん選択肢があるように見える。<br>
+しかし実は、使うことができる範囲で最も安い地点を貪欲に使えばよい。<br>
+$L$ の右からの累積最小値と $R$ の左からの累積最小値を事前処理すれば、その判断は $O(1)$ で可能。<br>
+$2$ 択の比較まで含めても、各クエリに $O(1)$ で答えが出る。</p>
+<p>以上で、全体の計算量は $O(N+Q)$ となる。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+q: 7
+l: {0, 5, 6, 2, 9}
+r: {3, 1, 3, 8, 0}</code></pre>
+<p><code>l[0]</code> と <code>r[4]</code> は端のマスに対応する仮の値であり、実際の移動コストではない。</p>
+<p>左右の移動コストについて累積最小値を求めると、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-left" style="text-align: left;">コスト</th>
+<th class="table-align-left" style="text-align: left;">元の値</th>
+<th class="table-align-left" style="text-align: left;">累積最小値</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">$R_1$ から $R_4$（左から）</th>
+<td class="table-align-left" style="text-align: left;">$\{3,1,3,8\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{3,1,1,1\}$</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">$L_2$ から $L_5$（右から）</th>
+<td class="table-align-left" style="text-align: left;">$\{5,6,2,9\}$</td>
+<td class="table-align-left" style="text-align: left;">$\{2,2,2,9\}$</td>
+</tr>
+</tbody>
+</table></div>
+<p>各クエリについて、直接移動する場合と、いったん逆方向に移動してから目的地へ向かう場合を比較する。<br>
+クエリのマス番号は問題文どおり $1$ から数える。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-center" style="text-align: center;">$(s,t)$</th>
+<th class="table-align-left" style="text-align: left;">直接移動する場合</th>
+<th class="table-align-left" style="text-align: left;">$2$ 回移動する場合の最小コスト</th>
+<th class="table-align-right" style="text-align: right;">答え</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$(1,2)$</th>
+<td class="table-align-left" style="text-align: left;">$R_1=3$</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$(2,1)$</th>
+<td class="table-align-left" style="text-align: left;">$L_2=5$</td>
+<td class="table-align-left" style="text-align: left;">$R_2+L_4=1+2=3$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$(2,4)$</th>
+<td class="table-align-left" style="text-align: left;">$R_2=1$</td>
+<td class="table-align-left" style="text-align: left;">$L_2+R_1=5+3=8$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$(3,2)$</th>
+<td class="table-align-left" style="text-align: left;">$L_3=6$</td>
+<td class="table-align-left" style="text-align: left;">$R_3+L_4=3+2=5$</td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$(3,5)$</th>
+<td class="table-align-left" style="text-align: left;">$R_3=3$</td>
+<td class="table-align-left" style="text-align: left;">$L_3+R_2=6+1=7$</td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$(4,3)$</th>
+<td class="table-align-left" style="text-align: left;">$L_4=2$</td>
+<td class="table-align-left" style="text-align: left;">$R_4+L_5=8+9=17$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row">$(5,2)$</th>
+<td class="table-align-left" style="text-align: left;">$L_5=9$</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、$7$ 個のクエリの答えは順に $3,3,1,5,3,2,9$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/greedy.html">貪欲法</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
