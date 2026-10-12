@@ -10,6 +10,7 @@ alternative_submission_urls:
     url: https://atcoder.jp/contests/abc479/submissions/79975157
 tags:
   - bit全探索
+  - ナップサック問題
 tag_note: B問題以下レベルの内容は省略。
 ---
 
