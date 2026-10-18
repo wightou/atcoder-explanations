@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC480 A - ADjacent</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC480 A - ADjacent</h1>
+      <p class="explanation-title-ja">隣接</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc480/tasks/abc480_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc480/submissions/80181261" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc480/submissions/80181267" target="_blank" rel="noopener noreferrer">別解</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>入力は文字列が $2$ つ。<br>
+<code>string</code> 型の変数を $2$ つ用意し、<code>cin</code> で入力を受け取る。</p>
+<p><code>&quot;Yes&quot;</code> であるパターンより、<code>&quot;No&quot;</code> であるパターンの方が数えやすい。<br>
+というのは、<code>&#x27;A&#x27;</code> と <code>&#x27;D&#x27;</code> が対角線位置にいることを判定するだけですむためである。</p>
+<p>よって、以下の $4$ つのいずれかに該当したら <code>&quot;No&quot;</code> である。</p>
+<ul>
+<li>左上が <code>&#x27;A&#x27;</code> で、右下が <code>&#x27;D&#x27;</code> である。
+</li>
+<li>右上が <code>&#x27;A&#x27;</code> で、左下が <code>&#x27;D&#x27;</code> である。
+</li>
+<li>左下が <code>&#x27;A&#x27;</code> で、右上が <code>&#x27;D&#x27;</code> である。
+</li>
+<li>右下が <code>&#x27;A&#x27;</code> で、左上が <code>&#x27;D&#x27;</code> である。
+</li>
+</ul>
+<p>if文の条件に全て書いてもよいが、長くなって大変。<br>
+出力用変数を <code>&quot;Yes&quot;</code> で用意しておき、「該当したら <code>&quot;No&quot;</code> に変更」を $4$ つ書くのがわかりやすい。</p>
+<p>文字コードの知識があれば、もっと簡単に書ける別解もある。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>s1: &quot;AB&quot;
+s2: &quot;DC&quot;</code></pre>
+<p>出力用変数を <code>&quot;Yes&quot;</code> で初期化する。</p>
+<p><code>&#x27;A&#x27;</code> と <code>&#x27;D&#x27;</code> が対角線上にあるか、$4$ つの条件を順に確認する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-left" style="text-align: left;">条件</th>
+<th class="table-align-left" style="text-align: left;">実際の文字</th>
+<th class="table-align-left" style="text-align: left;">判定</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">左上が <code>&#x27;A&#x27;</code>、右下が <code>&#x27;D&#x27;</code></th>
+<td class="table-align-left" style="text-align: left;">左上は <code>&#x27;A&#x27;</code>、右下は <code>&#x27;C&#x27;</code></td>
+<td class="table-align-left" style="text-align: left;">該当しない</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">右上が <code>&#x27;A&#x27;</code>、左下が <code>&#x27;D&#x27;</code></th>
+<td class="table-align-left" style="text-align: left;">右上は <code>&#x27;B&#x27;</code>、左下は <code>&#x27;D&#x27;</code></td>
+<td class="table-align-left" style="text-align: left;">該当しない</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">左下が <code>&#x27;A&#x27;</code>、右上が <code>&#x27;D&#x27;</code></th>
+<td class="table-align-left" style="text-align: left;">左下は <code>&#x27;D&#x27;</code>、右上は <code>&#x27;B&#x27;</code></td>
+<td class="table-align-left" style="text-align: left;">該当しない</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">右下が <code>&#x27;A&#x27;</code>、左上が <code>&#x27;D&#x27;</code></th>
+<td class="table-align-left" style="text-align: left;">右下は <code>&#x27;C&#x27;</code>、左上は <code>&#x27;A&#x27;</code></td>
+<td class="table-align-left" style="text-align: left;">該当しない</td>
+</tr>
+</tbody>
+</table></div>
+<p>どの条件にも該当しないため、出力用変数は <code>&quot;Yes&quot;</code> のままである。<br>
+したがって、<code>Yes</code> を出力する。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p><code>&#x27;A&#x27;</code> と <code>&#x27;D&#x27;</code> が左上と右下の組にある場合、それらの文字コードの和は $133$ である。</p>
+<p><code>&#x27;A&#x27;</code> と <code>&#x27;D&#x27;</code> が右上と左下の組にある場合、左上と右下は <code>&#x27;B&#x27;</code> と <code>&#x27;C&#x27;</code>。<br>
+それらの文字コードの和も $133$ である。</p>
+<p>そして、左上と右下の文字コードの和が $133$ になるのは、この $2$ 通りの場合だけである。<br>
+よって、<code>&quot;No&quot;</code> であることを左上と右下の文字コードの和が $133$ かどうかで判定してもよい。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/input-output.html">入出力</a>
+<a class="tag" href="../tags/string.html">string型</a>
+<a class="tag" href="../tags/char.html">char型</a>
+<a class="tag" href="../tags/if-statement.html">if分岐</a>
+<a class="tag" href="../tags/arithmetic-operations.html">四則演算</a>
+      </div>
+      
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

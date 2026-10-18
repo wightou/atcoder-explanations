@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC480 B - Invalid Vote</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC480 B - Invalid Vote</h1>
+      <p class="explanation-title-ja">無効票</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc480/tasks/abc480_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc480/submissions/80181270" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>実行速度に気を使わなくていいという意味ではB問題で間違いないのだが、かなり複雑。</p>
+<p>まず、各票が誰の票になるのかの調査の設計が難しい。<br>
+これは、全員の名前と比較して、$2$ つのデータに記録するとよい。<br>
+$1$ つめのデータは、名前が正確に一致する人がいるかどうかの <code>bool</code> 型。<br>
+$2$ つめのデータは、名前が $1$ 文字違いの人の一覧である <code>vector&lt;string&gt;</code> 型。</p>
+<p>このデータを作るには、票ごとに全員の名前と照らし合わせればよい。<br>
+まず、文字数が違えば、比較する意味もないので何もせず次の名前へ。<br>
+文字数が同じなら、同じ位置にあるのに文字が違う組が何ヶ所あるか数える。<br>
+$0$ ヶ所なら <code>bool</code> の方を <code>true</code> にし、$1$ ヶ所なら正しい名前を <code>vector&lt;string&gt;</code> の末尾に加える。<br>
+全員見終わった段階で、これが有効票であるパターンは以下の $2$ つである。</p>
+<ul>
+<li><code>bool</code> が <code>true</code> であるなら、票に書いてある名前の人に $1$ 票
+</li>
+<li><code>bool</code> が <code>false</code> で、<code>vector&lt;string&gt;</code> の要素数が $1$ なら、そこにある名前の人に $1$ 票
+</li>
+</ul>
+<p>ただし、これらは投票先の名前がわかるが、何番の候補者なのかを見るのは難しい（できなくはない）。<br>
+そこで、最初に全員分の名前をキーにした <code>map</code> を作ってしまうとよい。<br>
+各票ごと誰に票を入れるかわかったところで名前のまま票をカウントしていけばよい。<br>
+出力前に <code>map</code> を見て名簿順に票数を確認するのは、ここまでの作業と比べれば非常に簡単なことである。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+m: 8
+s: {&quot;takahashi&quot;, &quot;aoki&quot;, &quot;sato&quot;, &quot;kato&quot;, &quot;kano&quot;}
+t: {&quot;aoki&quot;, &quot;takanashi&quot;, &quot;sano&quot;, &quot;atcoder&quot;,
+    &quot;chokudai&quot;, &quot;kato&quot;, &quot;aoki&quot;, &quot;yato&quot;}</code></pre>
+<p>まず、候補者全員の得票数を $0$ として <code>map</code> に記録する。</p>
+<p>各投票用紙について、名前が完全一致する人がいるかどうかと、$1$ 文字違いの候補者の一覧を調べる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">投票用紙</th>
+<th class="table-align-left" style="text-align: left;">書かれた名前</th>
+<th class="table-align-center" style="text-align: center;">完全一致</th>
+<th class="table-align-left" style="text-align: left;">$1$ 文字違いの候補者</th>
+<th class="table-align-left" style="text-align: left;">投票先</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$1$</th>
+<td class="table-align-left" style="text-align: left;"><code>aoki</code></td>
+<td class="table-align-center" style="text-align: center;">あり</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;"><code>aoki</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-left" style="text-align: left;"><code>takanashi</code></td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-left" style="text-align: left;"><code>takahashi</code></td>
+<td class="table-align-left" style="text-align: left;"><code>takahashi</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$3$</th>
+<td class="table-align-left" style="text-align: left;"><code>sano</code></td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-left" style="text-align: left;"><code>sato</code>, <code>kano</code></td>
+<td class="table-align-left" style="text-align: left;">無効票</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$4$</th>
+<td class="table-align-left" style="text-align: left;"><code>atcoder</code></td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">無効票</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$5$</th>
+<td class="table-align-left" style="text-align: left;"><code>chokudai</code></td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;">無効票</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$6$</th>
+<td class="table-align-left" style="text-align: left;"><code>kato</code></td>
+<td class="table-align-center" style="text-align: center;">あり</td>
+<td class="table-align-left" style="text-align: left;"><code>sato</code></td>
+<td class="table-align-left" style="text-align: left;"><code>kato</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$7$</th>
+<td class="table-align-left" style="text-align: left;"><code>aoki</code></td>
+<td class="table-align-center" style="text-align: center;">あり</td>
+<td class="table-align-left" style="text-align: left;">なし</td>
+<td class="table-align-left" style="text-align: left;"><code>aoki</code></td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$8$</th>
+<td class="table-align-left" style="text-align: left;"><code>yato</code></td>
+<td class="table-align-center" style="text-align: center;">なし</td>
+<td class="table-align-left" style="text-align: left;"><code>sato</code>, <code>kato</code></td>
+<td class="table-align-left" style="text-align: left;">無効票</td>
+</tr>
+</tbody>
+</table></div>
+<p>$6$ 枚目は <code>sato</code> と $1$ 文字違いだが、<code>kato</code> に完全一致するため、<code>kato</code> に投票される。</p>
+<p>全ての投票を処理すると、候補者ごとの得票数は次のようになる。</p>
+<pre><code>takahashi: 1
+aoki: 2
+sato: 0
+kato: 1
+kano: 0</code></pre>
+<p>これらを名簿順に出力するので、答えは上から $1,2,0,1,0$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/brute-force.html">全探索</a>
+<a class="tag" href="../tags/nested-loop.html">多重ループ</a>
+<a class="tag" href="../tags/map.html">map</a>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
