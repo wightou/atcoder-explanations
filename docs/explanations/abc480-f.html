@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC480 F - Cake Cutting</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC480 F - Cake Cutting</h1>
+      <p class="explanation-title-ja">ケーキ分割</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc480/tasks/abc480_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc480/submissions/80181301" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-72986c8568">具体例での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>以下、 $1$ 人分のケーキの量を $D$ と表記する。</p>
+<p>まず、$M-1$ 回なら明らかに可能。<br>
+というのは、ケーキが棒状のもので、大きさとは長さの意味だったと思うことで理解できる。<br>
+全てのケーキを連結した長さ $MD$ のケーキを、長さが $D$ ずつになるように切れ目を入れればよい。</p>
+<p>さて、ではもっと少なくできるか考えよう。<br>
+$M-k$ 回で切れたとする。<br>
+このとき、各人を頂点、切れ目の両側をもらった人の組を辺で表したグラフを作る。<br>
+すると、グラフには $M$ 個の頂点に対し $M-k$ 個しか辺がない。<br>
+つまり、連結成分が少なくとも $k$ 個に分かれている。<br>
+この各連結成分は、いくつかのケーキをちょうどその人たちで分けきれた集まりである。<br>
+つまり、その人らが分けて受け取ったケーキの大きさ合計は $D$ の倍数であるはず。</p>
+<p>したがって、この問題は以下のように再解釈できる。<br>
+数列 $A$ の要素を適当なグループに分ける。<br>
+すべてのグループの合計が $D$ の倍数となるような最大グループ数を求め、$M$ から引いて答えよ。</p>
+<p>グループごとのカタマリを連続して並べるようにすれば、さらに以下のようにも再解釈できる。<br>
+数列 $A$ の要素を適当に並び替える。<br>
+初項からの累積和が $D$ の倍数となる回数の最大値を求め、$M$ から引いて答えよ。</p>
+<p>これはbitDPで簡単に解ける。<br>
+その中身はD問題レベルなので解説省略。<br>
+現状の合計値をDPテーブルについでに書いておくと実装しやすい。<br>
+計算量は $O(N2^N)$ である。</p>
+<h2 id="section-72986c8568">具体例での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+m: 4
+a: {1, 2, 3, 4, 6}</code></pre>
+<p>$1$ 人分の量は $D=(1+2+3+4+6)/4=4$ となる。</p>
+<p>選んだケーキの集合ごとに、累積和が $4$ の倍数になった回数の最大値を bitDP で求める。<br>
+状態は $5$ 桁のビットで表し、左から順にケーキ $6,4,3,2,1$ の選択状況を示す。<br>
+各状態について、最大値を達成する遷移元の一例を記す。<br>
+赤背景は、最終状態から遷移元をたどった状態を表す。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-center" style="text-align: center;">状態</th>
+<th class="table-align-center" style="text-align: center;">選んだケーキ</th>
+<th class="table-align-center" style="text-align: center;">遷移元</th>
+<th class="table-align-right" style="text-align: right;">総和</th>
+<th class="table-align-center" style="text-align: center;">$4$ の倍数</th>
+<th class="table-align-right" style="text-align: right;">達成回数の最大値</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;" scope="row"><code>00000</code></th>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">なし</td>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">-</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$0$</td>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">-</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>00001</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>00000</code></td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>00010</code></th>
+<td class="table-align-center" style="text-align: center;">$\{2\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>00000</code></td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>00011</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1,2\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>00010</code></td>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;" scope="row"><code>00100</code></th>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">$\{3\}$</td>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;"><code>00000</code></td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$3$</td>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">No</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;" scope="row"><code>00101</code></th>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">$\{1,3\}$</td>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;"><code>00100</code></td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$4$</td>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">Yes</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>00110</code></th>
+<td class="table-align-center" style="text-align: center;">$\{2,3\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>00100</code></td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>00111</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1,2,3\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>00101</code></td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>01000</code></th>
+<td class="table-align-center" style="text-align: center;">$\{4\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>00000</code></td>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-center" style="text-align: center;">Yes</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>01001</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1,4\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>01000</code></td>
+<td class="table-align-right" style="text-align: right;">$5$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>01010</code></th>
+<td class="table-align-center" style="text-align: center;">$\{2,4\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>01000</code></td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>01011</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1,2,4\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>01010</code></td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>01100</code></th>
+<td class="table-align-center" style="text-align: center;">$\{3,4\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>01000</code></td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;" scope="row"><code>01101</code></th>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">$\{1,3,4\}$</td>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;"><code>00101</code></td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$8$</td>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">Yes</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>01110</code></th>
+<td class="table-align-center" style="text-align: center;">$\{2,3,4\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>01100</code></td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;" scope="row"><code>01111</code></th>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">$\{1,2,3,4\}$</td>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;"><code>01101</code></td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$10$</td>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">No</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>10000</code></th>
+<td class="table-align-center" style="text-align: center;">$\{6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>00000</code></td>
+<td class="table-align-right" style="text-align: right;">$6$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>10001</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>10000</code></td>
+<td class="table-align-right" style="text-align: right;">$7$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>10010</code></th>
+<td class="table-align-center" style="text-align: center;">$\{2,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>10000</code></td>
+<td class="table-align-right" style="text-align: right;">$8$</td>
+<td class="table-align-center" style="text-align: center;">Yes</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>10011</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1,2,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>10010</code></td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>10100</code></th>
+<td class="table-align-center" style="text-align: center;">$\{3,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>10000</code></td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>10101</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1,3,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>00101</code></td>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>10110</code></th>
+<td class="table-align-center" style="text-align: center;">$\{2,3,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>10010</code></td>
+<td class="table-align-right" style="text-align: right;">$11$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>10111</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1,2,3,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>10110</code></td>
+<td class="table-align-right" style="text-align: right;">$12$</td>
+<td class="table-align-center" style="text-align: center;">Yes</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>11000</code></th>
+<td class="table-align-center" style="text-align: center;">$\{4,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>01000</code></td>
+<td class="table-align-right" style="text-align: right;">$10$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>11001</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1,4,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>11000</code></td>
+<td class="table-align-right" style="text-align: right;">$11$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>11010</code></th>
+<td class="table-align-center" style="text-align: center;">$\{2,4,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>11000</code></td>
+<td class="table-align-right" style="text-align: right;">$12$</td>
+<td class="table-align-center" style="text-align: center;">Yes</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>11011</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1,2,4,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>11010</code></td>
+<td class="table-align-right" style="text-align: right;">$13$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>11100</code></th>
+<td class="table-align-center" style="text-align: center;">$\{3,4,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>11000</code></td>
+<td class="table-align-right" style="text-align: right;">$13$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>11101</code></th>
+<td class="table-align-center" style="text-align: center;">$\{1,3,4,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>01101</code></td>
+<td class="table-align-right" style="text-align: right;">$14$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-align-center" style="text-align: center;" scope="row"><code>11110</code></th>
+<td class="table-align-center" style="text-align: center;">$\{2,3,4,6\}$</td>
+<td class="table-align-center" style="text-align: center;"><code>11010</code></td>
+<td class="table-align-right" style="text-align: right;">$15$</td>
+<td class="table-align-center" style="text-align: center;">No</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+</tr>
+<tr>
+<th class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;" scope="row"><code>11111</code></th>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">$\{1,2,3,4,6\}$</td>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;"><code>01111</code></td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$16$</td>
+<td class="table-bg-red table-align-center" style="background-color: #fee2e2; text-align: center;">Yes</td>
+<td class="table-bg-red table-align-right" style="background-color: #fee2e2; text-align: right;">$3$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、答えは $4-3=1$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>ケーキの大きさの総和は <code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/ad-hoc-thinking.html">考察問題</a>
+<a class="tag" href="../tags/bit-dp.html">bitDP</a>
+<a class="tag" href="../tags/dynamic-programming.html">動的計画法</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>

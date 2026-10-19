@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC480 D - Concatenation of Prefixes</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC480 D - Concatenation of Prefixes</h1>
+      <p class="explanation-title-ja">接頭辞の連結</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc480/tasks/abc480_d" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc480/submissions/80181283" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>$B_1$ から $B_R$ までの和を出すのは、高校数学の群数列の問題としては典型問題。<br>
+最初から何群が全て区間に入るか、最後の端数はその群の前から何個か、を出せばよいだけ。<br>
+それらが求まっていれば、あとは累積和を用いれば $B_1$ から $B_R$ までの和はすぐに出る。<br>
+具体的には、数列 $A$ の累積和が各群の総和になり、その累積和が各群以前の総和になる。<br>
+それぞれから該当位置の数を拾って足すだけである。</p>
+<p>さて、問題は $B_R$ は第何群にいるのか。<br>
+これは、数学的に処理する方法と、プログラム的に処理する方法がある。</p>
+<p>まず、数学的に処理する方法。<br>
+第 $m$ 群には $m$ 個の数があるので、それ以前の累計では第 $m$ 群までに $m(m+1)/2$ 個の数がある。<br>
+これが $R$ を超えない最大値と思うと、$m(m+1)/2\leq R$ を考えればよく、最大値は <code>1-indexed</code> で以下。</p>
+<p>$$<br>
+m_{max}=\left\lfloor\dfrac{\sqrt{8R+1}-1}{2}\right\rfloor<br>
+$$</p>
+<p>これが丸ごと含まれる群の数で、端数は $R-m_{max}(m_{max}+1)/2$ で求まる。</p>
+<p>次に、プログラム的に処理する方法。<br>
+これは、各群ごとの数の個数の累積和 $1,3,6,10,\dots$ を用意して、二分探索すればよい。</p>
+<p>いずれの方法でも、これで $B_1$ から $B_R$ までの和を出すことができた。<br>
+$B_L$ から $B_R$ までを出すには、これを $2$ 回やればよい。<br>
+つまり、「$B_1$ から $B_R$ までの和」から「$B_1$ から $B_{L-1}$ までの和」を引けばよい。</p>
+<p>計算量は、処理方法によって異なる。<br>
+数学的な方法で、平方根計算が $O(1)$ でできるCPUなのであれば、$O(N+Q)$ となる。<br>
+プログラム的な方法で二分探索した場合は、$O(N+Q\log N)$ となる。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 4
+q: 3
+a: {1, 10, 100, 1000}
+queries:
+(3, 6)
+(1, 10)
+(8, 8)</code></pre>
+<p>数列 $B$ の各群は次のようになる。</p>
+<pre><code>第1群: {1}
+第2群: {1, 10}
+第3群: {1, 10, 100}
+第4群: {1, 10, 100, 1000}</code></pre>
+<p>まず、数列 $A$ の累積和 <code>sum1</code> と、その累積和 <code>sum2</code> を求める。</p>
+<pre><code>sum1: {0, 1, 11, 111, 1111}
+sum2: {0, 1, 12, 123, 1234}</code></pre>
+<p>各クエリで必要になる、$B_1$ から $B_x$ までの和を求める。<br>
+完全に含まれる群の数と、その次の群の先頭から何項含まれるかを調べると、次のようになる。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">$x$</th>
+<th class="table-align-right" style="text-align: right;">完全な群の数</th>
+<th class="table-align-right" style="text-align: right;">次の群の項数</th>
+<th class="table-align-left" style="text-align: left;">$B_1$ から $B_x$ までの和</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$6$</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-left" style="text-align: left;">$123+0=123$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$2$</th>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-left" style="text-align: left;">$1+1=2$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$10$</th>
+<td class="table-align-right" style="text-align: right;">$4$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-left" style="text-align: left;">$1234+0=1234$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$0$</th>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-left" style="text-align: left;">$0$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$8$</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-left" style="text-align: left;">$123+11=134$</td>
+</tr>
+<tr>
+<th class="table-align-right" style="text-align: right;" scope="row">$7$</th>
+<td class="table-align-right" style="text-align: right;">$3$</td>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-left" style="text-align: left;">$123+1=124$</td>
+</tr>
+</tbody>
+</table></div>
+<p>各クエリについて、$B_1$ から $B_R$ までの和から、$B_1$ から $B_{L-1}$ までの和を引く。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-center" style="text-align: center;">$(L,R)$</th>
+<th class="table-align-right" style="text-align: right;">$B_1$ から $B_R$ まで</th>
+<th class="table-align-right" style="text-align: right;">$B_1$ から $B_{L-1}$ まで</th>
+<th class="table-align-right" style="text-align: right;">答え</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(3,6)$</td>
+<td class="table-align-right" style="text-align: right;">$123$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$123-2=121$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(1,10)$</td>
+<td class="table-align-right" style="text-align: right;">$1234$</td>
+<td class="table-align-right" style="text-align: right;">$0$</td>
+<td class="table-align-right" style="text-align: right;">$1234-0=1234$</td>
+</tr>
+<tr>
+<td class="table-align-center" style="text-align: center;">$(8,8)$</td>
+<td class="table-align-right" style="text-align: right;">$134$</td>
+<td class="table-align-right" style="text-align: right;">$124$</td>
+<td class="table-align-right" style="text-align: right;">$134-124=10$</td>
+</tr>
+</tbody>
+</table></div>
+<p>したがって、$3$ 個のクエリの答えは順に $121,1234,10$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>$R$ や区間和は <code>int</code> 型からはみ出ることがある。<br>
+<code>long long</code> 型を用いること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/cumulative-sum.html">累積和</a>
+<a class="tag" href="../tags/binary-search.html">二分探索</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
