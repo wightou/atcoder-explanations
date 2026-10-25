@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC481 F - Evil Shortest Path</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC481 F - Evil Shortest Path</h1>
+      <p class="explanation-title-ja">邪悪な最短経路</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc481/tasks/abc481_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc481/submissions/80392707" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc481/submissions/80392730" target="_blank" rel="noopener noreferrer">別解</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>スコアを距離と見なしてDijkstra法で求めれば、$O(N+M\log M)$ で解けそうに見える。<br>
+しかし、実はスコアの桁数が $O(N)$ で爆発するため、$O(NM\log M)$ になってしまい、TLEかMLE。<br>
+つまり、途中途中で剰余を取っていかなければならないが、そうすると今度は大小判定が困難になる。<br>
+この板挟みをどうにか解消しなければならない。</p>
+<p>まず、辺の数字に $0$ がないということは、$k$ 桁と思ったら実は先頭に $0$ が付いているという心配がない。<br>
+つまり、$k$ 個の辺を辿る経路では、必ずきちんと $k$ 桁の整数になる。<br>
+ということは、最小スコアの経路は、必ず重みなしグラフでの最短経路になっている。</p>
+<p>ならば、まずは普通の幅優先探索で最短経路を求め、その距離ごとに分割して処理すればよい。</p>
+<p>以下、距離 $k$ の頂点群のスコアを求める方法を考える。<br>
+まず、距離 $k-1$ の全ての点のスコアを小さい順にラベルをつける。<br>
+このとき、同じスコアの点には同じラベルをつける。<br>
+ようするに普通の座標圧縮をする。<br>
+そして、距離 $k-1$ の頂点から距離 $k$ の点に向かう各辺ごと、「前のラベル $\times 10+$ 辺の数字」を調べる。<br>
+この数の大小は、必ずスコアの大小と一致する。<br>
+よって、これを用いてどの辺から来るのが最小か調べ、そのときのスコアの剰余を求めればよい。<br>
+次にこれらをスコアの小さい順に並べるときには、「前のラベル $\times 10+$ 辺の数字」の方を使えばよい。</p>
+<p>これで板挟みが解消でき、計算量 $O(M+N\log N)$ で全ての点のスコアの剰余が求まる。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。<br>
+頂点番号は <code>0-indexed</code> に変換しておく。</p>
+<pre><code>n: 4
+m: 4
+u: {0, 0, 1, 2}
+v: {1, 2, 3, 3}
+w: {1, 1, 9, 2}</code></pre>
+<p>重みを無視して頂点 $0$ から幅優先探索を行う。<br>
+各頂点までの辺数は $0,1,1,2$ となるため、距離ごとの頂点は次の通り。</p>
+<pre><code>距離0: {0}
+距離1: {1, 2}
+距離2: {3}</code></pre>
+<p>頂点 $0$ のラベルとスコアの剰余を、ともに $0$ とする。</p>
+<p>距離 $1$ の頂点 $1,2$ は、どちらも頂点 $0$ から数字 $1$ の辺で到達する。<br>
+候補値「親のラベル $\times 10+$ 辺の数字」は、どちらも $0\times 10+1=1$ である。<br>
+よって、この $2$ 点のスコアの剰余はそれぞれ $1$ となる。<br>
+候補値 $\{1,1\}$ を座標圧縮すると、頂点 $1,2$ のラベルはいずれも $0$ となる。</p>
+<p>距離 $2$ の頂点 $3$ には、頂点 $1$ から数字 $9$ の辺、頂点 $2$ から数字 $2$ の辺で進める。<br>
+前の層のラベルを使って、両方の候補を比較する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-right" style="text-align: right;">親の頂点</th>
+<th class="table-align-right" style="text-align: right;">辺の数字</th>
+<th class="table-align-right" style="text-align: right;">候補値</th>
+<th class="table-align-right" style="text-align: right;">スコアの剰余</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="table-align-right" style="text-align: right;">$1$</td>
+<td class="table-align-right" style="text-align: right;">$9$</td>
+<td class="table-align-right" style="text-align: right;">$0\times 10+9=9$</td>
+<td class="table-align-right" style="text-align: right;">$1\times 10+9=19$</td>
+</tr>
+<tr>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$2$</td>
+<td class="table-align-right" style="text-align: right;">$0\times 10+2=2$</td>
+<td class="table-align-right" style="text-align: right;">$1\times 10+2=12$</td>
+</tr>
+</tbody>
+</table></div>
+<p>候補値の小さい頂点 $2$ からの経路を採用するため、頂点 $3$ のスコアの剰余は $12$ となる。<br>
+したがって、頂点 $1,2,3$ に対応する答えはそれぞれ $1,1,12$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>スコアの剰余から次の頂点の剰余を求める式 <code>result[k]*10+c</code> は、<code>int</code> 型からはみ出すことがある。<br>
+<code>long long</code> 型を用いること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>うまくやると、層にわけなくてもDijkstra法の中身をいじることで同等の処理ができる。<br>
+ただ、実装がちょっと込み入ったものになるので、バグりやすいし、バグったら修正が大変。<br>
+正しく実装しているコードは、上部の「別解」リンクを参照。<br>
+こちらの場合の計算量は $O((N+M)\log M)$ である。<br>
+どちらの方法を取るかはお好みで。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/bfs.html">幅優先探索</a>
+<a class="tag" href="../tags/adjacency-list.html">隣接リスト</a>
+<a class="tag" href="../tags/coordinate-compression.html">座標圧縮</a>
+<a class="tag" href="../tags/dijkstra.html">Dijkstra法</a>
+<a class="tag" href="../tags/modular-arithmetic.html">剰余類環</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
