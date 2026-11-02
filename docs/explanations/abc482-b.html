@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC482 B - Blank Bingo</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC482 B - Blank Bingo</h1>
+      <p class="explanation-title-ja">ビンゴ</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc482/tasks/abc482_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc482/submissions/80565147" target="_blank" rel="noopener noreferrer">解答例</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <h2 id="section-0469507120">考え方</h2>
+<p>あるラインの中にある <code>&#x27;.&#x27;</code> の個数が、そのラインでビンゴするまでの最短手数である。<br>
+したがって、ビンゴになる可能性がある $12$ ライン全てで <code>&#x27;.&#x27;</code> の個数を数え、最小値を答えればよい。</p>
+<p>これは、変に工夫を考えるよりも、素直に以下の $4$ つを書く方が早い。</p>
+<ul>
+<li>縦方向 $5$ ラインを見る二重ループ
+</li>
+<li>横方向 $5$ ラインを見る二重ループ
+</li>
+<li>左上から右下への斜めラインを見るブロック
+</li>
+<li>右上から左下への斜めラインを見るブロック
+</li>
+</ul>
+<p>変数の名前がダブって困るなら、<code>{ }</code> で囲んでスコープを区切ってやればよい。</p>
+<h2 id="section-1">入力例1での動作</h2>
+<p>入力を受け取る。</p>
+<pre><code>n: 5
+s: {&quot;.o..o&quot;, &quot;..oo.&quot;, &quot;.o..o&quot;, &quot;o.o..&quot;, &quot;o..oo&quot;}</code></pre>
+<p>答えの候補となる最小値を $5$ で初期化する。</p>
+<p>各行について <code>&#x27;.&#x27;</code> の個数を数えると、上から順に $3,3,3,3,2$ となる。<br>
+最小値は $2$ に更新される。</p>
+<p>各列について <code>&#x27;.&#x27;</code> の個数を数えると、左から順に $3,3,3,3,2$ となる。<br>
+最小値は $2$ のままである。</p>
+<p>左上から右下への斜めラインには <code>&#x27;.&#x27;</code> が $4$ 個、右上から左下への斜めラインには $2$ 個ある。<br>
+よって、最小値は $2$ のままである。</p>
+<p>したがって、答えは $2$ となる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>特になし。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>特になし。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/brute-force.html">全探索</a>
+<a class="tag" href="../tags/grid-operation.html">グリッド操作</a>
+<a class="tag" href="../tags/nested-loop.html">多重ループ</a>
+      </div>
+      <p class="tag-note">※ A問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
