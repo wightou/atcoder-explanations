@@ -35,17 +35,27 @@ window.MathJax = {
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc482/tasks/abc482_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc482/submissions/80565173" target="_blank" rel="noopener noreferrer">解答例</a></div>
     <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
-<p>ナップザック問題のような動的計画法で調べればよい。<br>
-ただし、そのままやると $M$ 個のデータを最大 $M$ 回ずつ調べることになり、全く間に合わない。<br>
+<p>例えば、$N^i$ の中に、余りが $R$ になるようなものを作れたとしよう。<br>
+この場合、$N^{i+1}$ では、$R$ に $N$ のある約数をかけたものが全て作れる。<br>
+この考え方をナップサック問題のような動的計画法に落とし込めばよい。</p>
+<p>ただし、そのままやると $M$ 個のデータを最大 $M$ 回ずつ調べることになり、全く間に合わない。<br>
 仮に、$N^{i+1}$ のときには $N^i$ で新しく作れたものだけ調べるとしても無理である。<br>
 $N$ の約数の個数を $D$ とすると、 $O(MD)$ 回の処理が必要。<br>
 $10^{14}$ 以下のうち約数が最も多いものは、次の数。</p>
 <p>$$<br>
-97821761637600=2^5\cdot 3^4\cdot 5^2\cdot 7^2\cdot 11\cdot 13\cdot 17\cdot 19\cdot 23\cdot 29<br>
+97821761637600=2^5\times 3^4\times 5^2\times 7^2\times 11\times 13\times 17\times 19\times 23\times 29<br>
 $$</p>
 <p>この場合、$D=17280$ であり、計算量は非常に厳しい。</p>
 <p>そこで、$N$ の素因数ごとに処理する。<br>
-$N^i$ のときに新たに作れた数を、$N^{i+1}$ での調査予定だけでなく、$N^i$ の方にも調査予定に追加する。<br>
+例えば $N$ が $72=2^3\times 3^2$ であった場合、以下の $2$ つの遷移にわける。<br>
+すると、約数の個数である $12$ 回ではなく、指数総和の $5$ 回の遷移で済むようになる。</p>
+<ul>
+<li>既に作れるものに $2, 4, 8$ のいずれかをかけて作れるものを調べる
+</li>
+<li>既に作れるものに $3, 9$ のいずれかをかけて作れるものを調べる
+</li>
+</ul>
+<p>$N^i$ のときに新たに作れた数を、$N^{i+1}$ での調査予定だけでなく、$N^i$ の方にも調査予定に追加する。<br>
 こうすることで、異なる素因数 $2$ つを同時にかけても指数を $1$ しか進めないように探索できる。<br>
 ただし、C++ で書く場合、範囲for文の最中に末尾追加をするとバグるので注意すること。</p>
 <p>計算量は、$N$ の素因数の指数総和を $S$ として、$O(\sqrt{N}+MS)$。<br>
