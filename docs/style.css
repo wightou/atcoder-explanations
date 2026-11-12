@@ -12,6 +12,7 @@
   --accent-2: #14b8a6;
   --tag-bg: #e9f3ff;
   --tag-border: #bfdbfe;
+  --text-red: #dc2626;
   --table-bg-red: #fee2e2;
   --table-bg-coral: #ffe4e1;
   --table-bg-orange: #ffedd5;
@@ -261,6 +262,10 @@ a:hover {
 
 .markdown-body ul ul ul {
   list-style-type: square;
+}
+
+.markdown-body .text-red {
+  color: var(--text-red);
 }
 
 .markdown-body code {
