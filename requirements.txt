@@ -1,7 +1,2 @@
-# Required third-party packages: none.
-# Canonical site generation and CI use Python 3.11+ standard library only.
-#
-# scripts/site_builder currently has compatibility paths for PyYAML and
-# Python-Markdown when they are installed, but they are intentionally not
-# installed by this requirements file because generated HTML can differ.
-# If either becomes a required dependency, regenerate and review docs/ first.
+Markdown==3.11.3
+PyYAML==6.0.3

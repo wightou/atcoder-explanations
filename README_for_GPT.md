@@ -18,13 +18,14 @@ __pycache__/
 リポジトリ直下でZIPを展開したあと、必要に応じて次を実行します。
 
 ```bash
+python -m pip install -r requirements.txt
 python scripts/build_site.py
 ```
 
 サイト生成処理を変更した場合は、次の回帰テストも実行します。
 
 ```bash
-python -S -m unittest discover -s tests -v
+python -m unittest discover -s tests -v
 ```
 
 知識記事のスタブを作る場合だけ、次を実行します。
@@ -55,17 +56,17 @@ Windows由来の `*:Zone.Identifier` ファイルを消す場合は、リポジ�
 - `scripts/create_knowledge_stubs.py` は未作成の知識記事Markdownスタブを生成する補助スクリプトです。
 - `scripts/delete_zone_identifier.sh` はWindows由来の `*:Zone.Identifier` ファイルを削除する補助スクリプトです。
 - `tests/` はサイト生成処理の回帰テストです。
-- `requirements.txt` はサイト生成・CIの依存関係方針を示します。必須の外部Pythonパッケージはありません。
+- `requirements.txt` はサイト生成・CIで使用する PyYAML と Python-Markdown のバージョンを固定します。
 - `.github/workflows/site-builder-tests.yml` は回帰テストと生成済み `docs/` の整合性確認を行うGitHub Actionsです。
 
 ## 回帰テスト・CI
 
-- 標準の検証環境は Python 3.11 以上とし、`python -S` で外部 site-packages を読み込まない経路を基準にします。
-- `requirements.txt` に必須の外部Pythonパッケージはありません。
+- 標準の検証環境は Python 3.13 以上とします。
+- 本番サイト生成とCIでは `requirements.txt` の PyYAML と Python-Markdown を使用します。
 - `tests/test_build_site.py` は固定fixtureからサイトを生成し、主要な独自Markdown機能・front matter・コンテスト分類・不正ファイルのskipを確認します。
 - `tests/expected_site_sha256.json` は固定fixtureから生成される全ファイルの SHA-256 一覧です。
 - 生成仕様を意図的に変更した場合だけ、差分を確認した上でスナップショットを更新します。テストを通すことだけを目的にスナップショットを更新しません。
-- GitHub Actionsでは Python 3.11 / 3.13 で構文チェックと回帰テストを行った後、実リポジトリ全体を再生成します。
+- GitHub Actionsでは Python 3.13 で依存関係を導入し、構文チェックと回帰テストを行った後、実リポジトリ全体を再生成します。
 - 再生成後の `docs/` に追跡済み・未追跡を問わず差分があればCIを失敗させます。
 - CIが失敗した場合は、まず差分が意図した生成仕様変更か回帰不具合かを確認します。意図した変更でなければ生成コード側を修正し、意図した変更なら生成物と回帰スナップショットの両方を確認して更新します。
 
