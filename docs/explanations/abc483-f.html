@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC483 F - Sum of Mod of Linear</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-title" href="../index.html">競技プログラミング 知識集積所</a>
+  </div>
+</header>
+
+<main class="page-layout">
+  <article class="markdown-body">
+    <div class="explanation-heading">
+      <h1>ABC483 F - Sum of Mod of Linear</h1>
+      <p class="explanation-title-ja">線型mod和</p>
+    </div>
+    <div class="auto-links"><a href="https://atcoder.jp/contests/abc483/tasks/abc483_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc483/submissions/80784635" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc483/submissions/80783348" target="_blank" rel="noopener noreferrer">NUFFTによる別解</a></div>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-1">高速化 $1$ つめ</a></li><li><a href="#section-2">高速化 $2$ つめ</a></li><li><a href="#section-3">高速化 $3$ つめ</a></li></ul></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a><ul><li><a href="#section-ad6d0207b0">周期的な減少分を周波数に分解する</a></li><li><a href="#section-dft-nufft">DFT・NUFFTによる一括計算</a></li><li><a href="#section-gaussian">Gaussian近似そのものの誤差</a></li><li><a href="#section-63529a0e49">浮動小数点の丸め誤差</a><ul><li><a href="#section-fft">FFTの誤差</a></li><li><a href="#section-dft">各周期のDFTの誤差</a></li><li><a href="#section-gaussian-2">Gaussian配置と係数の集約</a></li><li><a href="#section-fft-2">最終FFTと整数への復元</a></li></ul></li></ul></li></ul></nav>
+    <p><span class="text-red">おそらく、きちんとは解けない問題。</span></p>
+<p>というのも、<a href="https://atcoder.jp/contests/abc483/editorial/28053" target="_blank" rel="noopener noreferrer">公式解説</a>で「$5$ 億ループ回すだけ」と書かれている。<br>
+しかし、プログラムの処理は $1$ 秒あたり $10^8$ 回くらい（<a href="https://atcoder.jp/contests/apg4b/tasks/APG4b_w" target="_blank" rel="noopener noreferrer">APG4b</a>）であるとされている。<br>
+それを信じるなら、計算時間見積もりは $5$ 秒となり、制限時間の $2.5$ 秒に間に合わない。</p>
+<p>言語や処理系次第では $10^9$ くらい処理してくれることもある。<br>
+しかし、そうなるかどうかはAtCoder環境で実行してみるまでわからない。<br>
+しかも、最も時間がかかる入力は $1200002$ 個の整数で、コードテストの標準入力に入れられない。<br>
+そのため、AtCoder環境でどのくらい時間がかかるか事前に確認する方法がない。</p>
+<p>実際、chatGPT環境でいくつかの言語で解かせたところ、公式解説の方法で数十秒かかる言語が多数。<br>
+よって、おそらく「間に合う保証はないがワンチャンに賭けて提出してみる」以外にACをとる方法はない。<br>
+まあ、速度に優位性を持つC++なら $5$ 億回はわりといけそうな範囲だが……。</p>
+<p>以下では、公式解説と同じ $O(N\log N+x_{\max}\sqrt{N}+Q)$ だが定数が削減される考え方を紹介する。<br>
+この定数削減で $2.75$ 億ループまでは簡単に短縮できる。</p>
+<p>また、実装は非常に難しいが、$O(N+Q+x_{\max}\log x_{\max}+x_{\max}^{2/3}N^{2/3}(\log(x_{\max}N))^{1/3})$ で解ける。<br>
+とはいえ、アイデアは自力で出ても自分ではとても証明・実装できなかった。<br>
+そのため、chatGPTに代わりにやってもらった実装と解説を別解として掲載する。</p>
+<p>実際のAtCoderへの提出では、こちらのNUFFT版が $247$ ms、整数演算版が $120$ ms で、ともにACした。<br>
+どのくらいの $N$ から逆転するかは不明。</p>
+<h2 id="section-0469507120">考え方</h2>
+<p>まず、愚直にやると $O(NQ)$ で単純に解ける。<br>
+これの無駄を省き、高速化することがこの問題の主旨となる。</p>
+<p>ということで、まずはメモ化による準備。<br>
+つまり、クエリに応じるのではなく、全パターンのクエリに対する答えを前もって出しておくことにする。<br>
+実際のクエリでは、事前に求めた答えを見て出力するだけとする。<br>
+計算量は $O(Nx_{\max}+N+Q)$ となり遅くなるが、高速化可能な方針は増える。<br>
+具体的には、以下の方針を取る。</p>
+<p>$x+A \mod B$ の値は、$(x+A)/B$ （切り捨て）の値を $y$ として、$x+A-yB$ と変形できる。<br>
+つまり、全ペアに対する $x+A-yB$ の総和を $x$ の値ごとに求めればよい。<br>
+このうち、$x$ の総和は、単に $x\times N$ でよい。<br>
+また、$A$ の総和は $x$ に関係しないので、別途求めてから全体に定数として足せばよい。</p>
+<p>残るは $-yB$ の総和。<br>
+これは、階差数列を用いる。<br>
+長さ $x_{\max}+1$ の配列を用意し、$x+A$ が $B$ の倍数となる場所だけ $-B$ を足しておく。<br>
+全ペア分やったあとで累積和を取れば、各 $x$ に対する $-yB$ の総和となる。</p>
+<p>よって、以上のことをすれば、全ての $x$ に対する解答が出そろう。<br>
+この場合、各ペアの処理はエラトステネスの篩同様の工夫で $O(x_{\max}/B)$ で済む。<br>
+つまり、総計算量は $O(N+Q+x_{\max}\sum_{i=1}^{N}(1/B_i))$ である。<br>
+最悪の入力は全て $(A,B)=(0,1)$ のケース。<br>
+その場合の総計算量は $O(N+x_{\max}N+Q)$ 、$-B$ 処理の回数は約 $2500$ 億回になる。</p>
+<p>これをベースに $3$ つの高速化を行う。</p>
+<h3 id="section-1">高速化 $1$ つめ</h3>
+<p>$1$ つめは、重複データの一括処理。<br>
+$(A,B)$ の値が全く同じペアが複数組あった場合、事前にその組数を数える。<br>
+そうすると、それらを $1$ 回分の処理でまとめて $-B\times$ 組数分することができる。<br>
+これにより、$B$ の値が小さいものが大量にあった場合を高速化できる。<br>
+この場合最悪の入力は $B&lt;1000$ であるペア全 $499500$ 個に加えて $B=1000$ であるペアを $500$ 個。<br>
+その場合の総計算量は $O(N\log N+x_{\max}\sqrt{N}+Q)$ 、$-B$ 処理の回数は約 $5.0$ 億回になる。<br>
+ここまでをやるのが公式解説。</p>
+<h3 id="section-2">高速化 $2$ つめ</h3>
+<p>$2$ つめは、$B$ の倍化処理。<br>
+同じ $(A,B)$ のペアが $2$ つあったとする。<br>
+このとき、実はこれを $(A,B)\times 2 \to (A,2B) + (A+B,2B) - B$ （定数）に分解できる。<br>
+ペアの種類数が増えて悪化しているように見えるが、$B$ が $2$ 倍になるため $-B$ 処理の回数は悪化しない。<br>
+そのため、たまたま $(A,2B)$ や $(A+B,2B)$ が既に存在した場合の恩恵だけを得ることができる。</p>
+<p>これを $1\le B &lt; \sqrt{2N}$ くらいの範囲で小さい方から繰り返すと、最悪ケースを作りにくくなる。<br>
+とはいえ、同じペアが偶数個なければならない。<br>
+そこで、適当に $\sqrt{2N}$ より少し大きい $2$ の冪乗となる $t$ を求めて用いる。<br>
+全てのペアが実は $t$ 個ずつあるとして計算し、最後に答えを $t$ で割って出力すればよい。<br>
+こうすれば、$1\le B &lt; \sqrt{2N}$ の範囲全てで「ペア数は偶数個」を保つことができる。</p>
+<p>$1$ つめと $2$ つめを両方採用する場合、最悪計算量は $1$ だけの場合より $\sqrt{2}$ 倍高速になる。<br>
+最悪の入力は以下の内容のもの。</p>
+<ul>
+<li>$B$ が $1411$ 以下の奇数であるペア全 $498436$ 個
+</li>
+<li>$B=1413$ のペアで更新が $354$ 回発生する $A$ のもの $1211$ 個
+</li>
+<li>$B=1415$ のペアで更新が $354$ 回発生する $A$ のもの $353$ 個
+</li>
+</ul>
+<p>その場合の総計算量は $O(N\log N+x_{\max}\sqrt{N}+Q)$ で変わらないが、$-B$ 処理は約 $3.5$ 億回になる。</p>
+<h3 id="section-3">高速化 $3$ つめ</h3>
+<p>$3$ つめは、最頻値を利用してのペア減らし。<br>
+例えば、$B=6$ であるペア $6$ 種類が全て $1$ つずつあったとすると、これは全体に $15$ を足すだけになる。<br>
+これはさすがに都合がよすぎる例だが、$6$ 種類中 $4$ 種類が $1$ つずつある場合程度でも恩恵は得られる。<br>
+すなわち、全体に $15$ を加えた上で、欠けていた $2$ つが $-1$ 個ずつあったことにすればよい。<br>
+一般的には、$B$ ごとに、各 $A$ について該当ペア数を調べ、その最頻値を $0$ にするように調整するとよい。<br>
+この際、取り扱うペア数が減る分、$x$ の総和分に影響があることに注意。</p>
+<p>$3$ つ全てを採用する場合、最悪計算量はさらに減少する。<br>
+最悪の入力はかなり複雑になるが、$-B$ 処理の回数は約 $2.75$ 億回になる。<br>
+ここまでくれば、本当に $1$ 秒に $10^8$ 回のループでも $2.75$ 秒で済むので、$2.5$ 秒より少しはみ出る程度。<br>
+実際には $10^8$ より少しは速いだろうと思うと、これなら間に合いそうと言ってもいいかもレベルにはなる。</p>
+<h2 id="section-4d0fb049a3">注意点</h2>
+<p>答えは最大で $500000\times499999=249999500000$ となり、<code>int</code> 型からはみ出る。<br>
+<code>long long</code> 型を用いること。</p>
+<h2 id="section-f4aa49c835">別解</h2>
+<p>$-B$ 処理を離散フーリエ変換の周波数分布だと思って、逆変換をして加算する。<br>
+小数で処理をすることになるが、最後に得られる値の誤差が $0.5$ 未満であれば四捨五入で答えが得られる。</p>
+<p>この方針では計算量は $O(N+Q+x_{\max}\log x_{\max}+x_{\max}^{2/3}N^{2/3}(\log(x_{\max}N))^{1/3})$ となる。<br>
+$x_{\max}\fallingdotseq N$ の場合、$Q$ を除く主要項は、整数演算版は $O(N^{3/2})$、この別解は $O(N^{4/3}(\log N)^{1/3})$。<br>
+したがって、漸近的にはこの別解の方が高速である。</p>
+<p>私では解説が書ききれないし、実装力も足りなかったので、以下の解説は chatGPT による記述。</p>
+<p>以下はNUFFTを用いて計算回数を削減する方法である。<br>
+<code>sin</code> などの数学関数を含む浮動小数点演算には、後述の精度条件を仮定する。<br>
+その条件の下で、最終的な絶対誤差が $0.256$ 未満となることを示す。</p>
+<h3 id="section-ad6d0207b0">周期的な減少分を周波数に分解する</h3>
+<p>$F(x)=\sum_{i=1}^{N}((x+A_i)\bmod B_i)$ とおく。<br>
+$x\ge1$ に対し、$J(x)=\sum_{i:B_i\mid x+A_i}B_i$ と定義する。<br>
+このとき、$F(0)=\sum_iA_i$ および $F(x)=F(x-1)+N-J(x)$ である。</p>
+<p>$B_i=b,A_i=a$ である組の個数を $c_b(a)$ とする。<br>
+$C_b(k)=\sum_{a=0}^{b-1}c_b(a)e^{2\pi i ka/b}$ と定義すると、複素指数関数の直交性より、次が厳密に成立する。</p>
+<p>$$<br>
+b\sum_{a=0}^{b-1}c_b(a)[b\mid x+a]<br>
+=\sum_{k=0}^{b-1}C_b(k)e^{2\pi i kx/b}.<br>
+$$</p>
+<p>$k=0$ の寄与はその法に属する組の個数であり、別途整数で扱える。<br>
+また、$k/b$ を既約分数 $r/d$ に約分すると、異なる法から得られる同じ周波数の係数をまとめられる。<br>
+係数は実数列のDFTから得られるため、正負の周波数が複素共役になる性質も利用できる。</p>
+<h3 id="section-dft-nufft">DFT・NUFFTによる一括計算</h3>
+<p>小さい法 $b\le T$ について、各 $b$ のDFTから $C_b(k)$ を求め、同じ周波数の係数を合算する。<br>
+DFTは、係数が一様なら省略する。<br>
+非零係数や階差が少なければ直接計算し、それ以外はBluestein法で求める。<br>
+直接の階差更新の方が軽い場合も、無理にNUFFTへ載せずに直接処理する。</p>
+<p>周波数 $k/b$ はFFTの等間隔格子上に並ばないため、Gaussianの重みを使って近傍の格子点へ配置する。<br>
+その後、実数信号の共役対称性を利用した逆FFTを実行し、Gaussianによる減衰を補正する。<br>
+大きい法 $b&gt;T$ は、従来どおり階差配列へ直接更新する。<br>
+最後に、得られた $J(x)$ を整数へ丸め、$F(x)=F(x-1)+N-J(x)$ で答えを求める。</p>
+<p>$R$ をGaussianの片側の配置幅、$L$ をFFT長とする。<br>
+$L=\Theta(x_{\max})$ とし、精度を固定した場合の計算量は次のとおりである。</p>
+<p>$$<br>
+O\left(N+Q+x_{\max}\log x_{\max}+T^2\log T+RT^2+\frac{Nx_{\max}}{T}\right).<br>
+$$</p>
+<p>$R$ は定数とし、$T\asymp(Nx_{\max}/\log(Nx_{\max}))^{1/3}$ とおく。<br>
+このとき、主要項は $O((Nx_{\max})^{2/3}(\log(Nx_{\max}))^{1/3})$ となる。<br>
+これは、パラメータを入力規模に応じて設定した場合の評価である。<br>
+提出コードでは、今回の制約に合わせて固定値を使用している。</p>
+<h3 id="section-gaussian">Gaussian近似そのものの誤差</h3>
+<p>提出したコードでは $T=1400,L=2^{21},R=15,\tau=1.58$ とする。<br>
+$x\le500000$ に対して $\theta=2\pi x/L$ とおけば、$0\le\theta\le1.49803$ である。<br>
+誤差はGaussianのエイリアシングと、近傍 $2R+1=31$ 点での打ち切りに分けられる。<br>
+それぞれの上界は次のとおりである。</p>
+<p>$$<br>
+\begin{aligned}<br>
+E_{\mathrm{alias}}(\theta)<br>
+&amp;\le\sum_{q\ne0}e^{-\tau((\theta-2\pi q)^2-\theta^2)},\\<br>
+E_{\mathrm{tail}}(\theta)<br>
+&amp;\le\frac{2e^{\tau\theta^2}}{\sqrt{4\pi\tau}}<br>
+\frac{e^{-R^2/(4\tau)}}{1-e^{-R/(2\tau)}}.<br>
+\end{aligned}<br>
+$$</p>
+<p>これらを区間全体で評価すると、1周波数あたりの近似誤差は $1.216\times10^{-14}$ 未満となる。<br>
+周波数係数の絶対値和は $\sum_{b\le T}\sum_{k=1}^{b-1}|C_b(k)|\le N(T-1)$ である。<br>
+今回の制約では $N(T-1)\le699500000$ となる。<br>
+ここではDFT・Gaussianの重み・FFTを誤差なく計算すると仮定する。<br>
+このとき、全周波数合成後のGaussian近似誤差は $8.51\times10^{-6}$ 未満である。<br>
+この部分の評価は、実際の <code>double</code> の丸め誤差を含まない。</p>
+<h3 id="section-63529a0e49">浮動小数点の丸め誤差</h3>
+<p>以下では、実数演算による近似誤差に加えて、提出コードの浮動小数点演算を評価する。<br>
+この証明には、C++23の規格のみからは保証されない精度条件が必要である。</p>
+<ul>
+<li><code>double</code> はIEEE 754 binary64で、四則演算は最近接丸めに従う。
+</li>
+<li><code>sin</code>・<code>cos</code> の絶対誤差は、使用する引数について $5\times10^{-16}$ 以下である。
+</li>
+<li><code>exp</code>・<code>sqrt</code> の相対誤差は、使用する引数について $5\times10^{-16}$ 以下である。
+</li>
+<li><code>complex&lt;double&gt;</code> の加減算・乗算は、通常の倍精度四則演算によるものとする。
+</li>
+<li>複素除算の結果は、計算された分子と分母の厳密な商に対して相対誤差 $10^{-14}$ 以下である。
+</li>
+</ul>
+<p>単位丸め誤差を $u=2^{-53}$ とする。<br>
+通常の浮動小数点演算に対して $|\operatorname{fl}(z)-z|\le u|z|$ を用いる。<br>
+複素乗算は4回の実数乗算と2回の加減算に分解し、絶対誤差を $4u|zw|$ 以下で評価する。<br>
+サブノーマル数で相対誤差式が成立しない場合は、各演算の絶対誤差に $2^{-1074}$ を追加して扱う。</p>
+<h4 id="section-fft">FFTの誤差</h4>
+<p>FFTで用いる回転因子の引数は、$2\pi j/L$ を倍精度で計算した値である。<br>
+$\pi$ の定数化と引数の乗算誤差は合わせて $2\pi u$ 以下である。<br>
+三角関数の誤差も加えると、回転因子の複素数としての絶対誤差は $1.5\times10^{-15}$ 未満となる。<br>
+複素乗算と加減算の誤差を合わせ、1段のバタフライの誤差係数を保守的に $\lambda=4.5\times10^{-15}$ とできる。</p>
+<p>長さ $m=2^s$ のFFTについて $\gamma_s=(1+\lambda)^s-1$ とおく。<br>
+理想的なバタフライの $\ell_2$ 作用素ノルムは $\sqrt2$ なので、段数について帰納法を使うと次が成立する。</p>
+<p>$$<br>
+\begin{aligned}<br>
+\|\widetilde{\operatorname{FFT}}(v)-\operatorname{FFT}(v)\|_2<br>
+&amp;\le\gamma_s\sqrt m\|v\|_2,\\<br>
+|\widetilde{\operatorname{FFT}}(v)_k-\operatorname{FFT}(v)_k|<br>
+&amp;\le\gamma_s\|v\|_1.<br>
+\end{aligned}<br>
+$$</p>
+<p>各周期のDFTで用いるFFT長は最大4096であり、$\gamma_{12}&lt;5.41\times10^{-14}$ となる。<br>
+最後のFFTは20段なので、$\gamma_{20}&lt;9.01\times10^{-14}$ である。</p>
+<h4 id="section-dft">各周期のDFTの誤差</h4>
+<p>法 $b$ に属する入力の個数を $n_b$ とする。<br>
+$|C_b(k)|\le n_b$ であり、$b\le1400$ である。</p>
+<p>Bluestein法では、FFT長 $p$ は4096以下である。<br>
+畳み込み用の2配列を $f,h$ とすると、$\|f\|_2\le n_b$、$\|h\|_2=\sqrt{2b-1}$ となる。<br>
+Parsevalの等式とCauchy–Schwarzの不等式を用いる。<br>
+順FFT2回、周波数ごとの積、逆FFT1回を通した1係数の誤差は次で抑えられる。</p>
+<p>$$<br>
+\left((1+\gamma_{12})^3(1+4u)-1\right)n_b\sqrt{2b-1}.<br>
+$$</p>
+<p>チャープ因子は $\pi(a^2\bmod 2b)/b$ を引数に三角関数で求める。<br>
+引数と三角関数の誤差を合わせたチャープ因子の絶対誤差は $3\times10^{-15}$ 未満である。<br>
+入力への乗算、畳み込み核、出力への乗算を考慮しても、追加誤差は $4\times10^{-14}n_b$ 未満に収まる。<br>
+従って、$b\le1400$ でのBluestein法の各係数の誤差は次を満たす。</p>
+<p>$$<br>
+\begin{aligned}<br>
+|\widetilde C_b(k)-C_b(k)|<br>
+&amp;&lt;\left((1+\gamma_{12})^3(1+4u)-1\right)n_b\sqrt{2799}<br>
++4\times10^{-14}n_b\\<br>
+&amp;&lt;9\times10^{-12}n_b.<br>
+\end{aligned}<br>
+$$</p>
+<p>コードには、非零係数または巡回階差が9個以下の場合の直接DFTもある。<br>
+複素指数 $z=e^{2\pi ia/b}$ の計算と複素乗算の誤差を考える。<br>
+逐次計算した $z^k$ の絶対誤差は $4\times10^{-15}k$ 以下である。<br>
+非零項が9個以下なら、その積和の誤差は次で抑えられる。</p>
+<p>$$<br>
+|\Delta C_b(k)|\le(4\times10^{-15}k+2\times10^{-15})n_b.<br>
+$$</p>
+<p>巡回階差 $d_a=c_b(a)-c_b(a-1)$ を使う場合は $\sum_a|d_a|\le2n_b$ である。<br>
+積和の誤差は上式の右辺を2倍した値以下である。<br>
+さらに、$1\le k\le b/2$ に対して次が成り立つ。</p>
+<p>$$<br>
+|1-e^{2\pi ik/b}|=2\sin(\pi k/b)\ge4k/b.<br>
+$$</p>
+<p>分母の計算誤差は $4\times10^{-15}k+u|1-e^{2\pi ik/b}|$ 以下である。<br>
+従って、分母の相対誤差は $1.5\times10^{-12}$ 未満となる。<br>
+分子の誤差を除算で増幅した分は $4.3\times10^{-12}n_b$ 未満となる。<br>
+分母と複素除算の誤差を加えても $6\times10^{-12}n_b$ 未満である。</p>
+<p>以上より、どのDFT分岐についても共通して次の上界を使える。</p>
+<p>$$<br>
+\boxed{|\widetilde C_b(k)-C_b(k)|&lt;9\times10^{-12}n_b}<br>
+$$</p>
+<h4 id="section-gaussian-2">Gaussian配置と係数の集約</h4>
+<p>Gaussian重みの絶対値和を $S$、最終補正係数の最小値を $D_{\min}$ とおく。<br>
+Poissonの和公式および $0\le x\le500000$ から、次が成立する。</p>
+<p>$$<br>
+\begin{aligned}<br>
+S&amp;=\sup_{0\le\eta\le1}\sum_{j\in\mathbb Z}e^{-(j-\eta)^2/(4\tau)}&lt;4.47,\\<br>
+D_{\min}&amp;=\min_{0\le x\le500000}\sqrt{4\pi\tau}e^{-\tau(2\pi x/L)^2}&gt;0.1285.<br>
+\end{aligned}<br>
+$$</p>
+<p>正周波数について、$B_*:=\sum_{b\le T}\lfloor b/2\rfloor n_b\le NT/2\le350000000$ とおく。<br>
+負周波数の共役な寄与も含めると、DFT係数誤差の最終出力への影響は次を満たす。</p>
+<p>$$<br>
+E_{\mathrm{DFT}}<br>
+&lt;\frac{2SB_*}{D_{\min}}\,9\times10^{-12}<br>
+&lt;0.220.<br>
+$$</p>
+<p>Gaussianの重みの初期値、初期比、更新比をそれぞれ $w_0,r_0,\alpha$ とする。<br>
+引数の四則演算と <code>exp</code> の誤差条件から、各相対誤差を評価する。<br>
+初期値は $3\times10^{-14}$ 未満、初期比は $5\times10^{-15}$ 未満である。<br>
+更新比は $8\times10^{-16}$ 未満である。<br>
+$t\le30$ 回目の重みは $w_t=w_0r_0^t\alpha^{t(t-1)/2}$ である。<br>
+最大30回の重みの乗算と435回以下の比の乗算も含めると、各重みの相対誤差は次で抑えられる。</p>
+<p>$$<br>
+3\times10^{-14}+30\cdot5\times10^{-15}<br>
++435\cdot8\times10^{-16}+465u&lt;10^{-12}.<br>
+$$</p>
+<p>従って、Gaussian重み計算による最終出力誤差は $2SB_*\cdot10^{-12}/D_{\min}&lt;0.025$ である。</p>
+<p>既約周波数 $r/d$ に合算されるDFT係数は、法 $b$ が $d$ の倍数のものだけである。<br>
+$d\ge2$ なので、合算する個数は最大 $\lfloor1400/d\rfloor\le700$ 個である。<br>
+加算の誤差係数を $\gamma_m^{\mathrm{add}}=mu/(1-mu)$ とすると、係数の統合に伴う最終出力誤差は次を満たす。</p>
+<p>$$<br>
+\frac{2SB_*}{D_{\min}}\gamma_{700}^{\mathrm{add}}&lt;0.002.<br>
+$$</p>
+<p>異なる既約周波数の間隔は $1/T^2$ 以上である。<br>
+そのFFT格子上の距離は $L/T^2&gt;1$ なので、1格子点に寄与する周波数は最大31個である。<br>
+複素係数と重みの乗算も含めた格子加算の誤差係数は $\gamma_{33}^{\mathrm{add}}$ 以下である。<br>
+従って、格子への加算による最終出力誤差は次を満たす。</p>
+<p>$$<br>
+\frac{2SB_*}{D_{\min}}\gamma_{33}^{\mathrm{add}}&lt;0.001.<br>
+$$</p>
+<h4 id="section-fft-2">最終FFTと整数への復元</h4>
+<p>コードは共役対称性を使い、長さ $L/2$ の複素逆FFTで偶数番目と奇数番目の結果を同時に求める。<br>
+半周波数側の格子を $g$、組み直したFFT入力を $p$ とする。<br>
+このとき、$\|p\|_1\le4\|g\|_1\le4SB_*$ が成り立つ。<br>
+組み直し時の回転因子と複素四則演算の誤差を評価する。<br>
+各入力の誤差は $5\times10^{-15}(|g_k|+|g_{K-k}|)$ 以下である。<br>
+従って、組み直しによる最終出力誤差は $2SB_*\cdot5\times10^{-15}/D_{\min}&lt;0.001$ である。</p>
+<p>20段の逆FFTについて、先に示した $\ell_1$ 誤差評価を使う。<br>
+最終出力誤差は次のように抑えられる。</p>
+<p>$$<br>
+E_{\mathrm{IFFT}}<br>
+&lt;\frac{4SB_*}{D_{\min}}\gamma_{20}&lt;0.005.<br>
+$$</p>
+<p>最後に計算する補正係数は $D(x)=\sqrt{4\pi\tau}e^{-\tau(2\pi x/L)^2}$ である。<br>
+引数の計算と <code>sqrt</code>・<code>exp</code> の誤差を含め、$D(x)$ の相対誤差は $10^{-14}$ 未満である。<br>
+最後の実数除算の丸めも含めた最終出力誤差は $4SB_*\cdot10^{-14}/D_{\min}&lt;0.001$ となる。</p>
+<p>サブノーマル数による $2^{-1074}$ の絶対誤差も考慮する。<br>
+全演算を合計しても、最終値への影響は $10^{-200}$ 未満である。<br>
+演算回数は $10^{10}$ 回未満である。<br>
+各演算の誤差が最終値までに増幅される倍率も $10^{100}$ 以下である。</p>
+<p>以上の上界を合計する。</p>
+<div class="markdown-table-scroll"><table>
+<thead><tr>
+<th class="table-align-left" style="text-align: left;">誤差要因</th>
+<th class="table-align-right" style="text-align: right;">最終的な絶対誤差の上界</th>
+</tr></thead>
+<tbody>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">Gaussian近似</th>
+<td class="table-align-right" style="text-align: right;">$0.00001$ 未満</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">各周期のDFT</th>
+<td class="table-align-right" style="text-align: right;">$0.220$ 未満</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">Gaussian重みの計算</th>
+<td class="table-align-right" style="text-align: right;">$0.025$ 未満</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">周波数係数の統合</th>
+<td class="table-align-right" style="text-align: right;">$0.002$ 未満</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">格子への加算</th>
+<td class="table-align-right" style="text-align: right;">$0.001$ 未満</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">逆FFT入力の組み直し</th>
+<td class="table-align-right" style="text-align: right;">$0.001$ 未満</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">最終逆FFT</th>
+<td class="table-align-right" style="text-align: right;">$0.005$ 未満</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">最終補正・除算</th>
+<td class="table-align-right" style="text-align: right;">$0.001$ 未満</td>
+</tr>
+<tr>
+<th class="table-align-left" style="text-align: left;" scope="row">合計</th>
+<td class="table-align-right" style="text-align: right;">$0.256$ 未満</td>
+</tr>
+</tbody>
+</table></div>
+<p>従って、以上の精度条件を仮定すれば、$|\widetilde J(x)-J(x)|&lt;0.256&lt;0.5$ が成り立つ。<br>
+この条件下では <code>llround</code> は正しい整数を返す。<br>
+以後は整数演算のみなので、浮動小数点誤差によるWAは生じない。</p>
+<p>ただし、C++23の規格は <code>sin</code>・<code>cos</code>・<code>exp</code>・<code>sqrt</code> の精度条件を保証しない。<br>
+複素除算についても同様である。<br>
+この結論は、明示した演算精度モデルの下での条件付きの正当性保証である。<br>
+すべてのC++23環境での無条件の保証ではない。</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="side-card">
+      <h2>タグ</h2>
+      <div class="tags">
+        <a class="tag" href="../tags/difference-array.html">階差数列</a>
+<a class="tag" href="../tags/cumulative-sum.html">累積和</a>
+<a class="tag" href="../tags/periodicity.html">周期性</a>
+      </div>
+      <p class="tag-note">※ B問題以下レベルの内容は省略。</p>
+    </section>
+
+    <section class="side-card">
+      <h2>リンク</h2>
+      <ul class="side-links">
+        
+<li><a href="../index.html">トップ</a></li>
+<li class="side-nav-group">
+  <a href="../contests/index.html">問題解説</a>
+  <ul class="side-sub-links">
+    <li><a href="../contests/abc.html">ABC</a></li><li><a href="../contests/arc.html">ARC</a></li><li><a href="../contests/agc.html">AGC</a></li><li><a href="../contests/ahc.html">AHC</a></li><li><a href="../contests/typical90.html">典型90問</a></li><li><a href="../contests/educational.html">教育系コンテスト</a></li><li><a href="../contests/other-atcoder.html">その他AtCoder</a></li><li><a href="../contests/aoj.html">Aizu Online Judge</a></li><li><a href="../contests/project-euler-100.html">Project Euler</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-category.html">知識集（分野別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/categories/basic.html">基本</a></li><li><a href="../knowledge/categories/variables-and-data-structures.html">変数とデータ構造</a></li><li><a href="../knowledge/categories/data-search.html">データ探索系</a></li><li><a href="../knowledge/categories/optimization.html">高速化系</a></li><li><a href="../knowledge/categories/strings.html">文字列系</a></li><li><a href="../knowledge/categories/graph-theory.html">グラフ理論系</a></li><li><a href="../knowledge/categories/geometry.html">幾何学系</a></li><li><a href="../knowledge/categories/other-math.html">その他数学系</a></li><li><a href="../knowledge/categories/other.html">その他</a></li><li><a href="../knowledge/categories/typical-problems.html">典型問題集</a></li>
+  </ul>
+</li>
+<li class="side-nav-group">
+  <a href="../knowledge/by-level.html">知識集（難易度別）</a>
+  <ul class="side-sub-links">
+    <li><a href="../knowledge/levels/all-levels.html">難易度問わず</a></li><li><a href="../knowledge/levels/a.html">A問題相当</a></li><li><a href="../knowledge/levels/b.html">B問題相当</a></li><li><a href="../knowledge/levels/c.html">C問題相当</a></li><li><a href="../knowledge/levels/d.html">D問題相当</a></li><li><a href="../knowledge/levels/e.html">E問題相当</a></li><li><a href="../knowledge/levels/f.html">F問題相当</a></li><li><a href="../knowledge/levels/g-and-above.html">G問題以上相当</a></li><li><a href="../knowledge/levels/ahc.html">AHC用</a></li>
+  </ul>
+</li>
+
+      </ul>
+    </section>
+
+    <section class="side-card">
+      <h2>外部リンク</h2>
+      <ul class="side-links">
+        <li class="external-link-item"><a href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer">AtCoder</a></li><li class="external-link-item"><a href="https://kenkoooo.com/atcoder/" target="_blank" rel="noopener noreferrer">AtCoder Problems</a></li><li class="external-link-item"><a href="https://atcoder-novisteps.vercel.app/" target="_blank" rel="noopener noreferrer">AtCoder NoviSteps</a></li><li class="external-link-item"><a href="https://judge.u-aizu.ac.jp/onlinejudge/" target="_blank" rel="noopener noreferrer">Aizu Online Judge</a></li><li class="external-link-item"><a href="https://projecteuler.net/" target="_blank" rel="noopener noreferrer">Project Euler</a></li><li class="external-link-item"><a href="https://graph-editor.daikusutora3.workers.dev/" target="_blank" rel="noopener noreferrer">だいくすとら氏によるグラフ描画ツール</a></li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+</body>
+</html>
