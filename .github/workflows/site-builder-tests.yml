@@ -1,0 +1,64 @@
+name: Site builder tests
+
+on:
+  push:
+    paths:
+      - "scripts/**"
+      - "tests/**"
+      - "explanations/**"
+      - "knowledge/**"
+      - "docs/**"
+      - "site_config.toml"
+      - "requirements.txt"
+      - ".github/workflows/site-builder-tests.yml"
+  pull_request:
+    paths:
+      - "scripts/**"
+      - "tests/**"
+      - "explanations/**"
+      - "knowledge/**"
+      - "docs/**"
+      - "site_config.toml"
+      - "requirements.txt"
+      - ".github/workflows/site-builder-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Confirm dependency policy
+        run: python -S -c "import sys; assert sys.version_info >= (3, 11)"
+
+      - name: Compile Python sources
+        run: python -S -m compileall -q scripts tests
+
+      - name: Run regression tests
+        run: python -S -m unittest discover -s tests -v
+
+      - name: Rebuild the tracked site
+        run: python -S scripts/build_site.py
+
+      - name: Verify docs are fully up to date
+        shell: bash
+        run: |
+          status="$(git status --porcelain --untracked-files=all -- docs)"
+          if [[ -n "$status" ]]; then
+            echo "docs/ differs from a fresh site build:"
+            printf '%s\n' "$status"
+            git diff -- docs
+            exit 1
+          fi

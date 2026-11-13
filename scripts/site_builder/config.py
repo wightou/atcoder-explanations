@@ -105,27 +105,6 @@ EDUCATIONAL_CONTEST_ALIASES = {
     "fps24": "FPS24",
 }
 
-EXTERNAL_LINK_GROUPS = [
-    (
-        "リンク（競プロ関係）",
-        [
-            ("AtCoder", "https://atcoder.jp/home", "競プロサイト"),
-            ("AtCoder Problems", "https://kenkoooo.com/atcoder/", "AtCoderの非公式過去問集"),
-            ("Aizu Online Judge", "https://judge.u-aizu.ac.jp/onlinejudge/", "会津大学のジャッジ"),
-            ("Project Euler", "https://projecteuler.net/", "数学系競プロ（英語）"),
-        ],
-    ),
-    (
-        "",
-        [
-            ("", "https://w.atwiki.jp/sport_programming/pages/11.html", "自動更新"),
-            ("", "https://w.atwiki.jp/sport_programming/pages/81.html", "手動更新"),
-            ("@wiki", "https://atwiki.jp/", ""),
-            ("", "https://w.atwiki.jp/guide/", ""),
-        ],
-    ),
-]
-
 DEFAULT_EXPLANATIONS = ROOT / "explanations"
 
 DEFAULT_KNOWLEDGE = ROOT / "knowledge"

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from html import escape
 from pathlib import Path
 from urllib.parse import quote, urlparse
 import hashlib
@@ -18,7 +17,6 @@ from .config import (
 from .knowledge import category_sort_key, level_sort_key
 from .models import ExplanationPage, KnowledgePage
 
-TAG_SLUG_MAP: dict[str, str] = {}
 
 def safe_filename(name: str) -> str:
     name = str(name).strip()
@@ -86,14 +84,19 @@ def make_tag_slug_map(tags: list[str], knowledge_pages: list["KnowledgePage"]) -
     return result
 
 
-def tag_filename(tag: str) -> str:
-    slug = TAG_SLUG_MAP.get(tag) or fallback_tag_slug(tag)
+def tag_filename(tag: str, tag_slug_map: dict[str, str] | None = None) -> str:
+    slug = (tag_slug_map or {}).get(tag) or fallback_tag_slug(tag)
     return f"{slug}.html"
 
 
-def tag_href(tag: str, *, from_subdir: bool = False) -> str:
+def tag_href(
+    tag: str,
+    *,
+    tag_slug_map: dict[str, str] | None = None,
+    from_subdir: bool = False,
+) -> str:
     prefix = "../" if from_subdir else ""
-    return prefix + "tags/" + quote(tag_filename(tag))
+    return prefix + "tags/" + quote(tag_filename(tag, tag_slug_map))
 
 
 CATEGORY_PAGE_SLUGS = {
@@ -171,30 +174,6 @@ def contest_url_from_pages(pages: list["ExplanationPage"]) -> str:
         if m:
             return m.group(1)
     return ""
-
-
-def render_problem_card_link(
-    page: "ExplanationPage",
-    *,
-    code_label: str,
-    href: str,
-    css_class: str = "problem-cell",
-) -> str:
-    """問題一覧用の3点配置カードを生成する。
-
-    左上に問題コード、中央に英語タイトル、右下に任意の日本語タイトルを表示する。
-    """
-    title_ja_html = (
-        f'<span class="problem-title-ja">{escape(page.problem_title_ja)}</span>'
-        if page.problem_title_ja else ""
-    )
-    return (
-        f'<a class="{css_class}" href="{escape(href)}" title="{escape(page.full_title_with_ja)}">'
-        f'<span class="problem-code">{escape(code_label)}</span>'
-        f'<span class="problem-title">{escape(page.problem_title)}</span>'
-        f'{title_ja_html}'
-        '</a>'
-    )
 
 
 def contest_sort_key(contest: str):

@@ -1,0 +1,24 @@
+[[contest_views]]
+id = "ABC"
+title = "ABC"
+path = "abc.html"
+layout = "table"
+order = "latest_first"
+columns = ["A", "B"]
+
+[[contest_views]]
+id = "教育系コンテスト"
+title = "教育系コンテスト"
+path = "educational.html"
+layout = "grouped_list"
+order = "oldest_first"
+columns = []
+groups = ["EDPC"]
+
+[[contest_views]]
+id = "その他AtCoder"
+title = "その他AtCoder"
+path = "other-atcoder.html"
+layout = "list"
+order = "latest_first"
+columns = []

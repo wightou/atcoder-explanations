@@ -3,8 +3,6 @@ from __future__ import annotations
 from collections import defaultdict
 from pathlib import Path
 
-from . import navigation
-from . import render as render_module
 from .knowledge import (
     category_sort_key, level_sort_key, visible_knowledge_pages,
     warn_missing_knowledge_pages_for_tags, make_knowledge_key_map, make_knowledge_title_map,
@@ -14,7 +12,7 @@ from .loader import clean_output, copy_page_assets, load_explanations, load_know
 from .models import ExplanationPage, KnowledgePage
 from .navigation import category_page_filename, classify_page, level_page_filename, load_contest_views, make_tag_slug_map, tag_filename
 from .render import (
-    render_explanation_page, render_explanations_index, render_grouped_table_page, render_knowledge_filtered_page,
+    RenderContext, render_explanation_page, render_explanations_index, render_grouped_table_page, render_knowledge_filtered_page,
     render_knowledge_grouped_page, render_knowledge_index, render_knowledge_page, render_list_page, render_portal,
     render_table_page, render_tag_page,
 )
@@ -29,10 +27,9 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
 
     explanations = load_explanations(explanations_dir)
     knowledge_pages = load_knowledge(knowledge_dir)
+    contest_views = load_contest_views()
     copy_page_assets(explanations, out_dir)
     copy_page_assets(knowledge_pages, out_dir)
-
-    render_module.SIDEBAR_KNOWLEDGE_PAGES = knowledge_pages
 
     tag_map: dict[str, list[ExplanationPage]] = defaultdict(list)
     knowledge_tag_map: dict[str, list[KnowledgePage]] = defaultdict(list)
@@ -59,14 +56,19 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
                 knowledge_tag_map[key].append(k)
 
     all_tag_names = sorted(explanation_tag_names | set(knowledge_tag_map), key=str)
-    navigation.TAG_SLUG_MAP = make_tag_slug_map(all_tag_names, visible_knowledge)
+    tag_slug_map = make_tag_slug_map(all_tag_names, visible_knowledge)
+    context = RenderContext(
+        contest_views=contest_views,
+        tag_slug_map=tag_slug_map,
+        knowledge_pages=knowledge_pages,
+    )
 
     knowledge_key_map = make_knowledge_key_map(knowledge_pages)
     knowledge_title_map = make_knowledge_title_map(knowledge_pages)
 
     for p in explanations:
         (out_dir / p.url).write_text(
-            render_explanation_page(p, knowledge_title_map),
+            render_explanation_page(p, knowledge_title_map, context=context),
             encoding="utf-8",
         )
 
@@ -86,16 +88,17 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
                 list(related_pages.values()),
                 related_knowledge_pages,
                 knowledge_title_map,
+                context=context,
             ),
             encoding="utf-8",
         )
 
     warn_missing_related_knowledge_pages(missing_related_by_page)
 
-    (out_dir / "index.html").write_text(render_portal(pages_by_class, knowledge_pages), encoding="utf-8")
-    (out_dir / "contests" / "index.html").write_text(render_explanations_index(pages_by_class), encoding="utf-8")
+    (out_dir / "index.html").write_text(render_portal(pages_by_class, knowledge_pages, context=context), encoding="utf-8")
+    (out_dir / "contests" / "index.html").write_text(render_explanations_index(pages_by_class, context=context), encoding="utf-8")
 
-    for spec in load_contest_views():
+    for spec in contest_views:
         class_id = str(spec["id"])
         title = str(spec["title"])
         path = str(spec["path"])
@@ -104,44 +107,45 @@ def build(explanations_dir: Path, knowledge_dir: Path, out_dir: Path) -> None:
         layout = str(spec["layout"])
         order = str(spec["order"])
         if layout == "table":
-            html = render_table_page(title, pages, list(spec["columns"]), order=order, description=description)
+            html = render_table_page(title, pages, list(spec["columns"]), context=context, order=order, description=description)
         elif layout in {"grouped_table", "grouped_list"}:
             html = render_grouped_table_page(
                 title,
                 pages,
+                context=context,
                 order=order,
                 groups=list(spec.get("groups", [])),
                 description=description,
             )
         else:
-            html = render_list_page(title, pages, order=order, description=description)
+            html = render_list_page(title, pages, context=context, order=order, description=description)
         (out_dir / "contests" / path).write_text(html, encoding="utf-8")
 
     for tag in all_tag_names:
-        (out_dir / "tags" / tag_filename(tag)).write_text(
-            render_tag_page(tag, tag_map.get(tag, []), knowledge_tag_map.get(tag, [])),
+        (out_dir / "tags" / tag_filename(tag, tag_slug_map)).write_text(
+            render_tag_page(tag, tag_map.get(tag, []), knowledge_tag_map.get(tag, []), context=context),
             encoding="utf-8",
         )
 
-    (out_dir / "knowledge" / "index.html").write_text(render_knowledge_index(knowledge_pages), encoding="utf-8")
+    (out_dir / "knowledge" / "index.html").write_text(render_knowledge_index(knowledge_pages, context=context), encoding="utf-8")
     (out_dir / "knowledge" / "by-category.html").write_text(
-        render_knowledge_grouped_page("知識集（分野別）", knowledge_pages, group_by="category"),
+        render_knowledge_grouped_page("知識集（分野別）", knowledge_pages, context=context, group_by="category"),
         encoding="utf-8",
     )
     (out_dir / "knowledge" / "by-level.html").write_text(
-        render_knowledge_grouped_page("知識集（難易度別）", knowledge_pages, group_by="level"),
+        render_knowledge_grouped_page("知識集（難易度別）", knowledge_pages, context=context, group_by="level"),
         encoding="utf-8",
     )
 
     visible_knowledge = visible_knowledge_pages(knowledge_pages)
     for category in sorted({p.category for p in visible_knowledge}, key=category_sort_key):
         (out_dir / "knowledge" / "categories" / category_page_filename(category)).write_text(
-            render_knowledge_filtered_page(f"知識集（{category}）", knowledge_pages, group_by="category", value=category),
+            render_knowledge_filtered_page(f"知識集（{category}）", knowledge_pages, context=context, group_by="category", value=category),
             encoding="utf-8",
         )
     for level in sorted({p.level for p in visible_knowledge}, key=level_sort_key):
         (out_dir / "knowledge" / "levels" / level_page_filename(level)).write_text(
-            render_knowledge_filtered_page(f"知識集（{level}）", knowledge_pages, group_by="level", value=level),
+            render_knowledge_filtered_page(f"知識集（{level}）", knowledge_pages, context=context, group_by="level", value=level),
             encoding="utf-8",
         )
 

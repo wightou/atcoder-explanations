@@ -19,9 +19,12 @@ https://wightou.github.io/atcoder-explanations/
 .
 ├── explanations/   # 問題別解説のMarkdown
 ├── knowledge/      # 知識記事のMarkdown
-├── scripts/        # サイト生成スクリプト
+├── scripts/        # サイト生成・補助スクリプト
+├── tests/          # サイト生成処理の回帰テスト
 ├── docs/           # GitHub Pagesで公開する生成済みHTML
+├── .github/        # GitHub Actionsの設定
 ├── site_config.toml
+├── requirements.txt
 └── README.md
 ```
 

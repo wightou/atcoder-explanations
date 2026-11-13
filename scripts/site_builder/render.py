@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from dataclasses import dataclass
 from html import escape
 from pathlib import Path
 from urllib.parse import quote
@@ -16,11 +17,16 @@ from .models import ExplanationPage, KnowledgePage
 from .navigation import (
     category_item_sort_key, category_page_href, contest_sort_key, contest_url_from_pages,
     educational_contest_group, educational_group_sort_key, is_external_href, knowledge_sort_key,
-    level_item_sort_key, level_page_href, load_contest_views, page_sort_key, render_problem_card_link,
+    level_item_sort_key, level_page_href, page_sort_key,
     slug_id, sort_pages_for_view, tag_explanation_sort_key, tag_href,
 )
 
-SIDEBAR_KNOWLEDGE_PAGES: list[KnowledgePage] = []
+
+@dataclass(frozen=True)
+class RenderContext:
+    contest_views: list[dict]
+    tag_slug_map: dict[str, str]
+    knowledge_pages: list[KnowledgePage]
 
 def add_external_link_attrs(html: str) -> str:
     """HTML内の外部リンクだけを別タブで開くようにする。"""
@@ -124,13 +130,13 @@ def site_header_compact(*, prefix: str = "") -> str:
 """
 
 
-def render_sidebar_nav(*, prefix: str = "../") -> str:
+def render_sidebar_nav(context: RenderContext, *, prefix: str = "../") -> str:
     explanation_items = [
         (str(spec["title"]), f"{prefix}contests/{spec['path']}")
-        for spec in load_contest_views()
+        for spec in context.contest_views
     ]
 
-    sidebar_knowledge = visible_knowledge_pages(SIDEBAR_KNOWLEDGE_PAGES)
+    sidebar_knowledge = visible_knowledge_pages(context.knowledge_pages)
     category_names = sorted({p.category for p in sidebar_knowledge}, key=category_sort_key)
     level_names = sorted({p.level for p in sidebar_knowledge}, key=level_sort_key)
 
@@ -181,13 +187,13 @@ def render_external_links() -> str:
     )
 
 
-def common_sidebar(*, prefix: str = "") -> str:
+def common_sidebar(context: RenderContext, *, prefix: str = "") -> str:
     return f"""
 <aside class="sidebar">
   <section class="side-card">
     <h2>リンク</h2>
     <ul class="side-links">
-      {render_sidebar_nav(prefix=prefix)}
+      {render_sidebar_nav(context, prefix=prefix)}
     </ul>
   </section>
 
@@ -201,12 +207,36 @@ def common_sidebar(*, prefix: str = "") -> str:
 """
 
 
-def render_tags(tags: list[str], *, from_subdir: bool = False) -> str:
+def render_tags(tags: list[str], context: RenderContext, *, from_subdir: bool = False) -> str:
     if not tags:
         return '<span class="muted">なし</span>'
     return "\n".join(
-        f'<a class="tag" href="{tag_href(tag, from_subdir=from_subdir)}">{escape(tag)}</a>'
+        f'<a class="tag" href="{tag_href(tag, tag_slug_map=context.tag_slug_map, from_subdir=from_subdir)}">{escape(tag)}</a>'
         for tag in tags
+    )
+
+
+def render_problem_card_link(
+    page: "ExplanationPage",
+    *,
+    code_label: str,
+    href: str,
+    css_class: str = "problem-cell",
+) -> str:
+    """問題一覧用の3点配置カードを生成する。
+
+    左上に問題コード、中央に英語タイトル、右下に任意の日本語タイトルを表示する。
+    """
+    title_ja_html = (
+        f'<span class="problem-title-ja">{escape(page.problem_title_ja)}</span>'
+        if page.problem_title_ja else ""
+    )
+    return (
+        f'<a class="{css_class}" href="{escape(href)}" title="{escape(page.full_title_with_ja)}">'
+        f'<span class="problem-code">{escape(code_label)}</span>'
+        f'<span class="problem-title">{escape(page.problem_title)}</span>'
+        f'{title_ja_html}'
+        '</a>'
     )
 
 
@@ -214,7 +244,7 @@ def render_index_layout(
     title: str,
     inner_html: str,
     *,
-    current: str = "",
+    context: RenderContext,
     prefix: str = "",
     css_href: str = "style.css",
     include_mathjax: bool = False,
@@ -226,7 +256,7 @@ def render_index_layout(
   <article class="main-panel">
     {inner_html}
   </article>
-  {common_sidebar(prefix=prefix)}
+  {common_sidebar(context, prefix=prefix)}
 </main>
 """
     return html_document(
@@ -238,10 +268,10 @@ def render_index_layout(
     )
 
 
-def render_portal(pages_by_class: dict[str, list[ExplanationPage]], knowledge_pages: list[KnowledgePage]) -> str:
+def render_portal(pages_by_class: dict[str, list[ExplanationPage]], knowledge_pages: list[KnowledgePage], *, context: RenderContext) -> str:
     contest_items = [
         (str(spec["title"]), f"contests/{spec['path']}", len(pages_by_class.get(str(spec["id"]), [])))
-        for spec in load_contest_views()
+        for spec in context.contest_views
     ]
 
     visible_knowledge = visible_knowledge_pages(knowledge_pages)
@@ -297,13 +327,13 @@ def render_portal(pages_by_class: dict[str, list[ExplanationPage]], knowledge_pa
   </div>
 </section>
 """
-    return render_index_layout(SITE_TITLE, inner, prefix="")
+    return render_index_layout(SITE_TITLE, inner, context=context, prefix="")
 
 
-def render_explanations_index(pages_by_class: dict[str, list[ExplanationPage]]) -> str:
+def render_explanations_index(pages_by_class: dict[str, list[ExplanationPage]], *, context: RenderContext) -> str:
     items = [
         (str(spec["title"]), str(spec["path"]), len(pages_by_class.get(str(spec["id"]), [])))
-        for spec in load_contest_views()
+        for spec in context.contest_views
     ]
     card_html = "".join(
         f"""
@@ -320,10 +350,10 @@ def render_explanations_index(pages_by_class: dict[str, list[ExplanationPage]]) 
   {card_html}
 </div>
 """
-    return render_index_layout("問題解説", inner, current="問題解説", prefix="../", css_href="../style.css")
+    return render_index_layout("問題解説", inner, context=context, prefix="../", css_href="../style.css")
 
 
-def render_table_page(title: str, pages: list[ExplanationPage], columns: list[str], *, order: str, description: str = "") -> str:
+def render_table_page(title: str, pages: list[ExplanationPage], columns: list[str], *, context: RenderContext, order: str, description: str = "") -> str:
     rows_by_contest: dict[str, dict[str, ExplanationPage]] = defaultdict(dict)
     for p in pages:
         rows_by_contest[p.contest.upper()][p.problem.upper()] = p
@@ -370,19 +400,19 @@ def render_table_page(title: str, pages: list[ExplanationPage], columns: list[st
     return render_index_layout(
         title,
         inner,
-        current="問題解説",
+        context=context,
         prefix="../",
         css_href="../style.css",
         include_problem_title_fit=any(p.problem_title_ja for p in pages),
     )
 
 
-def render_list_page(title: str, pages: list[ExplanationPage], *, order: str, description: str = "") -> str:
+def render_list_page(title: str, pages: list[ExplanationPage], *, context: RenderContext, order: str, description: str = "") -> str:
     items = []
     for p in sort_pages_for_view(pages, order):
         items.append(
             f'<li><a href="../{escape(p.url)}">{escape(p.full_title)}</a> '
-            f'<span class="inline-tags">{render_tags(p.tags, from_subdir=True)}</span></li>'
+            f'<span class="inline-tags">{render_tags(p.tags, context, from_subdir=True)}</span></li>'
         )
 
     description_html = f'<p class="lead">{escape(description)}</p>' if description else ""
@@ -393,13 +423,14 @@ def render_list_page(title: str, pages: list[ExplanationPage], *, order: str, de
   {''.join(items) if items else '<li class="muted">まだ解説がありません。</li>'}
 </ul>
 """
-    return render_index_layout(title, inner, current="問題解説", prefix="../", css_href="../style.css")
+    return render_index_layout(title, inner, context=context, prefix="../", css_href="../style.css")
 
 
 def render_grouped_table_page(
     title: str,
     pages: list[ExplanationPage],
     *,
+    context: RenderContext,
     order: str,
     groups: list[str] | None = None,
     description: str = "",
@@ -461,7 +492,7 @@ def render_grouped_table_page(
     return render_index_layout(
         title,
         inner,
-        current="問題解説",
+        context=context,
         prefix="../",
         css_href="../style.css",
         include_problem_title_fit=any(p.problem_title_ja for p in pages),
@@ -504,6 +535,8 @@ def get_alternative_submission_links(meta: dict) -> list[tuple[str, str]]:
 def render_explanation_page(
     page: ExplanationPage,
     knowledge_title_map: dict[str, KnowledgePage],
+    *,
+    context: RenderContext,
 ) -> str:
     tag_note = page.meta.get("tag_note")
     tag_note_html = f'<p class="tag-note">※ {escape(str(tag_note))}</p>' if tag_note else ""
@@ -547,7 +580,7 @@ def render_explanation_page(
     <section class="side-card">
       <h2>タグ</h2>
       <div class="tags">
-        {render_tags(page.tags, from_subdir=True)}
+        {render_tags(page.tags, context, from_subdir=True)}
       </div>
       {tag_note_html}
     </section>
@@ -555,7 +588,7 @@ def render_explanation_page(
     <section class="side-card">
       <h2>リンク</h2>
       <ul class="side-links">
-        {render_sidebar_nav(prefix="../")}
+        {render_sidebar_nav(context, prefix="../")}
       </ul>
     </section>
 
@@ -571,7 +604,7 @@ def render_explanation_page(
     return html_document(page.full_title, body, css_href="../style.css", include_mathjax=page.needs_mathjax)
 
 
-def render_tag_page(tag: str, pages: list[ExplanationPage], knowledge_pages: list[KnowledgePage]) -> str:
+def render_tag_page(tag: str, pages: list[ExplanationPage], knowledge_pages: list[KnowledgePage], *, context: RenderContext) -> str:
     knowledge_items = "".join(
         f'<li><a href="../{escape(k.url)}">{escape(k.title)}</a>'
         f'{f"<div class=\"knowledge-summary\">{escape(k.summary)}</div>" if k.summary else ""}</li>'
@@ -608,6 +641,7 @@ def render_tag_page(tag: str, pages: list[ExplanationPage], knowledge_pages: lis
     return render_index_layout(
         f"タグ: {tag}",
         inner,
+        context=context,
         prefix="../",
         css_href="../style.css",
         include_mathjax=any(k.summary_needs_mathjax for k in knowledge_pages),
@@ -619,6 +653,8 @@ def render_knowledge_page(
     related_explanations: list[ExplanationPage],
     related_knowledge: list[KnowledgePage],
     knowledge_title_map: dict[str, KnowledgePage],
+    *,
+    context: RenderContext,
 ) -> str:
     related_explanation_items = "\n        ".join(
         f'<li><a href="../{escape(p.url)}">{escape(p.full_title)}</a></li>'
@@ -671,7 +707,7 @@ def render_knowledge_page(
     <section class="side-card">
       <h2>リンク</h2>
       <ul class="side-links">
-        {render_sidebar_nav(prefix="../")}
+        {render_sidebar_nav(context, prefix="../")}
       </ul>
     </section>
 
@@ -702,6 +738,7 @@ def render_knowledge_grouped_page(
     title: str,
     knowledge_pages: list[KnowledgePage],
     *,
+    context: RenderContext,
     group_by: str,
 ) -> str:
     knowledge_pages = visible_knowledge_pages(knowledge_pages)
@@ -758,7 +795,7 @@ def render_knowledge_grouped_page(
     return render_index_layout(
         title,
         inner,
-        current=title,
+        context=context,
         prefix="../",
         css_href="../style.css",
         include_mathjax=any(p.summary_needs_mathjax for p in knowledge_pages),
@@ -769,6 +806,7 @@ def render_knowledge_filtered_page(
     title: str,
     knowledge_pages: list[KnowledgePage],
     *,
+    context: RenderContext,
     group_by: str,
     value: str,
 ) -> str:
@@ -820,14 +858,14 @@ def render_knowledge_filtered_page(
     return render_index_layout(
         title,
         inner,
-        current="",
+        context=context,
         prefix="../../",
         css_href="../../style.css",
         include_mathjax=any(p.summary_needs_mathjax for p in pages),
     )
 
 
-def render_knowledge_index(knowledge_pages: list[KnowledgePage]) -> str:
+def render_knowledge_index(knowledge_pages: list[KnowledgePage], *, context: RenderContext) -> str:
     visible_knowledge = visible_knowledge_pages(knowledge_pages)
     inner = f"""
 <h1>知識集</h1>
@@ -842,4 +880,4 @@ def render_knowledge_index(knowledge_pages: list[KnowledgePage]) -> str:
   </a>
 </div>
 """
-    return render_index_layout("知識集", inner, prefix="../", css_href="../style.css")
+    return render_index_layout("知識集", inner, context=context, prefix="../", css_href="../style.css")
