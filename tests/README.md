@@ -10,7 +10,8 @@ python -m unittest discover -s tests -v
 ```
 
 Python 3.13 以上を前提とします。
-本番サイト生成では `requirements.txt` の PyYAML と Python-Markdown を使用し、fixture の個別テストでは外部パッケージを使わないフォールバック経路も明示的に確認します。
+本番サイト生成では `requirements.txt` の PyYAML を使用し、Markdown変換は既存のフォールバック経路を基準にします。
+fixture の個別テストでは、front matter を含めて外部パッケージを使わないフォールバック経路も明示的に確認します。
 
 `tests/expected_site_sha256.json` は、小さな固定 fixture から生成される全ファイルの SHA-256 一覧です。
 意図的に生成結果を変更した場合だけ、変更内容を確認したうえで次を実行して更新します。

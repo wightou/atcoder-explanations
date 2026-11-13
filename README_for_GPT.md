@@ -56,13 +56,13 @@ Windows由来の `*:Zone.Identifier` ファイルを消す場合は、リポジ�
 - `scripts/create_knowledge_stubs.py` は未作成の知識記事Markdownスタブを生成する補助スクリプトです。
 - `scripts/delete_zone_identifier.sh` はWindows由来の `*:Zone.Identifier` ファイルを削除する補助スクリプトです。
 - `tests/` はサイト生成処理の回帰テストです。
-- `requirements.txt` はサイト生成・CIで使用する PyYAML と Python-Markdown のバージョンを固定します。
+- `requirements.txt` はサイト生成・CIで使用する PyYAML のバージョンを固定します。
 - `.github/workflows/site-builder-tests.yml` は回帰テストと生成済み `docs/` の整合性確認を行うGitHub Actionsです。
 
 ## 回帰テスト・CI
 
 - 標準の検証環境は Python 3.13 以上とします。
-- 本番サイト生成とCIでは `requirements.txt` の PyYAML と Python-Markdown を使用します。
+- 本番サイト生成とCIでは `requirements.txt` の PyYAML を使用し、Markdown変換は既存のフォールバック経路を基準にします。
 - `tests/test_build_site.py` は固定fixtureからサイトを生成し、主要な独自Markdown機能・front matter・コンテスト分類・不正ファイルのskipを確認します。
 - `tests/expected_site_sha256.json` は固定fixtureから生成される全ファイルの SHA-256 一覧です。
 - 生成仕様を意図的に変更した場合だけ、差分を確認した上でスナップショットを更新します。テストを通すことだけを目的にスナップショットを更新しません。
