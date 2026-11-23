@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">カエル 2</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77327500" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/dp/submissions/77327525" target="_blank" rel="noopener noreferrer">配る方式</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a><ul><li><a href="#section-44079acd95">配る方式</a></li></ul></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-f4aa49c835">別解</a><ul><li><a href="#section-44079acd95">配る方式</a></li></ul></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>前問と考え方自体はほぼ同じ。<br>
 「$2$ 通りのうち小さい方」が「最大 $K$ 通りの中での最小」に変更となるだけ。<br>
@@ -136,8 +136,6 @@ h: {10, 30, 40, 50, 20}</code></pre>
 </tbody>
 </table></div>
 <p>最後の足場までの最小コスト $30$ が答え。</p>
-<h2 id="section-4d0fb049a3">注意点</h2>
-<p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>
 <h3 id="section-44079acd95">配る方式</h3>
 <p>各足場から、そこから $K$ 個先までの足場へ最小コストを配る形でも実装できる。<br>

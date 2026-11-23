@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">塔</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/dp/tasks/dp_x" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/dp/submissions/77885941" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-int">答えは int 型からはみ出る</a></li><li><a href="#section-s-w">重さ上限は、$s+w$ の最大値まででよい</a></li><li><a href="#section-w-dp">「重さ $W$ ぴったり」でDPテーブルをつくる。</a></li></ul></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a><ul><li><a href="#section-int">答えは int 型からはみ出る</a></li><li><a href="#section-s-w">重さ上限は、$s+w$ の最大値まででよい</a></li><li><a href="#section-w-dp">「重さ $W$ ぴったり」でDPテーブルをつくる。</a></li></ul></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>ABCでいうと、F問題級。<br>
 ただし、考察が重いという意味ではARC寄りかもしれない。</p>
@@ -152,8 +152,6 @@ window.MathJax = {
 <h3 id="section-w-dp">「重さ $W$ ぴったり」でDPテーブルをつくる。</h3>
 <p>通常のナップサックは「重さ $W$ 以下」でDPテーブルを作る方が楽だが、今回は制約上それが難しい。<br>
 「重さ $W$ ぴったり」で表を作り、最後に最大値探索をする。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

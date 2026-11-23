@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">和の二乗和</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc471/tasks/abc471_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc471/submissions/78511223" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>各回スコアの式を展開すると、全て $A_i\times A_j$ という形になる。<br>
 全取り出し方の合計は、それぞれの係数がどうなるか考えることで処理すればよい。</p>
@@ -67,8 +67,6 @@ a: {1, 10, 100}</code></pre>
 <p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 何か足し算や掛け算をするたびに結果を <code>% 998244353</code> し、割り算は $998244353-2$ 乗したものを掛ける。<br>
 二項係数の計算で逆元を求めるため、繰り返し二乗法のアルゴリズムも用意しておくこと。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">矩形塗り替え</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc464/tasks/abc464_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc464/submissions/77039507" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc464/submissions/77079134" target="_blank" rel="noopener noreferrer">別解</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>愚直に解くのは非常に簡単だが、計算量が $O(HWQ)$ かかってしまう。<br>
 大量に上書きした後で、さらに別のもので同じ範囲を上書きするのは、どう考えても無駄。</p>
@@ -64,8 +64,6 @@ q: 3
 <p>したがって、最終的な盤面は次のようになる。</p>
 <pre><code>DCC
 DBA</code></pre>
-<h2 id="section-4d0fb049a3">注意点</h2>
-<p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>
 <p>左上もクエリ入力される場合の解き方でもよい。</p>
 <p>まず、$2W$ 以上の長さの配列を用意する。<br>

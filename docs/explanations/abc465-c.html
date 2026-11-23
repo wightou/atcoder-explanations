@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">順序反転</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc465/tasks/abc465_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc465/submissions/77219802" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>一見、<code>reverse()</code> を多用して解けそうに見える。<br>
 しかし、<code>reverse()</code> は $O(N)$ かかる関数であり、$S$ の中身が <code>&#x27;o&#x27;</code> だらけだと全体で $O(N^2)$ かかる。<br>
@@ -119,10 +119,6 @@ s: &quot;ooxoo&quot;</code></pre>
 </table></div>
 <p>最後は通常状態なので、<code>deque</code> 全体を反転する必要はない。<br>
 したがって、答えは <code>5 2 1 3 4</code> となる。</p>
-<h2 id="section-4d0fb049a3">注意点</h2>
-<p>特になし。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

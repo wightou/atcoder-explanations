@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">積制限等差数列</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc480/tasks/abc480_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc480/submissions/80201177" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>初項、公差、項数の $3$ つのデータで全探索をかけたい。<br>
 しかし、入力例 $2$ からわかるように、$1$ つずつ数えていては間に合わない。<br>
@@ -238,8 +238,6 @@ $\infty$ のところは、$10^9$ 程度の十分大きな値。</p>
 <code>long long</code> 型を用いること。</p>
 <p>数列の総積は計算途中で <code>long long</code> 型からはみ出る可能性がある。<br>
 乗算の前にオーバーフローを判定し、総積が $N$ 以下かどうかを正しく比較できるようにすること。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

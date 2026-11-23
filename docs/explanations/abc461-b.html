@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">正直な木こり</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc461/tasks/abc461_b" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc461/submissions/76604370" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p><code>0-indexed</code> と <code>1-indexed</code> が入り混じると面倒なので、最初に全て <code>0-indexed</code> に統一するとよい。</p>
 <p>女神視点で、各斧について、本当の所有者が名乗りを上げているかをチェックしていく。</p>
@@ -67,8 +67,6 @@ b: {1, 2, 0}</code></pre>
 <code>b[2]</code> は $0$ なので、本当の所有者は $0$ 番の人である。<br>
 その人は、<code>a[0]</code> は $2$ つまり $2$ 番の斧を持っていると主張しているので正しい。</p>
 <p>全ての斧について矛盾がないので、<code>Yes</code> を出力する。</p>
-<h2 id="section-4d0fb049a3">注意点</h2>
-<p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>
 <p>木こり視点でチェックしてもよい。<br>
 その場合、<code>b[a[i]]</code> が <code>i</code> であるか確認することになる。</p>

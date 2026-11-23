@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">ランダム強盗</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc464/tasks/abc464_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc464/submissions/77039510" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-3">入力例3での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-3">入力例3での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>まず、$N \leq 20$ の場合の $O(2^N)$ 解法を考える。</p>
 <p>例として、金庫が $3$ 個で、中身が $2$ と $3$ と $4$、目標金額が $7$ である場合を考える。<br>
@@ -367,8 +367,6 @@ $$</p>
 何か足し算や掛け算をするたびに結果を <code>% 998244353</code> する。<br>
 割り算は通常 $998244353-2$ 乗したものを掛けるが、それでは計算量が増えてしまう。<br>
 階乗の事前計算で逆数も求めておき、繰り返し二乗法を毎回しなくて済むように高速化しておくこと。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

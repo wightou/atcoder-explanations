@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">PとQの間</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc468/tasks/abc468_c" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc468/submissions/77868255" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc468/submissions/77868259" target="_blank" rel="noopener noreferrer">別解</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>$N$ 個の数の順列は、$N!$ 通りある。<br>
 $P$ と $Q$ それぞれより辞書順で前にある順列の個数を求めてしまえば、それらの差 $-1$ で答えとなる。</p>
@@ -120,8 +120,6 @@ q: {3, 1, 2}</code></pre>
 </table></div>
 <p>したがって、$Q$ より辞書順で小さい順列は $4$ 個である。</p>
 <p>よって、$P$ と $Q$ の間にある順列の個数は $4-1-1=2$ となる。</p>
-<h2 id="section-4d0fb049a3">注意点</h2>
-<p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>
 <p>順列全探索で解くこともできる。<br>
 スタートを昇順ではなく $P$ そのものに設定し、毎回カウンタを $1$ 増やしていく。<br>

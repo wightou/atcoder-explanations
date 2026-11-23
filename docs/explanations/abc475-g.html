@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">大量の約数</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc475/tasks/abc475_g" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc475/submissions/79235203" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-72986c8568">具体例での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-72986c8568">具体例での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>まず、$D$ が無害な値である場合を考えてみる。</p>
 <p>正の約数の個数は、素因数分解したときの指数に $1$ を足した数の総乗。<br>
@@ -218,8 +218,6 @@ $25$ 以下で列挙される候補は次の通り。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>$N$ や探索中の整数は <code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

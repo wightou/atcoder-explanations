@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">会議の分担</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/arc226/tasks/arc226_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/arc226/submissions/78264483" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>会議の開始時刻に、何人空いているかで分けて考える。</p>
 <p>$1$ 人も空いていない場合、その時点で無理なので、その時点で打ち切ってよく答えは $0$ となる。<br>
@@ -62,8 +62,6 @@ meetings:
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 何か足し算や掛け算をするたびに結果を <code>% 998244353</code> する。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

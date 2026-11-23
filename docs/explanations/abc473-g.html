@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">全消し</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc473/tasks/abc473_g" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc473/submissions/78830667" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>各カード、$3$ 回以上めくる必要はない。<br>
 $1$ 回めくってハズレだった場合、それを食べるチャンスが来るまでめくらず放っておけばよい。<br>
@@ -90,8 +90,6 @@ k: 4</code></pre>
 <p>答えは $998244353$ で割った余りを要求されているので、剰余類環の考えに従って処理する。<br>
 何か足し算や掛け算をするたびに結果を <code>% 998244353</code> し、割り算は $998244353-2$ 乗したものを掛ける。<br>
 累乗計算を行うため、繰り返し二乗法のアルゴリズムも用意しておくこと。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

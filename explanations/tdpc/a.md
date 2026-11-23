@@ -47,11 +47,3 @@ DP テーブルは次のように更新される。
 | $5$ まで | {green}T | F | {green}T | {green}T | F | {green}T | F | {green}T | {green}T | F | {green}T |
 
 最終的に `dp` が `true` である総得点は $7$ 個あるので、答えは $7$。
-
-## 注意点
-
-特になし。
-
-## 別解
-
-特になし。

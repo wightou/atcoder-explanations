@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">超多数派</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc465/tasks/abc465_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc465/submissions/77219785" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>入力は整数が $2$ つなので、<code>int</code> 型の変数を $2$ つ用意し、<code>cin</code> で入力を受け取る。</p>
 <p>さて、$A&gt;B \times \dfrac{2}{3}$ かどうかを if 文で書けばよいように思える。<br>
@@ -64,8 +64,6 @@ b: 465</code></pre>
 <p>となる。</p>
 <p>$948&gt;930$ なので $3A&gt;2B$ が成り立つ。<br>
 したがって、<code>Yes</code> を出力する。</p>
-<h2 id="section-4d0fb049a3">注意点</h2>
-<p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>
 <p>今回、非整数になる場合のズレ方は必ず $\dfrac{1}{3} = 0.333\dots$ 単位である。<br>
 よって、小数で計算し、$A$ が $B \times \dfrac{2}{3}+0.1$ より大きいと誤差吸収する方針でも解ける。<br>

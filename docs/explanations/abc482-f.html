@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">mod M 約数</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc482/tasks/abc482_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc482/submissions/80565173" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>例えば、$N^i$ の中に、余りが $R$ になるようなものを作れたとしよう。<br>
 この場合、$N^{i+1}$ では、$R$ に $N$ のある約数をかけたものが全て作れる。<br>
@@ -86,8 +86,6 @@ m: 7</code></pre>
 <p>$N$ は <code>int</code> 型からはみ出すことがあるため、<code>long long</code> 型を用いること。<br>
 素因数を掛ける途中の積も <code>int</code> 型からはみ出すことがあるため、<code>long long</code> 型で計算すること。</p>
 <p>$M=1$ の場合は余り $0$ のみを考えればよく、$1$ が $N$ の約数なので、答えは $1$ である。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

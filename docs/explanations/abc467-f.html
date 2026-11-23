@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">メール最適化</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc467/tasks/abc467_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc467/submissions/77655607" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>まず、クエリを無視して、最初のデータでの最善の値を考える。<br>
 これは単純な貪欲法でよく、$B$ の値が大きいものから順にメールを書いて送ればよい。<br>
@@ -144,8 +144,6 @@ $B$ の大きい順に使う位置をあらかじめ確保する。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは、<code>int</code> 型からはみ出る。<br>
 segment木で管理する値と答えには、<code>long long</code> 型を用いること。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

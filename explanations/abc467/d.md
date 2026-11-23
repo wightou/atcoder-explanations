@@ -83,7 +83,3 @@ $\overrightarrow{\mathrm{PQ}}=(-1,1)$、$\overrightarrow{\mathrm{RS}}=(-1,1)$ �
 
 座標の差の二乗和や外積は、`int` 型からはみ出る。
 `long long` 型を用いること。
-
-## 別解
-
-特になし。

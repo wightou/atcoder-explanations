@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">タイポのペア</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc483/tasks/abc483_e" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc483/submissions/80702111" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>まず、ハミング距離が $0$ のペアの個数。<br>
 これは、<code>unordered_map</code> などを用いて普通にカウントすればよい。</p>
@@ -129,8 +129,6 @@ $3$ つの文字列は全て異なるので、$a_0=0$ である。</p>
 <h2 id="section-4d0fb049a3">注意点</h2>
 <p>答えは最大で $200000\times199999/2=19999900000$ となり、<code>int</code> 型からはみ出る。<br>
 <code>long long</code> 型を用いること。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">千秋楽</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc463/tasks/abc463_f" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc463/submissions/76862484" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-ptt">ptt</a></li><li><a href="#section-pts">pts</a></li><li><a href="#section-pst">pst</a></li><li><a href="#section-pss">pss</a></li><li><a href="#section-pto">pto</a></li><li><a href="#section-pso">pso</a></li></ul></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-ptt">ptt</a></li><li><a href="#section-pts">pts</a></li><li><a href="#section-pst">pst</a></li><li><a href="#section-pss">pss</a></li><li><a href="#section-pto">pto</a></li><li><a href="#section-pso">pso</a></li></ul></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>最後の $N$ 試合の前での最大勝利数を $W$ とする。</p>
 <p>最後の試合で各選手が増やせる勝利数は高々 $1$ なので、最終的な最多勝利数は $W$ または $W+1$ である。<br>
@@ -362,8 +362,6 @@ $$</p>
 <p>二項係数を階乗で計算するため、階乗と階乗の逆元を前計算しておくこと。</p>
 <p>剰余の掛け算では $998244353^2$ 級の値が現れる。<br>
 <code>long long</code> 型または <code>modint</code> を用いること。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

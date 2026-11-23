@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">上下左右移動2</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc474/tasks/abc474_g" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc474/submissions/79083373" target="_blank" rel="noopener noreferrer">解答例</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-1">必要性の証明 $1$</a></li><li><a href="#section-2">必要性の証明 $2$</a></li><li><a href="#section-8c5dbf954a">面積等分の証明</a></li><li><a href="#section-3">必要性の証明 $3$</a></li></ul></li><li><a href="#section-1-2">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a><ul><li><a href="#section-1">必要性の証明 $1$</a></li><li><a href="#section-2">必要性の証明 $2$</a></li><li><a href="#section-8c5dbf954a">面積等分の証明</a></li><li><a href="#section-3">必要性の証明 $3$</a></li></ul></li><li><a href="#section-1-2">入力例1での動作</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>まず、いくつかの小さめの $N$ と $K$ で実験してみる。<br>
 すると、以下の $3$ つが構築可能な必要十分条件らしいと予想される。</p>
@@ -223,10 +223,6 @@ $N$ が偶数なので必要条件を満たさず、<code>No</code> となる。
 まず $4$ 回分を使って <code>RRRRDLLLLD</code> と左右に蛇行する。<br>
 さらに、残った $2$ 回分について <code>RRDLLD</code> と途中まで進んで折り返す。<br>
 その後、残り部分を上下に蛇行すると <code>RRRUURDD</code> が続き、操作列は <code>RRRRDLLLLDRRDLLDRRRUURDD</code> となる。</p>
-<h2 id="section-4d0fb049a3">注意点</h2>
-<p>特になし。</p>
-<h2 id="section-f4aa49c835">別解</h2>
-<p>特になし。</p>
   </article>
 
   <aside class="sidebar">

@@ -33,7 +33,7 @@ window.MathJax = {
       <p class="explanation-title-ja">ぶどう</p>
     </div>
     <div class="auto-links"><a href="https://atcoder.jp/contests/abc478/tasks/abc478_a" target="_blank" rel="noopener noreferrer">問題ページ</a><a href="https://atcoder.jp/contests/abc478/submissions/79819436" target="_blank" rel="noopener noreferrer">解答例</a><a href="https://atcoder.jp/contests/abc478/submissions/79819447" target="_blank" rel="noopener noreferrer">別解</a></div>
-    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-4d0fb049a3">注意点</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
+    <nav class="page-toc" aria-label="目次"><div class="page-toc-title">目次</div><ul><li><a href="#section-0469507120">考え方</a></li><li><a href="#section-1">入力例1での動作</a></li><li><a href="#section-f4aa49c835">別解</a></li></ul></nav>
     <h2 id="section-0469507120">考え方</h2>
 <p>入力は整数が $2$ つなので、<code>int</code> 型の変数を $2$ つ用意し、<code>cin</code> で入力を受け取る。</p>
 <p>A問題としては少し難しいが、問題の通りにシミュレーションする。<br>
@@ -80,8 +80,6 @@ m: 5</code></pre>
 <p>$i=3$ では、$3\bmod 3=0$ なので人 $0$ に配り、<code>result</code> は <code>{2, 1, 1}</code> となる。</p>
 <p>$i=4$ では、$4\bmod 3=1$ なので人 $1$ に配り、<code>result</code> は <code>{2, 2, 1}</code> となる。</p>
 <p>したがって、順番に $2,2,1$ を出力する。</p>
-<h2 id="section-4d0fb049a3">注意点</h2>
-<p>特になし。</p>
 <h2 id="section-f4aa49c835">別解</h2>
 <p>数学得意な人向けの解法。</p>
 <p>もらえるぶどうの個数は、だいたいみんな $M\div N$ 個。<br>
